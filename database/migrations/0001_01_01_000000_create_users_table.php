@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->enum('role', ['admin', 'customer'])->default('customer');
-            $table->string('status');
+            $table->string('status')->nullable();
 
             $table->rememberToken();
             $table->timestamp('email_verified_at')->nullable();
@@ -33,6 +33,7 @@ return new class extends Migration
             $table->string('phone_number')->unique()->nullable();
             $table->string('address')->unique()->nullable();
             $table->string('zip_code')->nullable();
+            $table->timestamps();
         });
 
 

@@ -15,7 +15,7 @@
 
 	</head>
 
-	<body class="relative">
+	<body class=" relative">
 
 		<div id="app">
 			{{ $slot }}

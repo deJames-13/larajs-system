@@ -1,4 +1,4 @@
-@props(['title' => 'Laravel'])
+@props(['title' => 'TuneTown'])
 
 <header class="mx-auto">
 	<div class="navbar bg-base-100 border-b-2">
@@ -95,35 +95,6 @@
 
 
 	@role('customer')
-		@push('scripts')
-			<script type="module">
-				import ajaxRequest from "{{ asset('js/assets/ajaxRequest.js') }}";
-				let cartQty = 0;
-				let cartTotal = 0;
-
-				$(document).ready(function() {
-
-					// GET CART
-					const token = document.querySelector('meta[name="api-token"]').getAttribute('content');
-					ajaxRequest.get({
-						url: '/api/cart',
-						token: token,
-						onSuccess: ({
-							data
-						}) => {
-							data.forEach(product => {
-								cartQty += product.quantity;
-								cartTotal += product.price * product.quantity;
-							});
-							cartTotal = cartTotal.toFixed(2);
-							$('.cart-qty').text(cartQty);
-							$('#cart-sbt').text(cartTotal);
-						}
-					});
-
-				});
-			</script>
-		@endpush
 	@endrole
 
 </header>
