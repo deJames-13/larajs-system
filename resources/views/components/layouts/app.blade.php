@@ -10,21 +10,9 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="api-token" content="{{ session('api-token') }}";>
 		<title>{{ $title }}</title>
-		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-		<script src="https://cdn.tailwindcss.com"></script>
 
-		{{-- DATATABLES --}}
-		<link
-			href="https://cdn.datatables.net/v/dt/jszip-3.10.1/dt-2.0.7/b-3.0.2/b-html5-3.0.2/b-print-3.0.2/date-1.5.2/r-3.0.2/sc-2.4.2/sb-1.7.1/sl-2.0.1/sr-1.4.1/datatables.min.css"
-			rel="stylesheet">
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-		<script
-			src="https://cdn.datatables.net/v/dt/jszip-3.10.1/dt-2.0.7/b-3.0.2/b-html5-3.0.2/b-print-3.0.2/date-1.5.2/r-3.0.2/sc-2.4.2/sb-1.7.1/sl-2.0.1/sr-1.4.1/datatables.min.js">
-		</script>
-		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-		<script src="{{ asset('js/assets/printThis.js') }}"></script>
 		@vite('resources/css/app.css')
+
 	</head>
 
 	<body class="relative">
@@ -38,7 +26,7 @@
 		{{-- Loading overlay --}}
 
 		<div id="loading"
-			class="print:hidden z-[100] fixed top-0 w-screen h-screen grid place-content-center bg-gray-500 bg-opacity-20">
+			class="hidden print:hidden z-[100] fixed top-0 w-screen h-screen grid place-content-center bg-gray-500 bg-opacity-20">
 			<div class="div text-xl font-bold flex flex-col items-center justify-center">
 				<h2>
 					Loading...
