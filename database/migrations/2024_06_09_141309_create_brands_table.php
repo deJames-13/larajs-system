@@ -15,7 +15,13 @@ return new class extends Migration
             $table->id();
 
             // TODO: Fill up columns
+            $table->string('name');
+            $table->string('company')->nullable();
+            $table->string('website')->nullable();
+            $table->text('description')->nullable();
+            $table->string('logo')->nullable();
 
+            $table->string('status')->nullable();
             $table->timestamps();
         });
         Schema::create('product_brands', function (Blueprint $table) {

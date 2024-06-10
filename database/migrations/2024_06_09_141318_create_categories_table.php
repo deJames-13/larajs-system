@@ -15,6 +15,10 @@ return new class extends Migration
             $table->id();
 
             // TODO: Fill up columns
+            $table->string('name');
+            $table->text('description')->nullable();
+            $table->string('image')->nullable();
+            $table->string('status')->nullable();
 
             $table->timestamps();
         });

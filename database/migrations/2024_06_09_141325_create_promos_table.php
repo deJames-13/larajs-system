@@ -15,6 +15,15 @@ return new class extends Migration
             $table->id();
 
             // TODO: Fill up columns
+            $table->string('name');
+            $table->string('slug')->unique();
+            $table->text('description')->nullable();
+            $table->string('image')->nullable();
+            $table->string('status')->nullable();
+            $table->integer('discount')->nullable();
+            $table->dateTime('start_date')->nullable();
+            $table->dateTime('end_date')->nullable();
+
 
             $table->timestamps();
         });
