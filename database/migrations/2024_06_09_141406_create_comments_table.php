@@ -14,7 +14,10 @@ return new class extends Migration
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
 
-            // TODO: Fill up columns
+            $table->text('content');
+            $table->string('status')->nullable();
+            $table->tinyInteger('rating')->nullable();
+            $table->string('image_path')->nullable();
 
             $table->timestamps();
         });
