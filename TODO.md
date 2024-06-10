@@ -4,14 +4,14 @@
 
 ### Models
 - [x] User
-- [ ] Customer
-- [ ] Product
-- [ ] Order
-- [ ] Brand
-- [ ] Category
-- [ ] Promos
-- [ ] Comments
-- [ ] Stock
+- [x] Customer
+- [x] Product
+- [x] Order
+- [x] Brand
+- [x] Category
+- [x] Promos
+- [x] Comments
+- [x] Stock
 
 
 ## Controllers
