@@ -1,4 +1,4 @@
-@props(['title' => 'TuneTown'])
+@props(['title' => 'GlitzVogue'])
 
 <header class="mx-auto">
 	<div class="navbar bg-base-100 border-b-2">
