@@ -1,6 +1,6 @@
 
-import ajaxRequest from 'js/assets/ajaxRequest.js';
-import Carousel from 'js/components/Carousel.js';
+import Carousel from '../../components/Carousel.js';
+import ajaxRequest from '../assets/ajaxRequest.js';
 $(document).ready(function () {
 
     // CAROUSEL

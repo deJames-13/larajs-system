@@ -80,6 +80,6 @@
 
 
 	@push('scripts')
-		<script src="{{ asset('js/Products/create.js') }}"></script>
+		<script type="module" src="{{ asset('js/Products/create.js') }}"></script>
 	@endpush
 </x-layouts.default>

@@ -28,13 +28,11 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     });
 
     // NOTE: use of {id} instead of {item} in the route is much better for crud operations
-    
+
     // products
     Route::prefix('products')->group(function () {
         Route::post('/', [ProductController::class, 'store']);
         Route::put('/{id}', [ProductController::class, 'update']);
         Route::delete('/{id}', [ProductController::class, 'destroy']);
     });
-
-
 });

@@ -1,6 +1,6 @@
 
-import ajaxRequest from 'js/assets/ajaxRequest.js';
-import Carousel from 'js/components/Carousel.js';
+import Carousel from '../../components/Carousel.js';
+import ajaxRequest from '../assets/ajaxRequest.js';
 let id;
 let carousel;
 let item = [];
@@ -14,6 +14,7 @@ const init = () => {
 
     item = fetchItem(id);
 
+
     $('#cancel').click(function () {
         Swal.fire({
             title: 'Are you sure?',
@@ -26,6 +27,7 @@ const init = () => {
         }).then((result) => {
             if (result.isConfirmed) {
                 $('#save-item, #cancel').addClass('hidden');
+                item = fetchItem(id);
                 populateForm(item);
             }
 
@@ -42,11 +44,11 @@ const init = () => {
         });
 
         ajaxRequest.put({
-            url: '/api/items/' + id,
+            url: '/api/products/' + id,
             data: formData,
             token: token,
             onSuccess: response => handleSubmit(response.data || {}),
-            onError: handleError
+            onError: response => handleError(response.responseJSON.errors || {})
         });
     });
 
@@ -83,10 +85,12 @@ const populateForm = (item) => {
 }
 
 const fetchItem = (id) => {
+    $('.input-error').removeClass('input-error');
+    $('.text-error').remove();
     ajaxRequest.get({
-        url: '/api/items/' + id,
+        url: '/api/products/' + id,
         onSuccess: (response) => {
-            console.log(response);
+            // console.log(response);
             if (response.data) {
                 populateForm(response.data);
             }
@@ -122,8 +126,7 @@ const handleSubmit = (item) => {
 }
 
 const handleError = (errors) => {
-    $('.input-error').removeClass('input-error');
-    $('.text-error').remove();
+    console.log(errors);
     Object.keys(errors).forEach(field => {
         let input = $(`#${field}`);
         input.addClass('input-error');
