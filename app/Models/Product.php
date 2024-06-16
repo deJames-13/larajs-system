@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
     protected $guarded = [];
 
     // Scope Filter
@@ -33,5 +34,10 @@ class Product extends Model
     public function stock()
     {
         return $this->hasOne(Stock::class, 'product_sku_code', 'sku_code');
+    }
+
+    public function promos()
+    {
+        return $this->belongsToMany(Promos::class, 'promo_products', 'product_id', 'promo_id');
     }
 }

@@ -33,6 +33,7 @@ return new class extends Migration
             $table->string('phone_number')->unique()->nullable();
             $table->string('address')->unique()->nullable();
             $table->string('zip_code')->nullable();
+            $table->string('profile_image')->nullable();
             $table->timestamps();
         });
 

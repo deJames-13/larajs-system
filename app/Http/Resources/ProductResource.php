@@ -20,7 +20,7 @@ class ProductResource extends JsonResource // JSON
             ...parent::toArray($request),
 
             // load relationships
-            'stock' => $this->stock ?? 0,
+            'stock' => $this->stock->quantity ?? 0,
             'item_quantity' => $this->whenPivotLoaded('customer_products', function () {
                 return $this->pivot->quantity;
             }),

@@ -1,7 +1,8 @@
 <?php
 
-use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\TableController;
 
 
 // Guess routes
@@ -17,4 +18,15 @@ Route::group(['middleware' => 'guest'], function () {
 // Auth routes
 Route::group(['middleware' => 'auth'], function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    // ADMIN ONLY
+    Route::group(['prefix' => 'admin', 'middleware' => ['role:admin']], function () {
+
+        // TABLES
+        Route::get('/products', [TableController::class, 'products'])->name('tables.products');
+
+        // ITEMS
+
+
+    });
 });
