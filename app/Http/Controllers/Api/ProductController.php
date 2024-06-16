@@ -37,8 +37,18 @@ class ProductController extends Controller
         ]);
         $stock = $data['stock'];
         unset($data['stock']);
+
         $product = Product::create($data);
+
+        // TODO: test this
+        if ($request->hasFile('image')) {
+            $this->handleImageUpload($request, $product);
+        }
+
         $product->stock()->create(['quantity' => $stock]);
+
+
+
 
         $res = new ProductResource($product);
         return response($res, 201, ['message' => 'Product added successfully!']);
