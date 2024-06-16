@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\TableController;
 
 
@@ -15,7 +16,7 @@ Route::group(['middleware' => 'guest'], function () {
     Route::post('/register', [AuthController::class, 'store'])->name('store');
 });
 
-// Auth routes
+// Auth pages
 Route::group(['middleware' => 'auth'], function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
@@ -25,8 +26,12 @@ Route::group(['middleware' => 'auth'], function () {
         // TABLES
         Route::get('/products', [TableController::class, 'products'])->name('tables.products');
 
-        // ITEMS
+        // Products
+        Route::get('/products/create', [PageController::class, 'productCreate'])->name('products.create');
+        Route::get('/products/edit/{id}', [PageController::class, 'productEdit'])->name('products.edit');
 
+
+        // PDFS
 
     });
 });
