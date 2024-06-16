@@ -16,7 +16,6 @@ class TableController extends Controller
             $page = request('page') ?? 1;
             $limit = request('limit') ?? 10;
             $products = Product::paginate($limit, ['*'], 'page', $page);
-
             $response = ProductResource::collection($products);
             Debugbar::info($response);
             return $response;

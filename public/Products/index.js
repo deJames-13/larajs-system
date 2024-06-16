@@ -1,9 +1,9 @@
 import ajaxRequest from '../assets/ajaxRequest.js';
-import { Card } from '../components/ItemCard.js';
+import { Card } from '../components/ProductCard.js';
 
-export default class Items {
+export default class Products {
     constructor({ url, parent }) {
-        this.items = [];
+        this.products = [];
         this.url = url;
         this.parent = parent;
 
@@ -12,22 +12,22 @@ export default class Items {
 
 
     handleSuccess(data) {
-        data.forEach(item => {
+        data.forEach(product => {
             const data = {
                 parent: this.parent,
-                imageSrc: item.image,
-                altText: item.name,
-                title: 'P' + item.price,
-                text: item.name,
+                imageSrc: product.image,
+                altText: product.name,
+                title: 'P' + product.price,
+                text: product.name,
                 buttonText: 'Buy Now',
                 buttonAction: () => {
-                    window.location.replace('/items/' + item.id)
+                    window.location.replace('/products/' + product.id)
                 }
             };
             const card = new Card(data);
             card.elements.wrapper.addClass('max-w-xs hover');
             card.elements.wrapper.on('click', () => {
-                window.location.replace('/items/' + item.id)
+                window.location.replace('/products/' + product.id)
             });
         }
         );
