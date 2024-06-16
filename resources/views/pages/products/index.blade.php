@@ -12,7 +12,7 @@
 			import Products from "{{ asset('js/Products/index.js') }}";
 			new Products({
 				parent: '#items-container',
-				url: "{{ route('items.all') }}"
+				url: "{{ route('products.all') }}"
 			});
 		</script>
 	@endpush

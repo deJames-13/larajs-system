@@ -84,6 +84,6 @@
 
 
 	@push('scripts')
-		<script src="{{ asset('js/Products/edit.js') }}"></script>
+		<script type="module" src="{{ asset('js/Products/edit.js') }}"></script>
 	@endpush
 </x-layouts.default>

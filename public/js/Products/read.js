@@ -1,5 +1,5 @@
 
-import ajaxRequest from "js/assets/ajaxRequest.js";
+import ajaxRequest from '../assets/ajaxRequest.js';
 $(document).ready(function () {
 
     // TODO: STOCK
