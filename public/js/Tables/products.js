@@ -11,7 +11,7 @@ const makeTable = (data) => {
             "Price": `${product.price}`,
             "Stock": `${product.stock}`,
             "": `
-            <div class="flex flex-wrap items-center justify-end gap-2">
+            <div class="print:hidden flex flex-wrap items-center justify-end gap-2">
                 <a id="view-btn__${product.id}" href="/products/${product.id}" data-id="${product.id}" class="view-btn btn btn-primary btn-xs">View</a>
                 <a id="delete-btn__${product.id}" href="/admin/products/edit/${product.id}" data-id="${product.id}" class="edit-btn btn btn-info btn-xs">Edit</a>
                 <button id="delete-btn__${product.id}" data-id="${product.id}" class="delete-btn btn btn-error btn-xs">Delete</button>
@@ -34,7 +34,7 @@ $(document).ready(function () {
         limit: 10,
         minLimit: 1,
         maxLimit: 100,
-        // fileButtons: ['pdf', 'excel', 'print', 'csv'],
+        fileButtons: ['pdf', 'excel', 'print', 'csv'],
         makeTable: makeTable,
     });
 

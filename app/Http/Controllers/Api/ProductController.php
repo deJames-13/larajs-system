@@ -9,6 +9,12 @@ use App\Http\Resources\ProductResource;
 
 class ProductController extends Controller
 {
+    public function search()
+    {
+        // TODO: Implement sorting and other filters
+        $product = Product::filter(request(['search']))->get();
+        return ProductResource::collection($product);
+    }
     public function index()
     {
         return ProductResource::collection(Product::all());
@@ -23,7 +29,7 @@ class ProductController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|string',
-            'sku_code' => 'required|string|unique:items,sku_code',
+            'sku_code' => 'required|string|unique:products,sku_code',
             'stock' => 'required|numeric',
             'description' => 'required|string',
             'specifications' => 'required|string',
@@ -41,6 +47,7 @@ class ProductController extends Controller
     {
         $data = $request->validate([
             'name' => 'sometimes|string',
+            'sku_code' => 'sometimes|string|exists:products,sku_code',
             'stock' => 'sometimes|numeric',
             'description' => 'sometimes|string',
             'specifications' => 'sometimes|string',

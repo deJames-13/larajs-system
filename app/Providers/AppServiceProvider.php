@@ -14,7 +14,6 @@ class AppServiceProvider extends ServiceProvider
     {
         $loader = \Illuminate\Foundation\AliasLoader::getInstance();
         $loader->alias('Debugbar', \Barryvdh\Debugbar\Facades\Debugbar::class);
-        $loader->alias('DataTables', \Yajra\DataTables\Facades\DataTables::class);
         $loader->alias('Excel', \Maatwebsite\Excel\Facades\Excel::class);
         $loader->alias('Pdf', \Barryvdh\DomPDF\Facade\Pdf::class);
     }

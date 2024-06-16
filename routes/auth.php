@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PdfController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\TableController;
@@ -32,6 +33,11 @@ Route::group(['middleware' => 'auth'], function () {
 
 
         // PDFS
+        Route::get('/pdf/products', [PdfController::class, 'productsPdf'])->name('pdf.products');
+    });
 
+    // IMPORTS
+    Route::prefix('imports')->group(function () {
+        Route::post('/products', [TableController::class, 'productsImport'])->name('imports.products');
     });
 });

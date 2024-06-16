@@ -27,6 +27,11 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::get('/products', [TableController::class, 'products']);
     });
 
+    // EXPORTS
+    Route::prefix('exports')->group(function () {
+        Route::get('/items/{type}', [TableController::class, 'itemsExport']);
+    });
+
     // NOTE: use of {id} instead of {item} in the route is much better for crud operations
 
     // products
