@@ -12,8 +12,8 @@ const makeTable = (data) => {
             "Stock": `${product.stock}`,
             "": `
             <div class="flex flex-wrap items-center justify-end gap-2">
-                <a id="view-btn__${product.id}" href="/items/${product.id}" data-id="${product.id}" class="view-btn btn btn-primary btn-xs">View</a>
-                <a id="delete-btn__${product.id}" href="/admin/items/edit/${product.id}" data-id="${product.id}" class="edit-btn btn btn-info btn-xs">Edit</a>
+                <a id="view-btn__${product.id}" href="/products/${product.id}" data-id="${product.id}" class="view-btn btn btn-primary btn-xs">View</a>
+                <a id="delete-btn__${product.id}" href="/admin/products/edit/${product.id}" data-id="${product.id}" class="edit-btn btn btn-info btn-xs">Edit</a>
                 <button id="delete-btn__${product.id}" data-id="${product.id}" class="delete-btn btn btn-error btn-xs">Delete</button>
             </div>
             `,
