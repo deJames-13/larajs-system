@@ -13,7 +13,7 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable, HasRoles, HasApiTokens, SoftDeletes;
 
-    protected $with = ['customer'];
+    protected $with = ['info'];
 
     protected $fillable = [
         'username',
@@ -59,6 +59,11 @@ class User extends Authenticatable
     {
         return $this->hasOne(Customer::class, 'user_id', 'id');
     }
+    public function info()
+    {
+        return $this->hasOne(Customer::class, 'user_id', 'id');
+    }
+
 
     // N : n
     public function products()

@@ -18,8 +18,8 @@ class UserResource extends JsonResource
         unset($main['password']);
         return [
             ...$main,
-            'fullname' => $this->whenLoaded('customer', fn () => $this->customer->fullName()),
-            'info' => $this->whenLoaded('customer', fn () => $this->customer),
+            'fullname' => $this->whenLoaded('info', fn () => $this->info->fullName()),
+            'info' => $this->whenLoaded('info', fn () => $this->customer),
 
             'created_at' => str_replace('T', ' ', explode('.', $this->created_at)[0]),
             'updated_at' => str_replace('T', ' ', explode('.', $this->updated_at)[0]),

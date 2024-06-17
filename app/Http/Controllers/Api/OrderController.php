@@ -46,7 +46,7 @@ class OrderController extends Controller
             'products' => function ($query) {
                 $query->withPivot('quantity');
             },
-            'customer', 'customer.customer'
+            'customer', 'customer.info'
         ])->findOrFail($id);
         if (!$order) {
             return response(
@@ -70,11 +70,13 @@ class OrderController extends Controller
                 'shipping_address' => 'required|array',
                 'shipping_address.*' => 'required|string',
                 'products' => 'required|array',
-                'products.*.id' => 'required|exists:items,id',
+                'products.*.id' => 'required|exists:products,id',
                 'products.*.quantity' => 'required|integer|min:1',
                 'customer_info' => 'sometimes'
             ]
         );
+
+        // Debugbar::info($request);
 
         $combinedAddress = collect($data['shipping_address'])->values()->implode(', ');
 

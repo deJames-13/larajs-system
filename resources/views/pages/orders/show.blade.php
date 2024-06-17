@@ -1,11 +1,15 @@
 <x-layouts.default :page="'Manage Order'">
 	<x-card.page>
 
+		<span id="user-role" data-role="{{ $role }}"></span>
+		<span id="order-id" data-id="{{ $id }}"></span>
+
 		<div class="top flex justify-between items-center">
 
-			<div class="_skeleton ">
+			<div class="_skeleton">
 				<div class=" status-badge badge gap-2">
-					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-4 h-4 stroke-current">
+					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+						class="inline-block w-4 h-4 stroke-current">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
 					</svg>
 					<span id="status-badge" class="uppercase">Pending</span>
@@ -55,6 +59,9 @@
 
 	</x-card.page>
 
-	@include('pages.orders._js_show')
+	@push('scripts')
+		<script type="module" src="{{ asset('js/Orders/show.js') }}"></script>
+	@endpush
+
 
 </x-layouts.default>

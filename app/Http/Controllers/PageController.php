@@ -66,6 +66,10 @@ class PageController extends Controller
             }
         }
 
-        return view('pages.orders.show', ['page' => "Order", 'id' => $id]);
+        return view('pages.orders.show', [
+            'page' => "Order",
+            'id' => $id,
+            'role' => auth()->user()->role
+        ]);
     }
 }

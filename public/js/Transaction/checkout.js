@@ -15,7 +15,11 @@ const checkout = (payload) => {
 
     ajaxRequest.post({
         url: '/api/orders/checkout',
-        data: payload,
+        data: JSON.stringify(payload),
+        settings: {
+            contentType: 'application/json',
+            processData: true,
+        },
         token: token,
         onSuccess: (res, status, error) => {
             Swal.fire({
@@ -43,6 +47,7 @@ const checkout = (payload) => {
                     let field = `${key}`.split('.')[1];
                     $(`input[name=${field}]`).addClass('border-red-400 border-2');
                     $(`#${key}-error`).text(errors[key][0]);
+                    $(`.address-field`).removeClass('hidden');
                 });
             }
         },
@@ -62,7 +67,11 @@ const fetchItems = () => {
         onSuccess: ({
             data
         }) => {
+            $('#form-submit').show();
+
+            console.log(data);
             data.forEach(product => {
+                product.quantity = product.item_quantity;
                 product.total = product.price * product.quantity;
                 products.push(product);
             });
@@ -85,7 +94,6 @@ const fetchItems = () => {
                 const subtotal = products.reduce((acc, product) => acc + product.total, 0);
                 $('#subtotal, #total').text(subtotal.toFixed(2));
             });
-            $('#form-submit').show();
 
 
 
@@ -105,7 +113,7 @@ $(document).ready(function () {
 
         const payload = {
             shipping_address: address,
-            items: products.map(product => ({
+            products: products.map(product => ({
                 id: product.id,
                 quantity: product.quantity
             })),

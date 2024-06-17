@@ -76,8 +76,9 @@
 
 	</x-card.page>
 
-
 	@role('customer')
-		@include('pages.orders._js_index')
+		@push('scripts')
+			<script type="module" src="{{ asset('js/Orders/index.js') }}"></script>
+		@endpush
 	@endrole
 </x-layouts.default>

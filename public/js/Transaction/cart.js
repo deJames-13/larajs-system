@@ -8,7 +8,7 @@ const products = [];
 
 const checkCart = (data) => {
     $('#checkout').show();
-    data.forEach(product => {
+    data && data.forEach(product => {
         product.total = product.price * product.item_quantity;
         product.quantity = product.item_quantity;
         products.push(product);
