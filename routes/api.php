@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\Api\CartController;
+use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
 
 
@@ -47,5 +48,13 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::post('/', [CartController::class, 'store']);
         Route::put('/', [CartController::class, 'update']);
         Route::delete('/{id}', [CartController::class, 'destroy']);
+    });
+
+    // orders/checkout
+    Route::prefix('orders')->group(function () {
+        Route::post('/checkout', [OrderController::class, 'store']);
+        Route::get('/', [OrderController::class, 'index']);
+        Route::get('/{id}', [OrderController::class, 'show']);
+        Route::put('/{id}', [OrderController::class, 'update']);
     });
 });

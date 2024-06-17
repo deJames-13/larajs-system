@@ -41,6 +41,7 @@ Route::group(['middleware' => 'auth'], function () {
 
         // TABLES
         Route::get('/products', [TableController::class, 'products'])->name('tables.products');
+        Route::get('/orders', [TableController::class, 'orders'])->name('tables.orders');
 
         // Products
         Route::get('/products/create', [PageController::class, 'productCreate'])->name('products.create');

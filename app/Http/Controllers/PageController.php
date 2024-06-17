@@ -43,7 +43,7 @@ class PageController extends Controller
     {
 
         $user = auth()->user();
-        if (auth()->user()->items->count() == 0) {
+        if (auth()->user()->products->count() == 0) {
             return redirect()->route('cart');
         }
 

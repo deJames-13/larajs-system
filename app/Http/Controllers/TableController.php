@@ -13,7 +13,7 @@ use Barryvdh\Debugbar\Facades\Debugbar;
 
 class TableController extends Controller
 {
-
+    #1 - Products
     public function products()
     {
         if (request()->ajax()) {
@@ -56,5 +56,18 @@ class TableController extends Controller
             //return response()->json(['error' => $ex->getMessage()]);
             return abort(500, $ex->getMessage());
         }
+    }
+
+    #2 - Orders
+    public function orders()
+    {
+    }
+
+    public function ordersExport($type)
+    {
+    }
+
+    public function ordersImport()
+    {
     }
 }

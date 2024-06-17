@@ -13,7 +13,6 @@ class CartController extends Controller
     {
         if (auth()->user()) {
             $products = auth()->user()->products;
-
             return ProductResource::collection($products);
         }
 

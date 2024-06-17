@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Http\Resources;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class UserResource extends JsonResource
+{
+    /**
+     * Transform the resource into an array.
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray(Request $request): array
+    {
+        $main =  parent::toArray($request);
+        unset($main['password']);
+        return [
+            ...$main,
+            'fullname' => $this->whenLoaded('customer', fn () => $this->customer->fullName()),
+            'info' => $this->whenLoaded('customer', fn () => $this->customer),
+
+            'created_at' => str_replace('T', ' ', explode('.', $this->created_at)[0]),
+            'updated_at' => str_replace('T', ' ', explode('.', $this->updated_at)[0]),
+        ];
+    }
+}

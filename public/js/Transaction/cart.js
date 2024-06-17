@@ -87,7 +87,7 @@ const fetchItems = () => {
                     icon: 'error',
                     confirmButtonText: 'Ok'
                 }).then(() => {
-                    // window.location.href = '/login';
+                    window.location.href = '/login';
                 });
             }
         }
@@ -95,6 +95,8 @@ const fetchItems = () => {
 }
 
 $(document).ready(function () {
+    console.log('tite');
+
     $('#cart-upd').hide();
     fetchItems();
 })

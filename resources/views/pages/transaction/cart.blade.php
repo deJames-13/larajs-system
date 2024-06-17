@@ -71,9 +71,7 @@
 	</x-card.page>
 
 
-	@role('customer')
-		@push('scripts')
-			<script type="module" src="{{ asset('js/Cart/index.js') }}"></script>
-		@endpush
-	@endrole
+	@push('scripts')
+		<script type="module" src="{{ asset('js/Transaction/cart.js') }}"></script>
+	@endpush
 </x-layouts.default>
