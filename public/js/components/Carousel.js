@@ -13,6 +13,7 @@ export default class Carousel {
         for (let i = 0; i < this.images.length; i++) {
             let img = $('<img>');
             img.attr('src', this.images[i]);
+            img.attr('class', 'cursor-zoom-in max-h-[300px] object-contain');
             $(this.selector).append(img);
         }
         this.updateCarousel();

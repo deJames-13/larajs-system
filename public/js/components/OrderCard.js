@@ -91,7 +91,7 @@ export class Order {
             
             <!-- Items List -->
             <div id="order-item-list__${this.order.id}" class="container flex flex-col space-y-2">
-                ${this.order.items.map(it => { return this.renderItems(it); }).join('\n')}
+                ${this.order.products.map(it => { return this.renderItems(it); }).join('\n')}
             </div>
 
             <div class="m-0 divider"></div>

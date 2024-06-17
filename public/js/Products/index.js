@@ -1,5 +1,5 @@
-import { Card } from '../../components/ProductCard.js';
 import ajaxRequest from '../assets/ajaxRequest.js';
+import { Card } from '../components/Card.js';
 
 export default class Products {
     constructor({ url, parent }) {

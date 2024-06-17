@@ -40,4 +40,8 @@ class Product extends Model
     {
         return $this->belongsToMany(Promos::class, 'promo_products', 'product_id', 'promo_id');
     }
+    public function images()
+    {
+        return $this->belongsToMany(Image::class, 'product_images', 'product_id', 'image_id');
+    }
 }

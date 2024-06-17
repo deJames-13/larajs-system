@@ -39,6 +39,12 @@ return new class extends Migration
             $table->foreignId('image_id')->constrained()->onDelete('cascade');
             $table->foreignId('brand_id')->constrained()->onDelete('cascade');
         });
+
+        // Comments
+        Schema::create('comment_images', function (Blueprint $table) {
+            $table->foreignId('image_id')->constrained()->onDelete('cascade');
+            $table->foreignId('comment_id')->constrained()->onDelete('cascade');
+        });
     }
 
     /**
@@ -50,6 +56,7 @@ return new class extends Migration
         Schema::dropIfExists('product_images');
         Schema::dropIfExists('category_images');
         Schema::dropIfExists('brand_images');
+        Schema::dropIfExists('comment_images');
         Schema::dropIfExists('images');
     }
 };

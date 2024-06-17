@@ -16,7 +16,7 @@
 				</div>
 
 			</div>
-			<div class="right info-container py-4 px-2">
+			<div data-id={{ $item->id }} class="right info-container py-4 px-2">
 
 				{{-- Item Name Input --}}
 				<div class="flex flex-col space-y-2">
@@ -44,8 +44,8 @@
 
 					<div class="flex flex-col">
 						<label for="price" class="text-xs text-gray-500">Price</label>
-						<p id="price" name="price" class="text-lg font-semibold">
-							PHP {{ $item->price }}
+						<p class="text-lg font-semibold">
+							PHP <span id="price" name="price" data-price="{{ $item->price }}"> {{ $item->price }}</span>
 						</p>
 					</div>
 					<div class="flex flex-col">

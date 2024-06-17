@@ -14,4 +14,8 @@ class Promos extends Model
     {
         return $this->belongsToMany(Product::class, 'promo_products', 'promo_id', 'product_id');
     }
+    public function images()
+    {
+        return $this->belongsToMany(Image::class, 'promo_images', 'promo_id', 'image_id');
+    }
 }

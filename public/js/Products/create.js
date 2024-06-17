@@ -1,6 +1,6 @@
 
-import Carousel from '../../components/Carousel.js';
 import ajaxRequest from '../assets/ajaxRequest.js';
+import Carousel from '../components/Carousel.js';
 $(document).ready(function () {
 
     // CAROUSEL
@@ -44,25 +44,18 @@ $(document).ready(function () {
     // POST HANDLER
     $('#item-form').submit(function (event) {
         event.preventDefault();
-
-        let formData = {};
-
-        // NOTE: To self, to use this, input field name should correspond to database column name
-        $(this).serializeArray().forEach(item => {
-            formData[item.name] = item.value;
-        });
-
-        const token = document.querySelector('meta[name="api-token"]').getAttribute('content');
         $('.input-error').removeClass('input-error');
         $('.text-error').remove();
+
+
+        const token = document.querySelector('meta[name="api-token"]').getAttribute('content');
+        const formData = new FormData($('#item-form')[0]);
 
         ajaxRequest.post({
             url: '/api/products',
             data: formData,
             token: token,
             onSuccess: (response) => {
-
-
                 Swal.fire(
                     'Item Added!',
                     'Your item has been added to inventory.',

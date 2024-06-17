@@ -13,17 +13,14 @@ return new class extends Migration
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
-
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('product_id')->constrained()->onDelete('cascade');
             $table->text('content');
             $table->string('status')->nullable();
             $table->tinyInteger('rating')->nullable();
             $table->string('image_path')->nullable();
 
             $table->timestamps();
-        });
-        Schema::create('order_comments', function (Blueprint $table) {
-            $table->foreignId('order_id')->constrained()->onDelete('cascade');
-            $table->foreignId('comment_id')->constrained()->onDelete('cascade');
         });
     }
 
@@ -32,7 +29,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('order_comments');
+        Schema::dropIfExists('user_comments');
         Schema::dropIfExists('comments');
     }
 };
