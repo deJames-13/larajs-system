@@ -37,6 +37,8 @@ class CartController extends Controller
         if ($customer->products->contains($data['product_id'])) {
             $newQuantity = $customer->products->find($data['product_id'])->pivot->quantity + $data['quantity'];
             $customer->products()->updateExistingPivot($data['product_id'], ['quantity' => $newQuantity]);
+
+            // NOTE: ALWAYS RETURN cONTENT U FxK
             return response($data, 201, ['message' => 'Item updated in cart successfully']);
         }
 
