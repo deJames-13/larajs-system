@@ -14,17 +14,16 @@
 
 		<div class="divider"></div>
 
-		<div
+		<form data-id="{{ $id }}" id="item-form" enctype="multipart/form-data"
 			class="container grid grid-cols-1 lg:grid-cols-2 gap-4 border border-secondary border-opacity-25 rounded-md shadow-md">
 			<div class="left image-container flex flex-col space-y-2 border-r-2 border-secondary border-opacity-25 ">
 
 				<div>
 					<x-card.carousel />
 				</div>
-				<div class="flex space-x-2 p-4">
+				<div class="flex space-x-2 p-4 justify-center">
 					<input id="image-input" type="file" multiple accept="image/*"
-						class="flex-grow file-input file-input-bordered file-input-primary" name="images[]">
-					<label for="upload_image" class="btn btn-primary btn-secondary btn-full">Upload Image</label>
+						class="max-w-[300px] flex-grow file-input file-input-bordered file-input-primary" name="images[]">
 				</div>
 			</div>
 			<div class="right info-container py-4 px-2">
@@ -32,7 +31,7 @@
 				<h3 class="text-2xl font-semibold border-b-2 border-primary border-opacity-25">
 					Product Information
 				</h3>
-				<form data-id="{{ $id }}" id="item-form" action="" method="POST" class="flex flex-col space-y-4 ">
+				<div class="flex flex-col space-y-4 ">
 					@csrf
 
 
@@ -75,10 +74,10 @@
 
 
 
-				</form>
+				</div>
 
 			</div>
-		</div>
+		</form>
 
 	</x-card.page>
 

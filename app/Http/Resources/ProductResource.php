@@ -27,6 +27,7 @@ class ProductResource extends JsonResource // JSON
             'order_quantity' => $this->whenPivotLoaded('order_items', function () {
                 return $this->pivot->quantity;
             }),
+            'images' => $this->images()->get(['id', 'name', 'path'])
         ];
     }
 }

@@ -117,7 +117,6 @@ export default class DataTable {
     }
 
     makeFileButtons() {
-        // TODO: PDF 
         const buttons = {
             pdf: {
                 label: "PDF",
@@ -252,13 +251,15 @@ export default class DataTable {
         `
     }
 
-    updateTable(data = [], raw = false) {
+    updateTable(data = null, raw = false) {
+        if (!data) {
+            this.render().fetchData({ onFetch: this.queryCallback });
+        }
         this.table = raw ? data : this.makeTable(data);
         return this.render();
     }
 
     render() {
-        // TODO: PDF and EXCEL (import/export)
         const topBar = `
 			<h1 class="text-3xl font-extrabold">${this.tableTitle}</h1>
             <div class="divider m-0"></div>

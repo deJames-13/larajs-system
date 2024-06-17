@@ -4,16 +4,32 @@ import ajaxRequest from '../assets/ajaxRequest.js';
 let id;
 let carousel;
 let item = [];
+let images = [];
 
 const init = () => {
 
     id = $('#item-form').data('id');
 
-    // CAROUSEL
-    loadCarousel(carousel);
 
     item = fetchItem(id);
 
+
+    $('#image-input').change(function () {
+        let imagesInput = Array.from(this.files).map(file => URL.createObjectURL(file));
+        images = images.concat(imagesInput);
+        carousel = new Carousel('.item-carousel', images, '.prev', '.next');
+    });
+    $('.prev').click(function () {
+        if (carousel) carousel.prev();
+    });
+
+    $('.next').click(function () {
+        if (carousel) carousel.next();
+    });
+
+    $('input, textarea').on('input', function () {
+        $('#save-item, #cancel').removeClass('hidden');
+    });
 
     $('#cancel').click(function () {
         Swal.fire({
@@ -28,7 +44,6 @@ const init = () => {
             if (result.isConfirmed) {
                 $('#save-item, #cancel').addClass('hidden');
                 item = fetchItem(id);
-                populateForm(item);
             }
 
         })
@@ -38,17 +53,14 @@ const init = () => {
         event.preventDefault();
 
         const token = document.querySelector('meta[name="api-token"]').getAttribute('content');
-        let formData = {};
-        $(this).serializeArray().forEach(item => {
-            formData[item.name] = item.value;
-        });
-
-        ajaxRequest.put({
+        const formData = new FormData($('#item-form')[0]);
+        formData.append('_method', 'PUT');
+        ajaxRequest.post({
             url: '/api/products/' + id,
-            data: formData,
             token: token,
+            data: formData,
             onSuccess: response => handleSubmit(response.data || {}),
-            onError: response => handleError(response.responseJSON.errors || {})
+            onError: response => handleError(response.responseJSON && response.responseJSON.errors || {})
         });
     });
 
@@ -57,25 +69,9 @@ const init = () => {
     });
 }
 
-const loadCarousel = (carousel) => {
-    $('#image-input').change(function () {
-        let images = Array.from(this.files).map(file => URL.createObjectURL(file));
-        carousel = new Carousel('.item-carousel', images, '.prev', '.next');
-    });
-
-    $('.prev').click(function () {
-        if (carousel) carousel.prev();
-    });
-
-    $('.next').click(function () {
-        if (carousel) carousel.next();
-    });
-
-    $('input, textarea').on('input', function () {
-        $('#save-item, #cancel').removeClass('hidden');
-    });
-
-
+const loadCarousel = () => {
+    console.log(images);
+    carousel = new Carousel('.item-carousel', images, '.prev', '.next');
 }
 
 const populateForm = (item) => {
@@ -85,16 +81,21 @@ const populateForm = (item) => {
 }
 
 const fetchItem = (id) => {
+    $('#image-input').val('');
     $('.input-error').removeClass('input-error');
     $('.text-error').remove();
     ajaxRequest.get({
         url: '/api/products/' + id,
         onSuccess: (response) => {
-            // console.log(response);
             if (response.data) {
+                images = response.data.images.map(image => '/' + image.path);
+
+                // CAROUSEL
+                loadCarousel();
                 populateForm(response.data);
+                return response.data
             }
-            return response.data
+            return {};
         },
         onError: (error) => {
             console.log(error);
@@ -107,7 +108,7 @@ const fetchItem = (id) => {
     });
 }
 
-const updateForm = (item) => {
+const updateForm = (data) => {
     Swal.fire(
         'Item Updated!',
         'Your item has been updated.',
@@ -115,14 +116,15 @@ const updateForm = (item) => {
 
     ).then(() => {
         $('#save-item, #cancel').addClass('hidden');
-        populateForm(item);
+        item = data;
+        populateForm(data);
     })
 }
 
-const handleSubmit = (item) => {
+const handleSubmit = (data) => {
     $('.input-error').removeClass('input-error');
     $('.text-error').remove();
-    updateForm(item);
+    updateForm(data);
 }
 
 const handleError = (errors) => {

@@ -36,12 +36,17 @@ const ajaxCall = ({ url, method, data = {}, token = null, onSuccess, onError, he
         crossDomain: true,
         url: url,
         method: method,
-        data: method === 'GET' ? data : JSON.stringify(data),
-        contentType: method === 'GET' ? undefined : 'application/json',
+        // data: method === 'GET' ? data : JSON.stringify(data),
+        // contentType: method === 'GET' ? undefined : 'application/json',
+        data: data,
+        contentType: false,
+        processData: false,
+        dataType: 'json',
         headers: getHeaders(token, headers = {}),
         success: handleSuccess(onSuccess),
         error: handleError(onError)
     }
+    // console.log({ ...defaultSettings, ...settings });
     $.ajax({ ...defaultSettings, ...settings });
 };
 // ##########################################################################
