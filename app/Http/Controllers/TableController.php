@@ -28,9 +28,9 @@ class TableController extends Controller
                 ->paginate($limit, ['*'], 'page', $page);
 
 
-
             $response = ProductResource::collection($products);
-            Debugbar::info($response);
+
+            // Debugbar::info($response);
             return $response;
         }
         return view('admin.tables.products');

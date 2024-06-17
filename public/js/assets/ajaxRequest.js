@@ -39,12 +39,12 @@ const ajaxCall = ({ url, method, data = {}, token = null, onSuccess, onError, he
         // data: method === 'GET' ? data : JSON.stringify(data),
         // contentType: method === 'GET' ? undefined : 'application/json',
         data: data,
-        contentType: false,
+        contentType: method === 'GET' ? undefined : false,
         processData: false,
         dataType: 'json',
         headers: getHeaders(token, headers = {}),
+        error: handleError(onError),
         success: handleSuccess(onSuccess),
-        error: handleError(onError)
     }
     // console.log({ ...defaultSettings, ...settings });
     $.ajax({ ...defaultSettings, ...settings });

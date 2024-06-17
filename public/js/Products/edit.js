@@ -1,6 +1,6 @@
 
-import Carousel from '../../components/Carousel.js';
 import ajaxRequest from '../assets/ajaxRequest.js';
+import Carousel from '../components/Carousel.js';
 let id;
 let carousel;
 let item = [];

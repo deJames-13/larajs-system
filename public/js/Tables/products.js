@@ -13,8 +13,8 @@ const makeTable = (data) => {
             "Stock": `${product.stock}`,
             "": `
             <div class="print:hidden flex items-center flex-end w-full gap-3">
-            <a href="/admin/products/${product.id}" class="btn btn-xs btn-primary">View</a>
-            <a href="/admin/products/${product.id}/edit" class="btn btn-xs btn-secondary">Edit</a>
+            <a href="/products/${product.id}" class="btn btn-xs btn-primary">View</a>
+            <a href="/admin/products/edit/${product.id}/" class="btn btn-xs btn-secondary">Edit</a>
             <form id="row_delete__${product.id}" data-id="${product.id}" method="POST">
                 <button type="submit" data-id="${product.id}" class="row-delete btn btn-xs bg-red-400">Delete</button>
             </form>

@@ -22,7 +22,8 @@ class AuthController extends Controller
         $data['password'] = bcrypt($data['password']);
 
         $user = \App\Models\User::create($data);
-
+        $token = $user->createToken('api-token')->plainTextToken;
+        $request->session()->put('api-token', $token);
         auth()->login($user);
 
 
@@ -41,12 +42,17 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
+
+
         if (auth()->attempt($data)) {
+            $user = \App\Models\User::where('email', $data['email'])->first();
+
+            $token = $user->createToken('api-token')->plainTextToken;
             $request->session()->regenerate();
-            $token = auth()->user()->createToken('api-token')->plainTextToken;
-            // Debugbar::info($token);
             $request->session()->put('api-token', $token);
 
+            // dd(session('api-token'));
+            Debugbar::info($token);
             return redirect()->intended('/');
         }
 

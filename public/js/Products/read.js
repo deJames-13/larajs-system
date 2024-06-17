@@ -1,13 +1,17 @@
 
 import ajaxRequest from '../assets/ajaxRequest.js';
-$(document).ready(function () {
+let item = {
+    id: parseInt($('.info-container').data('id')),
+    price: parseFloat($('#price').data('price')),
+};
 
-    // TODO: STOCK
+const init = () => {
+    // TODO: STOCK Validation
     // QUANTITY COUNTER
     $('#add_qty').click(function () {
         var quantity = parseInt($('#quantity_count').text());
         $('#quantity_count').text(quantity + 1);
-        var price = (quantity + 1) * "{{ $item->price }}";
+        var price = (quantity + 1) * item.price;
         $('#price').text('PHP ' + price.toFixed(2));
     });
 
@@ -15,52 +19,57 @@ $(document).ready(function () {
         var quantity = parseInt($('#quantity_count').text());
         if (quantity > 1) {
             $('#quantity_count').text(quantity - 1);
-            var price = (quantity - 1) * "{{ $item->price }}";
+            var price = (quantity - 1) * item.price;
             $('#price').text('PHP ' + price.toFixed(2));
         }
     });
+}
 
-    // POST CART
 
-});
+
+// POST CART
 $(document).on('click', '#cart-add', function () {
     console.log('clicked');
-    var data = {
-        "item_id": "{{ $item->id }}",
-        "quantity": parseInt($('#quantity_count').text())
-    };
     const token = document.querySelector('meta[name="api-token"]').getAttribute('content');
+    var data = new FormData();
+    data.append("product_id", item.id);
+    data.append("quantity", parseInt($('#quantity_count').text()));
+    console.log(data);
+
     ajaxRequest.post({
         url: '/api/cart',
         data: data,
         token: token,
-        onSuccess: (response, status, xhr) => {
-            if (xhr.status === 201) {
-                Swal.fire({
+        onSuccess: (response) => {
+            Swal.fire(
+                {
                     title: 'Success',
-                    text: xhr.getResponseHeader('message'),
+                    text: 'This item has been added to cart.',
                     icon: 'success',
                     showCancelButton: false,
                     showDenyButton: true,
-                    confirmButtonText: 'View Cart',
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = '/cart';
-                    }
-                });
-            }
+                    confirmButtonText: 'View Cart'
+                }
+            ).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '/cart';
+                }
+            })
         },
-        onError: (response, status, xhr) => {
-            if (xhr.status === 422) {
-                Swal.fire({
-                    title: 'Error',
-                    text: response.errors.quantity[0],
-                    icon: 'error',
-                    showCancelButton: false,
-                    showDenyButton: true,
-                    confirmButtonText: 'Ok',
-                });
-            }
+        onError: (response) => {
+            Swal.fire(
+                'Oops!',
+                'Something went wrong. Please contact us',
+                'error'
+
+            ).then(() => {
+                window.location.href = '/products';
+            })
+            return;
         }
     });
+});
+
+$(document).ready(function () {
+    init();
 });

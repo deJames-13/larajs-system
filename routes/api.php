@@ -1,16 +1,16 @@
 <?php
 
-use App\Http\Controllers\Api\ProductController;
-use App\Http\Controllers\TableController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TableController;
+use App\Http\Controllers\Api\CartController;
+use App\Http\Controllers\Api\ProductController;
 
 
 
 Route::get('/test', function () {
     return response()->json(['message' => 'API is working']);
 });
-
 
 Route::prefix('products')->group(function () {
     Route::get('/', [ProductController::class, 'index'])->name('products.all');
@@ -32,12 +32,20 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::get('/items/{type}', [TableController::class, 'itemsExport']);
     });
 
-    // NOTE: use of {id} instead of {item} in the route is much better for crud operations
 
-    // products
+    // NOTE: use of {id} instead of {item} in the route is much better for crud operations
+    // Products
     Route::prefix('products')->group(function () {
         Route::post('/', [ProductController::class, 'store']);
         Route::delete('/{id}', [ProductController::class, 'destroy']);
         Route::match(['put', 'post'], '/{id}', [ProductController::class, 'update']);
+    });
+
+    // Cart
+    Route::prefix('cart')->group(function () {
+        Route::get('/', [CartController::class, 'index']);
+        Route::post('/', [CartController::class, 'store']);
+        Route::put('/', [CartController::class, 'update']);
+        Route::delete('/{id}', [CartController::class, 'destroy']);
     });
 });
