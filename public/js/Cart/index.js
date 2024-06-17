@@ -6,9 +6,13 @@ import {
 
 const products = [];
 
-const checkCart = () => {
+const checkCart = (data) => {
     $('#checkout').show();
-
+    data.forEach(product => {
+        product.total = product.price * product.item_quantity;
+        product.quantity = product.item_quantity;
+        products.push(product);
+    });
     if (products.length === 0) {
 
         $('#cart-body').append(
@@ -33,29 +37,26 @@ const onDelete = (id) => {
     const token = document.querySelector('meta[name="api-token"]').getAttribute('content');
     ajaxRequest.delete({
         url: `/api/cart/${id}`,
-        onSuccess: (res) => {
+        onSuccess: (response) => {
+            console.log(response);
             Swal.fire(
                 'Deleted!',
                 'Your item has been deleted.',
                 'success'
             )
-            $(this).closest('tr').remove();
+            $('#cart_item_' + id).remove();
             const subtotal = products.reduce((acc, product) => acc + product.total, 0);
             $('#subtotal, #total').text(subtotal.toFixed(2));
-            checkCart();
+            checkCart(response.data);
         },
         token: token,
-        onError: (res) => {
-            console.log(res);
+        onError: (response) => {
+            console.log(response);
         }
     });
 }
 
-$(document).ready(function () {
-
-    $('#cart-upd').hide();
-
-    // GET CART
+const fetchItems = () => {
     const token = document.querySelector('meta[name="api-token"]').getAttribute('content');
     ajaxRequest.get({
         url: '/api/cart',
@@ -63,13 +64,7 @@ $(document).ready(function () {
         onSuccess: (response, status, error) => {
 
             var data = response.data;
-
-            data.forEach(product => {
-                product.total = product.price * product.quantity;
-                products.push(product);
-            });
-
-            checkCart();
+            checkCart(data);
             // console.log(products);
 
             // RENDER CART
@@ -97,6 +92,11 @@ $(document).ready(function () {
             }
         }
     });
+}
+
+$(document).ready(function () {
+    $('#cart-upd').hide();
+    fetchItems();
 })
 
 // UPDATE CART
@@ -107,14 +107,15 @@ $(document).on('click', '#cart-upd', function () {
         product.quantity = $(`#item_qty_${id}`).val();
         product.total = product.quantity * product.price;
     });
-
-
-
     const token = document.querySelector('meta[name="api-token"]').getAttribute('content');
     ajaxRequest.put({
         url: '/api/cart',
         data: JSON.stringify({ products: products }),
         token: token,
+        settings: {
+            contentType: 'application/json',
+            processData: true,
+        },
         onSuccess: (res) => {
             Swal.fire({
                 title: 'Cart Updated!',
@@ -127,6 +128,15 @@ $(document).on('click', '#cart-upd', function () {
             $('#subtotal, #total').text(subtotal.toFixed(2));
             $('#cart-upd').hide()
         },
+        onError: (res) => {
+            Swal.fire({
+                title: 'Oops something went wrong!',
+                text: "Please contact us.",
+                icon: 'error',
+                confirmButtonColor: '#3085d6',
+            });
+
+        }
     });
 
 
@@ -157,5 +167,3 @@ $(document).on('click', '.item-rm-btn', function () {
         }
     })
 });
-
-// TODO: Clear Cart

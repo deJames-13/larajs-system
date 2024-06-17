@@ -67,6 +67,7 @@ class CartController extends Controller
         $customer = request()->user();
         $customer->products()->detach($id);
         // Debugbar::info($customer->products);
-        return response(null, 204, ['message' => 'Item removed from cart successfully']);
+        $res = ProductResource::collection($customer->products);
+        return response($res, 204, ['message' => 'Item removed from cart successfully']);
     }
 }
