@@ -1,5 +1,5 @@
-import ajaxRequest from '/js/assets/ajaxRequest.js';
-import DataTable from '/js/components/DataTable.js';
+import ajaxRequest from '../assets/ajaxRequest.js';
+import DataTable from '../components/DataTable.js';
 
 var dataTable
 const makeTable = (data) => {
