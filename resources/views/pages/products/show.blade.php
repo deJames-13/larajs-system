@@ -90,7 +90,7 @@
 
 
 	@push('scripts')
-		<script type="module" src="{{ asset('js/Products/read.js') }}"></script>
+		<script type="module" src="{{ asset('js/Products/show.js') }}"></script>
 	@endpush
 
 </x-layouts.default>
