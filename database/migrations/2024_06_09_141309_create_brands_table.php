@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('website')->nullable();
             $table->text('description')->nullable();
             $table->string('logo')->nullable();
+            $table->softDeletes();
 
             $table->string('status')->nullable();
             $table->timestamps();

@@ -169,8 +169,8 @@ export default class DataTable {
             url: url,
             token: token,
             onSuccess: (response) => {
-                // console.log(response);
-                onFetch(response);
+                console.log(response);
+                onFetch(response); // maketable
 
 
                 this.data = response.data;
