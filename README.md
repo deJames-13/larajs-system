@@ -7,6 +7,7 @@ composer install --ignore-platform-req=ext-gd
 
 cp .env.example .env
 php artisan key:generate
+php artisan storage:link
 php artisan vendor:publish --provider="Attrixtech\LaravelIcons\LaravelIconsServiceProvider" 
 php artisan migrate
 php artisan db:seed

@@ -15,5 +15,9 @@ Route::prefix('products')->group(function () {
 
 
 
+Route::prefix('promos')->group(function () {
+    Route::get('/', [PageController::class, 'promos'])->name('promos.index');
+    Route::get('/{id}', [PageController::class, 'promo'])->name('promos.show');
+});
 
 require __DIR__ . '/auth.php';
