@@ -6,6 +6,7 @@ use App\Http\Controllers\TableController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\PromoController;
 
 
 
@@ -18,14 +19,20 @@ Route::prefix('products')->group(function () {
     Route::get('/{id}', [ProductController::class, 'show'])->name('products.get');
 });
 
+Route::prefix('promos')->group(function () { // Add this block for promos
+    Route::get('/', [PromoController::class, 'index'])->name('promos.all');
+    Route::get('/{id}', [PromoController::class, 'show'])->name('promos.get');
+});
+
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
 
-    // TABLES 
+    // TABLES
     Route::prefix('tables')->group(function () {
         Route::get('/products', [TableController::class, 'products']);
+        Route::get('/promos', [TableController::class, 'promos']);
     });
 
     // EXPORTS
@@ -40,6 +47,13 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::post('/', [ProductController::class, 'store']);
         Route::delete('/{id}', [ProductController::class, 'destroy']);
         Route::match(['put', 'post'], '/{id}', [ProductController::class, 'update']);
+    });
+
+    // Promos
+    Route::prefix('promos')->group(function () { // Add this block for promos
+        Route::post('/', [PromoController::class, 'store']);
+        Route::delete('/{id}', [PromoController::class, 'destroy']);
+        Route::match(['put', 'post'], '/{id}', [PromoController::class, 'update']);
     });
 
     // Cart

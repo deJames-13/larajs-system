@@ -34,6 +34,8 @@ Route::group(['middleware' => 'auth'], function () {
     // IMPORTS
     Route::prefix('imports')->group(function () {
         Route::post('/products', [TableController::class, 'productsImport'])->name('imports.products');
+        Route::post('/promos', [TableController::class, 'promosImport'])->name('imports.promos');
+
     });
     //##################################################################################################################
     // ADMIN ONLY
@@ -42,6 +44,7 @@ Route::group(['middleware' => 'auth'], function () {
         // TABLES
         Route::get('/products', [TableController::class, 'products'])->name('tables.products');
         Route::get('/orders', [TableController::class, 'orders'])->name('tables.orders');
+        Route::get('/promos', [TableController::class, 'promos'])->name('tables.promos');
 
         // Products
         Route::get('/products/create', [PageController::class, 'productCreate'])->name('products.create');
