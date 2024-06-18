@@ -50,6 +50,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/products/create', [PageController::class, 'productCreate'])->name('products.create');
         Route::get('/products/edit/{id}', [PageController::class, 'productEdit'])->name('products.edit');
 
+        // Promos
+        Route::get('/promos/create', [PageController::class, 'promoCreate'])->name('promos.create');
+        Route::get('/promos/edit/{id}', [PageController::class, 'promoEdit'])->name('promos.edit');
 
         // PDFS
         Route::get('/pdf/products', [PdfController::class, 'productsPdf'])->name('pdf.products');

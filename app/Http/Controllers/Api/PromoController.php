@@ -40,7 +40,12 @@ class PromoController extends Controller
             'end_date' => 'required|date',
         ]);
 
+        $image_id = $data['image_id'] ?? null;
+        unset($data['image_id']);
+
         $promo = Promos::create($data);
+
+        $this->handleImageUpload($request, $promo, $image_id);
 
         $res = new PromoResource($promo);
         return response($res, 201, ['message' => 'Promo added successfully!']);
