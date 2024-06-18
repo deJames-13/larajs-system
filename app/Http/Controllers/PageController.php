@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Promos;
 use Illuminate\Http\Request;
+
 
 class PageController extends Controller
 {
@@ -33,6 +35,28 @@ class PageController extends Controller
     {
         return view('pages.products.edit', ['id' => $id]);
     }
+
+     // PROMOS PAGES
+     public function promos()
+     {
+         return view('pages.promos.index', ['page' => "Promos"]);
+     }
+
+     public function promo(string $id)
+     {
+         $promo = Promos::find($id);
+         return view('pages.promos.show', ['promo' => $promo]);
+     }
+
+     public function promoCreate()
+     {
+         return view('pages.promos.create');
+     }
+
+     public function promoEdit(string $id)
+     {
+         return view('pages.promos.edit', ['id' => $id]);
+     }
 
     // TRANSACTIONS PAGES
     public function cart()
