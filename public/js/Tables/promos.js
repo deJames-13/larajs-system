@@ -11,6 +11,7 @@ const makeTable = (data) => {
             "Name": `${promo.name}`,
             "Slug": `${promo.slug}`,
             "Description": `${promo.description}`,
+            "Image": `${promo.image}`,
             "Status": `${promo.status}`,
             "Discount": `${promo.discount}`,
             "Start Date": `${promo.start_date}`,
