@@ -36,27 +36,27 @@ class PageController extends Controller
         return view('pages.products.edit', ['id' => $id]);
     }
 
-     // PROMOS PAGES
-     public function promos()
-     {
-         return view('pages.promos.index', ['page' => "Promos"]);
-     }
+    // PROMOS PAGES
+    public function promos()
+    {
+        return view('pages.promos.index', ['page' => "Promos"]);
+    }
 
-     public function promo(string $id)
-     {
-         $promo = Promos::find($id);
-         return view('pages.promos.show', ['promo' => $promo]);
-     }
+    public function promo(string $id)
+    {
+        $promo = Promos::find($id);
+        return view('pages.promos.show', ['promo' => $promo]);
+    }
 
-     public function promoCreate()
-     {
-         return view('pages.promos.create');
-     }
+    public function promoCreate()
+    {
+        return view('pages.promos.create');
+    }
 
-     public function promoEdit(string $id)
-     {
-         return view('pages.promos.edit', ['id' => $id]);
-     }
+    public function promoEdit(string $id)
+    {
+        return view('pages.promos.edit', ['id' => $id]);
+    }
 
     // TRANSACTIONS PAGES
     public function cart()
@@ -72,7 +72,7 @@ class PageController extends Controller
         }
 
 
-        return view('pages.transaction.checkout', ['page' => "Checkout"]);
+        return view('pages.transaction.checkout', ['page' => "Checkout", 'user' => $user]);
     }
     // ORDER
 

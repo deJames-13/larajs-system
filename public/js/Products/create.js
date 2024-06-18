@@ -49,7 +49,7 @@ $(document).ready(function () {
 
 
         const token = document.querySelector('meta[name="api-token"]').getAttribute('content');
-        const formData = new FormData($('#item-form')[0]);
+        const formData = new FormData($('#item-form')[0]); // formData  object with images
 
         ajaxRequest.post({
             url: '/api/products',

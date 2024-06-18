@@ -3,6 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController;
 
+
+Route::get('/mailorder', function () {
+    return view('mail.order-status');
+});
+
 Route::get('/home', [PageController::class, 'home'])->name('home');
 Route::get('/', [PageController::class, 'home'])->name('shop');
 Route::get('/cart', [PageController::class, 'cart'])->name('cart');

@@ -26,7 +26,10 @@
 			src="https://cdn.datatables.net/v/dt/jszip-3.10.1/dt-2.0.7/b-3.0.2/b-html5-3.0.2/b-print-3.0.2/date-1.5.2/r-3.0.2/sc-2.4.2/sb-1.7.1/sl-2.0.1/sr-1.4.1/datatables.min.js">
 		</script>
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+		{{-- jQuery plugins --}}
 		<script src="{{ asset('js/assets/printThis.js') }}"></script>
+		<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
 
 	</head>
 
