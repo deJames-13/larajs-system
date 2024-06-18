@@ -10,6 +10,7 @@ class Order extends Model
 {
 
     use HasFactory, SoftDeletes;
+    // protected $with = ['customer', 'products'];
     protected $guarded = [];
 
     public function customer()
@@ -19,5 +20,21 @@ class Order extends Model
     public function products()
     {
         return $this->belongsToMany(Product::class, 'order_products')->withPivot('quantity');
+    }
+    public function scopeFilter($query, array $filters)
+    {
+        $query->when($filters['search'] ?? null, function ($query, $search) {
+            $query->where('id', 'like', '%' . $search . '%')
+                ->orWhere('shipping_address', 'like', '%' . $search . '%')
+                // customer relationship filter
+                ->orWhereHas('customer', function ($query) use ($search) {
+                    $query->where('username', 'like', '%' . $search . '%');
+                    $query->where('email', 'like', '%' . $search . '%');
+                })
+                // products relationship filter
+                ->orWhereHas('products', function ($query) use ($search) {
+                    $query->where('name', 'like', '%' . $search . '%');
+                });
+        });
     }
 }

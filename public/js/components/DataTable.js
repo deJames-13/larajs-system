@@ -169,7 +169,7 @@ export default class DataTable {
             url: url,
             token: token,
             onSuccess: (response) => {
-                // console.log(response);
+                console.log(response);
                 onFetch(response);
 
 

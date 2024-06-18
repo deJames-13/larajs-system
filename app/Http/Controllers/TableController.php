@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Exports\ProductsExport;
+use App\Http\Resources\OrderResource;
 use App\Imports\ProductsImport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Resources\ProductResource;
@@ -61,6 +63,27 @@ class TableController extends Controller
     #2 - Orders
     public function orders()
     {
+        if (request()->ajax()) {
+
+            $page = request('page') ?? 1;
+            $limit = request('limit') ?? 10;
+            $order =    request('order') ?? 'desc';
+
+
+            $orders = Order::filter(request(['search']))
+                ->orderBy('updated_at', $order)
+                ->paginate($limit, ['*'], 'page', $page);
+
+            $orders->load('products');
+            $orders->load('customer');
+
+
+            $response = OrderResource::collection($orders);
+
+            Debugbar::info($response);
+            return $response;
+        }
+        return view('admin.tables.orders');
     }
 
     public function ordersExport($type)
