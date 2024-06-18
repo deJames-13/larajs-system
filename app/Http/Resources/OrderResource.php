@@ -20,6 +20,12 @@ class OrderResource extends JsonResource
             ...parent::toArray($request),
             'products' => ProductResource::collection($this->whenLoaded('products')),
             'customer' => new UserResource($this->whenLoaded('customer')),
+            'total' => $this->whenLoaded('products', function () {
+                return $this->products->sum(fn ($product) => $product->pivot->quantity * $product->price);
+            }),
+
+
+
         ];
     }
 }

@@ -1,4 +1,5 @@
 @props([
+    'print' => true,
     'order' => [
         'id' => 'N/A',
         'full_name' => 'N/A',
@@ -9,7 +10,8 @@
     ],
 ])
 
-<div class="print:block hidden container mx-aut m-0">
+
+<div class="{{ $print && 'hidden' }} print:block  container mx-aut m-0">
 
 	<div class="container flex flex-col">
 		<h2 class="text-gray-600 m-0">Order Summary</h2>
@@ -18,7 +20,7 @@
 			<div class="w-full text-nowrap text-left">
 				<div class="flex space-x-4 items-center">
 					<h4 class="font-bold m-0">Shop Name:</h4>
-					<p class="m-0">TuneTown</p>
+					<p class="m-0">GlitzVogue</p>
 				</div>
 				<div class="flex space-x-4 items-center">
 					<h4 class="font-bold m-0">Shop Address:</h4>

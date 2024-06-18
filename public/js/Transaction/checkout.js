@@ -6,13 +6,35 @@ import {
 const products = [];
 
 
+const validateForm = () => {
+
+    // TODO: FIX: THIS SHIT
+    var rules = {};
+    var messages = {};
+    for (var key in { ...formData, ...address }) {
+        rules[key] = { required: true };
+        messages[key] = { required: 'This field is required.' };
+    }
+
+    $('#billing-form').validate({
+        rules: rules,
+        messages: messages,
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+            error.addClass('text-red-500 text-sm');
+            error.insertAfter(element);
+        },
+
+    })
+};
+
 
 const checkout = (payload) => {
     // clear errors
     $('input').removeClass('border-red-400 border-2');
     $('.address-field').addClass('hidden');
     const token = document.querySelector('meta[name="api-token"]').getAttribute('content')
-
+    validateForm();
     ajaxRequest.post({
         url: '/api/orders/checkout',
         data: JSON.stringify(payload),

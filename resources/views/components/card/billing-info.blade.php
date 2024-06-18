@@ -1,3 +1,13 @@
+@php
+	$user = $user ?? auth()->user();
+	$info =
+	    $user->info ??
+	    (object) [
+	        'first_name' => '',
+	        'last_name' => '',
+	        'phone_number' => '',
+	    ];
+@endphp
 <div>
 	<div class="info-container py-4 lg:px-12 ">
 		<div
@@ -50,11 +60,11 @@
 					<div class="flex flex-wrap items-end">
 						<div class="w-full md:w-1/2 px-2">
 							<label for="first_name">First Name*</label>
-							<input id="first_name" name="first_name" class="input input-bordered w-full" />
+							<input id="first_name" name="first_name" class="input input-bordered w-full" value="{{ $info->first_name }}" />
 						</div>
 						<div class="w-full md:w-1/2 px-2">
 							<label for="first_name">Last Name*</label>
-							<input id="last_name" name="last_name" class="input input-bordered w-full" />
+							<input id="last_name" name="last_name" class="input input-bordered w-full" value="{{ $info->last_name }}" />
 						</div>
 					</div>
 
@@ -104,11 +114,13 @@
 					<div class="flex flex-wrap items-end">
 						<div class="w-full md:w-1/2 px-2">
 							<label for="phone_number">Mobile Number * (Format: 639178888888)</label>
-							<input id="phone_number" name="phone_number" class="input input-bordered w-full" />
+							<input id="phone_number" name="phone_number" class="input input-bordered w-full"
+								value="{{ $info->phone_number }}" />
 						</div>
 						<div class="w-full md:w-1/2 px-2">
 							<label for="email">Email*</label>
-							<input id="email" name="email" type="email" class="input input-bordered w-full" />
+							<input id="email" name="email" type="email" class="input input-bordered w-full"
+								value="{{ $user->email }}" />
 						</div>
 					</div>
 
