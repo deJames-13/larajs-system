@@ -170,7 +170,7 @@ export default class DataTable {
             token: token,
             onSuccess: (response) => {
                 console.log(response);
-                onFetch(response);
+                onFetch(response); // maketable
 
 
                 this.data = response.data;

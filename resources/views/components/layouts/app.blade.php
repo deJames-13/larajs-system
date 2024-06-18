@@ -12,6 +12,7 @@
 		<title>{{ $title }}</title>
 
 		@vite('resources/css/app.css')
+
 		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 		<script src="https://cdn.tailwindcss.com"></script>
 

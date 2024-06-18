@@ -23,7 +23,7 @@ return new class extends Migration
             $table->integer('discount')->nullable();
             $table->dateTime('start_date')->nullable();
             $table->dateTime('end_date')->nullable();
-
+            $table->softDeletes();
 
             $table->timestamps();
         });
