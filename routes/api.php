@@ -29,31 +29,30 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         return $request->user();
     });
 
+    // add from here on out: make sure there are 3 functions in controller: store - destroy - update
+    $crud = [
+        'products' => ProductController::class,
+        'promos' => PromoController::class,
+        // 'brands' => BrandController::class,
+        // 'categories' => CategoryController::class,
+        // 'comments'?
+    ];
+
+    // NOTE: use of {id} instead of {item} in the route is much better for crud operations
+    foreach ($crud as $prefix => $controller) {
+        Route::post("/$prefix", [$controller, 'store'])->name($prefix . '.store');
+        Route::delete("/$prefix/{id}", [$controller, 'destroy'])->name($prefix . '.destroy');
+        Route::match(['put', 'post'], "/$prefix/{id}", [$controller, 'update'])->name($prefix . '.update');
+    }
     // TABLES
-    Route::prefix('tables')->group(function () {
-        Route::get('/products', [TableController::class, 'products']);
-        Route::get('/promos', [TableController::class, 'promos']);
-    });
+    foreach ($crud as $table => $controller) {
+        Route::get("/tables/" . $table, [TableController::class, $table]);
+    }
+    Route::get("/tables/orders", [TableController::class, 'orders']);
 
     // EXPORTS
     Route::prefix('exports')->group(function () {
         Route::get('/items/{type}', [TableController::class, 'itemsExport']);
-    });
-
-
-    // NOTE: use of {id} instead of {item} in the route is much better for crud operations
-    // Products
-    Route::prefix('products')->group(function () {
-        Route::post('/', [ProductController::class, 'store']);
-        Route::delete('/{id}', [ProductController::class, 'destroy']);
-        Route::match(['put', 'post'], '/{id}', [ProductController::class, 'update']);
-    });
-
-    // Promos
-    Route::prefix('promos')->group(function () { // Add this block for promos
-        Route::post('/', [PromoController::class, 'store']);
-        Route::delete('/{id}', [PromoController::class, 'destroy']);
-        Route::match(['put', 'post'], '/{id}', [PromoController::class, 'update']);
     });
 
     // Cart
