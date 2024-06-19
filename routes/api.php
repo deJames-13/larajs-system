@@ -35,16 +35,17 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         'promos' => PromoController::class,
         // 'brands' => BrandController::class,
         // 'categories' => CategoryController::class,
+        // 'comments'?
     ];
 
     // NOTE: use of {id} instead of {item} in the route is much better for crud operations
     foreach ($crud as $prefix => $controller) {
-        Route::post("/$prefix/", [$controller, 'store'])->name($prefix . '.store');
+        Route::post("/$prefix", [$controller, 'store'])->name($prefix . '.store');
         Route::delete("/$prefix/{id}", [$controller, 'destroy'])->name($prefix . '.destroy');
         Route::match(['put', 'post'], "/$prefix/{id}", [$controller, 'update'])->name($prefix . '.update');
     }
     // TABLES
-    foreach ($crud as $table) {
+    foreach ($crud as $table => $controller) {
         Route::get("/tables/" . $table, [TableController::class, $table]);
     }
 

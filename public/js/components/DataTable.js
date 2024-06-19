@@ -2,7 +2,7 @@ import ajaxRequest from '/js/assets/ajaxRequest.js';
 import Pagination from "/js/components/Paginate.js";
 
 const defaultProps = {
-    baseApi: '',
+    baseApi: '/api/tables/',
     data: [],
     fileButtons: [],
     limit: 10,
