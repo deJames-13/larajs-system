@@ -1,5 +1,6 @@
 @props([
     'title' => 'LaraJS',
+    'loading' => true,
 ])
 
 <!DOCTYPE html>
@@ -44,7 +45,7 @@
 		{{-- Loading overlay --}}
 
 		<div id="loading"
-			class="print:hidden z-[100] fixed top-0 w-screen h-screen grid place-content-center bg-gray-500 bg-opacity-20">
+			class="print:hidden hidden z-[100] fixed top-0 w-screen h-screen grid place-content-center bg-gray-500 bg-opacity-20">
 			<div class="div text-xl font-bold flex flex-col items-center justify-center">
 				<h2>
 					Loading...
