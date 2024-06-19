@@ -31,12 +31,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 
 
-    // IMPORTS
-    Route::prefix('imports')->group(function () {
-        Route::post('/products', [TableController::class, 'productsImport'])->name('imports.products');
-        Route::post('/promos', [TableController::class, 'promosImport'])->name('imports.promos');
 
-    });
     //##################################################################################################################
     // ADMIN ONLY
     Route::group(['prefix' => 'admin', 'middleware' => ['role:admin']], function () {
@@ -58,4 +53,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/pdf/products', [PdfController::class, 'productsPdf'])->name('pdf.products');
     });
     //##################################################################################################################
+    // IMPORTS
+    Route::group(['prefix' => 'imports', 'middleware' => ['role:admin']], function () {
+        Route::post('/products', [TableController::class, 'productsImport'])->name('imports.products');
+        Route::post('/promos', [TableController::class, 'promosImport'])->name('imports.promos');
+    });
 });
