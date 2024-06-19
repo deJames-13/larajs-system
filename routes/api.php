@@ -49,11 +49,9 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     }
 
     // TABLES
-    Route::prefix('tables')->group(function () use ($crud) {
-        foreach ($crud as $table) {
-            Route::get('/' . $table, [TableController::class, $table]);
-        }
-    });
+    foreach ($crud as $table) {
+        Route::get('/tables/' . $table, [TableController::class, $table]);
+    }
 
     // EXPORTS
     Route::prefix('exports')->group(function () {
