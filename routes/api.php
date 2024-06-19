@@ -29,28 +29,23 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         return $request->user();
     });
 
+    // add from here on out: make sure there are 3 functions in controller: store - destroy - update
     $crud = [
         'products' => ProductController::class,
         'promos' => PromoController::class,
-
-        // add from here on out: make sure there are 3 functions in controller: store - destroy - update
         // 'brands' => BrandController::class,
         // 'categories' => CategoryController::class,
-
     ];
 
     // NOTE: use of {id} instead of {item} in the route is much better for crud operations
     foreach ($crud as $prefix => $controller) {
-        Route::prefix($prefix)->group(function () use ($prefix, $controller) {
-            Route::post('/', [$controller, 'store'])->name($prefix . '.store');
-            Route::delete('/{id}', [$controller, 'destroy'])->name($prefix . '.destroy');
-            Route::match(['put', 'post'], '/{id}', [$controller, 'update'])->name($prefix . '.update');
-        });
+        Route::post("/$prefix/", [$controller, 'store'])->name($prefix . '.store');
+        Route::delete("/$prefix/{id}", [$controller, 'destroy'])->name($prefix . '.destroy');
+        Route::match(['put', 'post'], "/$prefix/{id}", [$controller, 'update'])->name($prefix . '.update');
     }
-
     // TABLES
     foreach ($crud as $table) {
-        Route::get('/tables/' . $table, [TableController::class, $table]);
+        Route::get("/tables/" . $table, [TableController::class, $table]);
     }
 
     // EXPORTS
