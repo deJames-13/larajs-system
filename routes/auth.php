@@ -21,15 +21,12 @@ Route::group(['middleware' => 'guest'], function () {
 Route::group(['middleware' => 'auth'], function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-
     // Checkout
     Route::get('/checkout', [PageController::class, 'checkout'])->name('checkout');
 
     // Orders
     Route::get('/orders', [PageController::class, 'orders'])->name('orders');
     Route::get('/orders/{id}', [PageController::class, 'order'])->name('order');
-
-
 
 
     //##################################################################################################################
