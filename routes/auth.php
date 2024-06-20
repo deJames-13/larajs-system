@@ -35,6 +35,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::prefix('imports')->group(function () {
         Route::post('/products', [TableController::class, 'productsImport'])->name('imports.products');
         Route::post('/promos', [TableController::class, 'promosImport'])->name('imports.promos');
+        Route::post('/brands', [TableController::class, 'brandsImport'])->name('imports.brands');
+        Route::post('/categories', [TableController::class, 'categoriesImport'])->name('imports.categories');
 
     });
     //##################################################################################################################
@@ -45,6 +47,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/products', [TableController::class, 'products'])->name('tables.products');
         Route::get('/orders', [TableController::class, 'orders'])->name('tables.orders');
         Route::get('/promos', [TableController::class, 'promos'])->name('tables.promos');
+        Route::get('/brands', [TableController::class, 'brands'])->name('tables.brands');
+        Route::get('/categories', [TableController::class, 'categories'])->name('tables.categories');
 
         // Products
         Route::get('/products/create', [PageController::class, 'productCreate'])->name('products.create');
@@ -53,6 +57,14 @@ Route::group(['middleware' => 'auth'], function () {
         // Promos
         Route::get('/promos/create', [PageController::class, 'promoCreate'])->name('promos.create');
         Route::get('/promos/edit/{id}', [PageController::class, 'promoEdit'])->name('promos.edit');
+
+        // Brands
+        Route::get('/brands/create', [PageController::class, 'brandCreate'])->name('brands.create');
+        Route::get('/brands/edit/{id}', [PageController::class, 'brandEdit'])->name('brands.edit');
+
+        // Categories
+        Route::get('/categories/create', [PageController::class, 'categoryCreate'])->name('categories.create');
+        Route::get('/categories/edit/{id}', [PageController::class, 'categoryEdit'])->name('categories.edit');
 
         // PDFS
         Route::get('/pdf/products', [PdfController::class, 'productsPdf'])->name('pdf.products');
