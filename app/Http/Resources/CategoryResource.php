@@ -23,6 +23,7 @@ class CategoryResource extends JsonResource
             'status' => $this->status,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'images' => $this->images()->get(['id', 'name', 'path'])
         ];
     }
 }
