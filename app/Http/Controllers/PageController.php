@@ -7,7 +7,6 @@ use App\Models\Product;
 use App\Models\Promos;
 use App\Models\Brand;
 use App\Models\Category;
-use Illuminate\Http\Request;
 
 
 class PageController extends Controller
