@@ -11,6 +11,22 @@ class Category extends Model
     use HasFactory, SoftDeletes;
     protected $guarded = [];
 
+    protected $fillable = [
+        'name',
+        'description',
+        'image',
+        'status',
+    ];
+
+    public function scopeFilter($query, array $filters)
+    {
+        $query->when($filters['search'] ?? null, function ($query, $search) {
+            $query->where('name', 'like', '%' . $search . '%')
+                ->orWhere('description', 'like', '%' . $search . '%')
+                ->orWhere('status', 'like', '%' . $search . '%');
+        });
+    }
+
     public function products()
     {
         return $this->belongsToMany(Product::class, 'product_categories', 'category_id', 'product');
