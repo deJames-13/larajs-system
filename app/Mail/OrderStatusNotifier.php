@@ -11,7 +11,7 @@ use Illuminate\Mail\Mailables\Envelope;
 use App\Http\Resources\OrderResource;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class OrderStatusNotifier extends Mailable
+class OrderStatusNotifier extends Mailable implements ShouldQueue // for asynch emailing
 {
     use Queueable, SerializesModels;
 
