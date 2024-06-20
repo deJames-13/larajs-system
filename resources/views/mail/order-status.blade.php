@@ -1,6 +1,11 @@
 @php
 
-	$status = $status ?? '';
+	// $status = $status ?? '';
+	// $orderId = $orderId ?? '';
+	// $status = $status ?? '';
+	// $fullname = $fullname ?? '';
+	// $subtotal = $subtotal ?? '';
+	// $total = $total ?? '';
 	$message = '';
 
 	switch ($status) {
@@ -32,7 +37,7 @@
 
 @endphp
 
-<x-layouts.app>
+<x-layouts.app :loading='false'>
 	<header
 		class="bg-gray-400 bg-opacity-35 py-12 flex flex-col space-y-4 justify-center items-center border-b border-primary">
 		<div class="prose text-center">
@@ -66,7 +71,7 @@
 
 					<div class="font-light text-sm">
 						<p>
-							{{ $message }}
+							{!! $message !!}
 						</p>
 					</div>
 					@include('partials._receipt', ['print' => false])
@@ -107,7 +112,6 @@
 
 
 	</div>
-
 
 
 </x-layouts.app>

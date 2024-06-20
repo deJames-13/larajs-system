@@ -138,13 +138,14 @@ class TableController extends Controller
     }
 
     public function promosImport(Request $request)
-{
-    try {
-        Excel::import(new PromosImport, request()->file('item_upload'));
-        return redirect()->back()->with('success', 'Excel file Imported Successfully');
-    } catch (Exception $ex) {
-        //return response()->json(['error' => $ex->getMessage()]);
-        return abort(500, $ex->getMessage());
+    {
+        try {
+            Excel::import(new PromosImport, request()->file('item_upload'));
+            return redirect()->back()->with('success', 'Excel file Imported Successfully');
+        } catch (Exception $ex) {
+            //return response()->json(['error' => $ex->getMessage()]);
+            return abort(500, $ex->getMessage());
+        }
     }
 }
 
@@ -191,7 +192,7 @@ class TableController extends Controller
     }
 }
 
-#4 - Categories
+#5 - Categories
 
 public function categories()
 {
@@ -234,3 +235,4 @@ try {
 }
 
 }
+

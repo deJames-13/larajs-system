@@ -15,9 +15,11 @@
 			class="container grid grid-cols-1 lg:grid-cols-2 gap-4 border border-secondary border-opacity-25 rounded-md shadow-md">
 			<div class="left image-container flex flex-col space-y-2 border-r-2 border-secondary border-opacity-25 ">
 
+				{{-- for showing images --}}
 				<div>
 					<x-card.carousel />
 				</div>
+
 				<div class="flex space-x-2 p-4">
 					<input id="image-input" type="file" multiple accept="image/*"
 						class="flex-grow file-input file-input-bordered file-input-primary" name="images[]">

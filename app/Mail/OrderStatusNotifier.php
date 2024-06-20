@@ -8,6 +8,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Queue\SerializesModels;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Mail\Mailables\Envelope;
+use App\Http\Resources\OrderResource;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class OrderStatusNotifier extends Mailable
@@ -22,12 +23,18 @@ class OrderStatusNotifier extends Mailable
     public $total = 0;
     public function __construct($order)
     {
-        Debugbar::info($order);
-        $this->orderId = $order->id;
-        $this->status = $order->status;
-        $this->fullname = $order->customer->fullname;
-        $this->subtotal = $order->total;
-        $this->total = $order->total;
+        $order->load(['products', 'customer']);
+        $orderResource = (new OrderResource($order))->toArray(request());
+
+        $this->orderId = $orderResource['id'];
+        $this->status = $orderResource['status'];
+        $this->fullname = $orderResource['customer']['fullname'];
+        $this->subtotal = $orderResource['total'];
+        $this->total = $orderResource['total'];
+
+        Debugbar::info([
+            $orderResource
+        ]);
     }
 
     /**
@@ -47,6 +54,13 @@ class OrderStatusNotifier extends Mailable
     {
         return new Content(
             view: 'mail.order-status',
+            with: [
+                'orderId' => $this->orderId,
+                'status' => $this->status,
+                'fullname' => $this->fullname,
+                'subtotal' => $this->subtotal,
+                'total' => $this->total,
+            ],
         );
     }
 
