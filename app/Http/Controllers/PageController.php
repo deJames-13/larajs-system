@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Promos;
+use App\Models\Brand;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 
@@ -56,6 +58,50 @@ class PageController extends Controller
     public function promoEdit(string $id)
     {
         return view('pages.promos.edit', ['id' => $id]);
+    }
+
+    // BRANDS PAGES
+    public function brands()
+    {
+        return view('pages.brands.index', ['page' => "Brands"]);
+    }
+
+    public function brand(string $id)
+    {
+        $brand = Brand::find($id);
+        return view('pages.brands.show', ['brand' => $brand]);
+    }
+
+    public function brandCreate()
+    {
+        return view('pages.brands.create');
+    }
+
+    public function brandEdit(string $id)
+    {
+        return view('pages.brands.edit', ['id' => $id]);
+    }
+
+    // CATEGORIES PAGES
+    public function categories()
+    {
+        return view('pages.categories.index', ['page' => "Categories"]);
+    }
+
+    public function category(string $id)
+    {
+        $category = Category::find($id);
+        return view('pages.categories.show', ['category' => $category]);
+    }
+
+    public function categoryCreate()
+    {
+        return view('pages.categories.create');
+    }
+
+    public function categoryEdit(string $id)
+    {
+        return view('pages.categories.edit', ['id' => $id]);
     }
 
     // TRANSACTIONS PAGES
