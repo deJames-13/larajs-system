@@ -14,6 +14,11 @@ php artisan db:seed
 
 npm install
 
+# Running
+php artisan serve
+php artisan queue:work
+npm run dev
+
 
 
 ```
