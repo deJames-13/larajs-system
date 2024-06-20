@@ -24,13 +24,10 @@ $crud = [
     // "comments"?
 ];
 
-
 foreach ($crud as $prefix => $controller) {
     Route::get("/$prefix", [$controller, "index"])->name($prefix . ".all");
     Route::get("/$prefix/{id}", [$controller, "show"])->name($prefix . ".get");
 }
-
-
 
 Route::group(["middleware" => "auth:sanctum"], function () use ($crud) {
 
