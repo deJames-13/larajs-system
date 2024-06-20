@@ -13,7 +13,7 @@
 					<a href="{{ route('products.create') }}">Restore</a>
 				</button>
 			</div>
-			<form method="POST" enctype="multipart/form-data" action="{{-- route('imports.items') --}}"
+			<form method="POST" enctype="multipart/form-data" action="{{ route('imports.products') }}"
 				class="flex justify-center space-x-2 my-4">
 				{{ csrf_field() }}
 				<input type="file" id="uploadName" name="item_upload" class="file-input file-input-sm  w-full max-w-xs" required>

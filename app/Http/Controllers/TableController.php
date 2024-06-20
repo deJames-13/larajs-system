@@ -147,7 +147,6 @@ class TableController extends Controller
             return abort(500, $ex->getMessage());
         }
     }
-}
 
 
     #4 - Brands
@@ -182,57 +181,55 @@ class TableController extends Controller
     }
 
     public function brandsImport(Request $request)
-{
-    try {
-        Excel::import(new BrandsImport, request()->file('item_upload'));
-        return redirect()->back()->with('success', 'Excel file Imported Successfully');
-    } catch (Exception $ex) {
-        //return response()->json(['error' => $ex->getMessage()]);
-        return abort(500, $ex->getMessage());
-    }
-}
-
-#5 - Categories
-
-public function categories()
-{
-    if (request()->ajax()) {
-        $page = request('page') ?? 1;
-        $limit = request('limit') ?? 10;
-        $order = request('order') ?? 'desc';
-
-        $categories = Category::filter(request(['search']))
-            ->orderBy('updated_at', $order)
-            ->paginate($limit, ['*'], 'page', $page);
-
-        return CategoryResource::collection($categories);
+    {
+        try {
+            Excel::import(new BrandsImport, request()->file('item_upload'));
+            return redirect()->back()->with('success', 'Excel file Imported Successfully');
+        } catch (Exception $ex) {
+            //return response()->json(['error' => $ex->getMessage()]);
+            return abort(500, $ex->getMessage());
+        }
     }
 
-    return view('admin.tables.categories');
-}
-public function categoriesExport(string $type)
-{
-    Debugbar::info($type);
-    $fileName = 'categories' . time() . '.' . $type;
-    $fileType = \Maatwebsite\Excel\Excel::XLSX;
-    if ($type == 'csv') {
-        $fileType = \Maatwebsite\Excel\Excel::CSV;
+    #5 - Categories
+
+    public function categories()
+    {
+        if (request()->ajax()) {
+            $page = request('page') ?? 1;
+            $limit = request('limit') ?? 10;
+            $order = request('order') ?? 'desc';
+
+            $categories = Category::filter(request(['search']))
+                ->orderBy('updated_at', $order)
+                ->paginate($limit, ['*'], 'page', $page);
+
+            return CategoryResource::collection($categories);
+        }
+
+        return view('admin.tables.categories');
+    }
+    public function categoriesExport(string $type)
+    {
+        Debugbar::info($type);
+        $fileName = 'categories' . time() . '.' . $type;
+        $fileType = \Maatwebsite\Excel\Excel::XLSX;
+        if ($type == 'csv') {
+            $fileType = \Maatwebsite\Excel\Excel::CSV;
+        }
+
+
+        return Excel::download(new CategoriesExport, $fileName, $fileType);
     }
 
-
-    return Excel::download(new CategoriesExport, $fileName, $fileType);
+    public function categoriesImport(Request $request)
+    {
+        try {
+            Excel::import(new CategoriesImport, request()->file('item_upload'));
+            return redirect()->back()->with('success', 'Excel file Imported Successfully');
+        } catch (Exception $ex) {
+            //return response()->json(['error' => $ex->getMessage()]);
+            return abort(500, $ex->getMessage());
+        }
+    }
 }
-
-public function categoriesImport(Request $request)
-{
-try {
-    Excel::import(new CategoriesImport, request()->file('item_upload'));
-    return redirect()->back()->with('success', 'Excel file Imported Successfully');
-} catch (Exception $ex) {
-    //return response()->json(['error' => $ex->getMessage()]);
-    return abort(500, $ex->getMessage());
-}
-}
-
-}
-

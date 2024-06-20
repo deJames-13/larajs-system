@@ -14,57 +14,39 @@ Route::get('/test', function () {
     return response()->json(['message' => 'API is working']);
 });
 
-Route::prefix('products')->group(function () {
-    Route::get('/', [ProductController::class, 'index'])->name('products.all');
-    Route::get('/{id}', [ProductController::class, 'show'])->name('products.get');
-});
 
-Route::prefix('promos')->group(function () { // Add this block for promos
-    Route::get('/', [PromoController::class, 'index'])->name('promos.all');
-    Route::get('/{id}', [PromoController::class, 'show'])->name('promos.get');
-});
+// add from here on out: make sure there are 3 functions in controller: store - destroy - update
+$crud = [
+    'products' => ProductController::class,
+    'promos' => PromoController::class,
+    'brands' => BrandController::class,
+    'categories' => CategoryController::class,
+    // 'comments'?
+];
 
-Route::prefix('brands')->group(function () { // Add this block for brands
-    Route::get('/', [BrandController::class, 'index'])->name('brands.all');
-    Route::get('/{id}', [BrandController::class, 'show'])->name('brands.get');
-});
 
-Route::prefix('categories')->group(function () { // Add this block for categories
-    Route::get('/', [CategoryController::class, 'index'])->name('categories.all');
-    Route::get('/{id}', [CategoryController::class, 'show'])->name('categories.get');
-});
+foreach ($crud as $prefix => $controller) {
+    Route::get("/$prefix", [$controller, 'index'])->name($prefix . '.all');
+    Route::get("/$prefix/{id}", [$controller, 'show'])->name($prefix . '.get');
+}
 
-Route::group(['middleware' => 'auth:sanctum'], function () {
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
 
-    // add from here on out: make sure there are 3 functions in controller: store - destroy - update
-    $crud = [
-        'products' => ProductController::class,
-        'promos' => PromoController::class,
-        'brands' => BrandController::class,
-        'categories' => CategoryController::class,
-        // 'comments'?
-    ];
+
+Route::group(['middleware' => 'auth:sanctum'], function () use ($crud) {
 
     // NOTE: use of {id} instead of {item} in the route is much better for crud operations
     foreach ($crud as $prefix => $controller) {
+        // Crud Functions
         Route::post("/$prefix", [$controller, 'store'])->name($prefix . '.store');
         Route::delete("/$prefix/{id}", [$controller, 'destroy'])->name($prefix . '.destroy');
         Route::match(['put', 'post'], "/$prefix/{id}", [$controller, 'update'])->name($prefix . '.update');
-    }
-    // TABLES
-    foreach ($crud as $table => $controller) {
-        Route::get("/tables/" . $table, [TableController::class, $table]);
-    }
-    Route::get("/tables/orders", [TableController::class, 'orders']);
 
+        // Crud TABLES
+        Route::get("/tables/" . $prefix, [TableController::class, $prefix]);
 
-    // EXPORTS
-    Route::prefix('exports')->group(function () {
-        Route::get('/items/{type}', [TableController::class, 'itemsExport']);
-    });
+        // EXPORTS
+        Route::get("/exports/$prefix/{type}", [TableController::class, $prefix . "Exports"]);
+    }
 
     // Cart
     Route::prefix('cart')->group(function () {
@@ -75,6 +57,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     });
 
     // orders/checkout
+    Route::get("/tables/orders", [TableController::class, 'orders']);
     Route::prefix('orders')->group(function () {
         Route::post('/checkout', [OrderController::class, 'store']);
         Route::get('/', [OrderController::class, 'index']);

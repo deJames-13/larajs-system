@@ -28,12 +28,12 @@ class PageController extends Controller
         $item = Product::find($id);
         return view('pages.products.show', ['item' => $item]);
     }
-    public function productCreate()
+    public function productsCreate()
     {
         return view('pages.products.create');
     }
 
-    public function productEdit(string $id)
+    public function productsEdit(string $id)
     {
         return view('pages.products.edit', ['id' => $id]);
     }
@@ -50,12 +50,12 @@ class PageController extends Controller
         return view('pages.promos.show', ['promo' => $promo]);
     }
 
-    public function promoCreate()
+    public function promosCreate()
     {
         return view('pages.promos.create');
     }
 
-    public function promoEdit(string $id)
+    public function promosEdit(string $id)
     {
         return view('pages.promos.edit', ['id' => $id]);
     }
@@ -72,12 +72,12 @@ class PageController extends Controller
         return view('pages.brands.show', ['brand' => $brand]);
     }
 
-    public function brandCreate()
+    public function brandsCreate()
     {
         return view('pages.brands.create');
     }
 
-    public function brandEdit(string $id)
+    public function brandsEdit(string $id)
     {
         return view('pages.brands.edit', ['id' => $id]);
     }
@@ -94,12 +94,12 @@ class PageController extends Controller
         return view('pages.categories.show', ['category' => $category]);
     }
 
-    public function categoryCreate()
+    public function categoriesCreate()
     {
         return view('pages.categories.create');
     }
 
-    public function categoryEdit(string $id)
+    public function categoriesEdit(string $id)
     {
         return view('pages.categories.edit', ['id' => $id]);
     }
@@ -135,7 +135,6 @@ class PageController extends Controller
                 return redirect()->route('orders');
             }
         }
-
         return view('pages.orders.show', [
             'page' => "Order",
             'id' => $id,
