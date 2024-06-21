@@ -9,7 +9,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Product extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $guarded = [];
+    // protected $guarded = [];
+    protected $fillable = [
+        'name',
+        'sku_code',
+        'description',
+        'specifications',
+        'price',
+    ];
+
 
     // Scope Filter
     public function scopeFilter($query, array $filters)

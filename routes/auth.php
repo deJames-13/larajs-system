@@ -54,6 +54,7 @@ Route::group(["middleware" => "auth"], function () use ($crud) {
             // Imports
             Route::post("/$prefix", [TableController::class, $prefix . "Import"])->name("imports.$prefix");
         }
+        Route::get("/orders", [TableController::class, "orders"])->name("tables.aorders");
     });
     //##################################################################################################################
 

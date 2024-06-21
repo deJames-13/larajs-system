@@ -1,25 +1,18 @@
 ## All TODO's HERE
 
-## Model and Migrations
-
-### Models
-
-
-## Controllers
-
-
-
-## Routes
+### Prio
+- [ ] SEEDERS
+- [ ] OrderSeeder
+- [ ] PromoSeeder
+- [ ] BrandSeeder 
+- [ ] CategorySeeder
 
 
-
-## Views
-- [ ] Items Index
-
-
-## DataTables
-
-
-
-
-
+- [ ] Fix email data
+- [ ] Fix auth ajax
+- [ ] Make modal js
+- [ ] Make login modal js
+- [ ] make register modal js
+- [ ] Fix authentication with ajax
+- [ ] Make profile page
+- [ ] Manage profile - edit/delete/deactivate

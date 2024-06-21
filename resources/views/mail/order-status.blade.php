@@ -8,6 +8,15 @@
 	// $total = $total ?? '';
 	$message = '';
 
+	$order = [
+	    'id' => $orderId,
+	    'full_name' => $fullname,
+	    'shipping_address' => $shippingAddress,
+	    'payment_method' => 'Cash on Delivery',
+	    'created_at' => $createdAt,
+	    'paid_date' => $paidDate,
+	];
+
 	switch ($status) {
 	    case 'processing':
 	        $message = "
@@ -74,7 +83,8 @@
 							{!! $message !!}
 						</p>
 					</div>
-					@include('partials._receipt', ['print' => false])
+
+					@include('partials._receipt', ['print' => false, 'order' => $order])
 
 					<h2 class="print:m-0">Order Total</h2>
 					{{-- Total Sales --}}
@@ -94,6 +104,7 @@
 						<h4 class="m-0">Shipping</h4>
 						<div class="text-sm font-bold">TBC</div>
 					</div>
+
 
 					{{-- Grandtotal --}}
 					<div class="flex justify-between items-center">
