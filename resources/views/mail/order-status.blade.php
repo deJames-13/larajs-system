@@ -8,7 +8,7 @@
 	// $total = $total ?? '';
 	$message = '';
 
-	$order = [
+	$order =  (object) [
 	    'id' => $orderId,
 	    'full_name' => $fullname,
 	    'shipping_address' => $shippingAddress,
