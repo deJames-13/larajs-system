@@ -11,7 +11,7 @@ use Illuminate\Mail\Mailables\Envelope;
 use App\Http\Resources\OrderResource;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class OrderStatusNotifier extends Mailable // implements ShouldQueue // for asynch emailing
+class OrderStatusNotifier extends Mailable implements ShouldQueue // for asynch emailing
 {
     use Queueable, SerializesModels;
 
@@ -28,14 +28,14 @@ class OrderStatusNotifier extends Mailable // implements ShouldQueue // for asyn
     public function __construct($order)
     {
         $order->load(['products', 'customer']);
-        // Debugbar::info($order);
+        Debugbar::info($order);
 
 
         $this->orderId = $order->id;
         $this->status = $order->status;
         $this->fullname = $order->customer->info->fullname();
-        $this->subtotal = $order->subtotal;
-        $this->total = $order->total;
+        $this->total = $order->products->sum(fn ($product) => $product->pivot->quantity * $product->price);
+        $this->subtotal = $this->total;
         $this->shippingAddress = $order->shipping_address;
         $this->createdAt = $order->created_at;
     }
@@ -57,6 +57,15 @@ class OrderStatusNotifier extends Mailable // implements ShouldQueue // for asyn
     {
         return new Content(
             view: 'mail.order-status',
+            with: [
+                'orderId' => $this->orderId,
+                'status' => $this->status,
+                'fullname' => $this->fullname,
+                'shippingAddress' => $this->shippingAddress,
+                'createdAt' => $this->createdAt,
+                'subtotal' => $this->subtotal,
+                'total' => $this->total,
+            ],
 
         );
     }

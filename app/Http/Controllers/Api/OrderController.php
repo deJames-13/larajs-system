@@ -159,6 +159,7 @@ class OrderController extends Controller
         );
         $order->load(['products', 'customer']);
         $res = new OrderResource($order);
+
         Debugbar::info('Sending: ' . $order->customer->email);
         Mail::to($order->customer->email)->send(new OrderStatusNotifier($order));
 
