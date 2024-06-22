@@ -83,8 +83,8 @@
 							</form>
 						</li>
 					@else
-						<li><a href="/register">Register</a></li>
-						<li><a href="/login">Login</a></li>
+						<li><button data-open-modal="signup_modal">Register</button></li>
+						<li><button data-open-modal="login_modal">Login</button></li>
 					@endauth
 
 				</ul>
@@ -93,8 +93,12 @@
 		</div>
 	</div>
 
-
-	@role('customer')
-	@endrole
+	@push('scripts')
+		@auth
+		@else
+			<script type="module" src="{{ asset('js/Auth/Login.js') }}"></script>
+			<script type="module" src="{{ asset('js/Auth/SignUp.js') }}"></script>
+		@endauth
+	@endpush
 
 </header>

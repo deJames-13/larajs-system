@@ -8,7 +8,6 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Queue\SerializesModels;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Mail\Mailables\Envelope;
-use App\Http\Resources\OrderResource;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class OrderStatusNotifier extends Mailable implements ShouldQueue // for asynch emailing
