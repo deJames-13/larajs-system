@@ -42,12 +42,11 @@ export default class Modal {
 
     render() {
         const modal = `
-        <div id="${this.id}"  style="display: none;" class="z-[100] fixed w-screen h-screen top-0 left-0 grid place-items-center">
+        <div id="${this.id}"  style="display: none;" class="z-[100] fixed w-screen h-screen top-0 left-0 flex items-center">
 
-            // backdrop
             <div id="modal-backdrop" data-modal-backdrop class="fixed w-screen h-screen bg-black bg-opacity-35"></div>
 
-            <div class="modal-box border animate__animated animate__bounceInDown ">
+            <div class="container max-w-sm  mx-auto modal-box border animate__animated animate__bounceInDown ">
                 <div class="flex justify-between align-center">
                     ${this.top}
                     <button class="modal-header btn btn-xs rounded-full hover:bg-red-400 hover:text-white btn-ghost" id="close-modal" data-close-modal>&times;</button>

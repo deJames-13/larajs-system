@@ -12,6 +12,8 @@ export default class Products {
 
 
     handleSuccess(data) {
+        $('#loading').show()
+
         data.forEach(product => {
             const data = {
                 parent: this.parent,
@@ -31,6 +33,8 @@ export default class Products {
             });
         }
         );
+        $('#loading').hide()
+
     }
 
     fetchItems() {

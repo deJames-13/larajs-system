@@ -2,16 +2,24 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\Api\CartController;
-use App\Http\Controllers\Api\OrderController;
-use App\Http\Controllers\Api\ProductController;
-use App\Http\Controllers\Api\PromoController;
 use App\Http\Controllers\Api\BrandController;
+use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\PromoController;
+use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
 
 Route::get("/test", function () {
     return response()->json(["message" => "API is working"]);
+});
+
+// API AUTH
+Route::group(["middleware" => "guest"], function () {
+    Route::post("/admin/login", [AuthController::class, "authenticate"]);
+    Route::post("/login", [AuthController::class, "authenticate"]);
+    Route::post("/register", [AuthController::class, "store"]);
 });
 
 
@@ -30,6 +38,7 @@ foreach ($crud as $prefix => $controller) {
 }
 
 Route::group(["middleware" => "auth:sanctum"], function () use ($crud) {
+    Route::post("/logout", [AuthController::class, "logout"])->name("logout");
 
     // NOTE: use of {id} instead of {item} in the route is much better for crud operations
     foreach ($crud as $prefix => $controller) {
