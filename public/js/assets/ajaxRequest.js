@@ -42,7 +42,7 @@ const ajaxCall = ({ url, method, data = {}, token = null, onSuccess, onError, he
         contentType: method === 'GET' ? undefined : false,
         processData: false,
         dataType: 'json',
-        headers: getHeaders(token, headers = {}),
+        headers: getHeaders(token, headers),
         error: handleError(onError),
         success: handleSuccess(onSuccess),
     }

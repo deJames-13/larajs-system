@@ -89,10 +89,8 @@ export default class Login {
         ajaxRequest.post({
             url: '/login',
             data: formData,
-            settings: {
-                headers: {
-                    'X-CSRF-TOKEN': token,
-                }
+            headers: {
+                'X-CSRF-TOKEN': token,
             },
             onSuccess: (response) => {
                 console.log(response);
