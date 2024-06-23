@@ -96,10 +96,9 @@
 	</div>
 
 	@push('scripts')
-		@auth
-		@else
+		@guest
 			<script type="module" src="{{ asset('js/Auth/index.js') }}"></script>
-		@endauth
+		@endguest
 	@endpush
 
 </header>

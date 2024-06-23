@@ -43,7 +43,7 @@ export class Card {
         const el = this.elements;
         el.wrapper = $('<div>', {
             id: `card-${this.id}`,
-            class: 'card bg-base-100 shadow-xl '
+            class: 'card bg-base-100 shadow-xl h-full'
         });
         el.figure = $('<figure>');
 
