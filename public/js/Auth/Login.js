@@ -6,6 +6,7 @@ export default class Login {
         this.modal = null;
         this.render();
         this.validate();
+        return this.modal;
     }
 
     render() {
@@ -32,6 +33,11 @@ export default class Login {
                 <div class="form-control mt-6">
                     <button type="button" id="form-submit" class="btn btn-primary">Log in</button>
                 </div>
+
+                <div class="divider"></div>
+                <span>
+                    Doesn't have an account? <a class="auth-btn text-blue-400 cursor-pointer text-center" data-open-modal="signup_modal">Sign up</a>
+                </span>
             </form>
             `,
             destroyOnClose: true,
@@ -89,9 +95,6 @@ export default class Login {
         ajaxRequest.post({
             url: '/login',
             data: formData,
-            headers: {
-                'X-CSRF-TOKEN': token,
-            },
             onSuccess: (response) => {
                 console.log(response);
                 this.modal.remove();
