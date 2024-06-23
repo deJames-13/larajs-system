@@ -31,7 +31,6 @@ class PageController extends Controller
     {
         return view('pages.products.create');
     }
-
     public function productsEdit(string $id)
     {
         return view('pages.products.edit', ['id' => $id]);
@@ -42,18 +41,15 @@ class PageController extends Controller
     {
         return view('pages.promos.index', ['page' => "Promos"]);
     }
-
     public function promo(string $id)
     {
         $promo = Promos::find($id);
         return view('pages.promos.show', ['promo' => $promo]);
     }
-
     public function promosCreate()
     {
         return view('pages.promos.create');
     }
-
     public function promosEdit(string $id)
     {
         return view('pages.promos.edit', ['id' => $id]);
@@ -64,18 +60,15 @@ class PageController extends Controller
     {
         return view('pages.brands.index', ['page' => "Brands"]);
     }
-
     public function brand(string $id)
     {
         $brand = Brand::find($id);
         return view('pages.brands.show', ['brand' => $brand]);
     }
-
     public function brandsCreate()
     {
         return view('pages.brands.create');
     }
-
     public function brandsEdit(string $id)
     {
         return view('pages.brands.edit', ['id' => $id]);
@@ -86,18 +79,15 @@ class PageController extends Controller
     {
         return view('pages.categories.index', ['page' => "Categories"]);
     }
-
     public function category(string $id)
     {
         $category = Category::find($id);
         return view('pages.categories.show', ['category' => $category]);
     }
-
     public function categoriesCreate()
     {
         return view('pages.categories.create');
     }
-
     public function categoriesEdit(string $id)
     {
         return view('pages.categories.edit', ['id' => $id]);

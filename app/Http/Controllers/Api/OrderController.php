@@ -33,7 +33,7 @@ class OrderController extends Controller
         ]);
 
         if ($request->user()->role === 'admin') {
-            $orders->with('customer.customer');
+            $orders->with('customer.info');
         }
         $orders->orderBy('updated_at', 'desc');
 

@@ -25,7 +25,7 @@ class UserSeeder extends Seeder
             'username' => 'johndoe',
             'email' => 'johndoe@tunetown.dev'
         ]);
-        $user->customer()->create([
+        $user->info()->create([
             'first_name' => 'John',
             'last_name' => 'Doe',
             'phone_number' => '1234567890',
