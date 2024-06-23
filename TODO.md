@@ -8,11 +8,11 @@
 - [ ] CategorySeeder
 
 
-- [ ] Fix email data
-- [ ] Fix auth ajax
-- [ ] Make modal js
-- [ ] Make login modal js
-- [ ] make register modal js
-- [ ] Fix authentication with ajax
+- [x] Fix email data
+- [x] Fix auth ajax
+- [x] Make modal js
+- [x] Make login modal js
+- [x] make register modal js
+- [x] Fix authentication with ajax
 - [ ] Make profile page
 - [ ] Manage profile - edit/delete/deactivate

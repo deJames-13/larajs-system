@@ -36,6 +36,7 @@ class OrderController extends Controller
             $orders->with('customer.customer');
         }
         $orders->orderBy('updated_at', 'desc');
+
         $page = $orders->paginate($limit);
         return OrderResource::collection($page);
     }

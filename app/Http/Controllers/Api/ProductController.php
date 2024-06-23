@@ -18,7 +18,18 @@ class ProductController extends Controller
     }
     public function index()
     {
-        return ProductResource::collection(Product::all());
+        $page = request('page') ?? 1;
+        $limit = request('limit') ?? 10;
+        $order =    request('order') ?? 'desc';
+        $search = request(['search']) ?? null;
+
+
+        $products = Product::filter($search)
+            ->orderBy('updated_at', $order)
+            ->paginate($limit, ['*'], 'page', $page);
+
+
+        return ProductResource::collection($products);
     }
     public function show(string $id)
     {
