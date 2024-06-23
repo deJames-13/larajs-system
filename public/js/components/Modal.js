@@ -6,6 +6,7 @@ const defaultProps = {
     backDropExit: false,
     destroyOnClose: false,
     isShown: false,
+    onEscClose: false,
 
 }
 
@@ -32,7 +33,7 @@ export default class Modal {
             this.close();
         });
 
-        $(document).on('keydown', (e) => {
+        this.onEscClose && $(document).on('keydown', (e) => {
             if (e.key === 'Escape') {
                 this.close();
             }
