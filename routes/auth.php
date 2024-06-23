@@ -26,6 +26,7 @@ Route::group(["middleware" => "guest"], function () {
 
 // Auth ONLY
 Route::group(["middleware" => "auth"], function () use ($crud) {
+    Route::post("/logout", [AuthController::class, "logout"])->name("logout");
 
 
     // Checkout

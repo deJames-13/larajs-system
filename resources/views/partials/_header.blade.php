@@ -84,8 +84,8 @@
 								</form>
 							</li>
 						@else
-							<li><button data-open-modal="signup_modal">Register</button></li>
-							<li><button data-open-modal="login_modal">Login</button></li>
+							<li><button class="auth-btn" data-open-modal="signup_modal">Register</button></li>
+							<li><button class="auth-btn" data-open-modal="login_modal">Login</button></li>
 						@endauth
 
 					</ul>
@@ -98,8 +98,7 @@
 	@push('scripts')
 		@auth
 		@else
-			<script type="module" src="{{ asset('js/Auth/Login.js') }}"></script>
-			<script type="module" src="{{ asset('js/Auth/SignUp.js') }}"></script>
+			<script type="module" src="{{ asset('js/Auth/index.js') }}"></script>
 		@endauth
 	@endpush
 

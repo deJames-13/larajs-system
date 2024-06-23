@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Product extends Model
 {
     use HasFactory, SoftDeletes;
-    // protected $guarded = [];
+    protected $with = ['stock'];
     protected $fillable = [
         'name',
         'sku_code',

@@ -4,6 +4,8 @@ const defaultProps = {
     content: `<p class="py-4">Press ESC key or click the button below to close</p>`,
     action: ``,
     backDropExit: false,
+    destroyOnClose: false,
+    isShown: false,
 
 }
 
@@ -29,6 +31,13 @@ export default class Modal {
         this.backDropExit && this.modal.find('[data-modal-backdrop]').click('click', () => {
             this.close();
         });
+
+        $(document).on('keydown', (e) => {
+            if (e.key === 'Escape') {
+                this.close();
+            }
+        });
+        this.isShown && this.open();
     }
 
     open() {
@@ -37,6 +46,7 @@ export default class Modal {
 
     close() {
         this.modal.fadeOut();
+        this.destroyOnClose && this.modal.remove();
     }
 
 

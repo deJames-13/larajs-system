@@ -15,12 +15,12 @@ Route::get("/test", function () {
     return response()->json(["message" => "API is working"]);
 });
 
-// API AUTH
-Route::group(["middleware" => "guest"], function () {
-    Route::post("/admin/login", [AuthController::class, "authenticate"]);
-    Route::post("/login", [AuthController::class, "authenticate"]);
-    Route::post("/register", [AuthController::class, "store"]);
-});
+// API AUTH: cant do this, need to handle tokens
+// Route::group(["middleware" => "guest"], function () {
+//     Route::post("/admin/login", [AuthController::class, "authenticate"]);
+//     Route::post("/login", [AuthController::class, "authenticate"]);
+//     Route::post("/register", [AuthController::class, "store"]);
+// });
 
 
 // add from here on out: make sure there are 3 functions in controller: store - destroy - update
@@ -38,7 +38,6 @@ foreach ($crud as $prefix => $controller) {
 }
 
 Route::group(["middleware" => "auth:sanctum"], function () use ($crud) {
-    Route::post("/logout", [AuthController::class, "logout"])->name("logout");
 
     // NOTE: use of {id} instead of {item} in the route is much better for crud operations
     foreach ($crud as $prefix => $controller) {

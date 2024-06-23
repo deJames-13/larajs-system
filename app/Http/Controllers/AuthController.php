@@ -29,7 +29,10 @@ class AuthController extends Controller
 
         // EMAIL CODE HERE
 
-        return redirect('/');
+        // return redirect('/');
+        return response()->json([
+            'message' => 'success',
+        ], 200);
     }
     public function login()
     {
@@ -37,12 +40,13 @@ class AuthController extends Controller
     }
     public function authenticate(Request $request)
     {
+
         $data = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
 
-
+        Debugbar::info(request()->ajax());
 
         if (auth()->attempt($data)) {
             $user = \App\Models\User::where('email', $data['email'])->first();
@@ -53,12 +57,23 @@ class AuthController extends Controller
 
             // dd(session('api-token'));
             Debugbar::info($token);
-            return redirect()->intended('/');
+
+            // return redirect()->intended('/');
+            return response()->json([
+                'message' => 'success',
+            ], 200);
         }
 
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ]);
+        if (request()->ajax()) {
+            return response()->json([
+                'message' => 'The provided credentials do not match our records.',
+            ], 422);
+        }
+
+
+        // return back()->withErrors([
+        //     'email' => 'The provided credentials do not match our records.',
+        // ]);
     }
     public function logout(Request $request)
     {
