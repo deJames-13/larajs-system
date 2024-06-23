@@ -120,10 +120,8 @@ export default class SignUp {
         ajaxRequest.post({
             url: '/register',
             data: formData,
-            settings: {
-                headers: {
-                    'X-CSRF-TOKEN': token,
-                }
+            headers: {
+                'X-CSRF-TOKEN': token,
             },
             onSuccess: (response) => {
                 console.log(response);
