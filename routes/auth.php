@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PdfController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TableController;
 
 $crud = [
@@ -27,6 +28,10 @@ Route::group(["middleware" => "guest"], function () {
 // Auth ONLY
 Route::group(["middleware" => "auth"], function () use ($crud) {
     Route::post("/logout", [AuthController::class, "logout"])->name("logout");
+
+    // PROFILE
+    Route::get("/profile", [ProfileController::class, "index"])->name("profile");
+
 
     // Checkout
     Route::get("/checkout", [PageController::class, "checkout"])->name("checkout");
