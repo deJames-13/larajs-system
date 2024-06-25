@@ -30,7 +30,7 @@ Route::group(["middleware" => "auth"], function () use ($crud) {
     Route::post("/logout", [AuthController::class, "logout"])->name("logout");
 
     // PROFILE
-    Route::get("/profile", [ProfileController::class, "index"])->name("profile");
+    Route::get("/profile", [ProfileController::class, "edit"])->name("profile");
 
 
     // Checkout

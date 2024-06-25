@@ -39,14 +39,13 @@ foreach ($crud as $prefix => $controller) {
 
 Route::group(["middleware" => "auth:sanctum"], function () use ($crud) {
 
-    // NOTE: use of {id} instead of {item} in the route is much better for crud operations
     foreach ($crud as $prefix => $controller) {
-        // Crud Functions
+        // Crud Functions: NOTE: use of {id} instead of {item} in the route is much better for crud operations
         Route::post("/$prefix", [$controller, "store"])->name($prefix . ".store");
         Route::delete("/$prefix/{id}", [$controller, "destroy"])->name($prefix . ".destroy");
         Route::match(["put", "post"], "/$prefix/{id}", [$controller, "update"])->name($prefix . ".update");
 
-        // Crud TABLES
+        // TABLES
         Route::get("/tables/" . $prefix, [TableController::class, $prefix]);
 
         // EXPORTS
