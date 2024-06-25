@@ -12,7 +12,8 @@ class SearchController extends Controller
 {
     public function autocomplete()
     {
-        $search = request()->get('search');
+        $validated = request()->validate(['search' => 'required|string|max:255']);
+        $search = str_replace(['%', '_'], ['\%', '\_'],  $validated['search']);
         $searchIn = (object)[
             'products' => Product::class,
             'categories' => Category::class,
