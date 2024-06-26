@@ -1,6 +1,6 @@
 export default class ProductCard {
   constructor(product, redirectUrl) {
-    this.card = product;
+    this.product = product;
     this.redirectUrl = redirectUrl;
 
 
@@ -8,9 +8,9 @@ export default class ProductCard {
   }
 
   render() {
-    return `
+    const card = `
         <!-- CARD -->
-      <div class="p-2 shadow-md bg-white overflow-clip rounded-t-lg">
+      <div class="p-2 shadow-md bg-white overflow-clip rounded-t-lg h-full max-h-96">
         <!-- Parent div with group class for hover effect -->
         <div class="group relative transition-all ease-in overflow-clip rounded-t-lg" onclick="window.location.replace('${this.redirectUrl}')">
           <!-- Image -->
@@ -44,13 +44,8 @@ export default class ProductCard {
           </div>
           <p class="text-xs">69</p>
         </div>
-
-
-
-
       </div>
-
-
         `
+    return card;
   }
 }
