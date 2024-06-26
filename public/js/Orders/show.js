@@ -266,13 +266,15 @@ if (!isAdmin) {
 }
 
 // INFO: CRUD: UPDATE
-const updateStatus = (statusString, id = "{{ $id }}") => {
+const updateStatus = (statusString) => {
     ajaxRequest.put({
         url: '/api/orders/' + id,
-        data: {
-            status: '' + statusString
-        },
+        data: JSON.stringify({ status: '' + statusString }),
         token: token,
+        settings: {
+            contentType: 'application/json',
+            processData: true,
+        },
         onSuccess: (response, status, error) => {
             setStatusMessage(statusString);
             setActionBtn(statusString);

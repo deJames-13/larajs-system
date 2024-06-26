@@ -2,7 +2,7 @@ import ajaxRequest from '/js/assets/ajaxRequest.js';
 import Pagination from "/js/components/Paginate.js";
 
 const defaultProps = {
-    baseApi: '',
+    baseApi: '/api/tables/',
     data: [],
     fileButtons: [],
     limit: 10,
@@ -169,8 +169,8 @@ export default class DataTable {
             url: url,
             token: token,
             onSuccess: (response) => {
-                // console.log(response);
-                onFetch(response);
+                console.log(response);
+                onFetch(response); // maketable
 
 
                 this.data = response.data;

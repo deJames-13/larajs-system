@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
+use App\Mail\OrderStatusNotifier;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Resources\OrderResource;
 use Barryvdh\Debugbar\Facades\Debugbar;
 
@@ -156,7 +158,11 @@ class OrderController extends Controller
             ]
         );
         $order->load(['products', 'customer']);
-        return new OrderResource($order);
+        $res = new OrderResource($order);
+        Debugbar::info('Sending: ' . $order->customer->email);
+        Mail::to($order->customer->email)->send(new OrderStatusNotifier($order));
+
+        return $res;
     }
 
     // WARNING: Order Deletion is not recommended

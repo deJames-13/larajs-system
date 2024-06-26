@@ -3,7 +3,7 @@ import DataTable from '../components/DataTable.js';
 
 var dataTable
 const makeTable = (data) => {
-    // console.log(data);
+    console.log(data);
     return data.map(product => {
         return {
             "ID": `${product.id}`,
@@ -62,6 +62,8 @@ $(document).ready(function () {
         makeTable: makeTable,
     });
 });
+
+
 $(document).on('click', '.row-delete', function (e) {
     e.preventDefault();
     const url = $(this).attr('href');

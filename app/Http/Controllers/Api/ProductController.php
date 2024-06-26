@@ -35,7 +35,7 @@ class ProductController extends Controller
             'description' => 'required|string',
             'specifications' => 'required|string',
             'price' => 'required|numeric',
-            'image_id' => 'sometimer|numeric'
+            'image_id' => 'sometimes|numeric'
         ]);
         // Debugbar::info($request);
         // Debugbar::info($data);
@@ -48,11 +48,13 @@ class ProductController extends Controller
         $product = Product::create($data);
 
         $this->handleImageUpload($request, $product, $image_id);
+
         if ($stock) $product->stock()->create(['quantity' => $stock]);
 
         $res = new ProductResource($product);
         return response($res, 201, ['message' => 'Product added successfully!']);
     }
+
     public function update(Request $request, string $id)
     {
         $data = $request->validate([
@@ -62,7 +64,7 @@ class ProductController extends Controller
             'description' => 'sometimes|string',
             'specifications' => 'sometimes|string',
             'price' => 'sometimes|numeric',
-            'image_id' => 'sometimer|numeric'
+            'image_id' => 'sometimes|numeric'
         ]);
         // Debugbar::info($request);
 
