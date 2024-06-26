@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Stock extends Model
 {
@@ -13,6 +14,6 @@ class Stock extends Model
 
     public function product()
     {
-        return $this->belongsTo(Item::class, 'product_sku_code', 'sku_code');
+        return $this->belongsTo(Product::class, 'product_sku_code', 'sku_code');
     }
 }

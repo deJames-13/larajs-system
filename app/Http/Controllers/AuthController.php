@@ -29,6 +29,12 @@ class AuthController extends Controller
 
         // EMAIL CODE HERE
 
+
+        if (request()->ajax()) {
+            return response()->json([
+                'message' => 'success',
+            ], 200);
+        }
         return redirect('/');
     }
     public function login()
@@ -37,11 +43,11 @@ class AuthController extends Controller
     }
     public function authenticate(Request $request)
     {
+
         $data = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
-
 
 
         if (auth()->attempt($data)) {
@@ -53,8 +59,22 @@ class AuthController extends Controller
 
             // dd(session('api-token'));
             Debugbar::info($token);
+
+            if (request()->ajax()) {
+                return response()->json([
+                    'message' => 'success',
+                ], 200);
+            }
+
             return redirect()->intended('/');
         }
+
+        if (request()->ajax()) {
+            return response()->json([
+                'message' => 'The provided credentials do not match our records.',
+            ], 422);
+        }
+
 
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',

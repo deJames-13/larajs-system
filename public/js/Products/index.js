@@ -1,5 +1,5 @@
 import ajaxRequest from '../assets/ajaxRequest.js';
-import { Card } from '../components/Card.js';
+import ProductCard from '../components/ProductCard.js';
 
 export default class Products {
     constructor({ url, parent }) {
@@ -12,25 +12,17 @@ export default class Products {
 
 
     handleSuccess(data) {
+        $('#loading').show()
+
         data.forEach(product => {
-            const data = {
-                parent: this.parent,
-                imageSrc: product.image,
-                altText: product.name,
-                title: 'P' + product.price,
-                text: product.name,
-                buttonText: 'Buy Now',
-                buttonAction: () => {
-                    window.location.replace('/products/' + product.id)
-                }
-            };
-            const card = new Card(data);
-            card.elements.wrapper.addClass('max-w-xs hover');
-            card.elements.wrapper.on('click', () => {
-                window.location.replace('/products/' + product.id)
-            });
+            const card = new ProductCard(product, '/products/' + product.id);
+            console.log(card);
+            $(this.parent).append(card.render());
+
         }
         );
+        $('#loading').hide()
+
     }
 
     fetchItems() {

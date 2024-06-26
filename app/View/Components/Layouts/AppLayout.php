@@ -11,6 +11,7 @@ class AppLayout extends Component
     public $title;
     public $page;
     public $description;
+    public $loading;
 
     public function __construct(
         $title = 'TuneTown',
@@ -20,6 +21,7 @@ class AppLayout extends Component
         $this->title = $title;
         $this->description = $description;
         $this->page = $page;
+        $this->loading = true;
     }
 
     /**

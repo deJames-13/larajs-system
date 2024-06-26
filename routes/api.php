@@ -2,17 +2,25 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\Api\CartController;
-use App\Http\Controllers\Api\OrderController;
-use App\Http\Controllers\Api\ProductController;
-use App\Http\Controllers\Api\PromoController;
 use App\Http\Controllers\Api\BrandController;
+use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\PromoController;
+use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
 
 Route::get("/test", function () {
     return response()->json(["message" => "API is working"]);
 });
+
+// API AUTH: cant do this, need to handle tokens
+// Route::group(["middleware" => "guest"], function () {
+//     Route::post("/admin/login", [AuthController::class, "authenticate"]);
+//     Route::post("/login", [AuthController::class, "authenticate"]);
+//     Route::post("/register", [AuthController::class, "store"]);
+// });
 
 
 // add from here on out: make sure there are 3 functions in controller: store - destroy - update
@@ -31,14 +39,13 @@ foreach ($crud as $prefix => $controller) {
 
 Route::group(["middleware" => "auth:sanctum"], function () use ($crud) {
 
-    // NOTE: use of {id} instead of {item} in the route is much better for crud operations
     foreach ($crud as $prefix => $controller) {
-        // Crud Functions
+        // Crud Functions: NOTE: use of {id} instead of {item} in the route is much better for crud operations
         Route::post("/$prefix", [$controller, "store"])->name($prefix . ".store");
         Route::delete("/$prefix/{id}", [$controller, "destroy"])->name($prefix . ".destroy");
         Route::match(["put", "post"], "/$prefix/{id}", [$controller, "update"])->name($prefix . ".update");
 
-        // Crud TABLES
+        // TABLES
         Route::get("/tables/" . $prefix, [TableController::class, $prefix]);
 
         // EXPORTS

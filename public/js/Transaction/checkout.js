@@ -5,6 +5,16 @@ import {
 
 const products = [];
 
+const isValid = () => {
+    if ($('#billing-form').valid()) return true;
+    Swal.fire({
+        title: 'Error!',
+        text: 'Please fill in all required fields.',
+        icon: 'error',
+        confirmButtonText: 'OK'
+    });
+    return false;
+}
 
 const validateForm = () => {
 
@@ -34,7 +44,6 @@ const checkout = (payload) => {
     $('input').removeClass('border-red-400 border-2');
     $('.address-field').addClass('hidden');
     const token = document.querySelector('meta[name="api-token"]').getAttribute('content')
-    validateForm();
     ajaxRequest.post({
         url: '/api/orders/checkout',
         data: JSON.stringify(payload),
@@ -126,10 +135,12 @@ const fetchItems = () => {
 
 
 $(document).ready(function () {
+    validateForm();
     fetchItems();
 
     $('#billing-form').on('submit', function (e) {
         e.preventDefault();
+        if (!isValid()) return;
         const addressInfo = Object.values(address).map(value => value ? value : 'N/A').join(', ');
         formData.address = addressInfo;
 

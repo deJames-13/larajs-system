@@ -57,7 +57,7 @@ const makeTable = (data) => {
             </div>
             
             `,
-            "Total": `P ${total}`,
+            "Total": `P ${total.toFixed(2)}`,
             "": `
             <div class="print:hidden flex items-center flex-end w-full gap-3">
             <a href="/orders/${order.id}/" class="btn btn-xs btn-secondary">Manage</a>
