@@ -17,10 +17,14 @@ const handleSuccess = (callback) => (response, status, xhr) => {
 // ##########################################################################
 // HEADER
 const getHeaders = (token, headers = {}) => {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     let defaultHeaders = {
         'Accept': 'application/json',
         'X-Requested-With': 'XMLHttpRequest'
     };
+    if (csrfToken) {
+        defaultHeaders['X-CSRF-TOKEN'] = csrfToken;
+    }
     if (token) {
         defaultHeaders['Authorization'] = 'Bearer ' + token;
     }
@@ -42,7 +46,7 @@ const ajaxCall = ({ url, method, data = {}, token = null, onSuccess, onError, he
         contentType: method === 'GET' ? undefined : false,
         processData: false,
         dataType: 'json',
-        headers: getHeaders(token, headers = {}),
+        headers: getHeaders(token, headers),
         error: handleError(onError),
         success: handleSuccess(onSuccess),
     }

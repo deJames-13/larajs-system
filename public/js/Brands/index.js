@@ -1,3 +1,4 @@
+// TODO: fix card
 export default class Brands {
     constructor({ url, parent }) {
         this.brands = [];

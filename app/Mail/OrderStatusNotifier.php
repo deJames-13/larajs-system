@@ -8,7 +8,6 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Queue\SerializesModels;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Mail\Mailables\Envelope;
-use App\Http\Resources\OrderResource;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class OrderStatusNotifier extends Mailable implements ShouldQueue // for asynch emailing
@@ -19,22 +18,25 @@ class OrderStatusNotifier extends Mailable implements ShouldQueue // for asynch 
     public $orderId;
     public $status = '';
     public $fullname = '';
+    public $shippingAddress = '';
+    public $createdAt = '';
+    // TODO:
+    public $paidDate = '';
     public $subtotal = 0;
     public $total = 0;
     public function __construct($order)
     {
         $order->load(['products', 'customer']);
-        $orderResource = (new OrderResource($order))->toArray(request());
+        Debugbar::info($order);
 
-        $this->orderId = $orderResource['id'];
-        $this->status = $orderResource['status'];
-        $this->fullname = $orderResource['customer']['fullname'];
-        $this->subtotal = $orderResource['total'];
-        $this->total = $orderResource['total'];
 
-        Debugbar::info([
-            $orderResource
-        ]);
+        $this->orderId = $order->id;
+        $this->status = $order->status;
+        $this->fullname = $order->customer->info->fullname();
+        $this->total = $order->products->sum(fn ($product) => $product->pivot->quantity * $product->price);
+        $this->subtotal = $this->total;
+        $this->shippingAddress = $order->shipping_address;
+        $this->createdAt = $order->created_at;
     }
 
     /**
@@ -58,9 +60,12 @@ class OrderStatusNotifier extends Mailable implements ShouldQueue // for asynch 
                 'orderId' => $this->orderId,
                 'status' => $this->status,
                 'fullname' => $this->fullname,
+                'shippingAddress' => $this->shippingAddress,
+                'createdAt' => $this->createdAt,
                 'subtotal' => $this->subtotal,
                 'total' => $this->total,
             ],
+
         );
     }
 

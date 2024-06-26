@@ -1,4 +1,4 @@
-@props(['title' => 'GlitzVogue'])
+@props(['title' => 'GlitzVogue', 'page' => ''])
 
 <header class="mx-auto">
 	<div class="navbar bg-base-100 border-b-2">
@@ -66,35 +66,39 @@
 						@endauth
 					</div>
 				</div>
-				<ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+				@if (!($page === 'login' || $page === 'register'))
+					<ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
 
-					{{-- Authenticated User --}}
-					@auth
-						<li>
-							<a class="justify-between">
-								Profile
-								<span class="badge">New</span>
-							</a>
-						</li>
-						<li>
-							<form id="logout-btn" method="POST" action="{{ route('logout') }}" class="flex">
-								@csrf
-								<button type="submit" class="w-full text-left">Logout</button>
-							</form>
-						</li>
-					@else
-						<li><a href="/register">Register</a></li>
-						<li><a href="/login">Login</a></li>
-					@endauth
+						{{-- Authenticated User --}}
+						@auth
+							<li>
+								<a class="justify-between">
+									Profile
+									<span class="badge">New</span>
+								</a>
+							</li>
+							<li>
+								<form id="logout-btn" method="POST" action="{{ route('logout') }}" class="flex">
+									@csrf
+									<button type="submit" class="w-full text-left">Logout</button>
+								</form>
+							</li>
+						@else
+							<li><button class="auth-btn" data-open-modal="signup_modal">Register</button></li>
+							<li><button class="auth-btn" data-open-modal="login_modal">Login</button></li>
+						@endauth
 
-				</ul>
+					</ul>
+				@endif
 			</div>
 
 		</div>
 	</div>
 
-
-	@role('customer')
-	@endrole
+	@push('scripts')
+		@guest
+			<script type="module" src="{{ asset('js/Auth/index.js') }}"></script>
+		@endguest
+	@endpush
 
 </header>

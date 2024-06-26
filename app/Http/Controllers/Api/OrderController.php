@@ -33,9 +33,10 @@ class OrderController extends Controller
         ]);
 
         if ($request->user()->role === 'admin') {
-            $orders->with('customer.customer');
+            $orders->with('customer.info');
         }
         $orders->orderBy('updated_at', 'desc');
+
         $page = $orders->paginate($limit);
         return OrderResource::collection($page);
     }
@@ -159,6 +160,7 @@ class OrderController extends Controller
         );
         $order->load(['products', 'customer']);
         $res = new OrderResource($order);
+
         Debugbar::info('Sending: ' . $order->customer->email);
         Mail::to($order->customer->email)->send(new OrderStatusNotifier($order));
 

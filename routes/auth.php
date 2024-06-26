@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PdfController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TableController;
 
 $crud = [
@@ -21,13 +22,16 @@ Route::group(["middleware" => "guest"], function () {
     Route::get("/login", [AuthController::class, "login"])->name("login");
     Route::post("/login", [AuthController::class, "authenticate"])->name("authenticate");
     Route::get("/register", [AuthController::class, "register"])->name("register");
-    Route::post("/register", [AuthController::class, "store"])->name("store");
+    Route::post("/register", [AuthController::class, "store"])->name("auth.store");
 });
 
 // Auth ONLY
 Route::group(["middleware" => "auth"], function () use ($crud) {
-
     Route::post("/logout", [AuthController::class, "logout"])->name("logout");
+
+    // PROFILE
+    Route::get("/profile", [ProfileController::class, "edit"])->name("profile");
+
 
     // Checkout
     Route::get("/checkout", [PageController::class, "checkout"])->name("checkout");
@@ -54,6 +58,7 @@ Route::group(["middleware" => "auth"], function () use ($crud) {
             // Imports
             Route::post("/$prefix", [TableController::class, $prefix . "Import"])->name("imports.$prefix");
         }
+        Route::get("/orders", [TableController::class, "orders"])->name("tables.aorders");
     });
     //##################################################################################################################
 

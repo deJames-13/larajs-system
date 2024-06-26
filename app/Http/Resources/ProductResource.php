@@ -27,7 +27,19 @@ class ProductResource extends JsonResource // JSON
             'order_quantity' => $this->whenPivotLoaded('order_products', function () {
                 return $this->pivot->quantity;
             }),
-            'images' => $this->images()->get(['id', 'name', 'path'])
+            'images' => $this->whenLoaded('images', function () {
+                return $this->images->makeHidden([''])->toArray();
+            }),
+            'brands' => $this->whenLoaded('brands', function () {
+                return $this->brands->makeHidden([''])->toArray();
+            }),
+            'categories' => $this->whenLoaded('categories', function () {
+                return $this->categories->makeHidden([''])->toArray();
+            }),
+            'promos' => $this->whenLoaded('promos', function () {
+                return $this->promos->makeHidden([''])->toArray();
+            }),
+
         ];
     }
 }

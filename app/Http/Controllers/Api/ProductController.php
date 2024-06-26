@@ -18,7 +18,18 @@ class ProductController extends Controller
     }
     public function index()
     {
-        return ProductResource::collection(Product::all());
+        $page = request('page') ?? 1;
+        $limit = request('limit') ?? 10;
+        $order =    request('order') ?? 'desc';
+        $search = request(['search']) ?? null;
+
+
+        $products = Product::filter($search)
+            ->orderBy('updated_at', $order)
+            ->paginate($limit, ['*'], 'page', $page);
+
+
+        return ProductResource::collection($products);
     }
     public function show(string $id)
     {
@@ -31,25 +42,25 @@ class ProductController extends Controller
         $data = $request->validate([
             'name' => 'required|string',
             'sku_code' => 'required|string|unique:products,sku_code',
-            'stock' => 'required|numeric',
             'description' => 'required|string',
             'specifications' => 'required|string',
             'price' => 'required|numeric',
-            'image_id' => 'sometimes|numeric'
+            'image_id' => 'sometimes|numeric',
+            'stock' => 'required|numeric',
+            'brands' => 'sometimes|array',
+            'brands.*' => 'sometimes|numeric',
+            'categories' => 'sometimes|array',
+            'categories.*' => 'sometimes|numeric',
         ]);
-        // Debugbar::info($request);
         // Debugbar::info($data);
 
         $stock = $data['stock'] ?? null;
         $image_id = $data['image_id'] ?? null;
-        unset($data['stock']);
-        unset($data['image_id']);
-
         $product = Product::create($data);
 
+        if ($stock) $product->stock()->create(['quantity' => $stock]);
         $this->handleImageUpload($request, $product, $image_id);
 
-        if ($stock) $product->stock()->create(['quantity' => $stock]);
 
         $res = new ProductResource($product);
         return response($res, 201, ['message' => 'Product added successfully!']);
@@ -107,5 +118,14 @@ class ProductController extends Controller
 
         $product->restore();
         return response(null, 200, ['message' => 'Product restored successfully!']);
+    }
+
+
+    public function attachBrand()
+    {
+    }
+
+    public function attachCategory()
+    {
     }
 }

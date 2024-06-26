@@ -55,10 +55,7 @@ class User extends Authenticatable
     // Relationships
 
     // 1 : 1
-    public function customer()
-    {
-        return $this->hasOne(Customer::class, 'user_id', 'id');
-    }
+    // customer 
     public function info()
     {
         return $this->hasOne(Customer::class, 'user_id', 'id');
