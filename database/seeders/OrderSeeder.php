@@ -15,7 +15,7 @@ class OrderSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->createOrder(100);
+        $this->createOrder(200);
     }
     public function createOrder($count)
     {
