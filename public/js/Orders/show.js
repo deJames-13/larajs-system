@@ -269,12 +269,8 @@ if (!isAdmin) {
 const updateStatus = (statusString) => {
     ajaxRequest.put({
         url: '/api/orders/' + id,
-        data: JSON.stringify({ status: '' + statusString }),
+        data: { status: '' + statusString },
         token: token,
-        settings: {
-            contentType: 'application/json',
-            processData: true,
-        },
         onSuccess: (response, status, error) => {
             setStatusMessage(statusString);
             setActionBtn(statusString);

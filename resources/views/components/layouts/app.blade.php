@@ -54,7 +54,8 @@
 					<h2>
 						Loading...
 					</h2>
-					<span class="loading loading-bars loading-lg"></span>
+					{{-- <span class="loading loading-bars loading-lg"></span> --}}
+					<div class="loader"></div>
 				</div>
 			</div>
 		@endif
