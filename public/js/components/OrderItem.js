@@ -22,7 +22,7 @@ export class OrderItem {
                 <td class="align-center">
                     <div class="max-w-[250px] flex items-center gap-3">
                         <div>
-                            <a href="/items/${this.product.id}" class="font-bold link link-hover link-primary">
+                            <a href="/products/${this.product.id}" class="font-bold link link-hover link-primary">
                                 ${this.product.name ?? 'Product Name'}
                             </a>
                             <div class="text-sm opacity-50">
