@@ -13,7 +13,7 @@ class PageController extends Controller
 {
     public function home()
     {
-        return view('index', ['page' => "Home"]);
+        return view('pages.home.index', ['page' => "Home"]);
     }
 
 

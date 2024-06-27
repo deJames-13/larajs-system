@@ -6,7 +6,7 @@
 @endphp
 
 
-<header class="sticky top-0 z-[100] bg-base-100 border-b">
+<header class="sticky top-0 z-[69] bg-base-100 border-b">
 	{{-- TOP BAR --}}@include('partials._header_top'){{-- TOP BAR --}}
 
 

@@ -1,4 +1,10 @@
-<x-layouts.app>
+@props([
+    'title' => 'GlitzVogue',
+    'page' => '',
+    'loading' => false,
+])
+
+<x-layouts.app :title="$title" :page="$page" :loading="$loading">
 
 	@include('partials._header')
 

@@ -1,8 +1,3 @@
-@props([
-    'title' => 'LaraJS',
-    'loading' => true,
-])
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,6 +7,7 @@
 		<meta name="csrf-token" content="{{ csrf_token() }}">
 		<meta name="api-token" content="{{ session('api-token') }}">
 		<title>{{ $title }}</title>
+		{{-- window title --}}
 
 		<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 		<script src="https://code.jquery.com/ui/1.13.3/jquery-ui.js"></script>

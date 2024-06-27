@@ -10,8 +10,7 @@
     ],
 ])
 
-
-<div class="{{ $print && 'hidden' }} print:block  container mx-aut m-0">
+<div class="{{ $print ? 'hidden' : '' }} print:block  container mx-aut m-0">
 
 	<div class="container flex flex-col">
 		<h2 class="text-gray-600 m-0">Order Summary</h2>

@@ -24,6 +24,9 @@ class DefaultLayout extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.layouts.default', ['page' => $this->page]);
+        return view('components.layouts.default', [
+            'page' => $this->page,
+            'title' => $this->title
+        ]);
     }
 }
