@@ -1,54 +1,138 @@
 import ajaxRequest from '../assets/ajaxRequest.js';
 import Carousel from '../components/Carousel.js';
 
-$(document).ready(function () {
+export default class BrandsCreate {
+    constructor() {
+        this.carousel = null;
+        this.init();
+        this.setupForm();
+        this.setupValidation();
+    }
 
-    // CAROUSEL
+    init() {
+        $(document).ready(() => {
+            // CAROUSEL
+            $('#image-input').change(() => {
+                const images = Array.from($('#image-input')[0].files).map(file => URL.createObjectURL(file));
+                this.carousel = new Carousel('.item-carousel', images, '.prev', '.next');
+            });
 
-    let carousel;
+            $('.prev').click(() => {
+                if (this.carousel) this.carousel.prev();
+            });
 
-    $('#image-input').change(function () {
-        let images = Array.from(this.files).map(file => URL.createObjectURL(file));
-        carousel = new Carousel('.item-carousel', images, '.prev', '.next');
-    });
+            $('.next').click(() => {
+                if (this.carousel) this.carousel.next();
+            });
 
-    $('.prev').click(function () {
-        if (carousel) carousel.prev();
-    });
+            // Initially show save and cancel buttons
+            $('#save-item, #cancel').removeClass('hidden');
+        });
+    }
 
-    $('.next').click(function () {
-        if (carousel) carousel.next();
-    });
+    setupForm() {
+        $('#cancel').click(() => {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, cancel it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#item-form').trigger('reset');
+                    $('#save-item, #cancel').addClass('hidden');
+                }
+            });
+        });
 
-    $('input, textarea').on('input', function () {
-        $('#save-item, #cancel').removeClass('hidden');
-    });
+        $('#save-item').click(() => {
+            $('#item-form').submit();
+        });
+    }
 
-    $('#cancel').click(function () {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, cancel it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $('#item-form').trigger('reset');
-                $('#save-item, #cancel').addClass('hidden');
+    setupValidation() {
+        $('#item-form').validate({
+            rules: {
+                name: {
+                    required: true,
+                    minlength: 3,
+                },
+                company: {
+                    required: true,
+                },
+                website: {
+                    required: true,
+                    url: true,
+                },
+                description: {
+                    required: true,
+                },
+                logo: {
+                    required: true,
+                },
+                status: {
+                    required: true,
+                },
+                created_at: {
+                    required: true,
+                    date: true,
+                },
+                updated_at: {
+                    required: true,
+                    date: true,
+                }
+            },
+            messages: {
+                name: {
+                    required: 'Name is required',
+                    minlength: 'Name must be at least 3 characters long',
+                },
+                company: {
+                    required: 'Company name is required',
+                },
+                website: {
+                    required: 'Website URL is required',
+                    url: 'Please enter a valid URL for the website',
+                },
+                description: {
+                    required: 'Description is required',
+                },
+                logo: {
+                    required: 'Logo image is required',
+                },
+                status: {
+                    required: 'Status is required',
+                },
+                created_at: {
+                    required: 'Created date is required',
+                    date: 'Please enter a valid date',
+                },
+                updated_at: {
+                    required: 'Updated date is required',
+                    date: 'Please enter a valid date',
+                }
+            },
+            errorElement: 'span',
+            errorPlacement: (error, element) => {
+                error.addClass('text-red-400 text-sm italic my-1');
+                element.addClass('border-red-400');
+                error.insertAfter(element);
+            },
+            submitHandler: (form) => {
+                this.handleFormSubmission(form);
             }
         });
-    });
+    }
 
-    // POST HANDLER FOR BRANDS
-    $('#item-form').submit(function (event) {
-        event.preventDefault();
+    handleFormSubmission(form) {
         $('.input-error').removeClass('input-error');
         $('.text-error').remove();
 
+        const formData = new FormData(form);
         const token = document.querySelector('meta[name="api-token"]').getAttribute('content');
-        const formData = new FormData($('#item-form')[0]);
 
         ajaxRequest.post({
             url: '/api/brands',
@@ -71,12 +155,12 @@ $(document).ready(function () {
                         `<p class="text-error text-sm">${response.errors[field]}</p>`
                     );
                 });
-                return;
             }
         });
-    });
+    }
+}
 
-    $('#save-item').click(function () {
-        $('#item-form').submit();
-    });
+// Initialize BrandsCreate class when document is ready
+$(document).ready(() => {
+    new BrandsCreate();
 });
