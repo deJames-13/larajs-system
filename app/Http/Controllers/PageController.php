@@ -25,6 +25,7 @@ class PageController extends Controller
     public function product(string $id)
     {
         $item = Product::find($id);
+
         return view('pages.products.show', ['item' => $item]);
     }
     public function productsCreate()
