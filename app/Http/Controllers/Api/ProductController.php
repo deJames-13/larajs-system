@@ -19,7 +19,7 @@ class ProductController extends Controller
     public function index()
     {
         $page = request('page') ?? 1;
-        $limit = request('limit') ?? 10;
+        $limit = request('limit') ?? 20;
         $order =    request('order') ?? 'desc';
         $search = request(['search']) ?? null;
 

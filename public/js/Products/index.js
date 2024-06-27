@@ -16,7 +16,7 @@ export default class Products {
 
         data.forEach(product => {
             const card = new ProductCard(product, '/products/' + product.id);
-            console.log(card);
+            // console.log(card);
             $(this.parent).append(card.render());
 
         }

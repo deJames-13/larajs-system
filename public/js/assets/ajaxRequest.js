@@ -1,23 +1,26 @@
 
 // LOADING SPINNER
+var isShowLoading = false;
 const showLoading = () => $('#loading').show();
 const hideLoading = () => $('#loading').hide();
 // ##########################################################################
 // HANDLERS
 const handleError = (callback) => (response, status, xhr) => {
-    hideLoading();
+    isShowLoading && hideLoading();
     callback(response, status, xhr);
     console.error('Error:', response);
 };
 
 const handleSuccess = (callback) => (response, status, xhr) => {
-    hideLoading();
+    isShowLoading && hideLoading();
     callback(response, status, xhr);
 }
 // ##########################################################################
 // HEADER
-const getHeaders = (token, headers = {}) => {
+const getHeaders = (token = null, headers = {}) => {
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    token = token || document.querySelector('meta[name="api-token"]')?.getAttribute('content') || null;
+
     let defaultHeaders = {
         'Accept': 'application/json',
         'X-Requested-With': 'XMLHttpRequest'
@@ -32,19 +35,20 @@ const getHeaders = (token, headers = {}) => {
 };
 // ##########################################################################
 // AJAX CALL
-const ajaxCall = ({ url, method, data = {}, token = null, onSuccess, onError, headers = {}, settings = {} }) => {
-    showLoading();
+const ajaxCall = ({ url, method, onSuccess, onError, data = {}, token = null, headers = {}, settings = {}, showLoader = true }) => {
+
+    const isFormData = data instanceof FormData;
+    isShowLoading = showLoader;
+    isShowLoading && showLoading();
 
     const defaultSettings = {
         async: true,
         crossDomain: true,
         url: url,
         method: method,
-        // data: method === 'GET' ? data : JSON.stringify(data),
-        // contentType: method === 'GET' ? undefined : 'application/json',
-        data: data,
-        contentType: method === 'GET' ? undefined : false,
-        processData: false,
+        data: isFormData ? data : JSON.stringify(data),
+        contentType: method === 'GET' ? undefined : isFormData ? false : 'application/json',
+        processData: !isFormData,
         dataType: 'json',
         headers: getHeaders(token, headers),
         error: handleError(onError),

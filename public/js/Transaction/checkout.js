@@ -46,11 +46,7 @@ const checkout = (payload) => {
     const token = document.querySelector('meta[name="api-token"]').getAttribute('content')
     ajaxRequest.post({
         url: '/api/orders/checkout',
-        data: JSON.stringify(payload),
-        settings: {
-            contentType: 'application/json',
-            processData: true,
-        },
+        data: payload,
         token: token,
         onSuccess: (res, status, error) => {
             Swal.fire({

@@ -13,8 +13,8 @@
 		<meta name="api-token" content="{{ session('api-token') }}">
 		<title>{{ $title }}</title>
 
-
-		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+		<script src="https://code.jquery.com/ui/1.13.3/jquery-ui.js"></script>
 		<script src="https://cdn.tailwindcss.com"></script>
 
 		{{-- DATATABLES --}}
@@ -54,7 +54,8 @@
 					<h2>
 						Loading...
 					</h2>
-					<span class="loading loading-bars loading-lg"></span>
+					{{-- <span class="loading loading-bars loading-lg"></span> --}}
+					<div class="loader"></div>
 				</div>
 			</div>
 		@endif
