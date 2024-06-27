@@ -27,9 +27,12 @@
 			<div class="dropdown dropdown-end ">
 				<div class="w-full flex space-x-1 items-center">
 
-					@auth <span class="text-xs font-bold">{{ auth()->user()->username }}</span> @endauth
+					@auth <span class="text-xs font-bold">{{ auth()->user()->username }}</span>
+					@else
+						<label tabindex="0" role="button" for="header-avatar" class="text-xs font-bold">Login / Register</label>
+					@endauth
 
-					<div tabindex="0" role="button" class="avatar">
+					<div id="header-avatar" tabindex="0" role="button" class="avatar">
 						@auth
 							<div class="w-8 rounded-full">
 								<img alt="Tailwind CSS Navbar component"

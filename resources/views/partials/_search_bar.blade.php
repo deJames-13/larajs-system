@@ -9,7 +9,7 @@
 			<span class="font-bold text-md text-primary">
 				Search:
 			</span>
-			<input id="search-input" type="text" class="z-[100] flex-grow focus:outline-none focus:border-0 p-2"
+			<input id="search-input" type="text" class="flex-grow focus:outline-none focus:border-0 p-2"
 				placeholder="What are you looking for? ">
 			<button class="bg-primary text-white p-2 hover:bg-secondary active:scale-95">
 				<i class="fas fa-search"></i>

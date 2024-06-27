@@ -1,12 +1,15 @@
 @props(['title' => 'GlitzVogue', 'page' => ''])
 
 @php
-	$exlcudeFromPages = ['login', 'register', 'cart', 'checkout', 'orders'];
-	$isShown = !in_array(strtolower($page), $exlcudeFromPages);
+	$exlcudeFromPages = ['login', 'register', 'cart', 'checkout', 'orders', 'profile'];
+	$isShown = isset($isShown) ? $isShown : !in_array(strtolower($page), $exlcudeFromPages);
+	$isHideHeader = isset($isHideHeader) ? $isHideHeader : false;
+
+	$isShown = $isShown && !$isHideHeader;
 @endphp
 
 
-<header class="sticky top-0 z-[100] bg-base-100 border-b">
+<header class="sticky top-0 z-[69] bg-base-100 border-b">
 	{{-- TOP BAR --}}@include('partials._header_top'){{-- TOP BAR --}}
 
 
