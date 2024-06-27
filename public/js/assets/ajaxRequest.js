@@ -17,8 +17,10 @@ const handleSuccess = (callback) => (response, status, xhr) => {
 }
 // ##########################################################################
 // HEADER
-const getHeaders = (token, headers = {}) => {
+const getHeaders = (token = null, headers = {}) => {
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    token = token || document.querySelector('meta[name="api-token"]')?.getAttribute('content') || null;
+
     let defaultHeaders = {
         'Accept': 'application/json',
         'X-Requested-With': 'XMLHttpRequest'

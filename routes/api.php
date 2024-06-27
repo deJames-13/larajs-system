@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\PromoController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\SearchController;
 
 Route::get("/test", function () {
     return response()->json(["message" => "API is working"]);
@@ -68,4 +69,7 @@ Route::group(["middleware" => "auth:sanctum"], function () use ($crud) {
         Route::get("/{id}", [OrderController::class, "show"]);
         Route::put("/{id}", [OrderController::class, "update"]);
     });
+
+    // autocomplete
+    Route::get("/autocomplete", [SearchController::class, "autocomplete"]);
 });

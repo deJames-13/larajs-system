@@ -24,6 +24,7 @@
 				});
 			})
 		</script>
+		<script type="module" src="{{ asset('js/scripts/header.js') }}"></script>
 	@endpush
 
 </header>
