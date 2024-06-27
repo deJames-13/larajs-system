@@ -9,7 +9,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Customer extends Model
 {
     use HasFactory;
-    protected $guarded = [];
+    protected $fillable = [
+        'user_id', 'first_name', 'last_name', 'phone_number', 'address', 'zip_code'
+    ];
+    protected $primaryKey = 'user_id';
+    public $incrementing = false;
 
     public function fullName(): string
     {

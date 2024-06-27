@@ -17,7 +17,7 @@ class ProductFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->sentence(),
+            'name' => fake()->word(),
             'sku_code' => fake()->unique()->regexify('[A-Z]{3}-[0-9]{3}'), // ABC-123
             'description' => fake()->paragraph(),
             'specifications' => fake()->paragraph(),
@@ -29,6 +29,20 @@ class ProductFactory extends Factory
     public function configure()
     {
         return $this->afterCreating(function (\App\Models\Product $item) {
+
+            // random brand
+            $brand = \App\Models\Brand::inRandomOrder()->first();
+            $item->brands()->attach($brand->id);
+
+            // random categories
+            $categories = \App\Models\Category::inRandomOrder()->limit(3)->get();
+            $item->categories()->attach($categories->pluck('id'));
+
+            // random promos
+            $promos = \App\Models\Promos::inRandomOrder()->limit(2)->get();
+            $item->promos()->attach($promos->pluck('id'));
+
+
             $item->stock()->create([
                 'quantity' => fake()->numberBetween(1, 100),
             ]);

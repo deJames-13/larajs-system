@@ -19,6 +19,17 @@ php artisan serve
 php artisan queue:work
 npm run dev
 
+# Accounts
+admin: 
+    'username' => 'admin',
+    'email' => 'admin@example.dev',
+    password: password
+
+customer: 
+    'username' => 'johndoe',
+    'email' => 'johndoe@example.dev',
+    password: password
+
 
 
 ```
