@@ -13,6 +13,13 @@
   font-family: 'Teachers';
   src: url('https://fonts.googleapis.com/css2?family=Teachers:ital,wght@0,400..800;1,400..800&display=swap');
 }
+
+/* https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap */
+
+@font-face {
+  font-family: 'Playfair';
+  src: url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+}
 button {
 @apply hover:scale-105 hover:shadow-lg hover:bg-gray-100 transition-all ease-in-out duration-300;
 }
@@ -74,4 +81,7 @@ background-color: rgba(0, 0, 0, 0.3);
   @apply scrollbar-thin
 }
 
-
+.hidden-search-bar {
+  transform: translateY(-100%);
+  transition: transform 0.3s ease-in-out;
+}

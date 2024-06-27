@@ -10,7 +10,7 @@ export default class ProductCard {
   render() {
     const card = `
         <!-- CARD -->
-      <div class="p-2 shadow-md bg-white overflow-clip rounded-t-lg h-full max-h-96">
+      <div class="p-2 shadow-md bg-white overflow-clip rounded-t-lg h-full max-w-72 max-h-96">
         <!-- Parent div with group class for hover effect -->
         <div class="group relative transition-all ease-in overflow-clip rounded-t-lg" onclick="window.location.replace('${this.redirectUrl}')">
           <!-- Image -->
@@ -29,7 +29,7 @@ export default class ProductCard {
           <span class="text-sm font-semibold uppercase">
             ${this.product.brand ?? "Brand"}
           </>
-            <p class="font-light">${this.product.name}</p>
+            <p class="font-light text-xs sm:text-md">${this.product.name}</p>
             <span class="font-bold">P${this.product.price}</span>
         </div>
         <!-- Ratings -->
