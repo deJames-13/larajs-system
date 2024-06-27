@@ -1,10 +1,20 @@
 @props(['title' => 'GlitzVogue', 'page' => ''])
+
+@php
+	$exlcudeFromPages = ['login', 'register', 'cart', 'checkout', 'orders'];
+	$isShown = !in_array(strtolower($page), $exlcudeFromPages);
+@endphp
+
+
 <header class="sticky top-0 z-[100] bg-base-100 border-b">
 	{{-- TOP BAR --}}@include('partials._header_top'){{-- TOP BAR --}}
 
-	{{-- SEARCH BAR --}}@include('partials._search_bar'){{-- SEARCH BAR --}}
 
-	{{-- NAVIGATION --}}@include('partials._nav_top'){{-- NAVIGATION --}}
+	@if ($isShown)
+		{{-- SEARCH BAR --}} @include('partials._search_bar') {{-- SEARCH BAR --}}
+		{{-- NAVIGATION --}} @include('partials._nav_top') {{-- NAVIGATION --}}
+	@endif
+
 
 
 	@push('scripts')

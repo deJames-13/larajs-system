@@ -1,5 +1,5 @@
 <div class="flex container mx-auto items-center justify-center uppercase space-x-8 lg:space-x-12 font-bold">
-	<a href="#" class="lg:px-4 py-2 hover:text-primary">New</a>
+	<a href="/products" class="lg:px-4 py-2 hover:text-primary">Products</a>
 	{{-- Categories --}}
 	<a href="#" class="block lg:hidden lg:px-4 py-2 hover:text-primary">Category</a>
 
