@@ -9,15 +9,30 @@ cp .env.example .env
 php artisan key:generate
 php artisan storage:link
 php artisan vendor:publish --provider="Attrixtech\LaravelIcons\LaravelIconsServiceProvider" 
-php artisan migrate
-php artisan db:seed
-
 npm install
+
+
 
 # Running
 php artisan serve
-php artisan queue:work
 npm run dev
+
+# FOR SEPARATE RUNNING OF JOBS
+php artisan queue:work
+
+
+# PROPER SEEDING !IMPORTANT
+# IF FIRST TIME:
+php artisan migrate
+
+# IF THE DATABASE EXIST:
+php artisan migrate:refresh
+php artisan db:seed                         # This one only seeds the Products, Brand, Promos, Categories and USER
+php artisan db:seed --class=OrderSeeder     # Make sure that `php artisan queue:work` is working. Make sure that first db:seed is executed
+
+
+
+
 
 # Accounts
 admin: 
