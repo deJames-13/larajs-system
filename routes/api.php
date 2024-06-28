@@ -24,6 +24,11 @@ Route::get("/test", function () {
 // });
 
 
+
+// Search Functions
+Route::get("/autocomplete", [SearchController::class, "autocomplete"]);
+
+
 // add from here on out: make sure there are 3 functions in controller: store - destroy - update
 $crud = [
     "products" => ProductController::class,
@@ -38,6 +43,7 @@ foreach ($crud as $prefix => $controller) {
     Route::get("/$prefix/{id}", [$controller, "show"])->name($prefix . ".get");
 }
 
+
 Route::group(["middleware" => "auth:sanctum"], function () use ($crud) {
 
     foreach ($crud as $prefix => $controller) {
@@ -50,7 +56,7 @@ Route::group(["middleware" => "auth:sanctum"], function () use ($crud) {
         Route::get("/tables/" . $prefix, [TableController::class, $prefix]);
 
         // EXPORTS
-        Route::get("/exports/$prefix/{type}", [TableController::class, $prefix . "Exports"]);
+        Route::get("/exports/$prefix/{type}", [TableController::class, $prefix . "Export"]);
     }
 
     // Cart
@@ -69,7 +75,4 @@ Route::group(["middleware" => "auth:sanctum"], function () use ($crud) {
         Route::get("/{id}", [OrderController::class, "show"]);
         Route::put("/{id}", [OrderController::class, "update"]);
     });
-
-    // autocomplete
-    Route::get("/autocomplete", [SearchController::class, "autocomplete"]);
 });
