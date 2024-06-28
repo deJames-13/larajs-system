@@ -23,6 +23,7 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+
         return [
             'username' => fake()->username(),
             'email' => fake()->unique()->safeEmail(),
@@ -40,5 +41,28 @@ class UserFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
         ]);
+    }
+    public function configure()
+    {
+        $street_address1 = fake()->streetAddress();
+        $street_address2 = fake()->streetAddress();
+        $city = fake()->city();
+        $region = fake()->state();
+        $country = fake()->country();
+
+        $address = $street_address1 . ', ' . $street_address2 . ', ' . $city . ', ' . $region . ', ' . $country;
+
+
+
+        return $this->afterCreating(function (\App\Models\User $user) use ($address) {
+            $user->info()->create([
+                'first_name' => fake()->firstName(),
+                'last_name' => fake()->lastName(),
+                'phone_number' => fake()->unique()->phoneNumber(),
+                'address' => $address,
+                'zip_code' => fake()->postcode(),
+                // 'profile_image' => fake()->imageUrl(),
+            ]);
+        });
     }
 }

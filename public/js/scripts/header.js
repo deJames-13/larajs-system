@@ -28,8 +28,9 @@ const searchSuggestion = async (term) => {
     }
 }
 
+const handleAutoComplete = () => {
 
-$(document).ready(function () {
+    if (!$('#search-input').length) return;
     $('#search-input').autocomplete({
         source: function (request, response) {
             searchSuggestion(request.term).then(data => {
@@ -64,4 +65,8 @@ $(document).ready(function () {
             .appendTo(ul);
     }
 
+}
+
+$(document).ready(function () {
+    handleAutoComplete();
 })

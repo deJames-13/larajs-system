@@ -126,7 +126,6 @@ class OrderController extends Controller
         $data = $request->validate(
             [
                 'status' => 'required|in:pending,processing,shipping,completed,cancelled',
-
                 // if user wants to edit the pending
                 'shipping_address' => 'sometimes',
                 'products' => 'sometimes|array',
@@ -139,6 +138,8 @@ class OrderController extends Controller
 
         if ($data['status'] === 'cancelled') {
             $order->items()->detach();
+        } else if ($data['status'] === 'completed') {
+            $order->update(['paid_date' => now()]);
         }
 
         if (isset($data['products'])) {

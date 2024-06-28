@@ -1,8 +1,8 @@
 @props(['title' => 'GlitzVogue', 'page' => ''])
 
 @php
-	$exlcudeFromPages = ['login', 'register', 'cart', 'checkout', 'orders', 'profile'];
-	$isShown = isset($isShown) ? $isShown : !in_array(strtolower($page), $exlcudeFromPages);
+	$showInPages = ['home', 'shop'];
+	$isShown = isset($isShown) ? $isShown : in_array(strtolower($page), $showInPages);
 	$isHideHeader = isset($isHideHeader) ? $isHideHeader : false;
 
 	$isShown = $isShown && !$isHideHeader;

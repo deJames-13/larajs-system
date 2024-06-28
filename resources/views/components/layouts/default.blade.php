@@ -1,7 +1,7 @@
 @props([
     'title' => 'GlitzVogue',
     'page' => '',
-    'loading' => false,
+    'loading' => true,
     'isHideHeader' => false,
 ])
 

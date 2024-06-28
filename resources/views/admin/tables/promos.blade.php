@@ -6,10 +6,10 @@
 			</div>
 
 			<div class="container flex space-x-2 justify-end align-items-center">
-				<button class="btn btn-success inline-block self-end">
-					<a href="{{ route('promos.create') }}">Add Promo</a>
+				<button class="btn text-white btn-success inline-block self-end">
+					<a href="{{ route('promos.create') }}">Add Product</a>
 				</button>
-				<button class="btn bg-primary inline-block self-end">
+				<button class="btn text-white bg-primary inline-block self-end">
 					<a href="{{ route('promos.create') }}">Restore</a>
 				</button>
 			</div>

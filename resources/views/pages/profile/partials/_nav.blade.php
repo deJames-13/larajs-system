@@ -1,3 +1,14 @@
+@php
+	$navs = [
+	    [
+	        'label' => 'Edit Profile',
+	        'icon' => 'fas fa-user',
+	        'route' => '/profile/edit	',
+	    ],
+	];
+@endphp
+
+
 <!--NAV-->
 <div class="nav p-8 rounded-lg border flex flex-col space-y-4">
 	<h2 class="text-2xl font-extrabold">Navigation</h2>

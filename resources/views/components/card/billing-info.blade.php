@@ -6,6 +6,7 @@
 	        'first_name' => '',
 	        'last_name' => '',
 	        'phone_number' => '',
+	        'zip_code' => '',
 	    ];
 @endphp
 <div>
@@ -106,7 +107,7 @@
 						</div>
 						<div class="w-full md:w-1/2 px-2">
 							<label for="zip_code">Zip / Postal Code*</label>
-							<input id="zip_code" name="zip_code" class="input input-bordered w-full" />
+							<input id="zip_code" name="zip_code" class="input input-bordered w-full" value="{{ $info->zip_code }}" />
 						</div>
 					</div>
 
@@ -135,6 +136,8 @@
 
 		@push('scripts')
 			<script>
+				var strAddress = "{{ $info->address }}"
+				var addr = strAddress.split(', ');
 				var formData = {
 					first_name: '',
 					last_name: '',
@@ -145,10 +148,18 @@
 				var address = {
 					address_1: '',
 					address_2: '',
-					country: '',
-					province: '',
 					city: '',
+					province: '',
+					country: '',
 				}
+
+				if (addr.length > 1) {
+					Object.keys(address).forEach(function(key, index) {
+						address[key] = addr[index];
+						$('#' + key).val(addr[index]);
+					});
+				}
+
 				$(document).ready(function() {
 					// COMPRESS PAYLOAD
 					$('input').on('input', function() {

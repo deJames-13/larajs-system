@@ -82,12 +82,17 @@ class TableController extends Controller
             $order =    request('order') ?? 'desc';
 
 
-            $orders = Order::filter(request(['search']))
+            $orders = Order::query()
+                ->with([
+                    'products' => function ($query) {
+                        $query->withPivot('quantity');
+                    },
+                    'customer',
+                    'customer.info'
+                ])
+                ->filter(request(['search']))
                 ->orderBy('updated_at', $order)
                 ->paginate($limit, ['*'], 'page', $page);
-
-            $orders->load('products');
-            $orders->load('customer');
 
 
             $response = OrderResource::collection($orders);

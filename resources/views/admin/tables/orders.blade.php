@@ -7,7 +7,7 @@
 
 			<div class="container flex space-x-2 justify-end align-items-center">
 
-				<button class="btn  bg-primary inline-block self-end">
+				<button class="btn text-white btn-primary inline-block self-end">
 					<a href="">Restore</a>
 				</button>
 			</div>
