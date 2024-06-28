@@ -11,7 +11,8 @@ export default class Products {
         this.maxPage = 1;
 
         this.fetchItems();
-        this.initInfinitScroll();
+        this.initInfiniteScroll();
+        $('#scroll-down').hide();
     }
 
     handlePage(page) {
@@ -19,46 +20,60 @@ export default class Products {
         this.fetchItems(this.page);
     }
 
-    initInfinitScroll() {
+    initInfiniteScroll() {
         let debounceTimer;
         let isAutoScrolling = false;
         $(window).scroll(() => {
             if (isAutoScrolling) return;
 
+            if (this.page === this.maxPage) {
+                $('#scroll-down').hide();
+                $('#no-more-products').show();
+            }
+            else {
+                $('#scroll-down').show();
+                $('#no-more-products').hide();
+            }
+
+            let scrollTop = $(window).scrollTop();
+            let scrollHeight = $(document).height();
+            let windowHeight = $(window).height();
+            // console.log(scrollTop / scrollHeight * 100);
+
             clearTimeout(debounceTimer);
             debounceTimer = setTimeout(() => {
                 // Move down
-                if ($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
+                if (scrollTop + windowHeight === scrollHeight) {
                     if (this.page < this.maxPage) {
                         this.page++;
                         this.fetchItems();
                         // move to top
                         isAutoScrolling = true;
-                        $('html, body').animate({ scrollTop: $(document).height() * 0.2 }, 500, () => {
+                        $('html, body').animate({ scrollTop: scrollHeight * 0.08 }, 500, () => {
                             isAutoScrolling = false;
                         });
                     }
                 }
 
                 // Move up
-                if ($(window).scrollTop() < 100) {
+                if (scrollTop === 0) {
+
                     if (this.page > 1) {
                         this.page--;
                         this.fetchItems();
                         isAutoScrolling = true;
-                        // move to bottom
-                        $('html, body').animate({ scrollTop: $(document).height() * 0.2 }, 500, () => {
+                        $('html, body').animate({ scrollTop: scrollHeight - windowHeight }, 500, () => {
                             isAutoScrolling = false;
                         });
+
                     }
                 }
-                // console.log(this.page, this.maxPage);
             }, 300); // Adjust the debounce time (in milliseconds) as needed
         });
+
     }
 
     handleSuccess(response) {
-        $('#loading').show()
 
         // console.log(response);
         response.data.forEach(product => {
@@ -79,13 +94,14 @@ export default class Products {
             $('#search-bar').hide();
         }
 
-        $('#loading').hide()
+        $('.scroll-loader').hide();
 
     }
 
     fetchItems() {
         $(this.parent).empty();
         $('#paginations').empty();
+        $('.scroll-loader').hide();
 
         let queries = [
             'page=' + this.page,
@@ -93,8 +109,14 @@ export default class Products {
         let q = queries.join('&');
         ajaxRequest.get({
             url: this.url + '?' + q,
-            onSuccess: (response) => { this.handleSuccess(response) },
-            onError: (error) => { console.log(error) }
+            onSuccess: (response) => {
+                this.handleSuccess(response);
+            },
+            onError: (error) => {
+                console.log(error);
+                $('.scroll-loader').hide();
+            },
+            // showLoader: false,
         });
     }
 
