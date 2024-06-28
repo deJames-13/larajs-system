@@ -25,6 +25,11 @@ class ProductController extends Controller
 
 
         $products = Product::filter($search)
+            ->with([
+                // 'images',
+                'brands',
+                // 'categories',
+            ])
             ->orderBy('updated_at', $order)
             ->paginate($limit, ['*'], 'page', $page);
 

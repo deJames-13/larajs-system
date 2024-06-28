@@ -1,17 +1,23 @@
 import ajaxrequest from '../assets/ajaxRequest.js';
 
+const showLoader = () => { $('.search-loader').show(); }
+const hideLoader = () => { $('.search-loader').hide(); }
+
 const fetchAutoComplete = (term) => {
+    showLoader();
     return new Promise((resolve, reject) => {
         ajaxrequest.get({
             url: `/api/autocomplete?term=${term}`,
             onSuccess: (response) => {
                 resolve(response);
+                hideLoader();
             },
             onError: (error) => {
                 console.log(error);
                 reject(error);
+                hideLoader();
             },
-            // showLoader: false,
+            showLoader: false,
         });
     });
 }
@@ -68,5 +74,6 @@ const handleAutoComplete = () => {
 }
 
 $(document).ready(function () {
+    hideLoader();
     handleAutoComplete();
 })

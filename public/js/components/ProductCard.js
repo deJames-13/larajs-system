@@ -27,13 +27,13 @@ export default class ProductCard {
         <!-- Content -->
         <div class="my-2">
           <span class="text-sm font-semibold uppercase">
-            ${this.product.brand ?? "Brand"}
+            ${this.product.brands[0].name ?? "Brand"}
           </>
             <p class="font-light text-xs sm:text-md">${this.product.name}</p>
             <span class="font-bold">P${this.product.price}</span>
         </div>
         <!-- Ratings -->
-        <div class="flex items-center space-x-1">
+        <div class="flex items-center space-x-1 my-2">
           <!-- Starts -->
           <div class="flex items-center text-secondary">
             <i class="fas fa-star text-primary"></i>

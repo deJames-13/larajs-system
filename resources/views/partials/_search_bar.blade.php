@@ -6,9 +6,12 @@
 
 	<div class="search flex items-center space-x-2 lg:w-1/3 max-w-lg">
 		<div class="pl-4 flex items-center space-x-2 border border-gray-300 w-full">
-			<span class="font-bold text-md text-primary">
-				Search:
-			</span>
+			<div class="flex items-center space-x-2 font-bold text-md text-primary">
+				<span class="w-5 search-loader"></span>
+				<span>
+					Search:
+				</span>
+			</div>
 			<input id="search-input" type="text" class="flex-grow focus:outline-none focus:border-0 p-2"
 				placeholder="What are you looking for? ">
 			<button class="bg-primary text-white p-2 hover:bg-secondary active:scale-95">
