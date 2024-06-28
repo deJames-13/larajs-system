@@ -18,9 +18,13 @@ class ProcessOrderSeed implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct()
+    public $count;
+    public $random;
+
+    public function __construct($count = 100, $random = true)
     {
-        //
+        $this->count = $count;
+        $this->random = $random;
     }
 
     /**
@@ -28,9 +32,9 @@ class ProcessOrderSeed implements ShouldQueue
      */
     public function handle()
     {
-        $this->createOrder(1000, random: true);
+        $this->createOrder($this->count, random: $this->random);
     }
-    public function createOrder($count, $status = 'completed', $random = false)
+    public function createOrder($count, $status = 'completed', $random = true)
     {
         $statuses = ['pending', 'processing', 'shipping', 'completed', 'cancelled'];
 

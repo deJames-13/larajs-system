@@ -30,6 +30,9 @@ php artisan migrate:refresh
 php artisan db:seed                         # This one only seeds the Products, Brand, Promos, Categories and USER
 php artisan db:seed --class=OrderSeeder     # Make sure that `php artisan queue:work` is working. Make sure that first db:seed is executed
 
+# To change the count of OrderSeeder
+# Goto database/seeders/OrderSeeder.php
+# change count $count = 50;
 
 
 
