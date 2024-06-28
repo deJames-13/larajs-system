@@ -8,6 +8,7 @@ export default class ProductCard {
   }
 
   render() {
+    const brand = this.product.brands.length > 0 && this.product.brands[0].name || '';
     const card = `
         <!-- CARD -->
       <div class="p-2 shadow-md bg-white overflow-clip rounded-t-lg h-full max-w-72 max-h-96">
@@ -27,7 +28,7 @@ export default class ProductCard {
         <!-- Content -->
         <div class="my-2">
           <span class="text-sm font-semibold uppercase">
-            ${this.product.brands[0].name ?? "Brand"}
+            ${brand}
           </>
             <p class="font-light text-xs sm:text-md">${this.product.name}</p>
             <span class="font-bold">P${this.product.price}</span>
