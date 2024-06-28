@@ -2,42 +2,18 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use App\Models\Product;
+use App\Jobs\ProcessOrderSeed;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-class OrderSeeder extends Seeder
+class OrderSeeder extends Seeder implements ShouldQueue
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        $this->createOrder(200, random: true);
-    }
-    public function createOrder($count, $status = 'completed', $random = false)
-    {
-        $statuses = ['pending', 'processing', 'shipping', 'completed', 'cancelled'];
-
-        for ($i = 0; $i < $count; $i++) {
-            DB::transaction(function () {
-                $customer = User::inRandomOrder()->first();
-                $product = Product::inRandomOrder()->first();
-                if (!$customer || !$product) {
-                    return;
-                }
-                $order = $customer->orders()->create([
-                    'status' => 'pending',
-                    'shipping_address' => $customer->info->address,
-                ]);
-
-                $order->products()->attach(
-                    $product->id,
-                    ['quantity' => rand(1, 5),]
-                );
-            });
-        }
+        ProcessOrderSeed::dispatch();
     }
 }
