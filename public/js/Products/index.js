@@ -51,7 +51,7 @@ export default class Products {
                         });
                     }
                 }
-                console.log(this.page, this.maxPage);
+                // console.log(this.page, this.maxPage);
             }, 300); // Adjust the debounce time (in milliseconds) as needed
         });
     }
