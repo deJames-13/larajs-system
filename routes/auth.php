@@ -4,8 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PdfController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PageController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TableController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Api\ChartController;
 
 $crud = [
     "products",
@@ -60,6 +61,17 @@ Route::group(["middleware" => "auth"], function () use ($crud) {
             Route::post("/$prefix", [TableController::class, $prefix . "Import"])->name("imports.$prefix");
         }
         Route::get("/orders", [TableController::class, "orders"])->name("tables.aorders");
+
+
+        // CHARTS
+        // insert chart function name here with url equivalent
+        $charts = [
+            'orderPerMonth' => 'order-per-month',
+        ];
+        // no need to touch
+        foreach ($charts as $chart => $url) {
+            Route::get("/charts/$url", [ChartController::class, $chart]);
+        }
     });
     //##################################################################################################################
 
