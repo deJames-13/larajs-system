@@ -34,7 +34,7 @@ export default class Products {
                         this.fetchItems();
                         // move to top
                         isAutoScrolling = true;
-                        $('html, body').animate({ scrollTop: $(document).height() * 0.1 }, 500, () => {
+                        $('html, body').animate({ scrollTop: $(document).height() * 0.2 }, 500, () => {
                             isAutoScrolling = false;
                         });
                     }
@@ -46,7 +46,8 @@ export default class Products {
                         this.page--;
                         this.fetchItems();
                         isAutoScrolling = true;
-                        $('html, body').animate({ scrollTop: $(document).height() * 0.7 }, 500, () => {
+                        // move to bottom
+                        $('html, body').animate({ scrollTop: $(document).height() * 0.2 }, 500, () => {
                             isAutoScrolling = false;
                         });
                     }
@@ -62,7 +63,9 @@ export default class Products {
         // console.log(response);
         response.data.forEach(product => {
             const card = new ProductCard(product, '/products/' + product.id);
-            $(this.parent).append(card.render());
+            $(this.parent).prepend(card.render());
+            // animate card
+
         });
 
 
