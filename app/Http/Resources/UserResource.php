@@ -19,7 +19,7 @@ class UserResource extends JsonResource
         return [
             ...$main,
             'fullname' => $this->whenLoaded('info', fn () => $this->info->fullName()),
-            'info' => $this->whenLoaded('info', fn () => $this->customer),
+            'info' => $this->whenLoaded('info', fn () => $this->info),
 
             'created_at' => str_replace('T', ' ', explode('.', $this->created_at)[0]),
             'updated_at' => str_replace('T', ' ', explode('.', $this->updated_at)[0]),

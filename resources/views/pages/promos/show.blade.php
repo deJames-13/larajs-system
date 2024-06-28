@@ -94,7 +94,8 @@
 		</div>
 
 		<div role="tablist" class="tabs tabs-lifted">
-			<input type="radio" id="description_tab" name="my_tabs" role="tab" class="tab" aria-label="Description" checked />
+			<input type="radio" id="description_tab" name="my_tabs" role="tab" class="tab" aria-label="Description"
+				checked />
 			<div role="tabpanel" class="tab-content bg-base-100 border-base-300 rounded-box p-6">
 				{{ $promo->description }}
 			</div>

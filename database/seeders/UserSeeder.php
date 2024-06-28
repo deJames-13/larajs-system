@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class UserSeeder extends Seeder
 {
@@ -12,26 +13,30 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        // admin
-        $admin = \App\Models\User::factory()->create([
-            'username' => 'admin',
-            'email' => 'admin@tunetown.dev',
-            'role' => 'admin'
-        ]);
+        $adminExists = User::where('email', 'admin@example.dev')->exists();
+        $customerExists = User::where('email', 'johndoe@example.dev')->exists();
 
+        if (!$adminExists) {
+            User::factory()->create([
+                'username' => 'admin',
+                'email' => 'admin@example.dev',
+                'role' => 'admin',
+            ]);
+        }
 
-        // customer
-        $user = \App\Models\User::factory()->create([
-            'username' => 'johndoe',
-            'email' => 'johndoe@tunetown.dev'
-        ]);
-        $user->info()->create([
-            'first_name' => 'John',
-            'last_name' => 'Doe',
-            'phone_number' => '1234567890',
-            'address' => '123 Main St',
-            'zip_code' => '12345'
-        ]);
-        $user = \App\Models\User::factory(20)->create();
+        if (!$customerExists) {
+            $user = User::factory()->create([
+                'username' => 'johndoe',
+                'email' => 'johndoe@example.dev',
+            ]);
+            $user->info()->updateOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'first_name' => 'John',
+                    'last_name' => 'Doe',
+                ]
+            );
+        }
+        $user = \App\Models\User::factory(50)->create();
     }
 }

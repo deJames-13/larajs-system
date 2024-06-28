@@ -19,12 +19,17 @@ class ProductController extends Controller
     public function index()
     {
         $page = request('page') ?? 1;
-        $limit = request('limit') ?? 10;
+        $limit = request('limit') ?? 20;
         $order =    request('order') ?? 'desc';
         $search = request(['search']) ?? null;
 
 
         $products = Product::filter($search)
+            ->with([
+                // 'images',
+                'brands',
+                // 'categories',
+            ])
             ->orderBy('updated_at', $order)
             ->paginate($limit, ['*'], 'page', $page);
 

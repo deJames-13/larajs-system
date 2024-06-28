@@ -11,8 +11,9 @@ export default {
       sans: ['Rubik', 'system-ui'],
       serif: ['Rubik', 'Georgia'],
       mono: ['ui-monospace', 'SFMono-Regular'],
-      body: ['"Rubik"', 'Font Awesome']
+      body: ['"Rubik"', 'Font Awesome'],
       // display: ['""'],
+      playfair: ['"Playfair Display"', 'serif'],
     }
   },
   plugins: [require("@tailwindcss/typography"), require('daisyui')],

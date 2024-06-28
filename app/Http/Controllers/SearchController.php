@@ -12,8 +12,8 @@ class SearchController extends Controller
 {
     public function autocomplete()
     {
-        $validated = request()->validate(['search' => 'required|string|max:255']);
-        $search = str_replace(['%', '_'], ['\%', '\_'],  $validated['search']);
+        $validated = request()->validate(['term' => 'required|string|max:255']);
+        $search = str_replace(['%', '_'], ['\%', '\_'],  $validated['term']);
         $searchIn = (object)[
             'products' => Product::class,
             'categories' => Category::class,
@@ -21,8 +21,26 @@ class SearchController extends Controller
             'promos' => Promos::class,
         ];
 
-        $results = collect($searchIn)->map(function ($model) use ($search) {
-            return $model::filter(['search' => $search])->limit(10)->get();
+        /*
+        results should retun
+        [
+            {
+                "label": "Product Name",
+                "value": "product_id",
+                "type": "product"
+            }
+        ]
+
+         */
+
+        $results = collect($searchIn)->flatMap(function ($model) use ($search) {
+            return $model::filter(['search' => $search])->limit(10)->get()->map(function ($item) use ($model) {
+                return [
+                    'label' => $item->name,
+                    'id' => $item->id,
+                    'type' => strtolower(class_basename($model))
+                ];
+            });
         });
 
         return response()->json($results);

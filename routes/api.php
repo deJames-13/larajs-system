@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\PromoController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\SearchController;
 
 Route::get("/test", function () {
     return response()->json(["message" => "API is working"]);
@@ -21,6 +22,11 @@ Route::get("/test", function () {
 //     Route::post("/login", [AuthController::class, "authenticate"]);
 //     Route::post("/register", [AuthController::class, "store"]);
 // });
+
+
+
+// Search Functions
+Route::get("/autocomplete", [SearchController::class, "autocomplete"]);
 
 
 // add from here on out: make sure there are 3 functions in controller: store - destroy - update
@@ -37,6 +43,7 @@ foreach ($crud as $prefix => $controller) {
     Route::get("/$prefix/{id}", [$controller, "show"])->name($prefix . ".get");
 }
 
+
 Route::group(["middleware" => "auth:sanctum"], function () use ($crud) {
 
     foreach ($crud as $prefix => $controller) {
@@ -49,7 +56,7 @@ Route::group(["middleware" => "auth:sanctum"], function () use ($crud) {
         Route::get("/tables/" . $prefix, [TableController::class, $prefix]);
 
         // EXPORTS
-        Route::get("/exports/$prefix/{type}", [TableController::class, $prefix . "Exports"]);
+        Route::get("/exports/$prefix/{type}", [TableController::class, $prefix . "Export"]);
     }
 
     // Cart

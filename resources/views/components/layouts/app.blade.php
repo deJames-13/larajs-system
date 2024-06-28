@@ -1,8 +1,3 @@
-@props([
-    'title' => 'LaraJS',
-    'loading' => true,
-])
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,9 +7,10 @@
 		<meta name="csrf-token" content="{{ csrf_token() }}">
 		<meta name="api-token" content="{{ session('api-token') }}">
 		<title>{{ $title }}</title>
+		{{-- window title --}}
 
-
-		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+		<script src="https://code.jquery.com/ui/1.13.3/jquery-ui.js"></script>
 		<script src="https://cdn.tailwindcss.com"></script>
 
 		{{-- DATATABLES --}}
@@ -32,6 +28,9 @@
 		<script src="{{ asset('js/assets/printThis.js') }}"></script>
 		<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/additional-methods.min.js"></script>
+
+		{{-- ApexCharts --}}
+		<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
 
 		@vite('resources/css/app.css')
@@ -54,7 +53,8 @@
 					<h2>
 						Loading...
 					</h2>
-					<span class="loading loading-bars loading-lg"></span>
+					{{-- <span class="loading loading-bars loading-lg"></span> --}}
+					<div class="loader"></div>
 				</div>
 			</div>
 		@endif

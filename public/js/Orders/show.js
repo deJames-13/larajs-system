@@ -174,7 +174,12 @@ const fetchOrder = (id) => {
             });
 
             // EXTRACT PAYLOAD
-            const customer_info = data.customer.info;
+            const customer_info = data.customer.info || {
+                first_name: '',
+                last_name: '',
+                zip_code: '',
+                phone_number: ''
+            };
             formData = {
                 first_name: customer_info.first_name,
                 last_name: customer_info.last_name,
@@ -261,109 +266,109 @@ $(document).on('click', '#view-receipt', () => {
     viewReceipt()
 })
 
-if (!isAdmin) {
-    exit;
-}
 
-// INFO: CRUD: UPDATE
-const updateStatus = (statusString) => {
-    ajaxRequest.put({
-        url: '/api/orders/' + id,
-        data: JSON.stringify({ status: '' + statusString }),
-        token: token,
-        settings: {
-            contentType: 'application/json',
-            processData: true,
-        },
-        onSuccess: (response, status, error) => {
-            setStatusMessage(statusString);
-            setActionBtn(statusString);
-            swalAlerts[statusString]();
-        },
-        onError: (response, status, error) => {
-            if (status !== 'success') {
-                Swal.fire({
-                    title: error,
-                    text: 'Something went wrong!',
-                    icon: 'error',
-                    confirmButtonText: 'Ok'
-                });
-                return;
+
+const adminFunction = () => {
+    // INFO: CRUD: UPDATE
+    const updateStatus = (statusString) => {
+        ajaxRequest.put({
+            url: '/api/orders/' + id,
+            data: { status: '' + statusString },
+            token: token,
+            onSuccess: (response, status, error) => {
+                setStatusMessage(statusString);
+                setActionBtn(statusString);
+                swalAlerts[statusString]();
+            },
+            onError: (response, status, error) => {
+                if (status !== 'success') {
+                    Swal.fire({
+                        title: error,
+                        text: 'Something went wrong!',
+                        icon: 'error',
+                        confirmButtonText: 'Ok'
+                    });
+                    return;
+                }
             }
-        }
+        });
+    }
+
+    // INFO: VERIFY PENDDING ORDER
+    $(document).on('click', '#btn-verify', function () {
+        Swal.fire({
+            title: 'Verify Order',
+            html: '<p>Please make sure that the order is correct before proceeding. <br/> <i class="text-xs">*This will send an email to the customer.</i></p>',
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonText: 'Verify and Accept',
+            cancelButtonText: 'Cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                updateStatus('processing');
+            }
+        });
+
     });
-}
 
-// INFO: VERIFY PENDDING ORDER
-$(document).on('click', '#btn-verify', function () {
-    Swal.fire({
-        title: 'Verify Order',
-        html: '<p>Please make sure that the order is correct before proceeding. <br/> <i class="text-xs">*This will send an email to the customer.</i></p>',
-        icon: 'info',
-        showCancelButton: true,
-        confirmButtonText: 'Verify and Accept',
-        cancelButtonText: 'Cancel',
-    }).then((result) => {
-        if (result.isConfirmed) {
-            updateStatus('processing');
-        }
+    // INFO: SHIP ORDER
+    $(document).on('click', '#btn-ship', function () {
+        Swal.fire({
+            title: 'Ship Order',
+            html: '<p>Please make sure that the order is ready before shipping. <br/> <i class="text-xs">*This will send an email to the customer.</i></p>',
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonText: 'Ship Now',
+            cancelButtonText: 'Cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                updateStatus(status.shipping);
+            }
+        });
     });
 
-});
-
-// INFO: SHIP ORDER
-$(document).on('click', '#btn-ship', function () {
-    Swal.fire({
-        title: 'Ship Order',
-        html: '<p>Please make sure that the order is ready before shipping. <br/> <i class="text-xs">*This will send an email to the customer.</i></p>',
-        icon: 'info',
-        showCancelButton: true,
-        confirmButtonText: 'Ship Now',
-        cancelButtonText: 'Cancel',
-    }).then((result) => {
-        if (result.isConfirmed) {
-            updateStatus(status.shipping);
-        }
-    });
-});
-
-// INFO: COMPLETE/ORDER DELIVERED
-$(document).on('click', '#btn-complete', function () {
-    Swal.fire({
-        title: 'Complete Order',
-        html: `
+    // INFO: COMPLETE/ORDER DELIVERED
+    $(document).on('click', '#btn-complete', function () {
+        Swal.fire({
+            title: 'Complete Order',
+            html: `
             <p>Please confirm the transaction before completing.</p>
             <p>Once the order is completed, it cannot be undone.</p>
             <i class="text-xs">*This will send an email to the customer.</i>
 
         `,
-        icon: 'info',
-        showCancelButton: true,
-        confirmButtonText: 'Done',
-        cancelButtonText: 'Cancel',
-    }).then((result) => {
-        if (result.isConfirmed) {
-            updateStatus(status.completed);
-        }
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonText: 'Done',
+            cancelButtonText: 'Cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                updateStatus(status.completed);
+            }
+        });
     });
-});
 
 
-// INFO: CANCEL ORDER
-$(document).on('click', '#btn-cancel', function () {
-    Swal.fire({
-        title: 'Cancel Order',
-        html: `
+    // INFO: CANCEL ORDER
+    $(document).on('click', '#btn-cancel', function () {
+        Swal.fire({
+            title: 'Cancel Order',
+            html: `
             <p>Are you sure you want to cancel this order? Note: Please provide a reason for cancelling this order.</p>
             <i class="text-xs">*This will send an email to the customer.</i>
         `,
-        icon: 'error',
-        showCancelButton: true,
-        confirmButtonText: 'Done',
-        cancelButtonText: 'Cancel',
-    }).then((result) => {
-        if (result.isConfirmed) {
-            updateStatus(status.cancelled);
-        }
+            icon: 'error',
+            showCancelButton: true,
+            confirmButtonText: 'Done',
+            cancelButtonText: 'Cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                updateStatus(status.cancelled);
+            }
+        });
     });
-});
+}
+
+if (isAdmin) {
+    adminFunction();
+}

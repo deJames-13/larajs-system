@@ -112,12 +112,8 @@ $(document).on('click', '#cart-upd', function () {
     const token = document.querySelector('meta[name="api-token"]').getAttribute('content');
     ajaxRequest.put({
         url: '/api/cart',
-        data: JSON.stringify({ products: products }),
+        data: { products: products },
         token: token,
-        settings: {
-            contentType: 'application/json',
-            processData: true,
-        },
         onSuccess: (res) => {
             Swal.fire({
                 title: 'Cart Updated!',

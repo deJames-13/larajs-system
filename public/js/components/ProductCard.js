@@ -8,9 +8,10 @@ export default class ProductCard {
   }
 
   render() {
+    const brand = this.product.brands.length > 0 && this.product.brands[0].name || '';
     const card = `
         <!-- CARD -->
-      <div class="p-2 shadow-md bg-white overflow-clip rounded-t-lg h-full max-h-96">
+      <div class="p-2 shadow-md bg-white overflow-clip rounded-t-lg h-full max-w-72 max-h-96">
         <!-- Parent div with group class for hover effect -->
         <div class="group relative transition-all ease-in overflow-clip rounded-t-lg" onclick="window.location.replace('${this.redirectUrl}')">
           <!-- Image -->
@@ -27,13 +28,13 @@ export default class ProductCard {
         <!-- Content -->
         <div class="my-2">
           <span class="text-sm font-semibold uppercase">
-            ${this.product.brand ?? "Brand"}
+            ${brand}
           </>
-            <p class="font-light">${this.product.name}</p>
+            <p class="font-light text-xs sm:text-md">${this.product.name}</p>
             <span class="font-bold">P${this.product.price}</span>
         </div>
         <!-- Ratings -->
-        <div class="flex items-center space-x-1">
+        <div class="flex items-center space-x-1 my-2">
           <!-- Starts -->
           <div class="flex items-center text-secondary">
             <i class="fas fa-star text-primary"></i>
