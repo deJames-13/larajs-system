@@ -67,7 +67,7 @@ class TableController extends Controller
             Excel::import(new ProductsImport, request()->file('item_upload'));
             return redirect()->back()->with('success', 'Excel file Imported Successfully');
         } catch (Exception $ex) {
-            //return response()->json(['error' => $ex->getMessage()]);
+            // return response()->json(['error' => $ex->getMessage()]);
             return abort(500, $ex->getMessage());
         }
     }

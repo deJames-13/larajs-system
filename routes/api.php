@@ -56,7 +56,7 @@ Route::group(["middleware" => "auth:sanctum"], function () use ($crud) {
         Route::get("/tables/" . $prefix, [TableController::class, $prefix]);
 
         // EXPORTS
-        Route::get("/exports/$prefix/{type}", [TableController::class, $prefix . "Exports"]);
+        Route::get("/exports/$prefix/{type}", [TableController::class, $prefix . "Export"]);
     }
 
     // Cart
