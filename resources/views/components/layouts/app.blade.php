@@ -29,6 +29,9 @@
 		<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/additional-methods.min.js"></script>
 
+		{{-- ApexCharts --}}
+		<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
 
 		@vite('resources/css/app.css')
 

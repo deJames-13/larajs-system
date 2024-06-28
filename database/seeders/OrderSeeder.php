@@ -15,10 +15,12 @@ class OrderSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->createOrder(200);
+        $this->createOrder(200, random: true);
     }
-    public function createOrder($count)
+    public function createOrder($count, $status = 'completed', $random = false)
     {
+        $statuses = ['pending', 'processing', 'shipping', 'completed', 'cancelled'];
+
         for ($i = 0; $i < $count; $i++) {
             DB::transaction(function () {
                 $customer = User::inRandomOrder()->first();
