@@ -4,6 +4,7 @@ import Modal from '../components/Modal.js';
 export default class Login {
     constructor() {
         this.modal = null;
+        // if path is /login do not show modal
         this.render();
         this.validate();
         return this.modal;
@@ -88,7 +89,17 @@ export default class Login {
 
     }
 
+    handleError = (errors) => {
+        // invalid credentials error message before the form
+        $('#login-form').prepend(`
+            <div class="text-error text-sm italic my-1">${errors}</div>
+        `);
+    }
+
     handleOnSubmit = () => {
+        // remove all errors
+        $('.text-error').remove();
+
 
         var formData = new FormData($('#login-form')[0]);
         const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -100,8 +111,11 @@ export default class Login {
                 this.modal.remove();
                 window.location.href = '/'
             },
-            onError: (error) => {
-                console.log(error);
+            onError: (xhr) => {
+                // console.log(xhr);2
+                if (xhr.status === 422) {
+                    this.handleError(xhr.responseJSON.message);
+                }
             }
         })
     }

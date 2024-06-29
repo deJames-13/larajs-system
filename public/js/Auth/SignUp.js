@@ -4,6 +4,7 @@ import Modal from '../components/Modal.js';
 export default class SignUp {
     constructor() {
         this.modal = null;
+        // if path is /register do not show modal
         this.render();
         this.validate();
         return this.modal;
@@ -118,7 +119,18 @@ export default class SignUp {
         return $('#signup-form').valid();
     }
 
+    handleInvalid = (errors) => {
+        Object.keys(errors).forEach((key) => {
+            $(`#${key}`).addClass('border-red-400');
+            $(`#${key}`).after(`<span class="text-red-400 text-sm italic my-1">${errors[key]}</span>`);
+        });
+    }
+
     handleOnSubmit = () => {
+        // remove all errors
+        $('.input-error').removeClass('input-error');
+        $('.text-error').remove();
+
         var formData = new FormData($('#signup-form')[0]);
         // console.log(formData);
         const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -130,8 +142,9 @@ export default class SignUp {
                 this.modal.remove();
                 window.location.href = '/'
             },
-            onError: (error) => {
-                console.log(error);
+            onError: (xhr) => {
+                console.log(xhr);
+                this.handleInvalid(xhr.responseJSON.errors || {});
             }
         })
     }
