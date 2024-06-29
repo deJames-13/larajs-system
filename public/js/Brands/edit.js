@@ -6,7 +6,9 @@ export default class BrandsEdit {
         this.id = null;
         this.carousel = null;
         this.brand = {};
-        this.images = [];
+        this.images = [
+            "https://placehold.co/400x600?text=item"
+        ]
 
         this.init();
         this.setupForm();
@@ -31,9 +33,15 @@ export default class BrandsEdit {
             if (this.carousel) this.carousel.next();
         });
 
-        $('input, textarea').on('input', () => {
-            $('#save-item, #cancel').removeClass('hidden');
+
+        // Initially hide save and cancel buttons
+        $('#save-item, #cancel').hide();
+
+        // On form change, show save and cancel buttons
+        $('#item-form').change(() => {
+            $('#save-item, #cancel').show();
         });
+
 
         $('#cancel').click(() => {
             Swal.fire({
@@ -46,7 +54,7 @@ export default class BrandsEdit {
                 confirmButtonText: 'Yes, cancel it!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    $('#save-item, #cancel').addClass('hidden');
+                    $('#save-item, #cancel').hide();
                     this.brand = this.fetchBrand(this.id);
                 }
             });
@@ -80,6 +88,10 @@ export default class BrandsEdit {
     populateForm(brand) {
         Object.keys(brand).forEach(key => {
             $(`#${key}`).val(brand[key]);
+            // if field is a select element
+            if ($(`#${key}`).is('select')) {
+                $(`#${key}`).val(brand[key].id);
+            }
         });
     }
 
@@ -92,7 +104,9 @@ export default class BrandsEdit {
             url: '/api/brands/' + id,
             onSuccess: (response) => {
                 if (response.data) {
-                    this.images = response.data.images.map(image => '/' + image.path);
+                    if (response.data.images && response.data.images.length > 0) {
+                        this.images = response.data.images.map(image => '/' + image.path);
+                    }
                     this.loadCarousel();
                     this.populateForm(response.data);
                     return response.data;
@@ -116,7 +130,7 @@ export default class BrandsEdit {
             'Your brand has been updated.',
             'success'
         ).then(() => {
-            $('#save-item, #cancel').addClass('hidden');
+            $('#save-item, #cancel').hide();
             this.brand = data;
             this.populateForm(data);
         });

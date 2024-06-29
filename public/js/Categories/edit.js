@@ -4,6 +4,9 @@ import Carousel from '../components/Carousel.js';
 export default class CategoriesEdit {
     constructor() {
         this.carousel = null;
+        this.images = [
+            "https://placehold.co/400x600?text=item"
+        ]
         this.init();
         this.setupForm();
         this.setupValidation();
@@ -30,8 +33,14 @@ export default class CategoriesEdit {
                 if (this.carousel) this.carousel.next();
             });
 
-            // Initially show save and cancel buttons
-            $('#save-item, #cancel').removeClass('hidden');
+            // Initially hide save and cancel buttons
+            $('#save-item, #cancel').hide();
+
+            // On form change, show save and cancel buttons
+            $('#item-form').change(() => {
+                $('#save-item, #cancel').show();
+            });
+
         });
     }
 
@@ -47,7 +56,7 @@ export default class CategoriesEdit {
                 confirmButtonText: 'Yes, cancel it!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    $('#save-item, #cancel').addClass('hidden');
+                    $('#save-item, #cancel').hide();
                     this.fetchCategory($('#item-form').data('id'));
                 }
             });
@@ -104,6 +113,10 @@ export default class CategoriesEdit {
         });
     }
 
+
+    loadCarousel() {
+        this.carousel = new Carousel('.item-carousel', this.images, '.prev', '.next');
+    }
     fetchCategory(id) {
         $('#image-input').val('');
         $('.input-error').removeClass('input-error');
@@ -113,8 +126,10 @@ export default class CategoriesEdit {
             url: '/api/categories/' + id,
             onSuccess: (response) => {
                 if (response.data) {
-                    const images = response.data.images.map(image => '/' + image.path);
-                    this.carousel = new Carousel('.item-carousel', images, '.prev', '.next');
+                    if (response.data.images && response.data.images.length > 0) {
+                        this.images = response.data.images.map(image => '/' + image.path);
+                    }
+                    this.loadCarousel();
                     this.populateForm(response.data);
                 }
             },
@@ -162,7 +177,7 @@ export default class CategoriesEdit {
             'Your category has been updated.',
             'success'
         ).then(() => {
-            $('#save-item, #cancel').addClass('hidden');
+            $('#save-item, #cancel').hide();
             this.fetchCategory($('#item-form').data('id'));
         });
     }

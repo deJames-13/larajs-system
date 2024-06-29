@@ -6,7 +6,9 @@ export default class PromosEdit {
         this.id = null;
         this.carousel = null;
         this.promo = {};
-        this.images = [];
+        this.images = [
+            "https://placehold.co/400x600?text=item"
+        ]
 
         this.init();
         this.validate();
@@ -31,12 +33,14 @@ export default class PromosEdit {
             if (this.carousel) this.carousel.next();
         });
 
-        // Initially show save and cancel buttons
-        $('#save-item, #cancel').removeClass('hidden');
+        // Initially hide save and cancel buttons
+        $('#save-item, #cancel').hide();
 
-        $('input, textarea').on('input', () => {
-            $('#save-item, #cancel').removeClass('hidden');
+        // On form change, show save and cancel buttons
+        $('#item-form').change(() => {
+            $('#save-item, #cancel').show();
         });
+
 
         $('#cancel').click(() => {
             Swal.fire({
@@ -49,7 +53,7 @@ export default class PromosEdit {
                 confirmButtonText: 'Yes, cancel it!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    $('#save-item, #cancel').addClass('hidden');
+                    $('#save-item, #cancel').hide();
                     this.promo = this.fetchPromo(this.id);
                 }
             });
@@ -83,6 +87,10 @@ export default class PromosEdit {
     populateForm(promo) {
         Object.keys(promo).forEach((key) => {
             $(`#${key}`).val(promo[key]);
+            // if input is date, format it
+            if (key.includes('date')) {
+                $(`#${key}`).val(new Date(promo[key]).toISOString().split('T')[0]);
+            }
         });
     }
 
@@ -95,7 +103,9 @@ export default class PromosEdit {
             url: '/api/promos/' + id,
             onSuccess: (response) => {
                 if (response.data) {
-                    this.images = response.data.images.map((image) => '/' + image.path);
+                    if (response.data.images && response.data.images.length > 0) {
+                        this.images = response.data.images.map(image => '/' + image.path);
+                    }
                     this.loadCarousel();
                     this.populateForm(response.data);
                     return response.data;
@@ -119,7 +129,7 @@ export default class PromosEdit {
             'Your promo has been updated.',
             'success'
         ).then(() => {
-            $('#save-item, #cancel').addClass('hidden');
+            $('#save-item, #cancel').hide();
             this.promo = data;
             this.populateForm(data);
         });
