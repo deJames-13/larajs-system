@@ -13,7 +13,7 @@
 			@else
 				<a class="cursor-pointer flex space-x-2 items-center">
 					<i class="fas fa-store"></i>
-					<span class="text-xs font-bold">Shop Now</span>
+					<a href="/products" class="text-xs font-bold">Shop Now</a>
 				</a>
 
 			@endauth
@@ -24,7 +24,7 @@
 		{{-- END --}}
 		<div class="flex space-x-1 items-center">
 			{{-- User --}}
-			<div class="dropdown dropdown-end ">
+			<div class="auth-dropdown dropdown dropdown-end ">
 				<div class="w-full flex space-x-1 items-center">
 
 					@auth <span class="text-xs font-bold">{{ auth()->user()->username }}</span>

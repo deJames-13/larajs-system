@@ -74,6 +74,7 @@ const handleAutoComplete = () => {
 }
 
 $(document).ready(function () {
+    if (window.location.pathname === '/login' || window.location.pathname === '/register') $('.auth-dropdown').hide();
     hideLoader();
     handleAutoComplete();
 })
