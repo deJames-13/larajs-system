@@ -55,6 +55,9 @@ const handleAutoComplete = () => {
             case 'category':
                 item.url = `/categories/${item.id}`;
                 break;
+            case 'promos':
+                item.url = `/promos/${item.id}`;
+                break;
             default:
                 item.url = `/${item.type}s/${item.id}`;
                 break;
