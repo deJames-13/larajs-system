@@ -71,6 +71,15 @@ background-color: rgba(0, 0, 0, 0.3);
 }
 
 
+.sidebar-link {
+  @apply btn btn-outline border-none justify-start btn-primary text-primary  w-full transition-all ease-in  hover:font-extrabold hover:scale-105 hover:text-lg ;
+}
+
+
+
+.active-sidebar-link {
+  @apply btn justify-start btn-primary text-white text-lg font-semibold ;
+}
 
 
 /* LOADERS */
@@ -113,4 +122,5 @@ background-color: rgba(0, 0, 0, 0.3);
   animation:l4 1s infinite steps(10);
 }
 @keyframes l4 {to{transform: rotate(1turn)}}
+
 

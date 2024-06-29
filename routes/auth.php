@@ -73,6 +73,17 @@ Route::group(["middleware" => "auth"], function () use ($crud) {
             Route::get("/charts/$url", [ChartController::class, $chart]);
         }
     });
+
+    // ADMIN DASHBOARD
+    // function => url
+    // should have done this from the start
+    $adminPages = [
+        "dashboard" => "/dashboard",
+        "users" => "/users",
+    ];
+    foreach ($adminPages as $page => $url) {
+        Route::get($url, [PageController::class, $page])->name("admin.$page");
+    }
     //##################################################################################################################
 
 });

@@ -1,7 +1,7 @@
 @props(['title' => 'GlitzVogue', 'page' => ''])
 
 @php
-	$showInPages = ['home', 'shop'];
+	$showInPages = ['home', 'shop', 'dashboard'];
 	$isShown = isset($isShown) ? $isShown : in_array(strtolower($page), $showInPages);
 	$isHideHeader = isset($isHideHeader) ? $isHideHeader : false;
 
@@ -14,7 +14,13 @@
 
 
 	@if ($isShown)
-		{{-- SEARCH BAR --}} @include('partials._search_bar') {{-- SEARCH BAR --}}
+		{{-- SEARCH BAR --}}
+		@role('admin')
+			@include('partials._search_bar', ['headerTitle' => $title, 'url' => route('admin.dashboard')])
+		@else
+			@include('partials._search_bar')
+		@endrole
+		{{-- SEARCH BAR --}}
 		{{-- NAVIGATION --}} @include('partials._nav_top') {{-- NAVIGATION --}}
 	@endif
 
