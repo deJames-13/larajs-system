@@ -3,7 +3,6 @@ import DashboardSideBar from "./components/sidebar.js";
 
 // TODO: adsjfklajdsfkljadsfkljal;dsfj ladsfjiamgoinginsane
 
-
 class Dashboard {
     constructor() {
         this.tables = new Tables({ target: '#dashboard-content' });
