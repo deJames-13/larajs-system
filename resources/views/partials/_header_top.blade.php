@@ -52,9 +52,9 @@
 						{{-- Authenticated User --}}
 						@auth
 							<li>
-								<a class="justify-between">
+								<a href="/profile" class="justify-between">
 									Profile
-									<span class="badge">New</span>
+									{{-- <span class="badge">New</span> --}}
 								</a>
 							</li>
 							<li>
