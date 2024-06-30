@@ -10,6 +10,12 @@
 			</a>
 
 			@auth
+				@if (!($page === 'shop' || $page === 'shop'))
+					<a class="cursor-pointer flex space-x-2 items-center">
+						<i class="fas fa-store"></i>
+						<a href="/products" class="text-xs font-bold">Go To Shop</a>
+					</a>
+				@endif
 			@else
 				<a class="cursor-pointer flex space-x-2 items-center">
 					<i class="fas fa-store"></i>
