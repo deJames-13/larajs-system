@@ -6,9 +6,19 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
+use Barryvdh\Debugbar\Facades\Debugbar;
 
 class UserController extends Controller
 {
+    public function confirmPassword()
+    {
+        $user = auth()->user();
+        $password = request()->get('password');
+        if (!auth()->guard('web')->attempt(['username' => $user->username, 'password' => $password])) {
+            return response()->json(["message" => "Unauthorized"], 401);
+        }
+        return response()->json(["message" => "Authorized"]);
+    }
     public function profile()
     {
         // check if logged in
@@ -68,9 +78,11 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {
+        // dd($request->hasFile('images'));
+        Debugbar::info($request);
         $userData = $request->validate([
-            'username' => 'required|unique:users,username,' . $id,
-            'email' => 'required|email|unique:users,email,' . $id,
+            'username' => 'sometimes|unique:users,username,' . $id . ',id',
+            'email' => 'sometimes|email|unique:users,email,' . $id . ',id',
             'password' => 'sometimes',
             'password_confirmation' => 'sometimes|same:password',
             'role' => 'sometimes|in:admin,customer',
@@ -79,13 +91,17 @@ class UserController extends Controller
             'info' => 'sometimes|array',
             'info.first_name' => 'sometimes|string',
             'info.last_name' => 'sometimes|string',
-            'info.phone_number' => 'sometimes|string|unique:customers,phone_number',
+            'info.phone_number' => 'sometimes|string|unique:customers,phone_number,' . $id . ',user_id',
             'info.address' => 'sometimes|string',
             'info.zip_code' => 'sometimes|string',
-            'info.profile_image' => 'sometimes|image',
+            'profile_image' => 'sometimes|image',
         ]);
+        // image 
 
         $user = User::find($id);
+        if (!$user) {
+            return response()->json(["message" => "User not found"], 404);
+        }
 
         // manage password changing
         if (isset($userData['password'])) {
@@ -96,13 +112,14 @@ class UserController extends Controller
 
         $user->update($userData);
 
-
-
         if (isset($userInfo['info'])) {
             $user->info()->updateOrCreate([], $userInfo['info']);
         }
 
-        return response(new UserResource($user));
+        $this->handleImageUpload($request, $user);
+
+
+        return response(new UserResource($user->fresh()));
     }
 
 

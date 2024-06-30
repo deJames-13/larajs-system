@@ -21,7 +21,7 @@ export default class FloatingInput {
     render() {
         const HTML = `
         <div name="floating-input" class="relative z-0">
-            <input ${this.type && `text="${this.type}"`} id="${this.id}"
+            <input ${this.type && `text="${this.type}"`} id="${this.id}" name="${this.id}"
                 class="block py-2.5 px-0 w-full text-sm  bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
                 placeholder=" " ${this.value ? `value="${this.value}"` : ''}/>
 

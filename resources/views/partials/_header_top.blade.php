@@ -41,12 +41,11 @@
 					<div id="header-avatar" tabindex="0" role="button" class="avatar">
 						@auth
 							<div class="w-8 rounded-full">
-								<img alt="Tailwind CSS Navbar component"
-									src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+								<img id="profile-image" alt="{{ auth()->user()->username }}" src="{{ auth()->user()->images[0]->path }}" />
 							</div>
 						@else
 							<div class="w-5 rounded-full">
-								<img src="https://img.icons8.com/ios-glyphs/30/user--v1.png" alt="user--v1" />
+								<img id="profile-image" src="https://img.icons8.com/ios-glyphs/30/user--v1.png" alt="user--v1" />
 							</div>
 						@endauth
 					</div>

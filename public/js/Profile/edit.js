@@ -1,15 +1,22 @@
 import ProfileForm from './partials/_profileform.js';
-
 export default class ProfileEdit {
-    constructor() {
+    constructor({ profile = null }) {
         this.target = '#profile-content';
-        this.form = new ProfileForm().getForm();
+        this.profile = profile || new ProfileForm();
+        this.form = this.profile.getForm();
+        this.user_profile = this.profile.getProfile();
         return this.render();
     }
 
-    static init() {
-        const profileEdit = new ProfileEdit();
+    static init({ profile = null }) {
+        const profileEdit = new ProfileEdit({ profile: profile });
         return profileEdit;
+    }
+
+    handleActionButtons(button) {
+        const btn = button.data('button');
+        btn === 'save' && this.profile.onSubmit();
+        btn === 'cancel' && this.profile.cancelSubmit();
     }
 
     render() {
@@ -39,6 +46,10 @@ export default class ProfileEdit {
         $(this.form).change(() => {
             $(this.target).find('#form-actions').show();
         });
+
+        $(this.target).find('#form-actions button').click((e) => { this.handleActionButtons($(e.target)) });
+
+
 
 
         return this;

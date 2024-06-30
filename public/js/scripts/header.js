@@ -1,7 +1,21 @@
-import ajaxrequest from '../assets/ajaxRequest.js';
-
+import ajaxRequest from '../assets/ajaxRequest.js';
+var user = null;
 const showLoader = () => { $('.search-loader').show(); }
 const hideLoader = () => { $('.search-loader').hide(); }
+
+
+const fetchProfile = () => {
+    ajaxRequest.get({
+        url: '/api/profile',
+        onSuccess: (response) => {
+            user = response;
+            $('#profile-image').attr('src', response.images && response.images.length > 0 && response.images[0].path);
+        },
+        onError: (error) => {
+            console.log(error);
+        }
+    });
+}
 
 const fetchAutoComplete = (term) => {
     showLoader();

@@ -93,7 +93,9 @@ foreach ($crud as $prefix => $config) {
 // MANUALLY ADDED
 Route::group(["middleware" => "auth:sanctum"], function () use ($crud) {
     // PROFILE
+    Route::post("/confirm-password", [UserController::class, "confirmPassword"]);
     Route::get("/profile", [UserController::class, "profile"]);
+    Route::match(["put", "post"], "/profile/update/{id}", [UserController::class, "update"]);
 
     // Cart
     Route::prefix("cart")->group(function () {

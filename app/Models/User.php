@@ -13,7 +13,7 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable, HasRoles, HasApiTokens, SoftDeletes;
 
-    protected $with = ['info'];
+    protected $with = ['info', 'images'];
 
     protected $fillable = [
         'username',
@@ -73,5 +73,11 @@ class User extends Authenticatable
     public function orders()
     {
         return $this->hasMany(Order::class);
+    }
+
+    // images
+    public function images()
+    {
+        return $this->belongsToMany(Image::class, 'user_images', 'user_id', 'image_id');
     }
 }
