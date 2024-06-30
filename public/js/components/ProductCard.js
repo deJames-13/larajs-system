@@ -3,6 +3,10 @@ export default class ProductCard {
     this.product = product;
     this.redirectUrl = redirectUrl;
 
+    if (this.product.images && this.product.images.length > 0) {
+      this.product.image_path = this.product.images[0].path;
+    }
+
 
     this.render();
   }
@@ -11,7 +15,7 @@ export default class ProductCard {
     const brand = this.product.brands.length > 0 && this.product.brands[0].name || '';
     const card = `
         <!-- CARD -->
-      <div class="p-2 shadow-md bg-white overflow-clip rounded-t-lg h-full max-w-72 max-h-96">
+      <div  class="item-card animate__animated animate__bounceIn p-2 shadow-md bg-white overflow-clip rounded-t-lg h-full max-w-72 max-h-96 container">
         <!-- Parent div with group class for hover effect -->
         <div class="group relative transition-all ease-in overflow-clip rounded-t-lg" onclick="window.location.replace('${this.redirectUrl}')">
           <!-- Image -->

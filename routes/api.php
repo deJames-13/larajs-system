@@ -4,13 +4,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TableController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\BrandController;
+use App\Http\Controllers\Api\ChartController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\PromoController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
-use App\Http\Controllers\SearchController;
 
 Route::get("/test", function () {
     return response()->json(["message" => "API is working"]);
@@ -75,4 +76,14 @@ Route::group(["middleware" => "auth:sanctum"], function () use ($crud) {
         Route::get("/{id}", [OrderController::class, "show"]);
         Route::put("/{id}", [OrderController::class, "update"]);
     });
+
+    // CHARTS
+    // insert chart function name here with url equivalent
+    $charts = [
+        'orderPerMonth' => 'order-per-month',
+    ];
+    // no need to touch
+    foreach ($charts as $chart => $url) {
+        Route::get("/charts/$url", [ChartController::class, $chart]);
+    }
 });

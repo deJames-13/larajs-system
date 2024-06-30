@@ -46,7 +46,7 @@ const ajaxCall = ({ url, method, onSuccess, onError, data = {}, token = null, he
         crossDomain: true,
         url: url,
         method: method,
-        data: isFormData ? data : JSON.stringify(data),
+        data: method === 'GET' ? undefined : isFormData ? data : JSON.stringify(data),
         contentType: method === 'GET' ? undefined : isFormData ? false : 'application/json',
         processData: !isFormData,
         dataType: 'json',

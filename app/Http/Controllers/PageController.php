@@ -131,4 +131,10 @@ class PageController extends Controller
             'role' => auth()->user()->role
         ]);
     }
+
+    // ADMIN DASHBOARD
+    public function dashboard()
+    {
+        return view('admin.dashboard', ['page' => "Dashboard"]);
+    }
 }

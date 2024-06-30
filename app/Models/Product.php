@@ -11,11 +11,11 @@ class Product extends Model
     use HasFactory, SoftDeletes;
     protected $with = [
         'stock',
+        'images',
         // JUST LOAD THEM
         // 'categories', 
         // 'brands', 
         // 'promos', 
-        // 'images'
     ];
     protected $fillable = [
         'name',

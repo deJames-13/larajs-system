@@ -25,6 +25,7 @@ class ProductsExport implements FromArray, WithHeadings, WithCustomCsvSettings
          */
         $products = Product::all()->map(function ($product) {
             return [
+                $product->id,
                 $product->name,
                 $product->sku_code,
                 $product->description,
@@ -40,12 +41,13 @@ class ProductsExport implements FromArray, WithHeadings, WithCustomCsvSettings
     public function headings(): array
     {
         return [
-            'Name',
-            'SKU Code',
-            'Description',
-            'Specifications',
-            'Price',
-            'Stock',
+            'id',
+            'name',
+            'sku_code',
+            'description',
+            'specifications',
+            'price',
+            'stock',
         ];
     }
 

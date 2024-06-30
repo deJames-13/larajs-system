@@ -4,9 +4,13 @@ import Carousel from '../components/Carousel.js';
 export default class ProductsEdit {
     constructor() {
         this.carousel = null;
+        this.images = [
+            "https://placehold.co/400x600?text=item"
+        ]
         this.init();
         this.setupForm();
         this.setupValidation();
+        this.id = $('#item-form').data('id');
     }
 
     init() {
@@ -27,8 +31,14 @@ export default class ProductsEdit {
                 if (this.carousel) this.carousel.next();
             });
 
-            // Initially show save and cancel buttons
-            $('#save-item, #cancel').removeClass('hidden');
+            // Initially hide save and cancel buttons
+            $('#save-item, #cancel').hide();
+
+            // Show save and cancel buttons when form is changed
+            $('#item-form').change(() => {
+                $('#save-item, #cancel').show();
+            });
+
         });
     }
 
@@ -44,7 +54,7 @@ export default class ProductsEdit {
                 confirmButtonText: 'Yes, cancel it!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    $('#save-item, #cancel').addClass('hidden');
+                    $('#save-item, #cancel').hide();
                     const id = $('#item-form').data('id');
                     this.fetchItem(id);
                 }
@@ -139,7 +149,9 @@ export default class ProductsEdit {
             }
         });
     }
-
+    loadCarousel() {
+        this.carousel = new Carousel('.item-carousel', this.images, '.prev', '.next');
+    }
     fetchItem(id) {
         $('#image-input').val('');
         $('.input-error').removeClass('input-error');
@@ -149,8 +161,10 @@ export default class ProductsEdit {
             url: '/api/products/' + id,
             onSuccess: (response) => {
                 if (response.data) {
-                    const images = response.data.images.map(image => '/' + image.path);
-                    this.carousel = new Carousel('.item-carousel', images, '.prev', '.next');
+                    if (response.data.images && response.data.images.length > 0) {
+                        this.images = response.data.images.map(image => '/' + image.path);
+                    }
+                    this.loadCarousel();
                     this.populateForm(response.data);
                 }
             },
@@ -180,7 +194,7 @@ export default class ProductsEdit {
         const token = document.querySelector('meta[name="api-token"]').getAttribute('content');
 
         ajaxRequest.post({
-            url: '/api/products/' + formData.get('id'),
+            url: '/api/products/' + this.id,
             data: formData,
             token: token,
             onSuccess: (response) => {
@@ -189,11 +203,12 @@ export default class ProductsEdit {
                     'Your item has been updated.',
                     'success'
                 ).then(() => {
-                    window.location.href = '/admin/products';
+                    $('#save-item, #cancel').hide();
+                    // window.location.href = '/admin/products';
                 });
             },
-            onError: (response) => {
-                Object.keys(response.errors).forEach(field => {
+            onError: (xhr) => {
+                Object.keys(xhr.responseJSON.errors).forEach(field => {
                     let input = $(`#${field}`);
                     input.addClass('input-error');
                     input.after(
