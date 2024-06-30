@@ -1,7 +1,7 @@
 import SideBar from "../../components/SideBar.js";
 
 export default class DashboardSideBar extends SideBar {
-    constructor({ target, onClick }) {
+    constructor({ target, onClick = () => { } }) {
         const sidebar = [{
             text: 'Main Page',
             icon: 'fas fa-home',
@@ -55,6 +55,7 @@ export default class DashboardSideBar extends SideBar {
             links: sidebar,
             onClick: onClick
         });
+        return this;
     }
 
     static init({ target, callback = () => { } }) {

@@ -1,5 +1,5 @@
 <x-layouts.default>
-	<div class="container px-12 py-24 mx-auto">
+	<div id="brands-page" class="container px-12 py-24 mx-auto">
 		<div class="flex flex-col items-center justify-center space-y-4">
 			<div class="w-full overflow-x-auto print:m-0 print:overflow-visible" id="table-wrapper">
 				<!-- DataTable will be rendered here -->
@@ -25,5 +25,11 @@
 
 	@push('scripts')
 		<script type="module" src="{{ asset('js/Tables/brands.js') }}"></script>
+		<script type="module">
+			import BrandsPage from "{{ asset('js/Tables/brands.js') }}";
+			BrandsPage.init({
+				target: "#brands-page"
+			});
+		</script>
 	@endpush
 </x-layouts.default>

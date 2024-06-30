@@ -75,7 +75,7 @@ class ProductController extends Controller
     {
         $data = $request->validate([
             'name' => 'sometimes|string',
-            'sku_code' => 'sometimes|string|exists:products,sku_code',
+            'sku_code' => 'sometimes|string|unique:products,sku_code,' . $id . ',id',
             'stock' => 'sometimes|numeric',
             'description' => 'sometimes|string',
             'specifications' => 'sometimes|string',

@@ -72,6 +72,9 @@
 
 
 	@push('scripts')
-		<script type="module" src="{{ asset('js/Transaction/cart.js') }}"></script>
+		<script type="module">
+			import Cart from "{{ asset('js/Transaction/cart.js') }}";
+			new Cart();
+		</script>
 	@endpush
 </x-layouts.default>

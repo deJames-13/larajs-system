@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Order;
-use App\Models\Product;
-use App\Models\Promos;
+use App\Models\User;
 use App\Models\Brand;
+use App\Models\Order;
+use App\Models\Promos;
+use App\Models\Product;
 use App\Models\Category;
 
 
@@ -16,6 +17,25 @@ class PageController extends Controller
         return view('pages.home.index', ['page' => "Home"]);
     }
 
+    // PRODUCTS PAGES
+    public function users()
+    {
+        return view('pages.users.index');
+    }
+    public function user(string $id)
+    {
+        $user = User::find($id);
+
+        return view('pages.users.show', ['item' => $user]);
+    }
+    public function usersCreate()
+    {
+        return view('pages.usersEdit.create');
+    }
+    public function usersEdit(string $id)
+    {
+        return view('pages.users.edit', ['id' => $id]);
+    }
 
     // PRODUCTS PAGES
     public function products()
@@ -136,5 +156,12 @@ class PageController extends Controller
     public function dashboard()
     {
         return view('admin.dashboard', ['page' => "Dashboard"]);
+    }
+
+
+    // PROFILE
+    public function profile()
+    {
+        return view('pages.profile.index', ['page' => "Profile"]);
     }
 }

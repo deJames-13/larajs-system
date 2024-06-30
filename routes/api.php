@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Api\CartController;
@@ -32,33 +33,69 @@ Route::get("/autocomplete", [SearchController::class, "autocomplete"]);
 
 // add from here on out: make sure there are 3 functions in controller: store - destroy - update
 $crud = [
-    "products" => ProductController::class,
-    "promos" => PromoController::class,
-    "brands" => BrandController::class,
-    "categories" => CategoryController::class,
+    "products" => [
+        "controller" => ProductController::class,
+    ],
+
+    "promos" => [
+        "controller" => PromoController::class,
+    ],
+
+    "brands" => [
+        "controller" => BrandController::class,
+    ],
+
+    "categories" => [
+        "controller" => CategoryController::class,
+    ],
+
+    "users" => [
+        "controller" => UserController::class,
+        "middleware" => ['auth:sanctum', 'role:admin'],
+    ],
+    // "users"?
     // "comments"?
 ];
 
-foreach ($crud as $prefix => $controller) {
-    Route::get("/$prefix", [$controller, "index"])->name($prefix . ".all");
-    Route::get("/$prefix/{id}", [$controller, "show"])->name($prefix . ".get");
+foreach ($crud as $prefix => $config) {
+    $controller = $config["controller"];
+    $middleware = isset($config["middleware"]) ? $config["middleware"] : [];
+    $middleware = is_array($middleware) ? $middleware : [$middleware];
+
+    Route::get("/$prefix", [$controller, "index"])->name($prefix . ".all")->middleware($middleware);
+    Route::get("/$prefix/{id}", [$controller, "show"])->name($prefix . ".get")->middleware($middleware);
+
+    array_unshift($middleware, "auth:sanctum");
+
+    // Crud Functions
+    Route::post("/$prefix", [$controller, "store"])
+        ->name($prefix . ".store")
+        ->middleware($middleware);
+
+    Route::delete("/$prefix/{id}", [$controller, "destroy"])
+        ->name($prefix . ".destroy")
+        ->middleware($middleware);
+
+    Route::match(["put", "post"], "/$prefix/{id}", [$controller, "update"])
+        ->name($prefix . ".update")
+        ->middleware($middleware);
+
+    // TABLES
+    Route::get("/tables/" . $prefix, [TableController::class, $prefix])
+        ->middleware($middleware);
+
+    // EXPORTS
+    Route::get("/exports/$prefix/{type}", [TableController::class, $prefix . "Export"])
+        ->middleware($middleware);
 }
 
 
+// MANUALLY ADDED
 Route::group(["middleware" => "auth:sanctum"], function () use ($crud) {
-
-    foreach ($crud as $prefix => $controller) {
-        // Crud Functions: NOTE: use of {id} instead of {item} in the route is much better for crud operations
-        Route::post("/$prefix", [$controller, "store"])->name($prefix . ".store");
-        Route::delete("/$prefix/{id}", [$controller, "destroy"])->name($prefix . ".destroy");
-        Route::match(["put", "post"], "/$prefix/{id}", [$controller, "update"])->name($prefix . ".update");
-
-        // TABLES
-        Route::get("/tables/" . $prefix, [TableController::class, $prefix]);
-
-        // EXPORTS
-        Route::get("/exports/$prefix/{type}", [TableController::class, $prefix . "Export"]);
-    }
+    // PROFILE
+    Route::post("/confirm-password", [UserController::class, "confirmPassword"]);
+    Route::get("/profile", [UserController::class, "profile"]);
+    Route::match(["put", "post"], "/profile/update/{id}", [UserController::class, "update"]);
 
     // Cart
     Route::prefix("cart")->group(function () {

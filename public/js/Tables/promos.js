@@ -17,6 +17,10 @@ export default class PromosPage {
         });
         this.bindEvents();
     }
+    static init({ target }) {
+        const instance = new PromosPage({ target });
+        return instance;
+    }
     makeTable(data) {
         console.log(data);
         return data.map(promo => {

@@ -3,7 +3,6 @@ import DashboardSideBar from "./components/sidebar.js";
 
 // TODO: adsjfklajdsfkljadsfkljal;dsfj ladsfjiamgoinginsane
 
-
 class Dashboard {
     constructor() {
         this.tables = new Tables({ target: '#dashboard-content' });
@@ -19,31 +18,15 @@ class Dashboard {
 
     getTable(url) {
         $('#dashboard-content').html('');
-        switch (url) {
-            case 'products':
-                this.tables.getProducts();
-                break;
-            case 'brands':
-                this.tables.getBrands();
-                break;
-            case 'promos':
-                this.tables.getPromos();
-                break;
-            case 'categories':
-                this.tables.getCategories();
-                break;
-            case 'orders':
-                this.tables.getOrders();
-                break;
-
-
-            default:
-                break;
-        }
+        url === 'products' && this.tables.getProducts();
+        url === 'brands' && this.tables.getBrands();
+        url === 'promos' && this.tables.getPromos();
+        url === 'categories' && this.tables.getCategories();
+        url === 'orders' && this.tables.getOrders();
     }
-
-
-
 }
+
+
+
 
 new Dashboard();
