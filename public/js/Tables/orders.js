@@ -25,6 +25,10 @@ export default class OrdersPage {
         this.bindEvents();
 
     }
+    static init({ target }) {
+        const instance = new OrdersPage({ target });
+        return instance;
+    }
 
     makeTable(data) {
         return data.map(order => {

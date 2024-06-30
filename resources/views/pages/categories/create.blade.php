@@ -38,6 +38,13 @@
 							placeholder="Enter category name">
 					</div>
 
+					{{-- Category Name Input --}}
+					<div class="flex flex-col space-y-2">
+						<label for="slug" class="text-lg font-semibold">Slug</label>
+						<input type="text" name="slug" id="slug" class="input input-bordered"
+							placeholder="Enter category slug">
+					</div>
+
 					{{-- Category Status Input --}}
 					<div class="flex flex-col space-y-2">
 						<label for="status" class="text-lg font-semibold">Status</label>

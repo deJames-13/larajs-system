@@ -1,5 +1,5 @@
 <x-layouts.default>
-	<div class="container mx-auto px-12 py-24">
+	<div id="orders-page" class="container mx-auto px-12 py-24">
 		<div class="flex flex-col space-y-4 items-center justify-center">
 			<div class=" w-full print:m-0 print:overflow-visible overflow-x-auto" id="table-wrapper">
 
@@ -21,6 +21,12 @@
 	</div>
 	@push('scripts')
 		<script type="module" src="{{ asset('js/Tables/orders.js') }}"></script>
+		<script type="module">
+			import OrdersPage from "{{ asset('js/Tables/orders.js') }}";
+			OrdersPage.init({
+				target: "#orders-page"
+			});
+		</script>
 	@endpush
 
 </x-layouts.default>

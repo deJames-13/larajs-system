@@ -154,8 +154,8 @@ export default class PromosCreate {
                     window.location.href = '/admin/promos';
                 });
             },
-            onError: (response) => {
-                Object.keys(response.errors).forEach(field => {
+            onError: (xhr) => {
+                Object.keys(xhr.responseJSON.errors).forEach(field => {
                     let input = $(`#${field}`);
                     input.addClass('input-error');
                     input.after(

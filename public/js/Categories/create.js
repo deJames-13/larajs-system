@@ -8,7 +8,7 @@ export default class CategoriesCreate {
         this.setupForm();
         this.setupValidation();
     }
-    
+
     init() {
         $(document).ready(() => {
             $('#image-input').change(() => {
@@ -59,6 +59,10 @@ export default class CategoriesCreate {
                     required: true,
                     minlength: 3,
                 },
+                slug: {
+                    required: true,
+                    minlength: 3,
+                },
                 description: {
                     required: true,
                     minlength: 10,
@@ -74,6 +78,10 @@ export default class CategoriesCreate {
                 name: {
                     required: 'Name is required',
                     minlength: 'Name must be at least 3 characters long',
+                },
+                name: {
+                    required: 'Slug is required',
+                    minlength: 'Slug must be at least 3 characters long',
                 },
                 description: {
                     required: 'Description is required',
@@ -118,8 +126,8 @@ export default class CategoriesCreate {
                     window.location.href = '/admin/categories';
                 });
             },
-            onError: (response) => {
-                Object.keys(response.errors).forEach(field => {
+            onError: (xhr) => {
+                Object.keys(xhr.responseJSON.errors).forEach(field => {
                     let input = $(`#${field}`);
                     input.addClass('input-error');
                     input.after(

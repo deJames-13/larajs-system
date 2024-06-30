@@ -17,6 +17,10 @@ export default class CategoriesPage {
         });
         this.bindEvents();
     }
+    static init({ target }) {
+        const instance = new CategoriesPage({ target });
+        return instance;
+    }
 
     makeTable(data) {
         console.log(data);
@@ -24,6 +28,7 @@ export default class CategoriesPage {
             return {
                 "ID": `${category.id}`,
                 "Name": `${category.name}`,
+                "Name": `${category.slug}`,
                 "Description": `${category.description}`,
                 "Status": `${category.status}`,
                 "": `
