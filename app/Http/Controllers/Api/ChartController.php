@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Order;
+use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -31,5 +32,34 @@ class ChartController extends Controller
         }
 
         return view('admin.charts.order-per-month');
+    }
+
+    public function customerPerAddress()
+    {
+        if (request()->ajax()) {
+            $customers = Customer::select('address', DB::raw('COUNT(*) as total'))
+                ->groupBy('address')
+                ->get();
+
+            Debugbar::info($customers);
+            return response()->json($customers);
+        }
+
+        return view('admin.charts.customer-per-address');
+    }
+
+    public function productsSold()
+    {
+        if (request()->ajax()) {
+            $productsSold = DB::table('order_products')
+                ->select('order_products.product_id', 'products.name', DB::raw('SUM(order_products.quantity) as total_sold'))
+                ->join('products', 'order_products.product_id', '=', 'products.id')
+                ->groupBy('order_products.product_id', 'products.name')
+                ->get();
+
+            return response()->json($productsSold);
+        }
+
+        return view('admin.charts.products-sold');
     }
 }
