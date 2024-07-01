@@ -39,6 +39,11 @@ return new class extends Migration
             $table->foreignId('image_id')->constrained()->onDelete('cascade');
             $table->foreignId('brand_id')->constrained()->onDelete('cascade');
         });
+        // Products
+        Schema::create('promo_images', function (Blueprint $table) {
+            $table->foreignId('image_id')->constrained()->onDelete('cascade');
+            $table->foreignId('promo_id')->constrained()->onDelete('cascade');
+        });
 
         // Comments
         Schema::create('comment_images', function (Blueprint $table) {
@@ -54,6 +59,7 @@ return new class extends Migration
     {
         Schema::dropIfExists('user_images');
         Schema::dropIfExists('product_images');
+        Schema::dropIfExists('promo_images');
         Schema::dropIfExists('category_images');
         Schema::dropIfExists('brand_images');
         Schema::dropIfExists('comment_images');
