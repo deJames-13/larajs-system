@@ -118,6 +118,8 @@ Route::group(["middleware" => "auth:sanctum"], function () use ($crud) {
     // insert chart function name here with url equivalent
     $charts = [
         'orderPerMonth' => 'order-per-month',
+        'customerPerAddress' => 'customer-per-address',
+        'productsSold' => 'products-sold',
     ];
     // no need to touch
     foreach ($charts as $chart => $url) {
