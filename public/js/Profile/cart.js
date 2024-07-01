@@ -1,5 +1,5 @@
 import Cart from "../Transaction/cart.js";
-import CartCard from "./partials/_cart.js";
+import CartPage from "./partials/_cart.js";
 
 export default class MyCart {
     constructor() {
@@ -14,7 +14,7 @@ export default class MyCart {
     }
 
     render() {
-        const cartCard = new CartCard({ target: this.target });
+        const cartCard = new CartPage({ target: this.target });
         this.cart = new Cart();
         return this;
     }

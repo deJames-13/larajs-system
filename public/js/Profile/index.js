@@ -38,6 +38,7 @@ export default class ProfilePage {
         url === 'edit-profile' && ProfileEdit.init({ profile: this.profile });
         url === 'edit-profile' && this.UserCard.hide();
         url === 'cart' && MyCart.init();
+        url === 'orders' && MyOrders.init();
 
     }
 }

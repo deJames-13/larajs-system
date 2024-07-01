@@ -119,9 +119,7 @@ class OrderController extends Controller
     // INFO: Order Update
     public function update(Request $request, string $id)
     {
-        if ($request->user()->role !== 'admin') {
-            abort(403, 'You are not allowed to perform this action');
-        }
+
 
         $data = $request->validate(
             [
@@ -129,21 +127,30 @@ class OrderController extends Controller
                 // if user wants to edit the pending
                 'shipping_address' => 'sometimes',
                 'products' => 'sometimes|array',
-                'products.*.id' => 'sometimes|exists:items,id',
+                'products.*.id' => 'sometimes|exists:products,id',
                 'products.*.quantity' => 'sometimes|integer|min:1',
             ]
         );
+
+        $isAdmin = $request->user()->role === 'admin';
+        $isRequestCancel =  $data['status'] === 'cancelled';
+
+        if (!$isAdmin && !$isRequestCancel) {
+            abort(403, 'You are not allowed to perform this action');
+        }
+
+
         // Debugbar::info($data);
         $order = Order::findOrFail($id);
 
         if ($data['status'] === 'cancelled') {
-            $order->items()->detach();
+            // $order->products()->detach();
         } else if ($data['status'] === 'completed') {
             $order->update(['paid_date' => now()]);
         }
 
         if (isset($data['products'])) {
-            $order->items()->sync(
+            $order->products()->sync(
                 collect($data['products'])->mapWithKeys(
                     function ($product) {
                         return [$product['id'] => ['quantity' => $product['quantity']]];

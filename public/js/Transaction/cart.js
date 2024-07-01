@@ -32,7 +32,7 @@ export default class Cart {
                 icon: 'warning',
                 confirmButtonColor: '#3085d6',
             }).then(() => {
-                window.location.href = '/';
+                // window.location.href = '/';
             });
         }
 
