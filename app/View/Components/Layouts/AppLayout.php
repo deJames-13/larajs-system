@@ -11,15 +11,18 @@ class AppLayout extends Component
     public $title;
     public $page;
     public $description;
+    public $loading;
 
     public function __construct(
-        $title = 'TuneTown',
-        $description = 'Your music hub.',
-        $page = ''
+        $title = 'GlitzVogue',
+        $description = 'Your cosmetic mentor.',
+        $page = '',
+        $loading = true
     ) {
         $this->title = $title;
         $this->description = $description;
         $this->page = $page;
+        $this->loading = $loading;
     }
 
     /**
@@ -27,6 +30,14 @@ class AppLayout extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.layouts.app');
+        return view(
+            'components.layouts.app',
+            [
+                'page' => $this->page,
+                'title' => $this->title,
+                'description' => $this->description,
+                'loading' => $this->loading
+            ]
+        );
     }
 }

@@ -1,54 +1,117 @@
 import ajaxRequest from '../assets/ajaxRequest.js';
 import Carousel from '../components/Carousel.js';
 
-$(document).ready(function () {
+export default class CategoriesCreate {
+    constructor() {
+        this.carousel = null;
+        this.init();
+        this.setupForm();
+        this.setupValidation();
+    }
 
-    // CAROUSEL
+    init() {
+        $(document).ready(() => {
+            $('#image-input').change(() => {
+                const images = Array.from($('#image-input')[0].files).map(file => URL.createObjectURL(file));
+                this.carousel = new Carousel('.item-carousel', images, '.prev', '.next');
+            });
 
-    let carousel;
+            $('.prev').click(() => {
+                if (this.carousel) this.carousel.prev();
+            });
 
-    $('#image-input').change(function () {
-        let images = Array.from(this.files).map(file => URL.createObjectURL(file));
-        carousel = new Carousel('.item-carousel', images, '.prev', '.next');
-    });
+            $('.next').click(() => {
+                if (this.carousel) this.carousel.next();
+            });
 
-    $('.prev').click(function () {
-        if (carousel) carousel.prev();
-    });
+            // Initially show save and cancel buttons
+            $('#save-item, #cancel').removeClass('hidden');
+        });
+    }
 
-    $('.next').click(function () {
-        if (carousel) carousel.next();
-    });
+    setupForm() {
+        $('#cancel').click(() => {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, cancel it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#item-form').trigger('reset');
+                    $('#save-item, #cancel').addClass('hidden');
+                }
+            });
+        });
 
-    $('input, textarea').on('input', function () {
-        $('#save-item, #cancel').removeClass('hidden');
-    });
+        $('#save-item').click(() => {
+            $('#item-form').submit();
+        });
+    }
 
-    $('#cancel').click(function () {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, cancel it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $('#item-form').trigger('reset');
-                $('#save-item, #cancel').addClass('hidden');
+    setupValidation() {
+        $('#item-form').validate({
+            rules: {
+                name: {
+                    required: true,
+                    minlength: 3,
+                },
+                slug: {
+                    required: true,
+                    minlength: 3,
+                },
+                description: {
+                    required: true,
+                    minlength: 10,
+                },
+                image: {
+                    required: true,
+                },
+                status: {
+                    required: true,
+                }
+            },
+            messages: {
+                name: {
+                    required: 'Name is required',
+                    minlength: 'Name must be at least 3 characters long',
+                },
+                name: {
+                    required: 'Slug is required',
+                    minlength: 'Slug must be at least 3 characters long',
+                },
+                description: {
+                    required: 'Description is required',
+                    minlength: 'Description must be at least 10 characters long',
+                },
+                image: {
+                    required: 'Image is required',
+                },
+                status: {
+                    required: 'Status is required',
+                }
+            },
+            errorElement: 'span',
+            errorPlacement: (error, element) => {
+                error.addClass('text-red-400 text-sm italic my-1');
+                element.addClass('border-red-400');
+                error.insertAfter(element);
+            },
+            submitHandler: (form) => {
+                this.handleFormSubmission(form);
             }
         });
-    });
+    }
 
-    // POST HANDLER FOR CATEGORIES
-    $('#item-form').submit(function (event) {
-        event.preventDefault();
+    handleFormSubmission(form) {
         $('.input-error').removeClass('input-error');
         $('.text-error').remove();
 
+        const formData = new FormData(form);
         const token = document.querySelector('meta[name="api-token"]').getAttribute('content');
-        const formData = new FormData($('#item-form')[0]);
 
         ajaxRequest.post({
             url: '/api/categories',
@@ -63,20 +126,20 @@ $(document).ready(function () {
                     window.location.href = '/admin/categories';
                 });
             },
-            onError: (response) => {
-                Object.keys(response.errors).forEach(field => {
+            onError: (xhr) => {
+                Object.keys(xhr.responseJSON.errors).forEach(field => {
                     let input = $(`#${field}`);
                     input.addClass('input-error');
                     input.after(
                         `<p class="text-error text-sm">${response.errors[field]}</p>`
                     );
                 });
-                return;
             }
         });
-    });
+    }
+}
 
-    $('#save-item').click(function () {
-        $('#item-form').submit();
-    });
+// Initialize CategoriesCreate class when document is ready
+$(document).ready(() => {
+    new CategoriesCreate();
 });

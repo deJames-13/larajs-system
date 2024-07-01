@@ -1,4 +1,4 @@
-export class Order {
+export default class Order {
     constructor(order) {
         this.order = order;
         this.total = 0;
@@ -21,7 +21,7 @@ export class Order {
                 <!-- Product -->
                 <div class="p-3 text-ellipsis flex items-center gap-3">
                     <div>
-                        <a href="/items/${item.id}" class="font-bold link link-hover link-primary">
+                        <a href="/products/${item.id}" class="font-bold link link-hover link-primary">
                         ${item.name}
                         </a>
 

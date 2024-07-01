@@ -1,4 +1,0 @@
-pag magpupush
-
-add muna
-commit message

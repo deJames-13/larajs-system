@@ -2,21 +2,40 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Order;
-use App\Models\Product;
-use App\Models\Promos;
+use App\Models\User;
 use App\Models\Brand;
+use App\Models\Order;
+use App\Models\Promos;
+use App\Models\Product;
 use App\Models\Category;
-use Illuminate\Http\Request;
 
 
 class PageController extends Controller
 {
     public function home()
     {
-        return view('pages.products.index', ['page' => "Home"]);
+        return view('pages.home.index', ['page' => "Home"]);
     }
 
+    // PRODUCTS PAGES
+    public function users()
+    {
+        return view('pages.users.index');
+    }
+    public function user(string $id)
+    {
+        $user = User::find($id);
+
+        return view('pages.users.show', ['item' => $user]);
+    }
+    public function usersCreate()
+    {
+        return view('pages.usersEdit.create');
+    }
+    public function usersEdit(string $id)
+    {
+        return view('pages.users.edit', ['id' => $id]);
+    }
 
     // PRODUCTS PAGES
     public function products()
@@ -26,14 +45,14 @@ class PageController extends Controller
     public function product(string $id)
     {
         $item = Product::find($id);
+
         return view('pages.products.show', ['item' => $item]);
     }
-    public function productCreate()
+    public function productsCreate()
     {
         return view('pages.products.create');
     }
-
-    public function productEdit(string $id)
+    public function productsEdit(string $id)
     {
         return view('pages.products.edit', ['id' => $id]);
     }
@@ -43,19 +62,16 @@ class PageController extends Controller
     {
         return view('pages.promos.index', ['page' => "Promos"]);
     }
-
     public function promo(string $id)
     {
         $promo = Promos::find($id);
         return view('pages.promos.show', ['promo' => $promo]);
     }
-
-    public function promoCreate()
+    public function promosCreate()
     {
         return view('pages.promos.create');
     }
-
-    public function promoEdit(string $id)
+    public function promosEdit(string $id)
     {
         return view('pages.promos.edit', ['id' => $id]);
     }
@@ -65,19 +81,16 @@ class PageController extends Controller
     {
         return view('pages.brands.index', ['page' => "Brands"]);
     }
-
     public function brand(string $id)
     {
         $brand = Brand::find($id);
         return view('pages.brands.show', ['brand' => $brand]);
     }
-
-    public function brandCreate()
+    public function brandsCreate()
     {
         return view('pages.brands.create');
     }
-
-    public function brandEdit(string $id)
+    public function brandsEdit(string $id)
     {
         return view('pages.brands.edit', ['id' => $id]);
     }
@@ -87,19 +100,16 @@ class PageController extends Controller
     {
         return view('pages.categories.index', ['page' => "Categories"]);
     }
-
     public function category(string $id)
     {
         $category = Category::find($id);
         return view('pages.categories.show', ['category' => $category]);
     }
-
-    public function categoryCreate()
+    public function categoriesCreate()
     {
         return view('pages.categories.create');
     }
-
-    public function categoryEdit(string $id)
+    public function categoriesEdit(string $id)
     {
         return view('pages.categories.edit', ['id' => $id]);
     }
@@ -135,11 +145,23 @@ class PageController extends Controller
                 return redirect()->route('orders');
             }
         }
-
         return view('pages.orders.show', [
             'page' => "Order",
             'id' => $id,
             'role' => auth()->user()->role
         ]);
+    }
+
+    // ADMIN DASHBOARD
+    public function dashboard()
+    {
+        return view('admin.dashboard', ['page' => "Dashboard"]);
+    }
+
+
+    // PROFILE
+    public function profile()
+    {
+        return view('pages.profile.index', ['page' => "Profile"]);
     }
 }

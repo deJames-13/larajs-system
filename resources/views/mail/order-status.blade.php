@@ -8,6 +8,15 @@
 	// $total = $total ?? '';
 	$message = '';
 
+	$order = (object) [
+	    'id' => $orderId,
+	    'full_name' => $fullname,
+	    'shipping_address' => $shippingAddress,
+	    'payment_method' => 'Cash on Delivery',
+	    'created_at' => $createdAt,
+	    'paid_date' => $paidDate,
+	];
+
 	switch ($status) {
 	    case 'processing':
 	        $message = "
@@ -27,10 +36,14 @@
 	        break;
 	    case 'completed':
 	        $message = "
-	            Thank you for shopping with us! Your order has been <strong>completed</strong>. We hope you are satisfied with our service. Please do not hesitate to contact us if you have any concerns or inquiries.
+	            Thank you for shopping with us! Your order has been <strong>completed</strong>. We hope you are satisfied with our service. Please do not hesitate to contact us if you have any concerns or inquiries. Landline: <strong>911-69420</strong> | Email: <strong>glitzvogue@ph.co</strong>
 	        ";
 	        break;
-
+	    case 'completed':
+	        $message = "
+	            Your order has been <strong>cancelled</strong>. If you have any inquiries, you can contact us at our landline <strong>911-69420</strong> or email us at <strong>glitzvogue@ph.co</strong>.
+	        ";
+	        break;
 	    default:
 	        break;
 	}
@@ -74,7 +87,8 @@
 							{!! $message !!}
 						</p>
 					</div>
-					@include('partials._receipt', ['print' => false])
+
+					@include('partials._receipt', ['print' => false, 'order' => $order])
 
 					<h2 class="print:m-0">Order Total</h2>
 					{{-- Total Sales --}}
@@ -94,6 +108,7 @@
 						<h4 class="m-0">Shipping</h4>
 						<div class="text-sm font-bold">TBC</div>
 					</div>
+
 
 					{{-- Grandtotal --}}
 					<div class="flex justify-between items-center">

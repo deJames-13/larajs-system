@@ -1,20 +1,16 @@
-@props([
-    'title' => 'LaraJS',
-    'loading' => true,
-])
-
 <!DOCTYPE html>
 <html lang="en">
 
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="csrf-token" content="{{ csrf_token() }}">
 		<meta name="api-token" content="{{ session('api-token') }}">
 		<title>{{ $title }}</title>
+		{{-- window title --}}
 
-		@vite('resources/css/app.css')
-
-		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+		<script src="https://code.jquery.com/ui/1.13.3/jquery-ui.js"></script>
 		<script src="https://cdn.tailwindcss.com"></script>
 
 		{{-- DATATABLES --}}
@@ -31,6 +27,13 @@
 		{{-- jQuery plugins --}}
 		<script src="{{ asset('js/assets/printThis.js') }}"></script>
 		<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/additional-methods.min.js"></script>
+
+		{{-- ChartJS --}}
+
+		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+		@vite('resources/css/app.css')
 
 	</head>
 
@@ -43,16 +46,18 @@
 
 
 		{{-- Loading overlay --}}
-
-		<div id="loading"
-			class="print:hidden hidden z-[100] fixed top-0 w-screen h-screen grid place-content-center bg-gray-500 bg-opacity-20">
-			<div class="div text-xl font-bold flex flex-col items-center justify-center">
-				<h2>
-					Loading...
-				</h2>
-				<span class="loading loading-bars loading-lg"></span>
+		@if ($loading)
+			<div id="loading"
+				class="print:hidden z-[100] fixed top-0 w-screen h-screen grid place-content-center bg-gray-500 bg-opacity-20">
+				<div class="div text-xl font-bold flex flex-col items-center justify-center">
+					<h2>
+						Loading...
+					</h2>
+					{{-- <span class="loading loading-bars loading-lg"></span> --}}
+					<div class="loader"></div>
+				</div>
 			</div>
-		</div>
+		@endif
 
 
 
@@ -85,6 +90,7 @@
 				$('#loading').hide();
 			});
 		</script>
+
 
 
 

@@ -1,4 +1,4 @@
-<x-layouts.default>
+<x-layouts.default :page="'shop'">
 	<x-card.page>
 		<div class="top flex justify-end items-center">
 			<div class="actions flex space-x-2 justify-end">

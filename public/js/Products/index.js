@@ -1,43 +1,122 @@
 import ajaxRequest from '../assets/ajaxRequest.js';
-import { Card } from '../components/Card.js';
+import Pagination from '../components/Paginate.js';
+import ProductCard from '../components/ProductCard.js';
 
 export default class Products {
     constructor({ url, parent }) {
         this.products = [];
         this.url = url;
         this.parent = parent;
+        this.page = 1;
+        this.maxPage = 1;
 
         this.fetchItems();
+        this.initInfiniteScroll();
+        $('#scroll-down').hide();
     }
 
+    handlePage(page) {
+        this.page = page;
+        this.fetchItems(this.page);
+    }
 
-    handleSuccess(data) {
-        data.forEach(product => {
-            const data = {
-                parent: this.parent,
-                imageSrc: product.image,
-                altText: product.name,
-                title: 'P' + product.price,
-                text: product.name,
-                buttonText: 'Buy Now',
-                buttonAction: () => {
-                    window.location.replace('/products/' + product.id)
+    initInfiniteScroll() {
+        let debounceTimer;
+        let isAutoScrolling = false;
+        $(window).scroll(() => {
+            if (isAutoScrolling) return;
+
+            if (this.page === this.maxPage) {
+                $('#scroll-down').hide();
+                $('#no-more-products').show();
+            }
+            else {
+                $('#scroll-down').show();
+                $('#no-more-products').hide();
+            }
+
+            let scrollTop = $(window).scrollTop();
+            let scrollHeight = $(document).height();
+            let windowHeight = $(window).height();
+            // console.log(scrollTop / scrollHeight * 100);
+
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                // Move down
+                if (scrollTop + windowHeight === scrollHeight) {
+                    if (this.page < this.maxPage) {
+                        this.page++;
+                        this.fetchItems();
+                        // move to top
+                        isAutoScrolling = true;
+                        $('html, body').animate({ scrollTop: scrollHeight * 0.08 }, 500, () => {
+                            isAutoScrolling = false;
+                        });
+                    }
                 }
-            };
-            const card = new Card(data);
-            card.elements.wrapper.addClass('max-w-xs hover');
-            card.elements.wrapper.on('click', () => {
-                window.location.replace('/products/' + product.id)
-            });
+
+                // Move up
+                if (scrollTop === 0) {
+
+                    if (this.page > 1) {
+                        this.page--;
+                        this.fetchItems();
+                        isAutoScrolling = true;
+                        $('html, body').animate({ scrollTop: scrollHeight - windowHeight }, 500, () => {
+                            isAutoScrolling = false;
+                        });
+
+                    }
+                }
+            }, 300); // Adjust the debounce time (in milliseconds) as needed
+        });
+
+    }
+
+    handleSuccess(response) {
+
+        // console.log(response);
+        response.data.forEach(product => {
+            const card = new ProductCard(product, '/products/' + product.id);
+            $(this.parent).prepend(card.render());
+            // animate card
+
+        });
+
+
+        if (response.links.next || response.prev || response.meta.current_page > 1) {
+            const links = new Pagination(response.links, response.meta.current_page).render(
+                '#paginations');
+            links.onClick(page => this.handlePage(page));
+            this.maxPage = response.meta.last_page;
+        } else {
+            $('#paginations').empty();
+            $('#search-bar').hide();
         }
-        );
+
+        $('.scroll-loader').hide();
+
     }
 
     fetchItems() {
+        $(this.parent).empty();
+        $('#paginations').empty();
+        $('.scroll-loader').hide();
+
+        let queries = [
+            'page=' + this.page,
+        ]
+        let q = queries.join('&');
         ajaxRequest.get({
-            url: this.url,
-            onSuccess: ({ data }) => { this.handleSuccess(data) },
-            onError: (error) => { console.log(error) }
+            url: this.url + '?' + q,
+            onSuccess: (response) => {
+                this.handleSuccess(response);
+            },
+            onError: (error) => {
+                console.log(error);
+                $('.scroll-loader').hide();
+            },
+            // showLoader: false,
         });
     }
 

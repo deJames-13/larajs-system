@@ -1,0 +1,35 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Models\Order;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Barryvdh\Debugbar\Facades\Debugbar;
+
+class ChartController extends Controller
+{
+
+    /**
+     * A function to get the total order per month in a year
+     * @return JSON
+     * [
+     * {"month":1,"total":10},
+     * {"month":2,"total":20},
+     * ]
+     */
+    public function orderPerMonth()
+    {
+        if (request()->ajax()) {
+            $orders = Order::select(DB::raw('MONTH(created_at) as month'), DB::raw('COUNT(*) as total'))
+                ->groupBy('month')
+                ->get();
+
+            Debugbar::info($orders);
+            return response()->json($orders);
+        }
+
+        return view('admin.charts.order-per-month');
+    }
+}

@@ -4,11 +4,25 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  @apply scrollbar-thin
+}
 @font-face {
-    font-family: 'Rubik';
-    src: url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
-  }
+  font-family: 'Rubik';
+  src: url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+}
 
+@font-face {
+  font-family: 'Teachers';
+  src: url('https://fonts.googleapis.com/css2?family=Teachers:ital,wght@0,400..800;1,400..800&display=swap');
+}
+
+/* https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap */
+
+@font-face {
+  font-family: 'Playfair';
+  src: url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+}
 button {
 @apply hover:scale-105 hover:shadow-lg hover:bg-gray-100 transition-all ease-in-out duration-300;
 }
@@ -42,7 +56,71 @@ background-color: rgba(0, 0, 0, 0.2);
 background-color: rgba(0, 0, 0, 0.3);
 }  
 
-
-* {
-  @apply scrollbar-thin
+.hidden-search-bar {
+  transform: translateY(-100%);
+  transition: transform 0.3s ease-in-out;
 }
+
+.ui-autocomplete {
+
+  @apply z-[1050] p-4 bg-base-100 border w-[100px] max-h-[400px] overflow-y-auto;
+
+}
+.ui-helper-hidden-accessible {
+  display: none;
+}
+
+
+.sidebar-link {
+  @apply btn btn-outline border-none justify-start btn-primary text-primary  w-full transition-all ease-in  hover:font-extrabold hover:scale-105 hover:text-lg ;
+}
+
+
+
+.active-sidebar-link {
+  @apply btn justify-start btn-primary text-white text-lg font-semibold ;
+}
+
+
+/* LOADERS */
+.loader {
+  width: 120px;
+  height: 22px;
+  border-radius: 40px;
+  color: #514b82;
+  border: 2px solid;
+  position: relative;
+}
+.loader::before {
+  content: "";
+  position: absolute;
+  margin: 2px;
+  width: 25%;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+  background: currentColor;
+  animation: l3 1s infinite linear;
+}
+@keyframes l3 {
+    50% {left:100%;transform: translateX(calc(-100% - 4px))}
+}
+
+.search-loader {
+  width: 50px;
+  --b: 8px; 
+  aspect-ratio: 1;
+  border-radius: 50%;
+  padding: 1px;
+  background: conic-gradient(#0000 10%,#514b82) content-box;
+  -webkit-mask:
+    repeating-conic-gradient(#0000 0deg,#000 1deg 20deg,#0000 21deg 36deg),
+    radial-gradient(farthest-side,#0000 calc(100% - var(--b) - 1px),#000 calc(100% - var(--b)));
+  -webkit-mask-composite: destination-in;
+          mask-composite: intersect;
+  animation:l4 1s infinite steps(10);
+}
+@keyframes l4 {to{transform: rotate(1turn)}}
+
+

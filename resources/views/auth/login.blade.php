@@ -1,4 +1,4 @@
-<x-layouts.default>
+<x-layouts.default :page="'login'">
 	<div class=" prose mx-auto container h-screen p-12">
 		<div class="flex justify-center py-18">
 			<x-card>

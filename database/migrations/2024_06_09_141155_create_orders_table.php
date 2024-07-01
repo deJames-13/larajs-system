@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('shipping_address');
             $table->enum('status', ['pending', 'processing', 'shipping', 'completed', 'cancelled'])->default('pending');
+            $table->date('paid_date')->nullable();
+
             $table->timestamps();
             $table->softDeletes();
         });

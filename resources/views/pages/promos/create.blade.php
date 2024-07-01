@@ -16,9 +16,6 @@
 			<div class="left image-container flex flex-col space-y-2 border-r-2 border-secondary border-opacity-25 ">
 
 				<div>
-					<!-- Carousel component or image upload -->
-					<!-- Replace with your carousel or image upload component -->
-					<!-- Example: <x-card.carousel /> -->
 					<x-card.carousel />
 				</div>
 				<div class="flex space-x-2 p-4">

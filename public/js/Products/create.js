@@ -1,55 +1,147 @@
-
 import ajaxRequest from '../assets/ajaxRequest.js';
 import Carousel from '../components/Carousel.js';
-$(document).ready(function () {
 
-    // CAROUSEL
+export default class ProductsCreate {
+    constructor() {
+        this.carousel = null;
+        this.init();
+        this.setupForm();
+        this.setupValidation();
+    }
 
-    let carousel;
+    init() {
+        $(document).ready(() => {
+            $('#image-input').change(() => {
+                const images = Array.from($('#image-input')[0].files).map(file => URL.createObjectURL(file));
+                this.carousel = new Carousel('.item-carousel', images, '.prev', '.next');
+            });
 
-    $('#image-input').change(function () {
-        let images = Array.from(this.files).map(file => URL.createObjectURL(file));
-        carousel = new Carousel('.item-carousel', images, '.prev', '.next');
-    });
+            $('.prev').click(() => {
+                if (this.carousel) this.carousel.prev();
+            });
 
-    $('.prev').click(function () {
-        if (carousel) carousel.prev();
-    });
+            $('.next').click(() => {
+                if (this.carousel) this.carousel.next();
+            });
 
-    $('.next').click(function () {
-        if (carousel) carousel.next();
-    });
+            // Initially show save and cancel buttons
+            $('#save-item, #cancel').removeClass('hidden');
+        });
+    }
 
+    setupForm() {
+        $('#cancel').click(() => {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, cancel it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#item-form').trigger('reset');
+                    $('#save-item, #cancel').addClass('hidden');
+                }
+            });
+        });
 
-    $('input, textarea').on('input', function () {
-        $('#save-item, #cancel').removeClass('hidden');
-    });
-    $('#cancel').click(function () {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, cancel it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $('#item-form').trigger('reset');
-                $('#save-item, #cancel').addClass('hidden');
+        $('#save-item').click(() => {
+            $('#item-form').submit();
+        });
+    }
+
+    setupValidation() {
+        $('#item-form').validate({
+            rules: {
+                name: {
+                    required: true,
+                    minlength: 3,
+                },
+                sku_code: {
+                    required: true,
+                    minlength: 3,
+                },
+                description: {
+                    required: true,
+                    minlength: 10,
+                },
+                specifications: {
+                    required: true,
+                },
+                price: {
+                    required: true,
+                    number: true,
+                    min: 0,
+                },
+                stock: {
+                    required: true,
+                    number: true,
+                    min: 0,
+                },
+                created_at: {
+                    required: true,
+                    date: true,
+                },
+                updated_at: {
+                    required: true,
+                    date: true,
+                }
+            },
+            messages: {
+                name: {
+                    required: 'Name is required',
+                    minlength: 'Name must be at least 3 characters long',
+                },
+                sku_code: {
+                    required: 'SKU Code is required',
+                    minlength: 'SKU Code must be at least 3 characters long',
+                },
+                description: {
+                    required: 'Description is required',
+                    minlength: 'Description must be at least 10 characters long',
+                },
+                specifications: {
+                    required: 'Specifications are required',
+                },
+                price: {
+                    required: 'Price is required',
+                    number: 'Price must be a number',
+                    min: 'Price must be at least 0',
+                },
+                stock: {
+                    required: 'Stock is required',
+                    number: 'Stock must be a number',
+                    min: 'Stock must be at least 0',
+                },
+                created_at: {
+                    required: 'Created date is required',
+                    date: 'Please enter a valid date',
+                },
+                updated_at: {
+                    required: 'Updated date is required',
+                    date: 'Please enter a valid date',
+                }
+            },
+            errorElement: 'span',
+            errorPlacement: (error, element) => {
+                error.addClass('text-red-400 text-sm italic my-1');
+                element.addClass('border-red-400');
+                error.insertAfter(element);
+            },
+            submitHandler: (form) => {
+                this.handleFormSubmission(form);
             }
-        })
-    });
+        });
+    }
 
-    // POST HANDLER
-    $('#item-form').submit(function (event) {
-        event.preventDefault();
+    handleFormSubmission(form) {
         $('.input-error').removeClass('input-error');
         $('.text-error').remove();
 
-
+        const formData = new FormData(form);
         const token = document.querySelector('meta[name="api-token"]').getAttribute('content');
-        const formData = new FormData($('#item-form')[0]); // formData  object with images
 
         ajaxRequest.post({
             url: '/api/products',
@@ -60,24 +152,24 @@ $(document).ready(function () {
                     'Item Added!',
                     'Your item has been added to inventory.',
                     'success'
-
                 ).then(() => {
                     window.location.href = '/admin/products';
-                })
+                });
             },
-            onError: (response) => {
-                Object.keys(response.errors).forEach(field => {
+            onError: (xhr) => {
+                Object.keys(xhr.responseJSON.errors).forEach(field => {
                     let input = $(`#${field}`);
                     input.addClass('input-error');
                     input.after(
                         `<p class="text-error text-sm">${response.errors[field]}</p>`
                     );
                 });
-                return;
             }
         });
-    });
-    $('#save-item').click(function () {
-        $('#item-form').submit();
-    });
+    }
+}
+
+// Initialize ProductsCreate class when document is ready
+$(document).ready(() => {
+    new ProductsCreate();
 });
