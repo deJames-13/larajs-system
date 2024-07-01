@@ -1,7 +1,5 @@
 import ajaxRequest from "../assets/ajaxRequest.js";
-import {
-    OrderItem
-} from "../components/OrderItem.js";
+import OrderItem from "../components/OrderItem.js";
 
 const products = [];
 

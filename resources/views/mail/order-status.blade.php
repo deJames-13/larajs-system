@@ -8,7 +8,7 @@
 	// $total = $total ?? '';
 	$message = '';
 
-	$order =  (object) [
+	$order = (object) [
 	    'id' => $orderId,
 	    'full_name' => $fullname,
 	    'shipping_address' => $shippingAddress,
@@ -36,10 +36,14 @@
 	        break;
 	    case 'completed':
 	        $message = "
-	            Thank you for shopping with us! Your order has been <strong>completed</strong>. We hope you are satisfied with our service. Please do not hesitate to contact us if you have any concerns or inquiries.
+	            Thank you for shopping with us! Your order has been <strong>completed</strong>. We hope you are satisfied with our service. Please do not hesitate to contact us if you have any concerns or inquiries. Landline: <strong>911-69420</strong> | Email: <strong>glitzvogue@ph.co</strong>
 	        ";
 	        break;
-
+	    case 'completed':
+	        $message = "
+	            Your order has been <strong>cancelled</strong>. If you have any inquiries, you can contact us at our landline <strong>911-69420</strong> or email us at <strong>glitzvogue@ph.co</strong>.
+	        ";
+	        break;
 	    default:
 	        break;
 	}

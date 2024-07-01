@@ -20,7 +20,7 @@ const fetchProfile = () => {
 const fetchAutoComplete = (term) => {
     showLoader();
     return new Promise((resolve, reject) => {
-        ajaxrequest.get({
+        ajaxRequest.get({
             url: `/api/autocomplete?term=${term}`,
             onSuccess: (response) => {
                 resolve(response);

@@ -40,8 +40,14 @@
 
 					<div id="header-avatar" tabindex="0" role="button" class="avatar">
 						@auth
+							@php
+								$image = isset(auth()->user()->images[0])
+								    ? auth()->user()->images[0]->path
+								    : 'https://img.icons8.com/ios-glyphs/30/user--v1.png';
+							@endphp
+
 							<div class="w-8 rounded-full">
-								<img id="profile-image" alt="{{ auth()->user()->username }}" src="{{ auth()->user()->images[0]->path }}" />
+								<img id="profile-image" alt="{{ auth()->user()->username }}" src="{{ $image }}" />
 							</div>
 						@else
 							<div class="w-5 rounded-full">

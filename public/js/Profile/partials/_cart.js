@@ -1,7 +1,7 @@
-export default class CartCard {
+export default class CartPage {
     constructor({ target }) {
         this.target = target;
-        this.render();
+        return this.render();
     }
 
     render() {
@@ -13,7 +13,7 @@ export default class CartCard {
                     <div>
                         <button id="cart-upd" class="btn btn-primary">Update Cart</button>
                     </div>
-                    <button class="back btn btn-secondary">Back</button>
+                    <!-- <button class="back btn btn-secondary">Back</button> -->
                 </div>
             </div>
             <div class="divider"></div>
