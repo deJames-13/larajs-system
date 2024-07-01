@@ -24,7 +24,7 @@ export class CartItem {
         return `
             <!-- row item -->
             <tr id="cart_item_${this.product.id}" class="text-xs lg:text-md">
-                {{-- IMAGE --}}
+                <!-- IMAGE -->
                 <td>
                     <div class="max-w-[90px] max-h-[120px]  rounded overflow-hidden">
                         <img 
@@ -34,7 +34,7 @@ export class CartItem {
                     </div>
                 </td>
 
-                {{-- PRODUCT --}}
+                <!-- PRODUCT -->
                 <td class="align-center">
                     <div class="max-w-[250px] flex items-center gap-3">
                         <div>
@@ -51,24 +51,24 @@ export class CartItem {
                     </div>
                 </td>
 
-                {{-- UNIT PRICE --}}
+                <!-- UNIT PRICE -->
                 <td class="align-center">
                     <div class=" font-bold">
                         PHP <span id="price">${this.product.price ?? '0'}</span>
                     </div>
                 </td>
-                {{-- QTY --}}
+                <!-- QTY -->
                 <td class="align-center">
                     <input id="item_qty_${this.product.id}" type="number" value="${this.product.quantity ?? '0'}" min=1 class="item_qty input input-xs w-12 font-bold">
                 </td>
-                {{-- TOTAL --}}
+                <!-- TOTAL -->
                 <td class="align-center">
                     <div class=" font-bold">
                         PHP <span id="unit_total">${parseFloat(this.product.price) * parseFloat(this.product.quantity) ?? '0'}</span>
                     </div>
                 </td>
 
-                {{-- ACTION --}}
+                <!-- ACTION -->
                 <th class="align-center">
                     <button data-id="${this.product.id}" id="item_rm_${this.product.id}" class="item-rm-btn btn btn-ghost aspect-square text-red-400">
                         <i class="fas fa-trash-alt"></i>

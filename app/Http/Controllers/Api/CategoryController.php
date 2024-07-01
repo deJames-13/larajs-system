@@ -31,6 +31,7 @@ class CategoryController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|string',
+            'slug' => 'required|string|unique:categories,slug',
             'description' => 'required|string',
             'status' => 'required|string',
         ]);

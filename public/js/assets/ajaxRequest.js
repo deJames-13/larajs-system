@@ -35,7 +35,7 @@ const getHeaders = (token = null, headers = {}) => {
 };
 // ##########################################################################
 // AJAX CALL
-const ajaxCall = ({ url, method, onSuccess, onError, data = {}, token = null, headers = {}, settings = {}, showLoader = true }) => {
+const ajaxCall = ({ url, method, onSuccess = () => { }, onError = () => { }, data = {}, token = null, headers = {}, settings = {}, showLoader = true }) => {
 
     const isFormData = data instanceof FormData;
     isShowLoading = showLoader;

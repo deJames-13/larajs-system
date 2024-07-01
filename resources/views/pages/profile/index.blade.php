@@ -1,50 +1,27 @@
-@extends('pages.profile.main')
-@section('banner')
-	@include('partials._banner', ['title' => 'User Account'])
-@endsection
+<x-layouts.default :page="'profile'" :isHideHeader="true">
 
-@section('left')
-	@include('pages.profile.partials._user-card')
-	@include('pages.profile.partials._nav')
-@endsection
 
-@section('right')
-	<div class="py-8 flex flex-col space-y-4 rounded-lg">
-		<h2 class="text-2xl font-extrabold">Purchases</h2>
-		<div class="grid grid-cols-3 items-center gap-4">
-			<div class="p-8 bg-yellow-400 text-white">
-				<h3 class="text-2xl lg:text-4xl font-extrabold">
-					<span id="status-pending">14</span>
-				</h3>
-				<div class="flex items-center space-x-2">
-					<i class="fas fa-wallet"></i>
-					<p class="text-md font-bold">To Pay</p>
-				</div>
-			</div>
-			<div class="p-8 bg-blue-400 text-white">
-				<h3 class="text-2xl lg:text-4xl font-extrabold">
-					<span id="status-processing">420</span>
-				</h3>
-				<div class="flex items-center space-x-2">
-					<i class="fas fa-box"></i>
-					<p class="text-md font-bold">To Ship</p>
-				</div>
-			</div>
-			<div class="p-8 bg-green-400 text-white">
-				<h3 class="text-2xl lg:text-4xl font-extrabold">
-					<span id="status-shipping">69</span>
-				</h3>
-				<div class="flex items-center space-x-2">
-					<i class="fas fa-truck-fast"></i>
-					<p class="text-md font-bold">To Receive</p>
-				</div>
-			</div>
+	<div
+		class=" min-h-screen flex flex-col space-y-4 lg:flex-row lg:space-y-0 lg:space-x-4  justify-center container mx-auto   py-12 border border-red-400">
+
+		<div id="profile-sidebar"
+			class="min-h-screen left flex flex-col space-y-8 py-4 lg:py-8 container max-w-sm border border-red-400">
+
+
+
 		</div>
-	</div>
-	<div class="flex flex-col space-y-4 rounded-lg">
-		<h2 class="text-2xl font-extrabold">Special Promos</h2>
+		<div id="profile-content"
+			class="min-h-screen right profile-page flex flex-col space-y-8 p-4 lg:p-8 flex-grow pb-24  overflow-scroll border border-red-400">
 
-		{{-- TODO: Add Special Promos --}}
+
+
+		</div>
 
 	</div>
-@endsection
+	</div>
+
+	@push('scripts')
+		<script type="module" src="{{ asset('js/Profile/index.js') }}"></script>
+	@endpush
+
+</x-layouts.default>

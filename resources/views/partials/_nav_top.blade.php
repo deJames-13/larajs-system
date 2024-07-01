@@ -1,4 +1,5 @@
-@role('customer')
+@role('admin')
+@else
 	<div class="flex container mx-auto items-center justify-center uppercase space-x-8 lg:space-x-12 font-bold">
 		<a href="/products" class="lg:px-4 py-2 hover:text-primary">Products</a>
 		{{-- Categories --}}

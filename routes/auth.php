@@ -5,7 +5,6 @@ use App\Http\Controllers\PdfController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\TableController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Api\ChartController;
 
 $crud = [
@@ -13,6 +12,7 @@ $crud = [
     "promos",
     "brands",
     "categories",
+    "users",
     // "comments"?
 ];
 
@@ -31,9 +31,7 @@ Route::group(["middleware" => "auth"], function () use ($crud) {
     Route::post("/logout", [AuthController::class, "logout"])->name("logout");
 
     // PROFILE
-    Route::get("/profile", [ProfileController::class, "index"])->name("profile");
-    Route::get("/profile/edit", [ProfileController::class, "edit"])->name("profile.edit");
-
+    Route::get("/profile", [PageController::class, "profile"])->name("profile");
 
     // Checkout
     Route::get("/checkout", [PageController::class, "checkout"])->name("checkout");

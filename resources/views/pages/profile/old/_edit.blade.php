@@ -46,7 +46,7 @@
 
 				<div class="text-black flex flex-col justify-center lg:justify-start space-y-8">
 					<div id="fullname" class="flex space-x-4">
-						<x-floating-input id="full_name" label="Full Name" class="w-full" />
+						<x-floating-input id="first_name" label="Full Name" class="w-full" />
 
 						<x-floating-input id="last_name" label="Last Name" class="w-full" />
 

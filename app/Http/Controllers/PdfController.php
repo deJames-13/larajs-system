@@ -2,16 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Models\Brand;
+use App\Models\Promos;
 use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
-use App\Models\Promos;
-use App\Models\Brand;
-use App\Models\Category;
 
 
 class PdfController extends Controller
 {
+    public function usersPdf()
+    {
+        $data = [
+            'title' => 'Products Table',
+            'data' => User::all()->toArray(),
+        ];
+        $pdf = Pdf::loadView('pdf.print', $data)->setPaper('a4', 'landscape');
+        $fileName = time() . '_pdf.pdf';
+
+        return $pdf->download($fileName);
+    }
     public function productsPdf()
     {
         $data = [

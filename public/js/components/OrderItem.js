@@ -1,5 +1,5 @@
 
-export class OrderItem {
+export default class OrderItem {
     constructor(product) {
         this.product = product;
     }
@@ -8,7 +8,7 @@ export class OrderItem {
         return `
             <!-- row item -->
             <tr id="cart_item_${this.product.id}">
-                {{-- IMAGE --}}
+                <!-- IMAGE -->
                 <th class="print:hidden">
                     <div class="max-w-[90px] max-h-[120px]  rounded overflow-hidden">
                         <img 
@@ -18,7 +18,7 @@ export class OrderItem {
                     </div>
                 </th>
 
-                {{-- PRODUCT --}}
+                <!-- PRODUCT -->
                 <td class="align-center">
                     <div class="max-w-[250px] flex items-center gap-3">
                         <div>
@@ -35,19 +35,19 @@ export class OrderItem {
                     </div>
                 </td>
 
-                {{-- UNIT PRICE --}}
+                <!-- UNIT PRICE -->
                 <td class="align-center">
                     <div class="text-sm font-bold">
                         PHP <span id="price">${this.product.price ?? '0'}</span>
                     </div>
                 </td>
-                {{-- QTY --}}
+                <!-- QTY -->
                 <td class="align-center">
                     <p id="item_qty_${this.product.id}">
                         ${this.product.quantity ?? '0'}
                     </p>
                 </td>
-                {{-- TOTAL --}}
+                <!-- TOTAL -->
                 <td class="align-center">
                     <div class="text-sm font-bold">
                         PHP <span id="unit_total">${parseFloat(this.product.price) * parseFloat(this.product.quantity) ?? '0'}</span>

@@ -147,8 +147,8 @@ export default class BrandsCreate {
                     window.location.href = '/admin/brands';
                 });
             },
-            onError: (response) => {
-                Object.keys(response.errors).forEach(field => {
+            onError: (xhr) => {
+                Object.keys(xhr.responseJSON.errors).forEach(field => {
                     let input = $(`#${field}`);
                     input.addClass('input-error');
                     input.after(

@@ -18,16 +18,18 @@
 					#{{ $id }}
 					Order Info
 				</h1>
-				<p id="status-message" class="print:hidden italic text-gray-600 text-xs">This order is pending for verification.
-					Please
-					<strong>verify
-						and accept</strong> the order to proceed.
-				</p>
+				<p id="status-message" class="print:hidden italic text-gray-600 text-xs"></p>
 			</div>
 
 
 			<div class="_skeleton actions  flex space-x-2 items-center print:hidden">
-				<button id="btn-verify" class="action-button btn bg-green-400">Verify and Accept</button>
+				<button id="btn-verify" class="action-button btn bg-green-400">
+					@role('admin')
+						Verify and Accept
+					@else
+						View Receipt
+					@endrole
+				</button>
 				<button class="back btn btn-secondary">Back</button>
 			</div>
 		</div>
@@ -40,27 +42,32 @@
 
 
 		{{-- Cancelling the order --}}
-		<div id="cancelling-form" class="print:hidden">
+		@role('admin')
+			<div id="cancelling-form" class="print:hidden">
 
-			{{-- Text area --}}
-			<div class="py-4 lg:px-12">
-				<label for="reason" class="block text-md font-bold text-gray-700">Reason for Cancelling</label>
-				<textarea id="reason" name="reason" rows="3" class="textarea textarea-bordered w-full"></textarea>
-			</div>
+				{{-- Text area --}}
+				<div class="py-4 lg:px-12">
+					<label for="reason" class="block text-md font-bold text-gray-700">Reason for Cancelling</label>
+					<textarea id="reason" name="reason" rows="3" class="textarea textarea-bordered w-full"></textarea>
+				</div>
 
-			<div class="text-right py-4 lg:px-12">
-				<button id="btn-cancel" class="btn bg-red-400">Cancel Order</button>
-				<p id="status-message" class="italic text-gray-600 text-xs">
-					Please provide a reason for cancelling this order.
-				</p>
+				<div class="text-right py-4 lg:px-12">
+					<button id="btn-cancel" class="btn bg-red-400">Cancel Order</button>
+					<p id="status-message" class="italic text-gray-600 text-xs">
+						Please provide a reason for cancelling this order.
+					</p>
+				</div>
 			</div>
-		</div>
+		@endrole
 
 
 	</x-card.page>
 
 	@push('scripts')
-		<script type="module" src="{{ asset('js/Orders/show.js') }}"></script>
+		<script type="module">
+			import OrderShow from "{{ asset('js/Orders/show.js') }}";
+			new OrderShow();
+		</script>
 	@endpush
 
 

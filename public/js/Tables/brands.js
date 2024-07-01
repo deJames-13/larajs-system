@@ -18,6 +18,10 @@ export default class BrandsPage {
         this.bindEvents();
     }
 
+    static init({ target }) {
+        const instance = new BrandsPage({ target });
+        return instance;
+    }
     makeTable(data) {
         console.log(data);
         return data.map(brand => {

@@ -10,6 +10,12 @@
 			</a>
 
 			@auth
+				@if (!($page === 'shop' || $page === 'shop'))
+					<a class="cursor-pointer flex space-x-2 items-center">
+						<i class="fas fa-store"></i>
+						<a href="/products" class="text-xs font-bold">Go To Shop</a>
+					</a>
+				@endif
 			@else
 				<a class="cursor-pointer flex space-x-2 items-center">
 					<i class="fas fa-store"></i>
@@ -34,13 +40,18 @@
 
 					<div id="header-avatar" tabindex="0" role="button" class="avatar">
 						@auth
+							@php
+								$image = isset(auth()->user()->images[0])
+								    ? auth()->user()->images[0]->path
+								    : 'https://img.icons8.com/ios-glyphs/30/user--v1.png';
+							@endphp
+
 							<div class="w-8 rounded-full">
-								<img alt="Tailwind CSS Navbar component"
-									src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+								<img id="profile-image" alt="{{ auth()->user()->username }}" src="{{ $image }}" />
 							</div>
 						@else
 							<div class="w-5 rounded-full">
-								<img src="https://img.icons8.com/ios-glyphs/30/user--v1.png" alt="user--v1" />
+								<img id="profile-image" src="https://img.icons8.com/ios-glyphs/30/user--v1.png" alt="user--v1" />
 							</div>
 						@endauth
 					</div>
@@ -52,9 +63,9 @@
 						{{-- Authenticated User --}}
 						@auth
 							<li>
-								<a class="justify-between">
+								<a href="/profile" class="justify-between">
 									Profile
-									<span class="badge">New</span>
+									{{-- <span class="badge">New</span> --}}
 								</a>
 							</li>
 							<li>
