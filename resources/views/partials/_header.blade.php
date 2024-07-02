@@ -27,7 +27,7 @@
 			{{-- NAVIGATION --}}
 			@include('partials._nav_top')
 
-			@role('admin')
+			{{-- @role('admin')
 				<div class="container flex items-center justify-center mx-auto space-x-8 font-bold uppercase lg:space-x-12">
 					<nav class="py-2 lg:px-4">
 						<a href="/admin/charts/order-per-month" class="py-2 lg:px-4 hover:text-primary">Chart 1</a>
@@ -35,7 +35,7 @@
 						<a href="/admin/charts/products-sold" class="py-2 lg:px-4 hover:text-primary">Chart 3</a>
 					</nav>
 				</div>
-			@endrole
+			@endrole --}}
 			{{-- NAVIGATION --}}
 		@endif
 	</div>

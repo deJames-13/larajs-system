@@ -1,5 +1,6 @@
 import Tables from "../Tables/tables.js";
 import DashboardSideBar from "./components/sidebar.js";
+import MainPage from "./partials/_main.js";
 
 // TODO: adsjfklajdsfkljadsfkljal;dsfj ladsfjiamgoinginsane
 
@@ -10,6 +11,7 @@ class Dashboard {
     }
 
     init() {
+        MainPage.init();
 
         DashboardSideBar.init({
             target: '#dashboard-sidebar',
@@ -20,34 +22,14 @@ class Dashboard {
     getTable(url) {
         $('#dashboard-content').html('');
 
-        if (url === 'main') {
-            this.loadMainPage();
-        } else {
-            url === 'products' && this.tables.getProducts();
-            url === 'brands' && this.tables.getBrands();
-            url === 'promos' && this.tables.getPromos();
-            url === 'categories' && this.tables.getCategories();
-            url === 'orders' && this.tables.getOrders();
-        }
+        url === 'main' && MainPage.init();
+        url === 'products' && this.tables.getProducts();
+        url === 'brands' && this.tables.getBrands();
+        url === 'promos' && this.tables.getPromos();
+        url === 'categories' && this.tables.getCategories();
+        url === 'orders' && this.tables.getOrders();
     }
 
-    loadMainPage() {
-        // Directly manipulate the DOM to load main page content
-        const mainPageContent = `
-        <div class="rounded-t-lg overflow-clip">
-            <div class="custom-circle-border bottom-pattern p-10">
-                <h1 class="text-5xl">HATDOG</h1>
-                <h1 class="text-5xl">HATDOG</h1>
-                <h1 class="text-5xl">HATDOG</h1>
-                <h1 class="text-5xl">HATDOG</h1>
-                <h1 class="text-5xl">HATDOG</h1>
-                <h1 class="text-5xl">HATDOG</h1>
-                <h1 class="text-5xl">HATDOG</h1>
-            </div>
-        </div>
-        `;
-        $('#dashboard-content').html(mainPageContent);
-    }
 }
 
 new Dashboard();
