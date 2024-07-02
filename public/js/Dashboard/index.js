@@ -36,6 +36,7 @@ class Dashboard {
         const mainPageContent = `
         <div class="rounded-t-lg overflow-clip">
             <div class="custom-circle-border bottom-pattern p-10">
+
                 <h1 class="text-5xl">HATDOG</h1>
                 <h1 class="text-5xl">HATDOG</h1>
                 <h1 class="text-5xl">HATDOG</h1>
@@ -43,6 +44,7 @@ class Dashboard {
                 <h1 class="text-5xl">HATDOG</h1>
                 <h1 class="text-5xl">HATDOG</h1>
                 <h1 class="text-5xl">HATDOG</h1>
+                
             </div>
         </div>
         `;

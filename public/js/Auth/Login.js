@@ -36,9 +36,9 @@ export default class Login {
                 </div>
 
                 <div class="divider"></div>
-                <span>
+                <div class="w-full text-center">
                     Doesn't have an account? <a class="auth-btn text-blue-400 cursor-pointer text-center" data-open-modal="signup_modal">Sign up</a>
-                </span>
+                </div>
             </form>
             `,
             destroyOnClose: true,
