@@ -10,7 +10,7 @@
 
 		{{-- main content/pages --}}
 		<div class="right px-4 py-8 pb-48 container min-h-screen flex-grow border border-blue-400">
-			<div id="dashboard-content" class="rounded-xl shadow-xl border p-4"></div>
+			<div id="dashboard-content" class="min-h-screen rounded-xl shadow-xl border p-4"></div>
 		</div>
 
 	</div>
