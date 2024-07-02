@@ -12,6 +12,7 @@
 <header class="sticky top-0 z-[69] bg-base-100 border-b">
 	{{-- TOP BAR --}}@include('partials._header_top'){{-- TOP BAR --}}
 
+
 	<div class="px-12">
 
 		@if ($isShown)
