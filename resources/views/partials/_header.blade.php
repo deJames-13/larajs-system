@@ -13,7 +13,7 @@
 	{{-- TOP BAR --}}@include('partials._header_top'){{-- TOP BAR --}}
 
 
-	<div class="px-12">
+	<div class="px-4 lg:px-12">
 
 		@if ($isShown)
 			{{-- SEARCH BAR --}}
