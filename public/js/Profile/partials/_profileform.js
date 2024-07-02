@@ -64,8 +64,6 @@ export default class ProfileForm extends FormCard {
 				<input id="input-image" type="file" accept="image/*"
 					class="max-w-sm file-input file-input-bordered file-input-primary" name="image">
 			</div>
-
-
         `
     }
 

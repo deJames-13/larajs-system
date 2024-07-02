@@ -5,6 +5,7 @@ import UserCard from "./partials/_usercard.js";
 
 import MyCart from "./cart.js";
 import ProfileEdit from "./edit.js";
+import MainPage from "./main.js";
 import MyOrders from "./orders.js";
 
 export default class ProfilePage {
@@ -22,12 +23,19 @@ export default class ProfilePage {
 
 
     init() {
+        MainPage.init();
+        this.banner = Banner.init({
+            title: 'Profile Page',
+            link: '/profile',
+        });
+
+
         this.profile.getProfile().then((profile) => {
-            this.banner = Banner.init({ title: 'Profile Page' });
             this.UserCard = UserCard.init({ target: this.sidebar, user: profile });
             const nav = NavSideBar.init({
                 callback: this.gotoPage.bind(this)
             });
+
         });
 
     }
@@ -35,10 +43,19 @@ export default class ProfilePage {
     gotoPage(url) {
         $(this.content).html('');
         this.UserCard.show();
-        url === 'edit-profile' && ProfileEdit.init({ profile: this.profile });
-        url === 'edit-profile' && this.UserCard.hide();
-        url === 'cart' && MyCart.init();
-        url === 'orders' && MyOrders.init();
+
+        const pages = {
+            'main': () => MainPage.init(),
+            'edit-profile': () => {
+                ProfileEdit.init({ profile: this.profile });
+                this.UserCard.hide();
+            },
+            'cart': () => MyCart.init(),
+            'orders': () => MyOrders.init()
+        }
+
+        pages[url] && pages[url]();
+
 
     }
 }

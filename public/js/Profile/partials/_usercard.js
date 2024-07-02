@@ -30,7 +30,7 @@ export default class UserCard {
   render() {
     const image = this.user.images && this.user.images.length > 0 && this.user.images[0].path;
     const HTML = `
-      <div id="user-card" style="display: none" class="border p-8 rounded-lg shadow-xl flex flex-col space-y-4 ">
+      <div id="user-card" style="display: none" class="p-8 flex flex-col space-y-4 ">
         <h2 class="text-2xl font-extrabold">Your Profile</h2>
         <div class="flex space-x-4 items-center">
           <div class="avatar">
@@ -51,6 +51,7 @@ export default class UserCard {
             </a>
           </div>
         </div>
+        <div class="divider"></div>
       </div>
     `;
     $(this.target).prepend(HTML);

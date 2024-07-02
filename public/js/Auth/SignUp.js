@@ -140,7 +140,7 @@ export default class SignUp {
             onSuccess: (response) => {
                 console.log(response);
                 this.modal.remove();
-                window.location.href = '/'
+                window.location.href = '/profile'
             },
             onError: (xhr) => {
                 console.log(xhr);

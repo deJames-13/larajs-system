@@ -6,9 +6,9 @@ export default class OrderPage {
 
     render() {
         const HTML = `
-        <div class="flex flex-col space-y-4">
+        <div class="p-4 flex flex-col space-y-4">
             <div class="top flex justify-between items-center">
-                <h1 class="text-3xl uppercase font-extrabold">My Orders</h1>
+                <h2 class="text-2xl font-extrabold">My Orders</h2>
                 <div class="actions flex space-x-2 items-center">
 
                     <button class="back btn btn-sm btn-secondary">Back</button>
