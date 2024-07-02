@@ -11,7 +11,7 @@ export const mainPageStyles = `
         margin: 0;
     }
     #main-page {
-        padding: 150px;
+        padding: 70px;
         border: none;
         border-radius: 10px 10px 0 0;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
