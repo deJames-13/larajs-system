@@ -62,4 +62,21 @@ class ChartController extends Controller
 
         return view('admin.charts.products-sold');
     }
+
+    public function ordersRevenue()
+    {
+        if (request()->ajax()) {
+            $revenues = DB::table('orders')
+                ->join('order_products', 'orders.id', '=', 'order_products.order_id')
+                ->join('products', 'order_products.product_id', '=', 'products.id')
+                ->select(DB::raw('MONTH(orders.created_at) as month'), DB::raw('SUM(order_products.quantity * products.price) as revenue'))
+                ->groupBy(DB::raw('MONTH(orders.created_at)'))
+                ->get();
+
+            return response()->json($revenues);
+        }
+
+        return view('admin.charts.orders-revenue');
+    }
+
 }
