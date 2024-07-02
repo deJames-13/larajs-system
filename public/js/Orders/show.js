@@ -135,7 +135,7 @@ export default class OrderShow {
 
     fetchOrder(id) {
         ajaxRequest.get({
-            url: '/api/orders/' + id,
+            url: '/api/orders/' + this.id,
             onSuccess: (response) => this.populateForm(response),
             onError: (response, status, error) => {
                 if (status !== 'success') {
@@ -156,12 +156,12 @@ export default class OrderShow {
 
     updateStatus(statusString) {
         ajaxRequest.put({
-            url: '/api/orders/' + id,
+            url: '/api/orders/' + this.id,
             data: { status: '' + statusString },
             onSuccess: (response, status, error) => {
                 this.setStatusMessage(statusString);
                 this.setActionBtn(statusString);
-                this.swalAlerts[statusString](id);
+                this.swalAlerts[statusString](this.id);
             },
             onError: (response, status, error) => {
                 if (status !== 'success') {
