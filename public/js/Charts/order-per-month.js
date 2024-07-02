@@ -1,7 +1,7 @@
 // import Chart from 'chart.js/auto';
 import ajaxRequest from '../assets/ajaxRequest.js';
 
-// TODO: this is basic chart, 
+// TODO: this is basic chart,
 //          add more date in one chart and make it dynamic
 //          charts should be in one page
 //          charts should be tabbed: Order Per Month | chart 2 | chart 3

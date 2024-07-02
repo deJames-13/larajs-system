@@ -31,6 +31,7 @@
             <a href="/admin/charts/order-per-month" class="py-2 lg:px-4 hover:text-primary">Chart 1</a>
             <a href="/admin/charts/customer-per-address" class="py-2 lg:px-4 hover:text-primary">Chart 2</a>
             <a href="/admin/charts/products-sold" class="py-2 lg:px-4 hover:text-primary">Chart 3</a>
+            <a href="/admin/charts/orders-revenue" class="py-2 lg:px-4 hover:text-primary">Chart 4</a>
         </nav>
     </div>
     @endrole
