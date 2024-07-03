@@ -1,17 +1,16 @@
-<x-layouts.default :page="'profile'" :isHideHeader="true">
+<x-layouts.default :page="'profile'">
 
 
-	<div
-		class="min-h-screen flex flex-col space-y-4 lg:flex-row lg:space-y-0 lg:space-x-4  justify-center container mx-auto py-12  mb-12">
+	<div class="min-h-screen flex space-x-4 container mx-auto py-12 mb-12">
 
 		<div id="profile-sidebar"
-			class="relative min-h-screen left border-2 border-primary rounded-xl shadow-xl flex flex-col space-y-4 container max-w-sm ">
+			class="left p-8 relative max-w-xs min-h-screen rounded-xl shadow-xl flex flex-col space-y-4 container">
 
 
 
 		</div>
 		<div id="profile-content"
-			class="min-h-screen right border rounded-xl shadow-xl flex flex-col p-4 space-y-4 flex-grow pb-24  overflow-scroll ">
+			class="right min-h-screen flex-grow rounded-xl shadow-xl flex flex-col p-4 space-y-4 pb-24 overflow-scroll ">
 
 
 

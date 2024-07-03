@@ -75,6 +75,22 @@ class User extends Authenticatable
         return $this->hasMany(Order::class);
     }
 
+    public function orderPerStatus()
+    {
+        // returns 
+        /* 
+        [
+            'pending' => 2,
+            'processing' => 1,
+            'completed' => 3,
+            'cancelled' => 1
+        ];
+        */
+
+        return $this->orders()->selectRaw('status, count(*) as count')->groupBy('status')->pluck('count', 'status');
+    }
+
+
     // images
     public function images()
     {

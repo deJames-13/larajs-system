@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 
 class SearchController extends Controller
 {
+
+    // jQuery autocomplete
     public function autocomplete()
     {
         $validated = request()->validate(['term' => 'required|string|max:255']);
@@ -20,19 +22,6 @@ class SearchController extends Controller
             'brands' => Brand::class,
             'promos' => Promos::class,
         ];
-
-        /*
-        results should retun
-        [
-            {
-                "label": "Product Name",
-                "value": "product_id",
-                "type": "product"
-            }
-        ]
-
-         */
-
         $results = collect($searchIn)->flatMap(function ($model) use ($search) {
             return $model::filter(['search' => $search])->limit(10)->get()->map(function ($item) use ($model) {
                 return [
@@ -45,4 +34,7 @@ class SearchController extends Controller
 
         return response()->json($results);
     }
+
+    // Laravel Scout MeiliSearch
+
 }

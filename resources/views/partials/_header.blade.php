@@ -1,7 +1,7 @@
 @props(['title' => 'GlitzVogue', 'page' => ''])
 
 @php
-	$showInPages = ['home', 'shop', 'dashboard'];
+	$showInPages = ['home', 'shop', 'dashboard', 'profile'];
 	$isShown = isset($isShown) ? $isShown : in_array(strtolower($page), $showInPages);
 	$isHideHeader = isset($isHideHeader) ? $isHideHeader : false;
 

@@ -4,11 +4,11 @@ export default class ProfileEdit {
         this.target = '#profile-content';
         this.profile = profile || new ProfileForm();
         this.form = this.profile.getForm();
-        this.user_profile = this.profile.getProfile();
+        this.user_profile = this.profile.user_profile;
         return this.render();
     }
 
-    static init({ profile = null }) {
+    static init({ profile = null, }) {
         const profileEdit = new ProfileEdit({ profile: profile });
         return profileEdit;
     }
