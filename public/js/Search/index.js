@@ -53,9 +53,13 @@ export default class SearchPage {
 
     getResults(response) {
         console.log(response);
-
         this.content.empty();
+
         this.paginate(response);
+        const { found_count, total_count } = response;
+
+        this.searchCount.text(found_count);
+        this.foundCount.text(total_count);
 
         this.results = response.results;
         this.results.forEach(result => {

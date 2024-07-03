@@ -75,7 +75,7 @@ export default class OrdersPage {
                 </div>
                 `,
                 "": `
-                <div class="print:hidden flex items-center flex-end w-full gap-3">
+                <div class="print:hidden flex items-center justify-end w-full gap-3">
                 <a href="/orders/${order.id}/" class="btn btn-xs btn-secondary">Manage</a>
                 <form id="row_delete__${order.id}" data-id="${order.id}" method="POST">
                     <button type="submit" data-id="${order.id}" class="row-delete btn btn-xs bg-red-400">Trash</button>

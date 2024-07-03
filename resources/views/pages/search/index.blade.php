@@ -1,5 +1,5 @@
 <x-layouts.default :page="'search'">
-	<div class="min-h-screen container mx-auto py-12 mb-12">
+	<div class="overflow-x-visible min-h-screen container mx-auto py-12 mb-12">
 		<div class="logo flex items-center space-x-2">
 			<img src="{{ asset('images/logo_nobg.png') }}" alt="" class="aspect-square w-24">
 			<h1 class="hidden md:block text-xl uppercase lg:text-3xl font-light tracking-widest">
@@ -29,8 +29,8 @@
 		<div class="divider m-0"></div>
 
 
-		<div id="search-results" class="flex flex-col gap-4 my-4">
-			<div class="flex items-center justify-between gap-2">
+		<div id="search-results" class="overflow-x-visible flex flex-col gap-4 my-4">
+			<div class="overflow-x-visible flex items-center justify-between gap-2">
 				<p class="text-sm">Found results
 					<span id="found-count" class="font-semibold">
 						0
@@ -44,7 +44,7 @@
 				<div id="paginations"></div>
 			</div>
 
-			<div id="search-contents" class="flex flex-col gap-4  py-4">
+			<div id="search-contents" class="max-h-screen overflow-y-scroll flex flex-col gap-4  py-4">
 
 
 

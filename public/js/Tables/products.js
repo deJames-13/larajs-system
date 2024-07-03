@@ -32,7 +32,7 @@ export default class ProductsPage {
             "Price": `${product.price}`,
             "Stock": `${product.stock}`,
             "": `
-                <div class="print:hidden flex items-center flex-end w-full gap-3">
+            <div class="print:hidden w-full flex items-center justify-end gap-3">
                 <a href="/products/${product.id}" class="btn btn-xs btn-primary">View</a>
                 <a href="/admin/products/edit/${product.id}/" class="btn btn-xs btn-secondary">Edit</a>
                 <button id="row-delete__${product.id}" data-id="${product.id}" class="row-delete btn btn-xs bg-red-400">Delete</button>
