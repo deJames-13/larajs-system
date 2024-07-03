@@ -124,12 +124,15 @@ export default class OrdersPage {
                 <div class=" w-full print:m-0 print:overflow-visible overflow-x-auto" id="table-wrapper">
 
                 </div>
-                <form id="import-form" method="POST" enctype="multipart/form-data" action="/admin/orders"
-                    class="flex justify-center space-x-2 my-4">
-                    <!-- {{ csrf_field() }} -->
-                    <input type="file" id="uploadName" name="item_upload" class="file-input file-input-sm  w-full max-w-xs" required>
-                    <button id="import-form-submit" type="submit" class="btn btn-info btn-sm btn-primary ">Import Excel File</button>
-                </form>
+                <div class="container flex flex-col-reverse gap-2 lg:flex-row justify-between items-center>
+                    <form id="import-form" method="POST" enctype="multipart/form-data" action="/admin/orders"
+                        class="flex flex-col-reverse lg:flex-row gap-2 items-center">
+                        <!-- {{ csrf_field() }} -->
+                        <input type="file" id="uploadName" name="item_upload" class="file-input file-input-sm  w-full max-w-xs" required>
+                        <button id="import-form-submit" type="submit" class="btn btn-info btn-sm btn-primary ">Import Excel File</button>
+                    </form>
+                    
+                </div>
 		</div>
         `
         $(target).html(page);

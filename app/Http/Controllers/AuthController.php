@@ -33,6 +33,7 @@ class AuthController extends Controller
         if (request()->ajax()) {
             return response()->json([
                 'message' => 'success',
+                'user' => $user,
             ], 200);
         }
         return redirect('/');
@@ -63,6 +64,7 @@ class AuthController extends Controller
             if (request()->ajax()) {
                 return response()->json([
                     'message' => 'success',
+                    'user' => $user,
                 ], 200);
             }
 

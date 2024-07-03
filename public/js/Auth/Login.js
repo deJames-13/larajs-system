@@ -36,9 +36,9 @@ export default class Login {
                 </div>
 
                 <div class="divider"></div>
-                <span>
+                <div class="w-full text-center">
                     Doesn't have an account? <a class="auth-btn text-blue-400 cursor-pointer text-center" data-open-modal="signup_modal">Sign up</a>
-                </span>
+                </div>
             </form>
             `,
             destroyOnClose: true,
@@ -107,8 +107,12 @@ export default class Login {
             url: '/login',
             data: formData,
             onSuccess: (response) => {
-                console.log(response);
+                const user = response.user ?? null;
                 this.modal.remove();
+                if (user.role === 'admin') {
+                    window.location.href = '/dashboard'
+                    return
+                }
                 window.location.href = '/'
             },
             onError: (xhr) => {

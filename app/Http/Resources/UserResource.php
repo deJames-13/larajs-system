@@ -23,6 +23,7 @@ class UserResource extends JsonResource
 
             'images' => $this->whenLoaded('images', fn () => $this->images),
 
+
             'created_at' => str_replace('T', ' ', explode('.', $this->created_at)[0]),
             'updated_at' => str_replace('T', ' ', explode('.', $this->updated_at)[0]),
         ];

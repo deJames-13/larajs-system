@@ -27,8 +27,6 @@ Route::get("/test", function () {
 
 
 
-// Search Functions
-Route::get("/autocomplete", [SearchController::class, "autocomplete"]);
 
 
 // add from here on out: make sure there are 3 functions in controller: store - destroy - update
@@ -53,9 +51,10 @@ $crud = [
         "controller" => UserController::class,
         "middleware" => ['auth:sanctum', 'role:admin'],
     ],
-    // "users"?
     // "comments"?
 ];
+
+
 
 foreach ($crud as $prefix => $config) {
     $controller = $config["controller"];
@@ -90,6 +89,12 @@ foreach ($crud as $prefix => $config) {
 }
 
 
+// Search Functions
+Route::get("/autocomplete", [SearchController::class, "autocomplete"]);
+
+
+
+
 // MANUALLY ADDED
 Route::group(["middleware" => "auth:sanctum"], function () use ($crud) {
     // PROFILE
@@ -118,6 +123,9 @@ Route::group(["middleware" => "auth:sanctum"], function () use ($crud) {
     // insert chart function name here with url equivalent
     $charts = [
         'orderPerMonth' => 'order-per-month',
+        'customerPerAddress' => 'customer-per-address',
+        'productsSold' => 'products-sold',
+        'ordersRevenue' => 'orders-revenue',
     ];
     // no need to touch
     foreach ($charts as $chart => $url) {

@@ -12,6 +12,10 @@ use App\Models\Category;
 
 class PageController extends Controller
 {
+    public function search()
+    {
+        return view('pages.search.index', ['page' => "Search"]);
+    }
     public function home()
     {
         return view('pages.home.index', ['page' => "Home"]);
@@ -130,10 +134,11 @@ class PageController extends Controller
 
         return view('pages.transaction.checkout', ['page' => "Checkout", 'user' => $user]);
     }
-    // ORDER
 
+    // ORDER
     public function orders()
     {
+        if (auth()->user()->role === 'admin') return redirect()->route('tables.orders');
         return view('pages.orders.index', ['page' => "Orders"]);
     }
     public function order(string $id)
