@@ -8,7 +8,12 @@ export default class SideBar {
         this.links = links;
         this.target = target;
         this.onClick = onClick;
+        this.currentUrl = links.length > 0 && links[0].url || null;
         this.render();
+    }
+
+    getLink(url) {
+        return $(this.target).find(`.sidebar-link[data-url="${url}"]`) || false;
     }
 
     setActiveLink(url) {
@@ -18,25 +23,27 @@ export default class SideBar {
 
     handleClick() {
         $(this.target).find('.sidebar-link').on('click', (e) => {
-            const url = $(e.currentTarget).data('url');
+            this.currentUrl = $(e.currentTarget).data('url');
 
-            if (!(url === ''))
-                window.history.pushState({}, '', `?page=${url}`);
+            if (!(this.currentUrl === ''))
+                window.history.pushState({}, '', `?page=${this.currentUrl}`);
 
 
-            this.setActiveLink(url);
-            this.onClick(url);
+            this.setActiveLink(this.currentUrl);
+            this.onClick(this.currentUrl);
         });
     }
 
 
     createLink({ icon, text, url = '#', isActive = false, type = 'link' }) {
 
+        if (isActive) this.currentUrl = url;
+
 
         const link = `
             <button class="sidebar-link ${isActive && 'active-sidebar-link'}" role="button" data-url="${url}" >
                 <i class="${icon}"></i>
-                <span> ${text}</span>
+                <span class="sm:hidden md:block"> ${text}</span>
             </button>
         `
 
@@ -50,14 +57,17 @@ export default class SideBar {
     render() {
         const HTML = `
             <div id="sidebar" class="px-2 flex flex-col space-y-4">
-                ${this.links.map(this.createLink).join('\n')}
+                ${this.links.map(this.createLink.bind(this)).join('\n')}
 			</div>
         `;
 
         $(this.target).html(HTML);
         this.handleClick();
 
-        const page = new URLSearchParams(window.location.search).get('page');
+
+
+
+        const page = new URLSearchParams(window.location.search).get('page') || this.currentUrl;
         if (page && this.links.map(link => link.url).includes(page)) {
             this.setActiveLink(page);
             this.onClick(page); // click the page

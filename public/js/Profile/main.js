@@ -3,6 +3,7 @@ const defaultProps = {
 };
 export default class MainPage {
     constructor(props = {}) {
+        this.id = "main-profile-page";
         Object.assign(this, defaultProps, props);
         return this.render();
     }
@@ -12,9 +13,7 @@ export default class MainPage {
     }
     render() {
         const HTML = `
-        <div id="user-card" class="h-full p-4 flex flex-col space-y-4">
-            <h1 class="text-2xl font-extrabold">Status</h1>
-        
+        <div id="${this.id}" class="h-full p-4 flex flex-col space-y-4">
         </div>
         `;
         $(this.target).html(HTML);

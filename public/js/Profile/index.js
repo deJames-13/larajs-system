@@ -15,6 +15,7 @@ export default class ProfilePage {
         this.user_profile = null;
         this.sidebar = '#profile-sidebar'
         this.content = '#profile-content';
+        this.url = 'main';
 
         this.profile = new ProfileForm();
         this.init();
@@ -24,10 +25,10 @@ export default class ProfilePage {
 
     init() {
         MainPage.init();
-        this.banner = Banner.init({
-            title: 'Profile Page',
-            link: '/profile',
-        });
+        // this.banner = Banner.init({
+        //     title: 'Profile Page',
+        //     link: '/profile',
+        // });
 
 
         this.profile.getProfile().then((profile) => {
@@ -36,16 +37,25 @@ export default class ProfilePage {
                 callback: this.gotoPage.bind(this)
             });
 
+            this.gotoPage(this.url);
         });
 
     }
 
+    loadMainPage() {
+        const main = MainPage.init();
+        this.UserCard.moveTo(main.id);
+        this.UserCard.setViewMore(true);
+    }
+
     gotoPage(url) {
         $(this.content).html('');
-        this.UserCard.show();
+        this.UserCard.show().setViewMore(false);
+
+        this.url = url;
 
         const pages = {
-            'main': () => MainPage.init(),
+            'main': () => { this.loadMainPage(); },
             'edit-profile': () => {
                 ProfileEdit.init({ profile: this.profile });
                 this.UserCard.hide();
