@@ -92,6 +92,12 @@ const handleAutoComplete = () => {
 
 $(document).ready(function () {
     if (window.location.pathname === '/login' || window.location.pathname === '/register') $('.auth-dropdown').hide();
+
+    $("#search-button").on('click', () => {
+        const search = $("#search-input").val();
+        if (search) window.location.href = `/search?q=${search}`;
+    });
+
     hideLoader();
     handleAutoComplete();
 })
