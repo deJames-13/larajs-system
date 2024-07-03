@@ -40,6 +40,7 @@ Route::group(["middleware" => "auth"], function () use ($crud) {
     Route::get("/orders", [PageController::class, "orders"])->name("orders");
     Route::get("/orders/{id}", [PageController::class, "order"])->name("order");
 
+
     //##################################################################################################################
     // ADMIN ONLY
     Route::group(["prefix" => "admin", "middleware" => ["role:admin"]], function () use ($crud) {
@@ -58,26 +59,22 @@ Route::group(["middleware" => "auth"], function () use ($crud) {
             // Imports
             Route::post("/$prefix", [TableController::class, $prefix . "Import"])->name("imports.$prefix");
         }
-        Route::get("/orders", [TableController::class, "orders"])->name("tables.aorders");
+        Route::get("/orders", [TableController::class, "orders"])->name("tables.orders");
 
 
         // CHARTS
-        // insert chart function name here with url equivalent
         $charts = [
             'orderPerMonth' => 'order-per-month',
             'customerPerAddress' => 'customer-per-address',
             'productsSold' => 'products-sold',
             'ordersRevenue' => 'orders-revenue',
         ];
-        // no need to touch
         foreach ($charts as $chart => $url) {
             Route::get("/charts/$url", [ChartController::class, $chart]);
         }
     });
 
     // ADMIN DASHBOARD
-    // function => url
-    // should have done this from the start
     $adminPages = [
         "dashboard" => "/dashboard",
         "users" => "/users",

@@ -9,37 +9,27 @@ import MainPage from "./main.js";
 import MyOrders from "./orders.js";
 
 export default class ProfilePage {
-    constructor() {
-        this.banner = null;
-        this.UserCard = null;
-        this.user_profile = null;
-        this.sidebar = '#profile-sidebar'
-        this.content = '#profile-content';
-        this.url = 'main';
+    banner = null;
+    UserCard = null;
+    user_profile = null;
+    sidebar = '#profile-sidebar';
+    content = '#profile-content';
+    url = 'main';
+    profile = new ProfileForm({ onUpdate: this.updateProfile.bind(this) });
 
-        this.profile = new ProfileForm();
+    constructor() {
         this.init();
     }
 
-
-
-    init() {
-        MainPage.init();
-        // this.banner = Banner.init({
-        //     title: 'Profile Page',
-        //     link: '/profile',
-        // });
-
-
-        this.profile.getProfile().then((profile) => {
-            this.UserCard = UserCard.init({ target: this.sidebar, user: profile });
-            const nav = NavSideBar.init({
-                callback: this.gotoPage.bind(this)
-            });
-
+    async init() {
+        try {
+            this.user_profile = await this.profile.getProfile();
+            this.UserCard = UserCard.init({ target: this.sidebar, user: this.user_profile });
+            NavSideBar.init({ callback: this.gotoPage.bind(this) });
             this.gotoPage(this.url);
-        });
-
+        } catch (error) {
+            console.error("Failed to initialize profile page:", error);
+        }
     }
 
     loadMainPage() {
@@ -48,25 +38,33 @@ export default class ProfilePage {
         this.UserCard.setViewMore(true);
     }
 
+    updateProfile(user) {
+        this.user_profile = user;
+        this.UserCard.setUser(user);
+    }
+
+
     gotoPage(url) {
-        $(this.content).html('');
+        $(this.content).empty();
         this.UserCard.show().setViewMore(false);
 
         this.url = url;
 
         const pages = {
-            'main': () => { this.loadMainPage(); },
+            'main': () => this.loadMainPage(),
             'edit-profile': () => {
                 ProfileEdit.init({ profile: this.profile });
                 this.UserCard.hide();
             },
             'cart': () => MyCart.init(),
-            'orders': () => MyOrders.init()
+            'orders': () => MyOrders.init(),
+        };
+
+        if (pages[url]) {
+            pages[url]();
+        } else {
+            console.error(`No page found for URL: ${url}`);
         }
-
-        pages[url] && pages[url]();
-
-
     }
 }
 

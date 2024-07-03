@@ -2,7 +2,7 @@ import ajaxRequest from '../../assets/ajaxRequest.js';
 import FormCard from '../../components/Form.js';
 
 export default class ProfileForm extends FormCard {
-    constructor() {
+    constructor({ onUpdate = () => { } }) {
         super({});
         this.user_profile = null;
         this.setFields();
@@ -10,7 +10,7 @@ export default class ProfileForm extends FormCard {
         this.form.prepend(this.additionalFields());
         this.bindEvents();
         this.handleImageUpload();
-        // this.getProfile()
+        this.onUpdate = onUpdate;
 
 
         return this;
@@ -286,6 +286,7 @@ export default class ProfileForm extends FormCard {
                     'Your profile has been updated.',
                     'success'
                 )
+                this.onUpdate(this.user_profile);
             },
             onError: (response) => {
                 console.log(response);

@@ -112,7 +112,7 @@ class UserController extends Controller
 
         $user->update($userData);
 
-        if (isset($userInfo['info'])) {
+        if (isset($userInfo)) {
             $user->info()->updateOrCreate([], $userInfo);
         }
 

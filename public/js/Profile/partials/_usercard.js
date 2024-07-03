@@ -1,4 +1,3 @@
-import ajaxRequest from "../../assets/ajaxRequest.js";
 
 export default class UserCard {
   constructor({ target, user }) {
@@ -7,6 +6,11 @@ export default class UserCard {
     this.card = null;
     this.viewMore = false;
 
+    return this.render();
+  }
+
+  setUser(user) {
+    this.user = user;
     this.render();
   }
 
@@ -17,31 +21,31 @@ export default class UserCard {
 
   moveTo(target) {
     $('#' + target).prepend(this.card);
-    $('#user-card').fadeIn();
+    this.card.fadeIn();
     return this;
   }
 
   show() {
     $(this.target).prepend(this.card);
-    $('#user-card').fadeIn();
+    this.card.fadeIn();
     return this;
   }
 
   hide() {
-    $('#user-card').fadeOut();
+    this.card.fadeOut();
     $(this.target).append(this.card);
     return this;
   }
 
   setViewMore(isView) {
     this.viewMore = isView;
-    if (this.viewMore) {
-      $("#view-profile").hide()
-      $("#view-more").show()
+    if (isView) {
+      this.card.find("#view-profile").hide()
+      this.card.find("#view-more").show()
     }
     else {
-      $("#view-profile").show()
-      $("#view-more").hide()
+      this.card.find("#view-profile").show()
+      this.card.find("#view-more").hide()
     }
   }
 
@@ -85,8 +89,6 @@ export default class UserCard {
     `;
 
     this.card = $(HTML);
-    $(this.target).prepend(this.card);
-    this.setViewMore(false);
 
     return this;
   }
