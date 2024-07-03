@@ -87,6 +87,10 @@ export default class BrandsPage {
             e.preventDefault();
             this.importExcel();
         });
+
+
+
+
     }
 
     importExcel() {

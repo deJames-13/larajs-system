@@ -19,5 +19,5 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
-*.mdb
-data.ms
+lock.mdb
+/data.ms
