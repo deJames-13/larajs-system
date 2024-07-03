@@ -29,7 +29,7 @@ class SearchController extends Controller
                     'id' => $item->id,
                     'label' => $item->name,
                     'type' => strtolower(class_basename($model)),
-                    'link' => "/$key/" + $item->id
+                    'link' => "/$key/" . $item->id
                 ];
             });
         });
@@ -58,14 +58,17 @@ class SearchController extends Controller
             'promos' => Promos::class,
         ];
 
-        $allResults = collect();
-        foreach ($q['types'] as $type) {
-            if (array_key_exists($type, $searchIn)) {
-                $model = $searchIn[$type];
-                $results = $model::search($search)->get();
-                $allResults = $allResults->merge($results);
-            }
-        }
+        $allResults = collect($searchIn)->flatMap(function ($model, $key) use ($search) {
+            return $model::search($search)->take(10)->get()->map(function ($item) use ($model, $key) {
+                return [
+                    'item' => $item,
+                    'label' => $item->name,
+                    'type' => strtolower(class_basename($model)),
+                    'link' => "/$key/" . $item->id
+                ];
+            });
+        });
+
         $sorted = $allResults->sortBy($q['orderBy'], SORT_REGULAR, $q['sort'] === 'desc');
         $sliced = $sorted->slice(($q['page'] - 1) * $q['perPage'], $q['perPage'])->values();
 
@@ -76,6 +79,23 @@ class SearchController extends Controller
             $q['page'],
             ['path' => $request->url(), 'query' => $request->query()]
         );
-        return response()->json($paginator);
+
+        $currentPage = $paginator->currentPage();
+        $lastPage = $paginator->lastPage();
+
+        $pagination = [
+            'first' => $paginator->url(1),
+            'last' => $paginator->url($lastPage),
+            'next' => $currentPage < $lastPage ? $paginator->url($currentPage + 1) : null,
+            'prev' => $currentPage > 1 ? $paginator->url($currentPage - 1) : null,
+        ];
+        return response()->json(
+            [
+                'results' => $paginator->items(),
+                'pagination' => $pagination,
+                'current_page' => $currentPage,
+                'last_page' => $lastPage,
+            ]
+        );
     }
 }

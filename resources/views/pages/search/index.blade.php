@@ -7,8 +7,8 @@
 			</h1>
 
 			<div class="flex items-center flex-grow">
-				<input type="text" class="input input-bordered rounded-none flex-grow" id="search-input" name="search-input">
-				<button class="btn rounded-none aspect-square bg-primary text-white">
+				<input type="text" class="input input-bordered rounded-none flex-grow" id="search-input-main" name="search-input">
+				<button id="search-button" class="btn rounded-none aspect-square bg-primary text-white">
 					<i class="fas fa-search"> </i>
 				</button>
 			</div>
@@ -59,7 +59,10 @@
 
 
 	@push('scripts')
-		<script type="module" src="{{ asset('js/Search/index.js') }}"></script>
+		<script type="module">
+			import SearchPage from "{{ asset('js/Search/index.js') }}";
+			new SearchPage();
+		</script>
 	@endpush
 
 </x-layouts.default>

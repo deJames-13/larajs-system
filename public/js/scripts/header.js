@@ -37,10 +37,10 @@ const fetchAutoComplete = (term) => {
 }
 
 const searchSuggestion = async (term) => {
-    console.log(term);
+    // console.log(term);
     try {
         const data = await fetchAutoComplete(term);
-        console.log(data);
+        // console.log(data);
         return data || [];
     } catch (error) {
         console.error("Failed to fetch autocomplete data:", error);
