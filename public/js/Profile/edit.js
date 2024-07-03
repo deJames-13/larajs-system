@@ -4,11 +4,11 @@ export default class ProfileEdit {
         this.target = '#profile-content';
         this.profile = profile || new ProfileForm();
         this.form = this.profile.getForm();
-        this.user_profile = this.profile.getProfile();
+        this.user_profile = this.profile.user_profile;
         return this.render();
     }
 
-    static init({ profile = null }) {
+    static init({ profile = null, }) {
         const profileEdit = new ProfileEdit({ profile: profile });
         return profileEdit;
     }
@@ -21,7 +21,7 @@ export default class ProfileEdit {
 
     render() {
         const HTML = `
-        <div id="profile-edit" class="py-8 rounded-lg border p-8 mb-72 ">
+        <div id="profile-edit" class="p-4">
             <div  class="flex items-center justify-between">
                 <h2 class="text-2xl font-extrabold">Edit Profile</h2>
                 <div id="form-actions">

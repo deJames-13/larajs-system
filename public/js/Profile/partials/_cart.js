@@ -6,9 +6,9 @@ export default class CartPage {
 
     render() {
         const HTML = `
-        <div class="flex flex-col space-y-4">
+        <div class="p-4 flex flex-col space-y-4">
             <div class="top flex flex-col lg:flex-row justify-between lg:items-center">
-                <h1 class="text-3xl uppercase font-extrabold">Shopping Cart</h1>
+                <h2 class="text-2xl font-extrabold">Shopping Cart</h2>
                 <div class="actions flex space-x-2 justify-end lg:items-center">
                     <div>
                         <button id="cart-upd" class="btn btn-primary">Update Cart</button>

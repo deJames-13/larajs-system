@@ -124,3 +124,24 @@ background-color: rgba(0, 0, 0, 0.3);
 @keyframes l4 {to{transform: rotate(1turn)}}
 
 
+
+.custom-circle-border {
+  --b:10px; /* border thickness */
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  display: inline-block;
+  border: var(--b) solid transparent;
+  background: red;
+  -webkit-mask:
+    radial-gradient(farthest-side,#fff 97%,#0000) 0 0/calc(2*var(--b)) calc(2*var(--b)) round,
+    linear-gradient(#fff 0 0) padding-box;
+}
+.bottom-pattern {
+  --b:50px;
+  min-height: 200px;
+  border-left:0;
+  border-right:0;
+  border-top:0;
+  background-color:#ffaedf;
+}

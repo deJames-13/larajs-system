@@ -12,28 +12,24 @@ Route::get('/home', [PageController::class, 'home'])->name('home');
 Route::get('/', [PageController::class, 'home'])->name('shop');
 Route::get('/cart', [PageController::class, 'cart'])->name('cart');
 
-// Products
-Route::prefix('products')->group(function () {
-    Route::get('/', [PageController::class, 'products'])->name('products.index');
-    Route::get('/{id}', [PageController::class, 'product'])->name('products.show');
-});
+
+$crud = [
+    'product',
+    'brand',
+    'promo',
+    'category',
+];
+
+// TO FIX
+foreach ($crud as $prefix) {
+    $prefix = str_replace('ys', 'ies', $prefix . 's');
+    Route::get("/$prefix", [PageController::class, $prefix])->name("$prefix.index");
+    Route::get("/$prefix/{id}", [PageController::class, $prefix])->name("$prefix.show");
+}
+
+// GLOBAL SEARCH
+Route::get('/search', [PageController::class, 'search'])->name('search');
 
 
-// Promos
-Route::prefix('promos')->group(function () {
-    Route::get('/', [PageController::class, 'promos'])->name('promos.index');
-    Route::get('/{id}', [PageController::class, 'promo'])->name('promos.show');
-});
 
-// Brands
-Route::prefix('brands')->group(function () {
-    Route::get('/', [PageController::class, 'brands'])->name('brands.index');
-    Route::get('/{id}', [PageController::class, 'brand'])->name('brands.show');
-});
-
-// Categories
-Route::prefix('categories')->group(function () {
-    Route::get('/', [PageController::class, 'categories'])->name('categories.index');
-    Route::get('/{id}', [PageController::class, 'category'])->name('categories.show');
-});
 require __DIR__ . '/auth.php';

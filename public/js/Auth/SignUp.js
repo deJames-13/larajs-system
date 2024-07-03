@@ -48,9 +48,9 @@ export default class SignUp {
                     <button type="button" id="form-submit" class="btn btn-primary">Sign Up</button>
                 </div>
                 <div class="divider"></div>
-                <span>
+                <div class="w-full text-center">
                     Already have an account? <a class="auth-btn text-blue-400 cursor-pointer text-center" data-open-modal="login_modal">Log in</a>
-                </span>
+                </div>
             </form>
             `,
             destroyOnClose: true,
@@ -140,7 +140,7 @@ export default class SignUp {
             onSuccess: (response) => {
                 console.log(response);
                 this.modal.remove();
-                window.location.href = '/'
+                window.location.href = '/profile'
             },
             onError: (xhr) => {
                 console.log(xhr);

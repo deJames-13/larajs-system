@@ -27,8 +27,6 @@ Route::get("/test", function () {
 
 
 
-// Search Functions
-Route::get("/autocomplete", [SearchController::class, "autocomplete"]);
 
 
 // add from here on out: make sure there are 3 functions in controller: store - destroy - update
@@ -53,9 +51,10 @@ $crud = [
         "controller" => UserController::class,
         "middleware" => ['auth:sanctum', 'role:admin'],
     ],
-    // "users"?
     // "comments"?
 ];
+
+
 
 foreach ($crud as $prefix => $config) {
     $controller = $config["controller"];
@@ -88,6 +87,12 @@ foreach ($crud as $prefix => $config) {
     Route::get("/exports/$prefix/{type}", [TableController::class, $prefix . "Export"])
         ->middleware($middleware);
 }
+
+
+// Search Functions
+Route::get("/autocomplete", [SearchController::class, "autocomplete"]);
+
+
 
 
 // MANUALLY ADDED
