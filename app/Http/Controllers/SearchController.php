@@ -95,6 +95,8 @@ class SearchController extends Controller
                 'pagination' => $pagination,
                 'current_page' => $currentPage,
                 'last_page' => $lastPage,
+                'found_count' => $sorted->count(),
+                'total_search' => $sorted->count(),
             ]
         );
     }
