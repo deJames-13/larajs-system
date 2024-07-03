@@ -43,7 +43,7 @@ export default class SideBar {
         const link = `
             <button class="sidebar-link ${isActive && 'active-sidebar-link'}" role="button" data-url="${url}" >
                 <i class="${icon}"></i>
-                <span class="sm:hidden md:block"> ${text}</span>
+                <span class="hidden md:block"> ${text}</span>
             </button>
         `
 
