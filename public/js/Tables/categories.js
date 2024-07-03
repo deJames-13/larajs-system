@@ -124,7 +124,7 @@ export default class CategoriesPage {
 
 			</div>
 
-            <div class="container flex flex-col-reverse gap-2 lg:flex-row justify-between items-center>
+            <div class="container flex flex-col-reverse gap-2 lg:flex-row justify-between items-center">
                 <form id="import-form" method="POST" enctype="multipart/form-data" action="/admin/categories"
                     class="flex flex-col-reverse lg:flex-row gap-2 items-center">
                     <!-- {{ csrf_field() }} -->

@@ -1,6 +1,14 @@
 ## Installation
 
 ```sh
+
+REQUIRED SOFTWARE / CLI: meilisearch
+# Install Meilisearch
+curl -L https://install.meilisearch.com | sh
+
+
+
+
 git clone https:://github.com/deJames-13/larajs-system
 cd larajs-system
 composer install --ignore-platform-req=ext-gd
@@ -21,6 +29,7 @@ npm run dev
 php artisan queue:work
 
 
+
 # PROPER SEEDING !IMPORTANT
 # IF FIRST TIME:
 php artisan migrate
@@ -33,6 +42,20 @@ php artisan db:seed --class=OrderSeeder     # Make sure that `php artisan queue:
 # To change the count of OrderSeeder
 # Goto database/seeders/OrderSeeder.php
 # change count $count = 50;
+
+
+
+# LARAVEL SCOUT with MeiliSearch
+# MEILI CONFIG in .env
+SCOUT_DRIVER=meilisearch
+# # Use the host below if you're running Meilisearch via Laravel Sail
+# MEILISEARCH_HOST=http://meilisearch:7700
+MEILISEARCH_HOST=http://127.0.0.1:7700
+MEILISEARCH_KEY=masterKey
+
+# Launch Meilisearch: FOR MEILISEARCH engine
+./meilisearch
+
 
 
 

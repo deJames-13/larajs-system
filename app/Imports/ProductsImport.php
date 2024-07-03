@@ -50,7 +50,8 @@ class ProductsImport implements ToCollection, WithHeadingRow
                 );
             } catch (\Exception $e) {
                 // Log the error for debugging
-                Log::error("Error processing product with SKU {$row['sku_code']}: " . $e->getMessage());
+                // $sku = $row['sku_code'];
+                // Log::error("Error processing product with SKU {$sku}: " . $e->getMessage());
             }
         }
         Debugbar::info("Added: $addCount, Updated: $upCount");
