@@ -47,7 +47,7 @@ export default class ProductsPage {
             onSuccess: (response) => {
                 Swal.fire(
                     'Deleted!',
-                    'Your file has been deleted.',
+                    'Your item has been deleted.',
                     'success'
                 )
                 this.dataTable.updateTable();
