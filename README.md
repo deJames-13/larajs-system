@@ -17,6 +17,7 @@ cp .env.example .env
 php artisan key:generate
 php artisan storage:link
 php artisan vendor:publish --provider="Attrixtech\LaravelIcons\LaravelIconsServiceProvider" 
+php artisan vendor:publish --provider="Laravel\Scout\ScoutServiceProvider"                                                                                                  
 npm install
 
 

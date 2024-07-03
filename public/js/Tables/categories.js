@@ -32,7 +32,7 @@ export default class CategoriesPage {
                 "Description": `${category.description}`,
                 "Status": `${category.status}`,
                 "": `
-                <div class="print:hidden flex items-center flex-end w-full gap-3">
+                <div class="print:hidden flex items-center justify-end w-full gap-3">
                     <a href="/categories/${category.id}" class="btn btn-xs btn-primary">View</a>
                     <a href="/admin/categories/edit/${category.id}/" class="btn btn-xs btn-secondary">Edit</a>
                     <button id="row-delete__${category.id}" data-id="${category.id}" class="row-delete btn btn-xs bg-red-400">Delete</button>

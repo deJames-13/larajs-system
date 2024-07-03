@@ -21,7 +21,7 @@ export default class SearchItem {
         const HTML = `
         	<!--  SEARCH RESULT ITEM -->
             <div data-id="${this.id}"  data-link="${this.link}" onclick="window.location.href = '${this.link}';"
-                class="search-item flex flex-col  p-4 cursor-pointer rounded-lg border-primary hover:bg-secondary hover:scale-105 hover:border-b-2 hover:text-primary hover:bg-opacity-20 hover:shadow-xl transition ease-in animated__animate animated__fadeInLeft">
+                class="search-item flex flex-col  p-4 cursor-pointer rounded-lg border-primary hover:bg-secondary hover:scale-95 hover:border-b-2 hover:text-primary hover:bg-opacity-20 hover:shadow-xl transition ease-in animated__animate animated__fadeInLeft">
                 <h3 class="font-bold text-lg">
                     ${this.title}
                 </h3>
