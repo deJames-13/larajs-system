@@ -6,7 +6,12 @@
 				SEARCH
 			</h1>
 
-			<input type="text" class="input input-bordered rounded-none w-2/3" id="search-input" name="search-input">
+			<div class="flex items-center flex-grow">
+				<input type="text" class="input input-bordered rounded-none flex-grow" id="search-input" name="search-input">
+				<button class="btn rounded-none aspect-square bg-primary text-white">
+					<i class="fas fa-search"> </i>
+				</button>
+			</div>
 			{{-- filters here --}}
 			<select name="search-filter" id="search-filter"
 				class="select select-bordered rounded-none font-bold bg-primary text-white uppercase">
