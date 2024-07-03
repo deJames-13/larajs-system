@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('logo')->nullable();
             $table->softDeletes();
 
-            $table->string('status')->nullable();
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });
         Schema::create('product_brands', function (Blueprint $table) {

@@ -70,7 +70,8 @@ class TableController extends Controller
     {
         try {
             Excel::import(new UsersImport, request()->file('item_upload'));
-            return redirect()->back()->with('success', 'Excel file Imported Successfully');
+            // return redirect()->back()->with('success', 'Excel file Imported Successfully');
+            return response()->json(['success' => 'Excel file Imported Successfully']);
         } catch (Exception $ex) {
             return response()->json(['error' => $ex->getMessage()]);
             // return abort(500, $ex->getMessage());
@@ -115,8 +116,10 @@ class TableController extends Controller
     public function productsImport()
     {
         try {
+            // dd(request()->file('item_upload'));
             Excel::import(new ProductsImport, request()->file('item_upload'));
-            return redirect()->back()->with('success', 'Excel file Imported Successfully');
+            // return redirect()->back()->with('success', 'Excel file Imported Successfully');
+            return response()->json(['success' => 'Excel file Imported Successfully']);
         } catch (Exception $ex) {
             return response()->json(['error' => $ex->getMessage()]);
             // return abort(500, $ex->getMessage());
@@ -197,7 +200,8 @@ class TableController extends Controller
     {
         try {
             Excel::import(new PromosImport, request()->file('item_upload'));
-            return redirect()->back()->with('success', 'Excel file Imported Successfully');
+            // return redirect()->back()->with('success', 'Excel file Imported Successfully');
+            return response()->json(['success' => 'Excel file Imported Successfully']);
         } catch (Exception $ex) {
             //return response()->json(['error' => $ex->getMessage()]);
             return abort(500, $ex->getMessage());
@@ -240,7 +244,8 @@ class TableController extends Controller
     {
         try {
             Excel::import(new BrandsImport, request()->file('item_upload'));
-            return redirect()->back()->with('success', 'Excel file Imported Successfully');
+            // return redirect()->back()->with('success', 'Excel file Imported Successfully');
+            return response()->json(['success' => 'Excel file Imported Successfully']);
         } catch (Exception $ex) {
             //return response()->json(['error' => $ex->getMessage()]);
             return abort(500, $ex->getMessage());
@@ -282,7 +287,8 @@ class TableController extends Controller
     {
         try {
             Excel::import(new CategoriesImport, request()->file('item_upload'));
-            return redirect()->back()->with('success', 'Excel file Imported Successfully');
+            // return redirect()->back()->with('success', 'Excel file Imported Successfully');
+            return response()->json(['success' => 'Excel file Imported Successfully']);
         } catch (Exception $ex) {
             //return response()->json(['error' => $ex->getMessage()]);
             return abort(500, $ex->getMessage());
