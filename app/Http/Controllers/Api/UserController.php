@@ -57,13 +57,12 @@ class UserController extends Controller
             'role' => 'sometimes|in:admin,customer',
         ]);
         $userInfo = $request->validate([
-            'info' => 'required|array',
-            'info.first_name' => 'required|string',
-            'info.last_name' => 'required|string',
-            'info.phone_number' => 'required|string|unique:customers,phone_number',
-            'info.address' => 'required|string',
-            'info.zip_code' => 'required|string',
-            'info.profile_image' => 'required|image',
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
+            'phone_number' => 'required|string|unique:customers,phone_number',
+            'address' => 'required|string',
+            'zip_code' => 'required|string',
+            'profile_image' => 'required|image',
         ]);
 
         $userData['password'] = bcrypt($userData['password']);
@@ -79,6 +78,8 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         // dd($request->hasFile('images'));
+        // dd($request);
+
         Debugbar::info($request);
         $userData = $request->validate([
             'username' => 'sometimes|unique:users,username,' . $id . ',id',
@@ -88,12 +89,11 @@ class UserController extends Controller
             'role' => 'sometimes|in:admin,customer',
         ]);
         $userInfo = $request->validate([
-            'info' => 'sometimes|array',
-            'info.first_name' => 'sometimes|string',
-            'info.last_name' => 'sometimes|string',
-            'info.phone_number' => 'sometimes|string|unique:customers,phone_number,' . $id . ',user_id',
-            'info.address' => 'sometimes|string',
-            'info.zip_code' => 'sometimes|string',
+            'first_name' => 'sometimes|string',
+            'last_name' => 'sometimes|string',
+            'phone_number' => 'sometimes|string|unique:customers,phone_number,' . $id . ',user_id',
+            'address' => 'sometimes|string',
+            'zip_code' => 'sometimes|string',
             'profile_image' => 'sometimes|image',
         ]);
         // image 
@@ -113,7 +113,7 @@ class UserController extends Controller
         $user->update($userData);
 
         if (isset($userInfo['info'])) {
-            $user->info()->updateOrCreate([], $userInfo['info']);
+            $user->info()->updateOrCreate([], $userInfo);
         }
 
         $this->handleImageUpload($request, $user);

@@ -10,16 +10,35 @@ export default class ProfileForm extends FormCard {
         this.form.prepend(this.additionalFields());
         this.bindEvents();
         this.handleImageUpload();
-        this.getProfile()
+        // this.getProfile()
+
 
         return this;
 
+    }
+
+    async fetchProfile() {
+        return new Promise((resolve, reject) => {
+            ajaxRequest.get({
+                url: '/api/profile',
+                onSuccess: (response) => {
+                    this.user_profile = response;
+                    this.populateForm();
+                    resolve(this.user_profile); // Resolve the promise with the profile data
+                },
+                onError: (response) => {
+                    console.log(response);
+                    reject(response); // Reject the promise on error
+                }
+            });
+        });
     }
 
     async getProfile() {
         this.user_profile = await this.fetchProfile();
         return this.user_profile;
     }
+
     setFields() {
         const fields = {
             fullname: [
@@ -62,11 +81,10 @@ export default class ProfileForm extends FormCard {
 
 			<div class="flex p-4 justify-center space-x-2">
 				<input id="input-image" type="file" accept="image/*"
-					class="max-w-sm file-input file-input-bordered file-input-primary" name="image">
+					class="max-w-sm file-input file-input-bordered file-input-primary" name="images[]">
 			</div>
         `
     }
-
 
     populateForm() {
 
@@ -119,22 +137,6 @@ export default class ProfileForm extends FormCard {
             this.saveForm();
         });
     }
-    async fetchProfile() {
-        return new Promise((resolve, reject) => {
-            ajaxRequest.get({
-                url: '/api/profile',
-                onSuccess: (response) => {
-                    this.user_profile = response;
-                    this.populateForm();
-                    resolve(this.user_profile); // Resolve the promise with the profile data
-                },
-                onError: (response) => {
-                    console.log(response);
-                    reject(response); // Reject the promise on error
-                }
-            });
-        });
-    }
 
     confirmWithPassword() {
         Swal.fire({
@@ -152,11 +154,11 @@ export default class ProfileForm extends FormCard {
                         url: '/api/confirm-password',
                         data: { password },
                         onSuccess: (response) => {
-                            console.log(response);
+                            // console.log(response);
                             resolve();
                         },
                         onError: (response) => {
-                            console.log(response);
+                            // console.log(response);
                             Swal.showValidationMessage("Error: Password confirmation failed");
                             reject();
                         }
@@ -188,6 +190,9 @@ export default class ProfileForm extends FormCard {
     }
 
     onSubmit() {
+        this.validate();
+        console.log(this.form.valid());
+        if (!this.form.valid()) return;
         Swal.fire({
             title: 'Are you sure?',
             text: "You are about to update your profile",
@@ -203,42 +208,73 @@ export default class ProfileForm extends FormCard {
         });
     }
 
-    submitForm() {
-        const payload = {
-            username: this.form.find('#username').val(),
-            email: this.form.find('#email').val(),
-            info: {
-                first_name: this.form.find('#first_name').val(),
-                last_name: this.form.find('#last_name').val(),
-                phone_number: this.form.find('#phone_number').val(),
-                address: `${this.form.find('#address_1').val()},${this.form.find('#address_2').val()},${this.form.find('#city').val()},${this.form.find('#province').val()},${this.form.find('#country').val()}`,
-                birthdate: this.form.find('#birthdate').val(),
-                zip_code: this.form.find('#zip_code').val(),
-            }
-        }
-        // add image
-        const images = this.form.find('#input-image')[0].files;
+    validate() {
+        const requiredFields = ['first_name', 'last_name', 'username', 'email', 'phone_number', 'address_1', 'address_2', 'city', 'province', 'country', 'zip_code', 'birthdate'];
 
-        const formData = new FormData();
-        Object.keys(payload).map((key) => {
-            if (key === 'info') {
-                Object.keys(payload.info).map((info) => {
-                    formData.append(`info[${info}]`, payload.info[info]);
-                });
-            } else {
-                formData.append(key, payload[key]);
+        const rules = requiredFields.reduce((acc, field) => {
+            acc[field] = {
+                required: true,
+            };
+
+            if (field == 'email') {
+                acc[field].email = true;
+            }
+
+            if (field == 'username') {
+                acc[field].minlength = 3;
+                acc[field].maxlength = 25;
+                acc[field].pattern = /^[a-zA-Z0-9_]+$/;
+            }
+
+            return acc;
+        }, {});
+
+        const messages = requiredFields.reduce((acc, field) => {
+            acc[field] = {
+                required: 'This field is required!',
+            };
+
+            if (field == 'email') {
+                acc[field].email = 'Email is invalid';
+            }
+
+            if (field == 'username') {
+                acc[field].minlength = 'Username must be at least 3 characters';
+                acc[field].maxlength = 'Username must be at most 25 characters';
+                acc[field].pattern = 'Username must contain only letters, numbers, or underscores';
+            }
+
+            return acc;
+        }, {});
+        console.log({
+            rules: rules,
+            messages: messages,
+        })
+        this.form.validate({
+            rules: rules,
+            messages: messages,
+            errorElement: 'p',
+            errorPlacement: function (error, element) {
+                error.addClass('text-error text-xs italic my-1');
+                error.insertAfter(element);
             }
         });
-        if (images && images.length > 0) {
-            for (let i = 0; i < images.length; i++) {
-                formData.append(`images[${i}]`, images[i]);
-            }
-        }
-        console.log(formData);
+
+    }
 
 
 
+    handleInvalidInput(errors) {
+        Object.keys(errors).map(e => {
+            const errorId = this.form.find(`[data-error-id="${e}"]`);
+            errorId.text(errors[e]);
+        });
+    }
 
+    submitForm() {
+        $('name[input-error]').text('');
+
+        const formData = new FormData(this.form[0]);
         ajaxRequest.post({
             url: '/api/profile/update/' + this.user_profile.id,
             data: formData,
@@ -253,6 +289,12 @@ export default class ProfileForm extends FormCard {
             },
             onError: (response) => {
                 console.log(response);
+                // if 422
+                if (response.status === 422) {
+                    this.handleInvalidInput(response.responseJSON.errors);
+                    return;
+                }
+
                 Swal.fire(
                     'Error!',
                     'An error occured while updating your profile.',
@@ -284,7 +326,6 @@ export default class ProfileForm extends FormCard {
         })
         $('#form-actions').hide();
     }
-
 
 
 
