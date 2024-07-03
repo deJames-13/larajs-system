@@ -22,7 +22,4 @@ yarn-error.log
 lock.mdb
 /data.ms
 /data.ms/**/*.mdb
-data.ms/indexes/0b906f5c-5a79-4d1d-9b73-322f272346e7/lock.mdb
 data.ms/indexes/**/*.mdb
-data.ms/indexes/946d1c4f-efa1-4f28-a0c1-c4c4611a5a8d/lock.mdb
-data.ms/indexes/a3cda8d7-c95a-4582-b71a-7fc2c4532951/lock.mdb
