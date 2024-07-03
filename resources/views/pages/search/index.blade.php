@@ -44,7 +44,7 @@
 				<div id="paginations"></div>
 			</div>
 
-			<div id="search-contents" class="flex flex-col gap-4 border border-red-400 py-4">
+			<div id="search-contents" class="flex flex-col gap-4  py-4">
 
 
 
