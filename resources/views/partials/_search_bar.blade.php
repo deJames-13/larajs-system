@@ -18,7 +18,7 @@
 			</div>
 			<input id="search-input" type="text" class="flex-grow focus:outline-none focus:border-0 p-2"
 				placeholder="What are you looking for? ">
-			<button class="bg-primary text-white p-2 hover:bg-secondary active:scale-95">
+			<button id="search-button" class="bg-primary text-white p-2 hover:bg-secondary active:scale-95">
 				<i class="fas fa-search"></i>
 			</button>
 		</div>

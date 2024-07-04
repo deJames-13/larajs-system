@@ -35,7 +35,7 @@ export default class PromosPage {
                 "Start Date": `${promo.start_date}`,
                 "End Date": `${promo.end_date}`,
                 "": `
-                <div class="print:hidden flex items-center flex-end w-full gap-3">
+                <div class="print:hidden flex items-center justify-end w-full gap-3">
                     <a href="/promos/${promo.id}" class="btn btn-xs btn-primary">View</a>
                     <a href="/admin/promos/edit/${promo.id}/" class="btn btn-xs btn-secondary">Edit</a>
                     <form id="row_delete__${promo.id}" data-id="${promo.id}" method="POST">
@@ -129,7 +129,7 @@ export default class PromosPage {
 
                 </div>
 
-            <div class="container flex flex-col-reverse gap-2 lg:flex-row justify-between items-center>
+            <div class="container flex flex-col-reverse gap-2 lg:flex-row justify-between items-center">
                     <form id="import-form" method="POST" enctype="multipart/form-data" action="/admin/promos"
                         class="flex flex-col-reverse lg:flex-row gap-2 items-center">
                         <!-- {{ csrf_field() }} -->

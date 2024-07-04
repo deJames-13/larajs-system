@@ -22,9 +22,9 @@ $crud = [
 
 // TO FIX
 foreach ($crud as $prefix) {
-    $prefix = str_replace('ys', 'ies', $prefix . 's');
-    Route::get("/$prefix", [PageController::class, $prefix])->name("$prefix.index");
-    Route::get("/$prefix/{id}", [PageController::class, $prefix])->name("$prefix.show");
+    $prefixPlural = str_replace('ys', 'ies', $prefix . 's');
+    Route::get("/$prefixPlural", [PageController::class, $prefixPlural])->name("$prefixPlural.index");
+    Route::get("/$prefixPlural/{id}", [PageController::class, $prefix])->name("$prefixPlural.show");
 }
 
 // GLOBAL SEARCH

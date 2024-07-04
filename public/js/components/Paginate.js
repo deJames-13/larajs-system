@@ -12,10 +12,11 @@ export default class Pagination {
             }
             this.links[key] = page;
         });
-
         this.links.current = current_page ? parseInt(current_page) : 1;
         this.before = parseInt(this.links.current) - 1;
         this.after = parseInt(this.links.current) + 1;
+
+
         return this;
     }
 

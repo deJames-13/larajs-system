@@ -33,7 +33,7 @@ export default class BrandsPage {
                 "Description": `${brand.description}`,
                 "Status": `${brand.status}`,
                 "": `
-                <div class="print:hidden flex items-center flex-end w-full gap-3">
+                <div class="print:hidden flex items-center justify-end w-full gap-3">
                     <a href="/brands/${brand.id}" class="btn btn-xs btn-primary">View</a>
                     <a href="/admin/brands/edit/${brand.id}/" class="btn btn-xs btn-secondary">Edit</a>
                     <button id="row-delete__${brand.id}" data-id="${brand.id}" class="row-delete btn btn-xs bg-red-400">Delete</button>
@@ -87,6 +87,10 @@ export default class BrandsPage {
             e.preventDefault();
             this.importExcel();
         });
+
+
+
+
     }
 
     importExcel() {
@@ -121,7 +125,7 @@ export default class BrandsPage {
 
 			</div>
 
-			<div class="container flex flex-col-reverse gap-2 lg:flex-row justify-between items-center>
+			<div class="container flex flex-col-reverse gap-2 lg:flex-row justify-between items-center">
                 <form id="import-form" method="POST" enctype="multipart/form-data" action="/admin/brands"
                     class="flex flex-col-reverse lg:flex-row gap-2 items-center">
                     <!-- {{ csrf_field() }} -->

@@ -32,7 +32,7 @@ export default class ProductsPage {
             "Price": `${product.price}`,
             "Stock": `${product.stock}`,
             "": `
-                <div class="print:hidden flex items-center flex-end w-full gap-3">
+            <div class="print:hidden w-full flex items-center justify-end gap-3">
                 <a href="/products/${product.id}" class="btn btn-xs btn-primary">View</a>
                 <a href="/admin/products/edit/${product.id}/" class="btn btn-xs btn-secondary">Edit</a>
                 <button id="row-delete__${product.id}" data-id="${product.id}" class="row-delete btn btn-xs bg-red-400">Delete</button>
@@ -47,7 +47,7 @@ export default class ProductsPage {
             onSuccess: (response) => {
                 Swal.fire(
                     'Deleted!',
-                    'Your file has been deleted.',
+                    'Your item has been deleted.',
                     'success'
                 )
                 this.dataTable.updateTable();
@@ -118,8 +118,8 @@ export default class ProductsPage {
 			<div class=" w-full print:m-0 print:overflow-visible overflow-x-auto" id="table-wrapper">
 
 			</div>
-            <div class="container flex flex-col-reverse gap-2 lg:flex-row justify-between items-center>
-                <form id="import-form" method="POST" enctype="multipart/form-data" action="/admin/products"
+            <div class="container flex flex-col-reverse gap-2 lg:flex-row justify-between items-center">
+                <form id='import-form' method='POST' enctype='multipart/form-data' action='/admin/products'
                     class="flex flex-col-reverse lg:flex-row gap-2 items-center">
                     <!-- {{ csrf_field() }} -->
                     <input type="file" id="uploadName" name="item_upload" class="file-input file-input-sm  w-full max-w-xs" required>

@@ -91,6 +91,7 @@ foreach ($crud as $prefix => $config) {
 
 // Search Functions
 Route::get("/autocomplete", [SearchController::class, "autocomplete"]);
+Route::post("/search", [SearchController::class, "search"]);
 
 
 

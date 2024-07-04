@@ -49,6 +49,10 @@ class PageController extends Controller
     public function product(string $id)
     {
         $item = Product::find($id);
+        if (!$item) {
+            abort(404);
+        }
+
 
         return view('pages.products.show', ['item' => $item]);
     }
@@ -69,6 +73,10 @@ class PageController extends Controller
     public function promo(string $id)
     {
         $promo = Promos::find($id);
+        if (!$promo) {
+            abort(404);
+        }
+
         return view('pages.promos.show', ['promo' => $promo]);
     }
     public function promosCreate()
@@ -88,6 +96,9 @@ class PageController extends Controller
     public function brand(string $id)
     {
         $brand = Brand::find($id);
+        if (!$brand) {
+            abort(404);
+        }
         return view('pages.brands.show', ['brand' => $brand]);
     }
     public function brandsCreate()
@@ -107,6 +118,9 @@ class PageController extends Controller
     public function category(string $id)
     {
         $category = Category::find($id);
+        if (!$category) {
+            abort(404);
+        }
         return view('pages.categories.show', ['category' => $category]);
     }
     public function categoriesCreate()
