@@ -4,7 +4,7 @@ export default class OrdersPage extends TablePage {
     constructor({ target }) {
         super({
             target: target,
-            table: 'promos',
+            table: 'orders',
             withActions: false,
         });
     }

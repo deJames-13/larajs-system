@@ -11,7 +11,7 @@ export default class TablePage {
         this.withActions = withActions;
         if (title) this.title = title;
         else if (this.table && this.table.length > 0)
-            this.title = this.table.charAt(0).toUpperCase() + this.table.slice(1) + 'DataTable';
+            this.title = this.table.charAt(0).toUpperCase() + this.table.slice(1) + ' DataTable';
         else '';
         this.init();
     }
