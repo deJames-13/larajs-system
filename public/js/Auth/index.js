@@ -13,3 +13,4 @@ $(document).on('click', '.auth-btn', function () {
         modal = new SignUp();
     }
 })
+

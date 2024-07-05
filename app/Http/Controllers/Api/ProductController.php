@@ -51,6 +51,7 @@ class ProductController extends Controller
             'specifications' => 'required|string',
             'price' => 'required|numeric',
             'image_id' => 'sometimes|numeric',
+            'status' => 'required|string|in:active,inactive',
             'stock' => 'required|numeric',
             'brands' => 'sometimes|array',
             'brands.*' => 'sometimes|numeric',
@@ -79,6 +80,7 @@ class ProductController extends Controller
             'stock' => 'sometimes|numeric',
             'description' => 'sometimes|string',
             'specifications' => 'sometimes|string',
+            'status' => 'required|string|in:active,inactive',
             'price' => 'sometimes|numeric',
             'image_id' => 'sometimes|numeric'
         ]);
