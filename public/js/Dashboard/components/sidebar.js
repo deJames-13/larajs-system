@@ -34,6 +34,11 @@ export default class DashboardSideBar extends SideBar {
             url: 'promos'
         },
         {
+            text: 'Users',
+            icon: 'fas fa-users',
+            url: 'users'
+        },
+        {
             text: 'Charts',
             icon: 'fas fa-chart-line',
             url: 'charts'

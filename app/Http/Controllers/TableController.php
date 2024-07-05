@@ -52,7 +52,7 @@ class TableController extends Controller
             // Debugbar::info($response);
             return $response;
         }
-        return view('admin.tables.products');
+        return view('admin.tables.users');
     }
     public function usersExport(string $type)
     {

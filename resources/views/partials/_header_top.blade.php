@@ -2,25 +2,34 @@
 	<div class="container mx-auto flex items-center justify-between text-white">
 		{{-- START --}}
 		<div class="flex space-x-4 items-center">
-			<a class="cursor-pointer flex space-x-2 items-center">
-				<i class="fab fa-instagram"></i>
-				<i class="fab fa-facebook"></i>
-				<i class="fas fa-phone"></i>
+			<div class="cursor-pointer flex space-x-1 items-center">
+				<a class="hover:text-secondary"><i class="fab fa-facebook"></i></a>
+				<a class="hover:text-secondary"><i class="fab fa-instagram"></i></a>
+				<a class="hover:text-secondary"><i class="fas fa-phone"></i></a>
 				<span class="text-xs font-bold">Contact Us</span>
-			</a>
+			</div>
+
+			@role('admin')
+				@if (!($page === 'dashboard' || $page === 'dashboard'))
+					<div class="cursor-pointer space-x-1 flex items-center">
+						<i class="fas fa-cog"></i>
+						<a href="/dashboard" class="text-xs font-bold">Go To Dashboard</a>
+					</div>
+				@endif
+			@endrole
 
 			@auth
 				@if (!($page === 'shop' || $page === 'shop'))
-					<a class="cursor-pointer flex space-x-2 items-center">
+					<div class="cursor-pointer space-x-1 flex items-center">
 						<i class="fas fa-store"></i>
 						<a href="/products" class="text-xs font-bold">Go To Shop</a>
-					</a>
+					</div>
 				@endif
 			@else
-				<a class="cursor-pointer flex space-x-2 items-center">
+				<div class="cursor-pointer space-x-1 flex items-center">
 					<i class="fas fa-store"></i>
 					<a href="/products" class="text-xs font-bold">Shop Now</a>
-				</a>
+				</div>
 
 			@endauth
 

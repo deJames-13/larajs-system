@@ -33,7 +33,8 @@ class CategoryController extends Controller
             'name' => 'required|string',
             'slug' => 'required|string|unique:categories,slug',
             'description' => 'required|string',
-            'status' => 'required|string',
+            // enum of active and inactive 
+            'status' => 'required|string|in:active,inactive',
         ]);
 
         $image_id = $data['image_id'] ?? null;

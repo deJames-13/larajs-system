@@ -1,11 +1,11 @@
 ## All TODO's HERE
 
 ### Prio
-- [ ] SEEDERS
-- [ ] OrderSeeder
-- [ ] PromoSeeder
-- [ ] BrandSeeder 
-- [ ] CategorySeeder
+- [x] SEEDERS
+- [x] OrderSeeder
+- [x] PromoSeeder
+- [x] BrandSeeder 
+- [x] CategorySeeder
 
 
 - [x] Fix email data
@@ -14,5 +14,5 @@
 - [x] Make login modal js
 - [x] make register modal js
 - [x] Fix authentication with ajax
-- [ ] Make profile page
-- [ ] Manage profile - edit/delete/deactivate
+- [x] Make profile page
+- [x] Manage profile - edit/delete/deactivate
