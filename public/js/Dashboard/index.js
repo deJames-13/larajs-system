@@ -22,12 +22,18 @@ class Dashboard {
     getTable(url) {
         $('#dashboard-content').html('');
 
-        url === 'main' && MainPage.init();
-        url === 'products' && this.tables.getProducts();
-        url === 'brands' && this.tables.getBrands();
-        url === 'promos' && this.tables.getPromos();
-        url === 'categories' && this.tables.getCategories();
-        url === 'orders' && this.tables.getOrders();
+        const pages = {
+            main: () => MainPage.init(),
+            products: () => this.tables.getProducts(),
+            brands: () => this.tables.getBrands(),
+            promos: () => this.tables.getPromos(),
+            categories: () => this.tables.getCategories(),
+            orders: () => this.tables.getOrders(),
+            users: () => this.tables.getUsers(),
+        }
+
+        pages[url]();
+
     }
 
 }

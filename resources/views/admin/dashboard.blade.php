@@ -3,7 +3,7 @@
 	<div class="container mx-auto flex space-x-2 min-h-screen overflow-auto">
 
 		{{-- side-bar --}}
-		<div class="left py-8 px-4 container min-h-screen max-w-xs">
+		<div class="left py-8 px-4 container max-h-[1000px] max-w-xs overflow-auto">
 			<div id="dashboard-sidebar" class="rounded-xl shadow-xl border p-4"></div>
 		</div>
 

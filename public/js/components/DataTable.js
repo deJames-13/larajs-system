@@ -231,8 +231,8 @@ export default class DataTable {
             <div id="paginations" class="container flex justify-end items-end">
             </div>
         </div>
-        <div id="datatable" class="print:my-4 w-full print:overflow-visible overflow-x-auto flex items-center justify-center">
-            <table id="${this.tableId}" class="table table-xs table-auto w-full">
+        <div id="datatable" class="py-8 print:my-4 w-full print:overflow-visible overflow-auto flex items-center justify-center">
+            <table id="${this.tableId}" class="table table-xs table-auto h-full w-full ">
                 <thead>
                     <tr>
                         ${columns.map(column => `<th>${column}</th>`).join('')}
@@ -240,8 +240,8 @@ export default class DataTable {
                 </thead>
                 <tbody>
                     ${this.table.map(row => `
-                    <tr class="hover">
-                        ${columns.map(column => `<td>${row[column]}</td>`).join('')}
+                    <tr class="hover:border-secondary hover:bg-secondary hover:bg-opacity-20 hover:border-y-2 hover:scale-95 transition-all ease-in">
+                        ${columns.map(column => `<td class="">${row[column]}</td>`).join('')}
                     </tr>
                 `).join('')}
                 </tbody>
