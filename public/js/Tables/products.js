@@ -1,10 +1,12 @@
 import ajaxRequest from '../assets/ajaxRequest.js';
 import DataTable from '../components/DataTable.js';
+import { statusColors } from './config.js';
 
 export default class ProductsPage {
     constructor({ target }) {
 
         this.render(target);
+        this.statusColors = statusColors;
         this.dataTable = new DataTable({
             parent: '#table-wrapper',
             tableId: 'productsTable',
@@ -14,7 +16,7 @@ export default class ProductsPage {
             minLimit: 1,
             maxLimit: 100,
             fileButtons: ['pdf', 'excel', 'print', 'csv'],
-            makeTable: this.makeTable,
+            makeTable: this.makeTable.bind(this),
         });
 
         this.bindEvents();
@@ -31,6 +33,10 @@ export default class ProductsPage {
             "SKU": `${product.sku_code}`,
             "Price": `${product.price}`,
             "Stock": `${product.stock}`,
+            "Status": `
+                <div class="badge ${this.statusColors[product.status]} gap-2">
+                    ${product.status}
+                </div>`,
             "": `
             <div class="print:hidden w-full flex items-center justify-end gap-3">
                 <a href="/products/${product.id}" class="btn btn-xs btn-primary">View</a>

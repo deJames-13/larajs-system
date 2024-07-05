@@ -1,9 +1,11 @@
 import ajaxRequest from '../assets/ajaxRequest.js';
 import DataTable from '../components/DataTable.js';
+import { statusColors } from './config.js';
 
 export default class PromosPage {
     constructor({ target }) {
         this.render(target);
+        this.statusColors = statusColors;
         this.dataTable = new DataTable({
             parent: '#table-wrapper',
             tableId: 'promosTable',
@@ -13,7 +15,7 @@ export default class PromosPage {
             minLimit: 1,
             maxLimit: 100,
             fileButtons: ['pdf', 'excel', 'print', 'csv'],
-            makeTable: this.makeTable,
+            makeTable: this.makeTable.bind(this),
         });
         this.bindEvents();
     }
@@ -30,7 +32,10 @@ export default class PromosPage {
                 "Slug": `${promo.slug}`,
                 "Description": `${promo.description}`,
                 "Image": `${promo.image}`,
-                "Status": `${promo.status}`,
+                "Status": `
+                <div class="badge ${this.statusColors[promo.status]} gap-2">
+                    ${promo.status}
+                </div>`,
                 "Discount": `${promo.discount}`,
                 "Start Date": `${promo.start_date}`,
                 "End Date": `${promo.end_date}`,

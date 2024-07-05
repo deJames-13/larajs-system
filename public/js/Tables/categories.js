@@ -1,9 +1,11 @@
 import ajaxRequest from '../assets/ajaxRequest.js';
 import DataTable from '../components/DataTable.js';
+import { statusColors } from './config.js';
 
 export default class CategoriesPage {
     constructor({ target }) {
         this.render(target);
+        this.statusColors = statusColors;
         this.dataTable = new DataTable({
             parent: '#table-wrapper',
             tableId: 'categoriesTable',
@@ -13,7 +15,7 @@ export default class CategoriesPage {
             minLimit: 1,
             maxLimit: 100,
             fileButtons: ['pdf', 'excel', 'print', 'csv'],
-            makeTable: this.makeTable,
+            makeTable: this.makeTable.bind(this),
         });
         this.bindEvents();
     }
@@ -30,7 +32,10 @@ export default class CategoriesPage {
                 "Name": `${category.name}`,
                 "Slug": `${category.slug}`,
                 "Description": `${category.description}`,
-                "Status": `${category.status}`,
+                "Status": `
+                <div class="badge ${this.statusColors[category.status]} gap-2">
+                    ${category.status}
+                </div>`,
                 "": `
                 <div class="print:hidden flex items-center justify-end w-full gap-3">
                     <a href="/categories/${category.id}" class="btn btn-xs btn-primary">View</a>

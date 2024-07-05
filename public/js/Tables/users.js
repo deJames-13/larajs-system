@@ -1,9 +1,12 @@
 import ajaxRequest from '../assets/ajaxRequest.js';
 import DataTable from '../components/DataTable.js';
+import { statusColors } from './config.js';
 
 export default class UsersPage {
+
     constructor({ target }) {
         this.render(target);
+        this.statusColors = statusColors;
         this.dataTable = new DataTable({
             parent: '#table-wrapper',
             tableId: 'usersTable',
@@ -13,9 +16,9 @@ export default class UsersPage {
             minLimit: 1,
             maxLimit: 100,
             fileButtons: ['pdf', 'excel', 'print', 'csv'],
-            makeTable: this.makeTable,
+            makeTable: this.makeTable.bind(this),
         });
-
+        console.log(this.statusColors);
         this.bindEvents();
     }
     static init({ target }) {
@@ -51,7 +54,11 @@ export default class UsersPage {
                 "Phone Number": `${info.phone_number || 'N/A'}`,
                 "Address": `${info.address || 'N/A'}`,
                 "Role": `${user.role}`,
-                "Account Status": `${user.status}`,
+                "Account Status": `
+                <div class="badge ${this.statusColors[user.status]} gap-2">
+                    ${user.status}
+                </div>
+                `,
                 "": `
                 <div class="print:hidden w-full flex items-center justify-end gap-3">
                     <a href="/users/${user.id}" class="btn btn-xs btn-primary">View</a>

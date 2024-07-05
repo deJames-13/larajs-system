@@ -1,15 +1,10 @@
 import ajaxRequest from '../assets/ajaxRequest.js';
 import DataTable from '../components/DataTable.js';
+import { statusColors } from './config.js';
 
 export default class OrdersPage {
     constructor({ target }) {
-        this.badgeColors = {
-            'pending': 'bg-yellow-400',
-            'processing': 'bg-blue-400',
-            'shipping': 'bg-blue-400',
-            'completed': 'bg-green-400',
-            'cancelled': 'bg-red-400'
-        };
+        this.badgeColors = statusColors;
         this.render(target);
         this.dataTable = new DataTable({
             parent: '#table-wrapper',
