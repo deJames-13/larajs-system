@@ -11,13 +11,12 @@ export default class BrandsEdit {
         ]
 
         this.init();
-        this.setupForm();
-        this.setupValidation();
+        // this.setupValidation();
     }
 
     init() {
         this.id = $('#item-form').data('id');
-        this.brand = this.fetchBrand(this.id);
+        this.fetchBrand(this.id);
 
         $('#image-input').change(() => {
             const imagesInput = Array.from($('#image-input')[0].files).map(file => URL.createObjectURL(file));
@@ -55,7 +54,7 @@ export default class BrandsEdit {
             }).then((result) => {
                 if (result.isConfirmed) {
                     $('#save-item, #cancel').hide();
-                    this.brand = this.fetchBrand(this.id);
+                    this.fetchBrand(this.id);
                 }
             });
         });
@@ -86,11 +85,11 @@ export default class BrandsEdit {
     }
 
     populateForm(brand) {
+        if (!brand) return;
         Object.keys(brand).forEach(key => {
             $(`#${key}`).val(brand[key]);
-            // if field is a select element
             if ($(`#${key}`).is('select')) {
-                $(`#${key}`).val(brand[key].id);
+                $(`#${key}`).val(brand[key]);
             }
         });
     }
@@ -107,9 +106,9 @@ export default class BrandsEdit {
                     if (response.data.images && response.data.images.length > 0) {
                         this.images = response.data.images.map(image => '/' + image.path);
                     }
+                    this.brand = response.data
                     this.loadCarousel();
-                    this.populateForm(response.data);
-                    return response.data;
+                    this.populateForm(this.brand);
                 }
                 return {};
             },

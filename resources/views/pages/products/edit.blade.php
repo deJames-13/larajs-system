@@ -26,7 +26,7 @@
 						class="max-w-[300px] flex-grow file-input file-input-bordered file-input-primary" name="images[]">
 				</div>
 			</div>
-			<div class="right info-container py-4 px-2">
+			<div class="right info-container py-4 px- mb-24">
 
 				<h3 class="text-2xl font-semibold border-b-2 border-primary border-opacity-25">
 					Product Information
@@ -72,7 +72,14 @@
 						 placeholder="Enter item specifications" rows="4"></textarea>
 					</div>
 
-
+					{{-- Item Status Input --}}
+					<div class="flex flex-col space-y-2">
+						<label for="status" class="text-lg font-semibold">Status</label>
+						<select name="status" id="status" class="select select-bordered">
+							<option value="active">Active</option>
+							<option value="inactive">Inactive</option>
+						</select>
+					</div>
 
 				</div>
 
