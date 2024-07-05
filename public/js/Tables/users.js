@@ -1,3 +1,5 @@
+import UserAdd from '../Users/create.js';
+import UserEdit from '../Users/edit.js';
 import TablePage from './table.js';
 
 export default class UsersPage extends TablePage {
@@ -7,7 +9,6 @@ export default class UsersPage extends TablePage {
             table: 'users',
         });
 
-        this.bindEvents();
     }
     static init({ target }) {
         const instance = new UsersPage({ target });
@@ -50,8 +51,8 @@ export default class UsersPage extends TablePage {
                 `,
                 "": `
                 <div class="print:hidden w-full flex items-center justify-end gap-3">
-                    <a href="/users/${user.id}" class="btn btn-xs btn-primary">View</a>
-                    <a href="/admin/users/edit/${user.id}/" class="btn btn-xs btn-secondary">Edit</a>
+                    <button data-action="view" data-id="${user.id}"  id="action-btn" class="btn btn-xs btn-primary">View</button>
+                    <button data-action="edit" data-id="${user.id}"  id="action-btn" class="btn btn-xs btn-secondary">Edit</>
                     <button id="row-delete__${user.id}" data-id="${user.id}" class="row-delete btn btn-xs bg-red-400">Delete</button>
                 </div>
                 `,
@@ -61,15 +62,24 @@ export default class UsersPage extends TablePage {
 
 
     bindEvents() {
-        $(`#btn-add-${this.table}`).off('click').on('click', () => {
-            console.log('add new user');
+
+        $(document).on('click', '#action-btn', (e) => {
+            const action = $(e.target).data('action');
+            const userId = $(e.target).data('id');
+            if (action === 'view') {
+                console.log('view', userId);
+            } else if (action === 'edit') {
+                console.log('edit', userId);
+                new UserEdit({ userId });
+            }
         });
 
-        $(`#btn-restore-${this.table}`).off('click').on('click', () => {
-            console.log('restore user');
+        $('#btn-add-' + this.table).off('click').on('click', () => {
+            new UserAdd();
         });
 
-
+        $('#btn-restore-' + this.table).off('click').on('click', () => {
+        });
     }
 
 

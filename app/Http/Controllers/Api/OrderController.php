@@ -145,8 +145,6 @@ class OrderController extends Controller
 
         if ($data['status'] === 'cancelled') {
             // $order->products()->detach();
-        } else if ($data['status'] === 'completed') {
-            $order->update(['paid_date' => now()]);
         }
 
         if (isset($data['products'])) {
@@ -163,9 +161,14 @@ class OrderController extends Controller
             [
                 'status' => $data['status'],
                 'shipping_address' => $data['shipping_address'] ?? $order->shipping_address,
-                'updated_at' => now()
+                'updated_at' => now(),
+                'paid_date' => $data['status'] === 'completed' ? now() : null
+
             ]
         );
+
+        // Refresh the model to ensure it has the latest data
+        $order->refresh();
         $order->load(['products', 'customer']);
         $res = new OrderResource($order);
 

@@ -3,10 +3,11 @@ const defaultProps = {
     top: `<h3 class="font-bold text-lg">Hello!</h3>`,
     content: `<p class="py-4">Press ESC key or click the button below to close</p>`,
     action: ``,
-    backDropExit: false,
+    backDropExit: true,
     destroyOnClose: false,
     isShown: false,
-    onEscClose: false,
+    onEscClose: true,
+    width: 'sm'
 
 }
 
@@ -57,10 +58,10 @@ export default class Modal {
 
             <div id="modal-backdrop" data-modal-backdrop class="fixed w-screen h-screen bg-black bg-opacity-35"></div>
 
-            <div class="h-full container border-t-4 border-primary overflow-clip max-w-sm  mx-auto modal-box  animate__animated animate__bounceInDown ">
+            <div class="h-full container border-t-4 border-primary overflow-clip max-w-${this.width}  mx-auto modal-box  animate__animated animate__bounceInDown ">
                 <div class="flex justify-between align-center">
                     ${this.top}
-                    <button class="modal-header btn btn-xs rounded-full hover:bg-red-400 hover:text-white btn-ghost" id="close-modal" data-close-modal>&times;</button>
+                    <button class="ml-auto align-end modal-header btn btn-xs rounded-full hover:bg-red-400 hover:text-white btn-ghost" id="close-modal" data-close-modal>&times;</button>
                 </div>
                 <div class="divider m-0"></div>
                 <div class="h-full overflow-auto pb-12">
