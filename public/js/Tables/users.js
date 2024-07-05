@@ -6,6 +6,8 @@ export default class UsersPage extends TablePage {
             target: target,
             table: 'users',
         });
+
+        this.bindEvents();
     }
     static init({ target }) {
         const instance = new UsersPage({ target });
@@ -18,7 +20,7 @@ export default class UsersPage extends TablePage {
             const info = user.info || {};
             return {
                 "ID": `${user.id}`,
-                "Name": `  
+                "Name": `
                 <div class="flex items-center gap-3">
                     <div class="avatar">
                     <div class="mask mask-squircle h-12 w-12">
@@ -58,7 +60,17 @@ export default class UsersPage extends TablePage {
     }
 
 
+    bindEvents() {
+        $(`#btn-add-${this.table}`).off('click').on('click', () => {
+            console.log('add new user');
+        });
 
+        $(`#btn-restore-${this.table}`).off('click').on('click', () => {
+            console.log('restore user');
+        });
+
+
+    }
 
 
 

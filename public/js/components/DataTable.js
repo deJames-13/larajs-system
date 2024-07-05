@@ -40,7 +40,7 @@ export default class DataTable {
     constructor(props = {}) {
         Object.assign(this, defaultProps, props);
 
-        // TODO: Other queries like sorting 
+        // TODO: Other queries like sorting
         this.query = {
             search: '',
             limit: this.limit,
@@ -117,7 +117,7 @@ export default class DataTable {
     }
 
     makeFileButtons() {
-        // TODO: PDF 
+        // TODO: PDF
         const buttons = {
             pdf: {
                 label: "PDF",
@@ -252,6 +252,14 @@ export default class DataTable {
             });
         });
 
+        $('#btn-restore-' + this.tableName).on('click', () => {
+            window.location.href = '/admin/' + this.tableName + '/restore';
+        });
+
+        $('#btn-add-' + this.tableName).on('click', () => {
+            window.location.href = '/admin/' + this.tableName + '/create';
+        });
+
         $('#import-form').on('submit', (e) => {
             e.preventDefault();
             this.importExcel();
@@ -286,14 +294,14 @@ export default class DataTable {
         <div class="print:w-0 print:hidden flex justify-between items-end space-x-2 py-4">
             <div class="w-full flex flex-wrap gap-2">
                 <div id="file-buttons" class="flex flex-wrap gap-2 items-center">
-                
+
                 </div>
                 <div id="limit-wrapper" class="container">
                     <span>Items: </span>
                     <input id="limit" type="number" min='10' value='10' max='50' class="input input-bordered input-sm max-w-[69px] max-h-[35px]" />
                 </div>
             </div>
-        
+
             <div id="paginations" class="container flex justify-end items-end">
             </div>
         </div>
@@ -314,7 +322,7 @@ export default class DataTable {
             </table>
         </div>
 
-    
+
         `
     }
 
@@ -322,18 +330,18 @@ export default class DataTable {
         return `
         <div class="py-4 container flex flex-col-reverse gap-2 lg:flex-row justify-between items-center">
             <form id='import-form' method='POST' enctype='multipart/form-data' action='/admin/${this.tableName}'
-                class="flex flex-col-reverse lg:flex-row gap-2 items-center">
+                class="flex flex-col-reverse lg:flex-row gap-2 lg:items-center">
                 <!-- {{ csrf_field() }} -->
                 <input type="file" id="uploadName" name="item_upload" class="file-input file-input-sm  w-full max-w-xs" required>
                 <button id="import-form-submit" type="submit" class="btn btn-info btn-sm btn-primary ">Import Excel File</button>
             </form>
             <div class="container flex space-x-2 justify-end align-items-center">
-                <button class="btn btn-sm text-white btn-success inline-block self-end">
+                <button id="btn-add-${this.tableName}" class="btn btn-sm text-white btn-success inline-block self-end">
                     <i class="fas fa-plus"></i>
-                    <a href="/admin/${this.tableName}/create">Add</a>
+                    <span href="">Add</span>
                 </button>
-                <button class="btn btn-sm text-white bg-primary inline-block self-end">
-                    <a href="/admin/${this.tableName}/restore">Restore</a>
+                <button id="btn-restore-${this.tableName}" class="btn btn-sm text-white bg-primary inline-block self-end">
+                    <span href="">Restore</span>
                 </button>
             </div>
         </div>
