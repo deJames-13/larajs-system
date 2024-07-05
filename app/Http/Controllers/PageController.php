@@ -34,7 +34,7 @@ class PageController extends Controller
     }
     public function usersCreate()
     {
-        return view('pages.usersEdit.create');
+        return view('pages.users.create');
     }
     public function usersEdit(string $id)
     {

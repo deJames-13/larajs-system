@@ -1,4 +1,4 @@
-<x-layouts.default :page="'Dashboard'" :title="'Dashboard'">
+<x-layouts.default :page="'dashboard'" :title="'Dashboard'">
 
 	<div class="container mx-auto flex space-x-2 min-h-screen overflow-auto">
 

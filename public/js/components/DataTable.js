@@ -15,6 +15,7 @@ const defaultProps = {
     tableName: '',
     tableTitle: '',
     withImport: true,
+    withActions: true,
 }
 
 // DOCS HERE
@@ -38,7 +39,6 @@ const defaultProps = {
 export default class DataTable {
     constructor(props = {}) {
         Object.assign(this, defaultProps, props);
-
 
         // TODO: Other queries like sorting 
         this.query = {
@@ -211,13 +211,79 @@ export default class DataTable {
         });
     }
 
+    importExcel() {
+        const formData = new FormData($('#import-form')[0]);
+        ajaxRequest.post({
+            url: `/admin/${this.tableName}`,
+            data: formData,
+            onSuccess: (response) => {
+                Swal.fire(
+                    'Success!',
+                    'File Imported successfully',
+                    'success'
+                )
+                this.updateTable();
+            },
+            onError: (response) => {
+                Swal.fire(
+                    'Oops!',
+                    'Something went wrong...',
+                    'error'
+                )
+            },
+        });
+
+    }
+    bindEvents() {
+        $(document).on('click', '.row-delete', (e) => {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const id = $(e.target).data('id');
+                    this.onDelete(id);
+                }
+            });
+        });
+
+        $('#import-form').on('submit', (e) => {
+            e.preventDefault();
+            this.importExcel();
+        });
+    }
+    onDelete(id) {
+        ajaxRequest.delete({
+            url: `/api/${this.tableName}/${id}`,
+            onSuccess: (response) => {
+                Swal.fire(
+                    'Deleted!',
+                    'Row has been deleted.',
+                    'success'
+                )
+                this.updateTable();
+            },
+            onError: (response) => {
+                Swal.fire(
+                    'Oops!',
+                    'Something went wrong...',
+                    'error'
+                )
+            },
+        });
+    }
     createTable() {
         if (this.table.length === 0) {
             return `<div id="datatable" class="container overflow-x-auto text-center">No data found</div>`
         }
         const columns = Object.keys(this.table[0]).filter(col => typeof this.table[0][col] === 'string');
         return `
-        <div class="print:w-0 print:hidden flex justify-between items-end space-x-2">
+        <div class="print:w-0 print:hidden flex justify-between items-end space-x-2 py-4">
             <div class="w-full flex flex-wrap gap-2">
                 <div id="file-buttons" class="flex flex-wrap gap-2 items-center">
                 
@@ -252,6 +318,28 @@ export default class DataTable {
         `
     }
 
+    actions() {
+        return `
+        <div class="py-4 container flex flex-col-reverse gap-2 lg:flex-row justify-between items-center">
+            <form id='import-form' method='POST' enctype='multipart/form-data' action='/admin/${this.tableName}'
+                class="flex flex-col-reverse lg:flex-row gap-2 items-center">
+                <!-- {{ csrf_field() }} -->
+                <input type="file" id="uploadName" name="item_upload" class="file-input file-input-sm  w-full max-w-xs" required>
+                <button id="import-form-submit" type="submit" class="btn btn-info btn-sm btn-primary ">Import Excel File</button>
+            </form>
+            <div class="container flex space-x-2 justify-end align-items-center">
+                <button class="btn btn-sm text-white btn-success inline-block self-end">
+                    <i class="fas fa-plus"></i>
+                    <a href="/admin/${this.tableName}/create">Add</a>
+                </button>
+                <button class="btn btn-sm text-white bg-primary inline-block self-end">
+                    <a href="/admin/${this.tableName}/restore">Restore</a>
+                </button>
+            </div>
+        </div>
+        `
+    }
+
     updateTable(data = null, raw = false) {
         if (!data) return this.render().fetchData({ onFetch: this.queryCallback });
         this.table = raw ? data : this.makeTable(data);
@@ -264,14 +352,13 @@ export default class DataTable {
 			<h1 class="text-3xl font-extrabold">${this.tableTitle}</h1>
             <div class="divider m-0"></div>
 
-
-            <div id="search-bar" class="py-4 print:w-0 print:hidden" >
-                <div class="flex justify-end space-x-4 items-center">
-                    <i class="aspect-square fas fa-magnifying-glass"></i>
-                    <span>Search</span>
-                    <input id="search" type="text" placeholder="" class="input input-bordered input-sm max-h-[35px]">
+                <div id="search-bar" class="py-4 print:w-0 print:hidden" >
+                    <div class="flex justify-end space-x-4 items-center">
+                        <i class="aspect-square fas fa-magnifying-glass"></i>
+                        <span>Search</span>
+                        <input id="search" type="text" placeholder="" class="input input-bordered input-sm max-h-[35px]">
+                    </div>
                 </div>
-            </div>
             `;
         // const importForm = this.withImport ? `
         // <form id="import-form" class="flex justify-center space-x-2 my-4" enctype="multipart/form-data">
@@ -280,7 +367,9 @@ export default class DataTable {
         // <button id="import-form-submit" type="submit" class="btn btn-info btn-sm btn-primary ">Import Excel File</button>
         // </form>
         // ` : ``;
-        this.html = topBar + this.createTable();//+ importForm;
+        this.html = topBar;
+        this.html += this.withActions ? this.actions() : '';
+        this.html += this.createTable();//+ importForm;
         this.element = this.parent && $(`${this.parent} `).html(this.html);
 
         // rerender the inputs base on querym object
@@ -290,6 +379,7 @@ export default class DataTable {
 
         this.onQuery(this.queryCallback);
         this.makeFileButtons();
+        this.bindEvents();
         // this.withImport && this.bindImport();
         return this
 
