@@ -52,7 +52,7 @@ export default class OrdersPage extends TablePage {
                 "Contact": `${customer.info && customer.info.phone_number}`,
                 "Total": `<strong>P ${total.toFixed(2)}</strong>`,
                 "Status": `
-                <div class="badge ${this.badgeColors[order.status]} gap-2">
+                <div class="badge ${this.statusColors[order.status]} gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class=" print:hidden inline-block w-4 h-4 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                     ${order.status}
                 </div>
