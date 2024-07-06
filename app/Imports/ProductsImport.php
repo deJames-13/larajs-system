@@ -3,31 +3,21 @@
 namespace App\Imports;
 
 use App\Models\Product;
+use App\Models\Stock;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
-use Barryvdh\Debugbar\Facades\Debugbar;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-
-
 
 class ProductsImport implements ToCollection, WithHeadingRow
 {
-    /**
-     * @param Collection $collection
-     */
-    // TOOOOOOO FIIIZZ
-    public function collection(Collection $collection)
+    public function collection(Collection $rows)
     {
-        Debugbar::info($collection);
-        $addCount = 0;
-        $upCount = 0;
-        foreach ($collection as $row) {
-            try {
-                // Use updateOrCreate to either update an existing product or create a new one
-                $item = Product::updateOrCreate(
-                    ['sku_code' => $row['sku_code']], // Unique identifier
+        foreach ($rows as $row) {
+            if (isset($row['name'], $row['sku_code'], $row['description'], $row['specifications'], $row['price'], $row['quantity'])) {
+                $skuCode = $row['sku_code'];
+
+                Product::updateOrCreate(
+                    ['sku_code' => $skuCode],
                     [
                         'name' => $row['name'],
                         'description' => $row['description'],
@@ -36,24 +26,11 @@ class ProductsImport implements ToCollection, WithHeadingRow
                     ]
                 );
 
-                // Determine if the product was newly created or updated
-                if ($item->wasRecentlyCreated) {
-                    $addCount++;
-                } else {
-                    $upCount++;
-                }
-
-                // Update or create stock information
-                $item->stock()->updateOrCreate(
-                    ['product_sku_code' => $row['sku_code']],
-                    ['quantity' => $row['stock'] ?? 0]
+                Stock::updateOrCreate(
+                    ['product_sku_code' => $skuCode],
+                    ['quantity' => $row['quantity']]
                 );
-            } catch (\Exception $e) {
-                // Log the error for debugging
-                // $sku = $row['sku_code'];
-                // Log::error("Error processing product with SKU {$sku}: " . $e->getMessage());
             }
         }
-        Debugbar::info("Added: $addCount, Updated: $upCount");
     }
 }
