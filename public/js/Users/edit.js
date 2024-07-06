@@ -1,5 +1,6 @@
 import UserFormPage from './_formpage.js';
 export default class UserEdit extends UserFormPage {
+
     constructor({ userId }) {
         super();
         this.userId = userId;
@@ -11,6 +12,7 @@ export default class UserEdit extends UserFormPage {
         this.bindAction();
 
     }
+
     makeTop() {
         return `<h1 class="text-2xl font-extrabold">Edit User #${this.userId}</h1>`
     }
@@ -18,8 +20,8 @@ export default class UserEdit extends UserFormPage {
     makeAction() {
         return `
         <div id="form-actions" style="display: none;" class="absolute bottom-0 left-0  py-4 flex gap-4 px-8 justify-end w-full">
-            <button type="button" class="btn btn-primary" id="btn_edit_user">Save</button>
-            <button type="button" class="btn btn-ghost hover:bg-red-400" id="btn_edit_user">Cancel</button>
+            <button data-action="save" type="button" class="btn btn-primary" id="btn_edit_user">Save</button>
+            <button data-action="cancel" type="button" class="btn btn-ghost hover:bg-red-400" id="btn_edit_user">Cancel</button>
         </div>
     `
     }
@@ -28,7 +30,26 @@ export default class UserEdit extends UserFormPage {
         $(this.form).change(() => {
             $('#form-actions').show();
         });
+        $('#form-actions button').click((e) => {
+            const action = $(e.target).data('action');
+            if (action === 'save') {
+                this.saveUser();
+            } else {
+                this.cancelEdit();
+                a
+            }
+        });
     }
+
+    saveUser() {
+
+    }
+
+    cancelEdit() {
+
+    }
+
+
 
 
     populateForm(data) {

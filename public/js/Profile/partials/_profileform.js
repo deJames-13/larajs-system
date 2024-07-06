@@ -300,7 +300,7 @@ export default class ProfileForm extends FormCard {
                     'Error!',
                     'An error occured while updating your profile.',
                     'error'
-                )
+                 )
             },
         })
         $('#form-actions').hide();

@@ -15,8 +15,6 @@ export default class UserFormPage {
 
     init() {
         this.render();
-        this.validate();
-        this.form = $('#form-wrapper form');
         return this.modal;
     }
 
@@ -52,9 +50,61 @@ export default class UserFormPage {
     }
 
 
-
     validate() {
+        const requiredFields = ['first_name', 'last_name', 'username', 'email', 'phone_number', 'address_1', 'address_2', 'city', 'province', 'country', 'zip_code', 'birthdate'];
+
+        const rules = requiredFields.reduce((acc, field) => {
+            acc[field] = {
+                required: true,
+            };
+
+            if (field == 'email') {
+                acc[field].email = true;
+            }
+
+            if (field == 'username') {
+                acc[field].minlength = 3;
+                acc[field].maxlength = 25;
+                acc[field].pattern = /^[a-zA-Z0-9_]+$/;
+            }
+
+            return acc;
+        }, {});
+
+        const messages = requiredFields.reduce((acc, field) => {
+            acc[field] = {
+                required: 'This field is required!',
+            };
+
+            if (field == 'email') {
+                acc[field].email = 'Email is invalid';
+            }
+
+            if (field == 'username') {
+                acc[field].minlength = 'Username must be at least 3 characters';
+                acc[field].maxlength = 'Username must be at most 25 characters';
+                acc[field].pattern = 'Username must contain only letters, numbers, or underscores';
+            }
+
+            return acc;
+        }, {});
+        console.log({
+            rules: rules,
+            messages: messages,
+        })
+        this.form.validate({
+            rules: rules,
+            messages: messages,
+            errorElement: 'p',
+            errorPlacement: function (error, element) {
+                error.addClass('text-error text-xs italic my-1');
+                error.insertAfter(element);
+            }
+        });
+
     }
+
+
 
     render() {
         this.modal = new Modal({
