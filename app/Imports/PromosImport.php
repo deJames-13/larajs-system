@@ -10,21 +10,20 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 class PromosImport implements ToCollection, WithHeadingRow
 {
     /**
-    * @param Collection $collection
-    */
-    public function collection(Collection $collection)
+     * @param Collection $rows
+     */
+    public function collection(Collection $rows)
     {
-        foreach ($collection as $row) {
-            $item = Promos::create([
-                'name' => $row['name'],
-                'sku_code' => $row['sku_code'],
-                'description' => $row['description'],
-                'specifications' => $row['specification'],
-                'price' => $row['price'],
-            ]);
-            $item->stock()->create([
-                'quantity' => $row['stock'],
-            ]);
+        foreach ($rows as $row) {
+            Promos::updateOrCreate(
+                ['name' => $row['name']],
+                [
+                    'slug' => $row['slug'],
+                    'description' => $row['description'],
+                    'status' => $row['status'],
+                    'discount' => $row['discount'],
+                ]
+            );
         }
     }
 }
