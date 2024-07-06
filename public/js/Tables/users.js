@@ -1,5 +1,6 @@
 import UserAdd from '../Users/create.js';
 import UserEdit from '../Users/edit.js';
+import UserView from '../Users/read.js';
 import TablePage from './table.js';
 
 export default class UsersPage extends TablePage {
@@ -68,6 +69,7 @@ export default class UsersPage extends TablePage {
             const userId = $(e.target).data('id');
             if (action === 'view') {
                 console.log('view', userId);
+                new UserView({ userId });
             } else if (action === 'edit') {
                 console.log('edit', userId);
                 new UserEdit({ userId });
