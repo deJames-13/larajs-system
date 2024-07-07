@@ -39,8 +39,9 @@ const defaultProps = {
 export default class DataTable {
     constructor(props = {}) {
         Object.assign(this, defaultProps, props);
+        this.tableId = this.tableId || this.tableName + 'Table';
 
-        // TODO: Other queries like sorting 
+        // TODO: Other queries like sorting
         this.query = {
             search: '',
             limit: this.limit,
@@ -117,7 +118,7 @@ export default class DataTable {
     }
 
     makeFileButtons() {
-        // TODO: PDF 
+        // TODO: PDF
         const buttons = {
             pdf: {
                 label: "PDF",
@@ -234,7 +235,7 @@ export default class DataTable {
         });
 
     }
-    bindEvents() {
+    bindActions() {
         $(document).on('click', '.row-delete', (e) => {
             Swal.fire({
                 title: 'Are you sure?',
@@ -252,11 +253,20 @@ export default class DataTable {
             });
         });
 
+        $('#btn-restore-' + this.tableName).one('click', () => {
+            window.location.href = '/admin/' + this.tableName + '/restore';
+        });
+
+        $('#btn-add-' + this.tableName).one('click', () => {
+            window.location.href = '/admin/' + this.tableName + '/create';
+        });
+
         $('#import-form').on('submit', (e) => {
             e.preventDefault();
             this.importExcel();
         });
     }
+
     onDelete(id) {
         ajaxRequest.delete({
             url: `/api/${this.tableName}/${id}`,
@@ -283,20 +293,6 @@ export default class DataTable {
         }
         const columns = Object.keys(this.table[0]).filter(col => typeof this.table[0][col] === 'string');
         return `
-        <div class="print:w-0 print:hidden flex justify-between items-end space-x-2 py-4">
-            <div class="w-full flex flex-wrap gap-2">
-                <div id="file-buttons" class="flex flex-wrap gap-2 items-center">
-                
-                </div>
-                <div id="limit-wrapper" class="container">
-                    <span>Items: </span>
-                    <input id="limit" type="number" min='10' value='10' max='50' class="input input-bordered input-sm max-w-[69px] max-h-[35px]" />
-                </div>
-            </div>
-        
-            <div id="paginations" class="container flex justify-end items-end">
-            </div>
-        </div>
         <div id="datatable" class="py-8 print:my-4 w-full print:overflow-visible overflow-auto flex items-center justify-center">
             <table id="${this.tableId}" class="table table-xs table-auto h-full w-full ">
                 <thead>
@@ -314,7 +310,7 @@ export default class DataTable {
             </table>
         </div>
 
-    
+
         `
     }
 
@@ -322,18 +318,18 @@ export default class DataTable {
         return `
         <div class="py-4 container flex flex-col-reverse gap-2 lg:flex-row justify-between items-center">
             <form id='import-form' method='POST' enctype='multipart/form-data' action='/admin/${this.tableName}'
-                class="flex flex-col-reverse lg:flex-row gap-2 items-center">
+                class="flex flex-col-reverse lg:flex-row gap-2 lg:items-center">
                 <!-- {{ csrf_field() }} -->
                 <input type="file" id="uploadName" name="item_upload" class="file-input file-input-sm  w-full max-w-xs" required>
                 <button id="import-form-submit" type="submit" class="btn btn-info btn-sm btn-primary ">Import Excel File</button>
             </form>
             <div class="container flex space-x-2 justify-end align-items-center">
-                <button class="btn btn-sm text-white btn-success inline-block self-end">
+                <button id="btn-add-${this.tableName}" class="btn btn-sm text-white btn-success inline-block self-end">
                     <i class="fas fa-plus"></i>
-                    <a href="/admin/${this.tableName}/create">Add</a>
+                    <span>Add</span>
                 </button>
-                <button class="btn btn-sm text-white bg-primary inline-block self-end">
-                    <a href="/admin/${this.tableName}/restore">Restore</a>
+                <button id="btn-restore-${this.tableName}" class="btn btn-sm text-white bg-primary inline-block self-end">
+                    <span>Restore</span>
                 </button>
             </div>
         </div>
@@ -343,8 +339,10 @@ export default class DataTable {
     updateTable(data = null, raw = false) {
         if (!data) return this.render().fetchData({ onFetch: this.queryCallback });
         this.table = raw ? data : this.makeTable(data);
-        return this.render();
+        this.element.find('#datatable').html(this.createTable());
     }
+
+
 
     render() {
         // TODO: PDF and EXCEL (import/export)
@@ -352,35 +350,43 @@ export default class DataTable {
 			<h1 class="text-3xl font-extrabold">${this.tableTitle}</h1>
             <div class="divider m-0"></div>
 
-                <div id="search-bar" class="py-4 print:w-0 print:hidden" >
-                    <div class="flex justify-end space-x-4 items-center">
-                        <i class="aspect-square fas fa-magnifying-glass"></i>
-                        <span>Search</span>
-                        <input id="search" type="text" placeholder="" class="input input-bordered input-sm max-h-[35px]">
+            <div id="search-bar" class="py-4 print:w-0 print:hidden" >
+                <div class="flex justify-end space-x-4 items-center">
+                    <i class="aspect-square fas fa-magnifying-glass"></i>
+                    <span>Search</span>
+                    <input id="search" type="text" placeholder="" class="input input-bordered input-sm max-h-[35px]">
+                </div>
+            </div>
+            <div class="print:w-0 print:hidden flex justify-between items-end space-x-2 py-4">
+                <div class="w-full flex flex-wrap gap-2">
+                    <div id="file-buttons" class="flex flex-wrap gap-2 items-center">
+
+                    </div>
+                    <div id="limit-wrapper" class="container">
+                        <span>Items: </span>
+                        <input id="limit" type="number" min='10' value='10' max='50' class="input input-bordered input-sm max-w-[69px] max-h-[35px]" />
                     </div>
                 </div>
+
+                <div id="paginations" class="container flex justify-end items-end">
+                </div>
+            </div>
             `;
-        // const importForm = this.withImport ? `
-        // <form id="import-form" class="flex justify-center space-x-2 my-4" enctype="multipart/form-data">
-        // <input type="file" id="upload_${this.tableName}" name="${this.tableName}_upload" class="file-input file-input-sm  w-full max-w-xs"
-        // accept=".xlsx" required>
-        // <button id="import-form-submit" type="submit" class="btn btn-info btn-sm btn-primary ">Import Excel File</button>
-        // </form>
-        // ` : ``;
+
         this.html = topBar;
         this.html += this.withActions ? this.actions() : '';
         this.html += this.createTable();//+ importForm;
-        this.element = this.parent && $(`${this.parent} `).html(this.html);
+        this.element = $(`${this.parent} `).html(this.html);
 
-        // rerender the inputs base on querym object
+
+
+        this.makeFileButtons();
+        this.bindActions();
+        this.onQuery(this.queryCallback);
+
         Object.keys(this.query).map(key => {
             $(`#${key}`).val(this.query[key]);
         })
-
-        this.onQuery(this.queryCallback);
-        this.makeFileButtons();
-        this.bindEvents();
-        // this.withImport && this.bindImport();
         return this
 
     }

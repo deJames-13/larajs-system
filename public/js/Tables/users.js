@@ -1,3 +1,6 @@
+import UserAdd from '../Users/create.js';
+import UserEdit from '../Users/edit.js';
+import UserView from '../Users/read.js';
 import TablePage from './table.js';
 
 export default class UsersPage extends TablePage {
@@ -6,6 +9,7 @@ export default class UsersPage extends TablePage {
             target: target,
             table: 'users',
         });
+
     }
     static init({ target }) {
         const instance = new UsersPage({ target });
@@ -18,7 +22,7 @@ export default class UsersPage extends TablePage {
             const info = user.info || {};
             return {
                 "ID": `${user.id}`,
-                "Name": `  
+                "Name": `
                 <div class="flex items-center gap-3">
                     <div class="avatar">
                     <div class="mask mask-squircle h-12 w-12">
@@ -48,8 +52,8 @@ export default class UsersPage extends TablePage {
                 `,
                 "": `
                 <div class="print:hidden w-full flex items-center justify-end gap-3">
-                    <a href="/users/${user.id}" class="btn btn-xs btn-primary">View</a>
-                    <a href="/admin/users/edit/${user.id}/" class="btn btn-xs btn-secondary">Edit</a>
+                    <button data-action="view" data-id="${user.id}"  id="action-btn" class="btn btn-xs btn-primary">View</button>
+                    <button data-action="edit" data-id="${user.id}"  id="action-btn" class="btn btn-xs btn-secondary">Edit</>
                     <button id="row-delete__${user.id}" data-id="${user.id}" class="row-delete btn btn-xs bg-red-400">Delete</button>
                 </div>
                 `,
@@ -58,7 +62,30 @@ export default class UsersPage extends TablePage {
     }
 
 
+    bindEvents() {
 
+        $(document).on('click', '#action-btn', (e) => {
+            const action = $(e.target).data('action');
+            const userId = $(e.target).data('id');
+            if (action === 'view') {
+                new UserView({ userId });
+            } else if (action === 'edit') {
+                new UserEdit({
+                    userId: userId,
+                    onUpdate: () => {
+                        this.dataTable.updateTable();
+                    }
+                })
+            }
+        });
+
+        $('#btn-add-' + this.table).off('click').on('click', () => {
+            new UserAdd();
+        });
+
+        $('#btn-restore-' + this.table).off('click').on('click', () => {
+        });
+    }
 
 
 

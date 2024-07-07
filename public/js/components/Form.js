@@ -44,7 +44,7 @@ export default class FormCard {
     makeForm() {
         const fields = this.getFields();
 
-        const userInfo = Object.keys(fields).map((key) => {
+        const formFields = Object.keys(fields).map((key) => {
             const field = fields[key];
             const wrap = $('<div class="grid xl:grid-cols-4 gap-4"></div>');
 
@@ -60,18 +60,18 @@ export default class FormCard {
 
 
         return `
-        
+
 		<form action="#" id="form-card" class="h-full px-4 py-8 rounded-lg bg-base-100 border flex flex-col justify-center ">
-		
+
 			<!--USER INFO -->
 			<div class="container ">
 				<div class="text-black flex flex-col justify-center lg:justify-start space-y-8">
-                    ${userInfo.join('')}
+                    ${formFields.join('')}
 			    </div>
 			</div>
-            
+
 		</form>
-        
+
         `;
 
     }

@@ -38,8 +38,9 @@ export default class TablePage {
     init() {
         this.render(this.target);
         this.setDataTable();
+        this.bindEvents();
     }
-
+    bindEvents() { }
 
     render(target) {
         $(target).html('');
