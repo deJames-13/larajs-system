@@ -80,7 +80,11 @@ export default class UsersPage extends TablePage {
         });
 
         $('#btn-add-' + this.table).off('click').on('click', () => {
-            new UserAdd();
+            new UserAdd({
+                onUpdate: () => {
+                    this.dataTable.updateTable();
+                }
+            });
         });
 
         $('#btn-restore-' + this.table).off('click').on('click', () => {

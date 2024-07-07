@@ -10,13 +10,14 @@ export default class UserFormPage {
         this.user = null;
         this.userId = null;
         this.userForm = new UserForm();
+        this.handleUpdate = null;
         this.form = this.userForm.getForm();
     }
 
     init() {
         this.render();
         this.form = $('#form-wrapper form');
-        return this.modal;
+        this.handleImageUpload();
     }
 
     makeTop() {
@@ -30,7 +31,12 @@ export default class UserFormPage {
         `;
     }
     makeAction() {
-        return ``
+        return `
+        <div id="form-actions" style="display: none;" class="absolute bottom-0 left-0  py-4 flex gap-4 px-8 justify-end w-full">
+            <button data-action="save" type="button" class="btn btn-primary" id="btn_save_user">Save</button>
+            <button data-action="cancel" type="button" class="btn btn-ghost hover:bg-red-400" id="btn_cancel_user">Cancel</button>
+        </div>
+    `
     }
 
 
@@ -52,20 +58,36 @@ export default class UserFormPage {
 
 
     submitForm() {
-        $('name[input-error]').text('');
-        this.form.validate();
-        if (!this.form.valid()) {
-            return;
-        }
-        const formData = new FormData(this.form[0]);
+        $('.text-error').text('');
         return new Promise((resolve, reject) => {
+            this.validate();
+            if (!this.form.valid()) {
+                Swal.fire({
+                    title: 'Input Error',
+                    text: 'Form Invalid! Please fill in all required fields',
+                    icon: 'error',
+                    confirmButtonText: 'Ok'
+                });
+                reject();
+                return;
+            }
+            const formData = new FormData(this.form[0]);
+            let address = [
+                formData.get('address_1'),
+                formData.get('address_2'),
+                formData.get('city'),
+                formData.get('province'),
+                formData.get('country'),
+            ].join(',');
+            formData.set('address', address);
+
             ajaxRequest.post({
-                url: `/api/users/${this.userId}`,
+                url: `/api/users${this.userId ? '/' + this.userId : ''}`,
                 data: formData,
                 onSuccess: (response) => {
                     $('#form-actions').hide();
                     this.user = response;
-                    this.populateForm();
+                    try { this.populateForm(); } catch (e) { }
                     resolve(response);
                 },
                 onError: (response) => {
@@ -77,6 +99,27 @@ export default class UserFormPage {
     }
 
 
+    handleImageUpload() {
+        // if an image is inputted in the input-image, preview it in profile-image
+        const inputImage = this.form.find('#input-image');
+        const profileImage = this.form.find('#profile-image');
+        inputImage.change(() => {
+            const file = inputImage[0].files[0];
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                profileImage.attr('src', e.target.result);
+            }
+            reader.readAsDataURL(file);
+        });
+    }
+
+    handleInvalidInput(errors) {
+        if (!errors) return;
+        Object.keys(errors).map(e => {
+            const errorId = this.form.find(`[data-error-id="${e}"]`);
+            errorId.text(errors[e]);
+        });
+    }
     validate() {
         const requiredFields = ['first_name', 'last_name', 'username', 'email', 'phone_number', 'address_1', 'address_2', 'city', 'province', 'country', 'zip_code', 'birthdate'];
 

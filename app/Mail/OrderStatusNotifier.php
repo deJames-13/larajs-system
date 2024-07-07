@@ -20,7 +20,6 @@ class OrderStatusNotifier extends Mailable implements ShouldQueue // for asynch 
     public $fullname = '';
     public $shippingAddress = '';
     public $createdAt = '';
-    // TODO:
     public $paidDate = '';
     public $subtotal = 0;
     public $total = 0;

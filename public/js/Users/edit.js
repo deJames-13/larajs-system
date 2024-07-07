@@ -10,26 +10,13 @@ export default class UserEdit extends UserFormPage {
         this.fetchUser(userId).then((response) => {
             this.populateForm()
         });
+        this.handleUpdate = onUpdate;
         this.bindAction();
-        this.onUpdate = onUpdate;
-
-        this.handleImageUpload();
-
     }
 
     makeTop() {
         return `<h1 class="text-2xl font-extrabold">Edit User #${this.userId}</h1>`
     }
-
-    makeAction() {
-        return `
-        <div id="form-actions" style="display: none;" class="absolute bottom-0 left-0  py-4 flex gap-4 px-8 justify-end w-full">
-            <button data-action="save" type="button" class="btn btn-primary" id="btn_edit_user">Save</button>
-            <button data-action="cancel" type="button" class="btn btn-ghost hover:bg-red-400" id="btn_edit_user">Cancel</button>
-        </div>
-    `
-    }
-
     bindAction() {
         $(this.form).change(() => {
             $('#form-actions').show();
@@ -37,14 +24,14 @@ export default class UserEdit extends UserFormPage {
         $('#form-actions button').click((e) => {
             const action = $(e.target).data('action');
             if (action === 'save') {
-                this.onSave();
+                this.onSubmit();
             } else {
                 this.onCancel();
             }
         });
     }
 
-    onSave() {
+    onSubmit() {
         Swal.fire({
             title: 'Are you sure?',
             text: "You are about to save changes on this user's information.",
@@ -54,17 +41,20 @@ export default class UserEdit extends UserFormPage {
             cancelButtonColor: '#d33',
             confirmButtonText: 'Save'
         }).then((result) => {
-            if (result.isConfirmed) {
-                this.submitForm().then((response) => {
-                    this.onUpdate();
-                    Swal.fire(
-                        'Saved!',
-                        'User information has been updated.',
-                        'success'
-                    );
-                    $('#form-actions').hide();
-                });
-            }
+            if (result.isConfirmed) this.handleSubmit();
+        });
+    }
+
+    handleSubmit() {
+        this.submitForm().then((response) => {
+            this.handleUpdate();
+            this.populateForm();
+            Swal.fire(
+                'Saved!',
+                'User information has been updated.',
+                'success'
+            );
+            $('#form-actions').hide();
         });
     }
 
@@ -86,30 +76,6 @@ export default class UserEdit extends UserFormPage {
         });
     }
 
-
-    handleImageUpload() {
-        // if an image is inputted in the input-image, preview it in profile-image
-        const inputImage = this.form.find('#input-image');
-        const profileImage = this.form.find('#profile-image');
-        inputImage.change(() => {
-            const file = inputImage[0].files[0];
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                profileImage.attr('src', e.target.result);
-            }
-            reader.readAsDataURL(file);
-        });
-    }
-
-
-    handleInvalidInput(errors) {
-        Object.keys(errors).map(e => {
-            const errorId = this.form.find(`[data-error-id="${e}"]`);
-            errorId.text(errors[e]);
-        });
-    }
-
-
     populateForm(data) {
         // console.log(this.user);
         if (!this.user) return console.log('No user profile found');
@@ -121,7 +87,7 @@ export default class UserEdit extends UserFormPage {
 
         if (!this.user.info) return;
         if (this.user.images.length > 0) {
-            this.form.find('#profile-image').attr('src', this.usur_profile.images[0].path);
+            this.form.find('#profile-image').attr('src', this.user.images[0].path);
         }
 
         Object.keys(this.user.info).map((key) => {
