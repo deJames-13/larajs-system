@@ -6,7 +6,7 @@ export default class OrdersPage extends TablePage {
         super({
             target: target,
             table: 'orders',
-            withActions: false,
+            withActions: true,
         });
     }
     static init({ target }) {

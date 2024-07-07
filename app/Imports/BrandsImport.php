@@ -10,18 +10,20 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 class BrandsImport implements ToCollection, WithHeadingRow
 {
     /**
-    * @param Collection $collection
-    */
-    public function collection(Collection $collection)
+     * @param Collection $rows
+     */
+    public function collection(Collection $rows)
     {
-        foreach ($collection as $row) {
-            $item = Brand::create([
-                'name' => $row['name'],
-                'company' => $row['company'],
-                'website' => $row['website'],
-                'description' => $row['description'],
-                'status' => $row['status'],
-            ]);
+        foreach ($rows as $row) {
+            Brand::updateOrCreate(
+                ['name' => $row['name']],
+                [
+                    'company' => $row['company'],
+                    'website' => $row['website'],
+                    'description' => $row['description'],
+                    'status' => $row['status'],
+                ]
+            );
         }
     }
 }

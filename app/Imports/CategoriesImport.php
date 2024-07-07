@@ -10,16 +10,19 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 class CategoriesImport implements ToCollection, WithHeadingRow
 {
     /**
-    * @param Collection $collection
-    */
-    public function collection(Collection $collection)
+     * @param Collection $rows
+     */
+    public function collection(Collection $rows)
     {
-        foreach ($collection as $row) {
-            $item = Category::create([
-                'name' => $row['name'],
-                'description' => $row['description'],
-                'status' => $row['status'],
-            ]);
+        foreach ($rows as $row) {
+            Category::updateOrCreate(
+                ['name' => $row['name']],
+                [
+                    'slug' => $row['slug'],
+                    'description' => $row['description'],
+                    'status' => $row['status'],
+                ]
+            );
         }
     }
 }
