@@ -1,15 +1,19 @@
+import ajaxRequest from '../assets/ajaxRequest.js';
 import UserFormPage from './_formpage.js';
 export default class UserEdit extends UserFormPage {
 
-    constructor({ userId }) {
+    constructor({ userId, onUpdate = () => { } }) {
         super();
         this.userId = userId;
         this.id = 'user_edit_modal';
         this.init();
         this.fetchUser(userId).then((response) => {
-            this.populateForm(response)
+            this.populateForm()
         });
         this.bindAction();
+        this.onUpdate = onUpdate;
+
+        this.handleImageUpload();
 
     }
 
@@ -33,26 +37,81 @@ export default class UserEdit extends UserFormPage {
         $('#form-actions button').click((e) => {
             const action = $(e.target).data('action');
             if (action === 'save') {
-                this.saveUser();
+                this.onSave();
             } else {
-                this.cancelEdit();
-                a
+                this.onCancel();
             }
         });
     }
 
-    saveUser() {
-
+    onSave() {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You are about to save changes on this user's information.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Save'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                this.submitForm().then((response) => {
+                    this.onUpdate();
+                    Swal.fire(
+                        'Saved!',
+                        'User information has been updated.',
+                        'success'
+                    );
+                    $('#form-actions').hide();
+                });
+            }
+        });
     }
 
-    cancelEdit() {
 
+    onCancel() {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You are about to discard changes on this user's information.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Discard'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                this.populateForm();
+                $('#form-actions').hide();
+            }
+        });
     }
 
 
+    handleImageUpload() {
+        // if an image is inputted in the input-image, preview it in profile-image
+        const inputImage = this.form.find('#input-image');
+        const profileImage = this.form.find('#profile-image');
+        inputImage.change(() => {
+            const file = inputImage[0].files[0];
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                profileImage.attr('src', e.target.result);
+            }
+            reader.readAsDataURL(file);
+        });
+    }
+
+
+    handleInvalidInput(errors) {
+        Object.keys(errors).map(e => {
+            const errorId = this.form.find(`[data-error-id="${e}"]`);
+            errorId.text(errors[e]);
+        });
+    }
 
 
     populateForm(data) {
+        // console.log(this.user);
         if (!this.user) return console.log('No user profile found');
 
         Object.keys(this.user).map((key) => {
@@ -80,8 +139,6 @@ export default class UserEdit extends UserFormPage {
                     this.form.find(`#${addr}`).val(address[addr]);
                 });
             }
-
-
 
             if (key === 'birthdate')
                 this.form.find(`#${key}`).val(this.user[key].split('T')[0]);

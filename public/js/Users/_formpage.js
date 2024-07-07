@@ -15,6 +15,7 @@ export default class UserFormPage {
 
     init() {
         this.render();
+        this.form = $('#form-wrapper form');
         return this.modal;
     }
 
@@ -44,6 +45,32 @@ export default class UserFormPage {
                 onError: (error) => {
                     console.log(error);
                     reject(error);
+                }
+            })
+        });
+    }
+
+
+    submitForm() {
+        $('name[input-error]').text('');
+        this.form.validate();
+        if (!this.form.valid()) {
+            return;
+        }
+        const formData = new FormData(this.form[0]);
+        return new Promise((resolve, reject) => {
+            ajaxRequest.post({
+                url: `/api/users/${this.userId}`,
+                data: formData,
+                onSuccess: (response) => {
+                    $('#form-actions').hide();
+                    this.user = response;
+                    this.populateForm();
+                    resolve(response);
+                },
+                onError: (response) => {
+                    this.handleInvalidInput(response.responseJSON.errors);
+                    reject(response);
                 }
             })
         });

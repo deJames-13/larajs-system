@@ -68,11 +68,14 @@ export default class UsersPage extends TablePage {
             const action = $(e.target).data('action');
             const userId = $(e.target).data('id');
             if (action === 'view') {
-                console.log('view', userId);
                 new UserView({ userId });
             } else if (action === 'edit') {
-                console.log('edit', userId);
-                new UserEdit({ userId });
+                new UserEdit({
+                    userId: userId,
+                    onUpdate: () => {
+                        this.dataTable.updateTable();
+                    }
+                })
             }
         });
 
