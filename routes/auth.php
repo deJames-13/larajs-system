@@ -16,6 +16,7 @@ $crud = [
     // "comments"?
 ];
 
+Route::post("/admin/orders", [TableController::class, "ordersImport"])->name("imports.orders");
 // Guess ONLY
 Route::group(["middleware" => "guest"], function () {
     Route::get("/admin/login", [AuthController::class, "login"])->name("admin.login");
@@ -47,6 +48,7 @@ Route::group(["middleware" => "auth"], function () use ($crud) {
 
         foreach ($crud as $prefix) {
             // TABLE pages
+            Route::post("/$prefix", [TableController::class, $prefix])->name("tables.$prefix");
             Route::get("/$prefix", [TableController::class, $prefix])->name("tables.$prefix");
 
             // CREATE and EDIT pages
@@ -85,3 +87,5 @@ Route::group(["middleware" => "auth"], function () use ($crud) {
     //##################################################################################################################
 
 });
+
+

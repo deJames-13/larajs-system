@@ -12,7 +12,9 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Exports\BrandsExport;
 use App\Exports\PromosExport;
+use App\Exports\OrdersExport;
 use App\Imports\BrandsImport;
+use App\Imports\OrdersImport;
 use App\Imports\PromosImport;
 use App\Exports\ProductsExport;
 use App\Imports\ProductsImport;
@@ -66,16 +68,17 @@ class TableController extends Controller
 
         return Excel::download(new UsersExport, $fileName, $fileType);
     }
-    public function usersImport()
+    public function usersImport(Request $request)
     {
-        try {
-            Excel::import(new UsersImport, request()->file('item_upload'));
-            // return redirect()->back()->with('success', 'Excel file Imported Successfully');
-            return response()->json(['success' => 'Excel file Imported Successfully']);
-        } catch (Exception $ex) {
-            return response()->json(['error' => $ex->getMessage()]);
-            // return abort(500, $ex->getMessage());
-        }
+        $request->validate([
+            'item_upload' => [
+                'required',
+                'file'
+            ],
+        ]);
+
+        Excel::import(new UsersImport, $request->file('item_upload'));
+        return response()->json(['success' => 'Excel file Imported Successfully']);
     }
 
 
@@ -113,17 +116,17 @@ class TableController extends Controller
 
         return Excel::download(new ProductsExport, $fileName, $fileType);
     }
-    public function productsImport()
+    public function productsImport(Request $request)
     {
-        try {
-            // dd(request()->file('item_upload'));
-            Excel::import(new ProductsImport, request()->file('item_upload'));
-            // return redirect()->back()->with('success', 'Excel file Imported Successfully');
-            return response()->json(['success' => 'Excel file Imported Successfully']);
-        } catch (Exception $ex) {
-            return response()->json(['error' => $ex->getMessage()]);
-            // return abort(500, $ex->getMessage());
-        }
+        $request->validate([
+            'item_upload' => [
+                'required',
+                'file'
+            ],
+        ]);
+
+        Excel::import(new ProductsImport, $request->file('item_upload'));
+        return response()->json(['success' => 'Excel file Imported Successfully']);
     }
 
     #2 - Orders
@@ -157,12 +160,30 @@ class TableController extends Controller
         return view('admin.tables.orders');
     }
 
-    public function ordersExport($type)
+    public function ordersExport(string $type)
     {
+        Debugbar::info($type);
+        $fileName = 'orders' . time() . '.' . $type;
+        $fileType = \Maatwebsite\Excel\Excel::XLSX;
+        if ($type == 'csv') {
+            $fileType = \Maatwebsite\Excel\Excel::CSV;
+        }
+
+
+        return Excel::download(new OrdersExport, $fileName, $fileType);
     }
 
-    public function ordersImport()
+    public function ordersImport(Request $request)
     {
+        $request->validate([
+            'item_upload' => [
+                'required',
+                'file'
+            ],
+        ]);
+
+        Excel::import(new OrdersImport, $request->file('item_upload'));
+        return response()->json(['success' => 'Excel file Imported Successfully']);
     }
 
     #3 - Promos
@@ -198,14 +219,15 @@ class TableController extends Controller
 
     public function promosImport(Request $request)
     {
-        try {
-            Excel::import(new PromosImport, request()->file('item_upload'));
-            // return redirect()->back()->with('success', 'Excel file Imported Successfully');
-            return response()->json(['success' => 'Excel file Imported Successfully']);
-        } catch (Exception $ex) {
-            //return response()->json(['error' => $ex->getMessage()]);
-            return abort(500, $ex->getMessage());
-        }
+        $request->validate([
+            'item_upload' => [
+                'required',
+                'file'
+            ],
+        ]);
+
+        Excel::import(new PromosImport, $request->file('item_upload'));
+        return response()->json(['success' => 'Excel file Imported Successfully']);
     }
 
 
@@ -242,15 +264,17 @@ class TableController extends Controller
 
     public function brandsImport(Request $request)
     {
-        try {
-            Excel::import(new BrandsImport, request()->file('item_upload'));
-            // return redirect()->back()->with('success', 'Excel file Imported Successfully');
-            return response()->json(['success' => 'Excel file Imported Successfully']);
-        } catch (Exception $ex) {
-            //return response()->json(['error' => $ex->getMessage()]);
-            return abort(500, $ex->getMessage());
-        }
+        $request->validate([
+            'item_upload' => [
+                'required',
+                'file'
+            ],
+        ]);
+
+        Excel::import(new BrandsImport, $request->file('item_upload'));
+        return response()->json(['success' => 'Excel file Imported Successfully']);
     }
+
 
     #5 - Categories
 
@@ -285,13 +309,14 @@ class TableController extends Controller
 
     public function categoriesImport(Request $request)
     {
-        try {
-            Excel::import(new CategoriesImport, request()->file('item_upload'));
-            // return redirect()->back()->with('success', 'Excel file Imported Successfully');
-            return response()->json(['success' => 'Excel file Imported Successfully']);
-        } catch (Exception $ex) {
-            //return response()->json(['error' => $ex->getMessage()]);
-            return abort(500, $ex->getMessage());
-        }
+        $request->validate([
+            'item_upload' => [
+                'required',
+                'file'
+            ],
+        ]);
+
+        Excel::import(new CategoriesImport, $request->file('item_upload'));
+        return response()->json(['success' => 'Excel file Imported Successfully']);
     }
 }
