@@ -26,8 +26,11 @@ class OrderStatusNotifier extends Mailable implements ShouldQueue // for asynch 
     public $total = 0;
     public function __construct($order)
     {
+        // Refresh the model to ensure it has the latest data
+        $order->refresh();
         $order->load(['products', 'customer']);
         Debugbar::info($order);
+        Debugbar::info($order->paid_date);
 
 
         $this->orderId = $order->id;
@@ -37,6 +40,7 @@ class OrderStatusNotifier extends Mailable implements ShouldQueue // for asynch 
         $this->subtotal = $this->total;
         $this->shippingAddress = $order->shipping_address;
         $this->createdAt = $order->created_at;
+        $this->paidDate = $order->paid_date;
     }
 
     /**
@@ -63,6 +67,7 @@ class OrderStatusNotifier extends Mailable implements ShouldQueue // for asynch 
                 'shippingAddress' => $this->shippingAddress,
                 'createdAt' => $this->createdAt,
                 'subtotal' => $this->subtotal,
+                'paidDate' => $this->paidDate,
                 'total' => $this->total,
             ],
 

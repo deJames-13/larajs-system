@@ -40,7 +40,7 @@
 				<div class="flex space-x-4 items-center">
 					<h4 class="font-bold m-0">Order Paid Date:</h4>
 					<p class="m-0">
-						<span id='rcpt_order_paiddate'>{{ $order->paid_date ?? 'N/A' }}</span>
+						<span id='rcpt_order_paiddate'>{{ $paidDate ?? 'N/A' }}</span>
 					</p>
 				</div>
 				<div class="flex space-x-4 items-center">

@@ -39,6 +39,10 @@ export default class OrderShow {
         if (!(status == 'pending')) {
             $('#cancelling-form').remove();
         }
+
+        // if status is completed 
+
+
     }
 
     setActionBtn(status) {
@@ -59,6 +63,7 @@ export default class OrderShow {
         this.data = response.data;
 
         $('_skeleton').removeClass('skeleton');
+        this.products = [];
         this.data.products.forEach(product => {
             product.quantity = product.order_quantity;
             product.total = product.price * product.quantity;
@@ -70,6 +75,7 @@ export default class OrderShow {
         }
 
         // RENDER ORDER ITEMS
+        $('#cart-body').empty();
         this.products.forEach(product => {
             // if no product in cart redirect to shop
             if (this.products.length === 0) {
@@ -130,6 +136,9 @@ export default class OrderShow {
 
         !this.isAdmin && this.setActionBtn('completed');
 
+        $('#rcpt_order_paiddate').text(this.data.paid_date)
+
+
         $('.page').show();
     }
 
@@ -159,6 +168,7 @@ export default class OrderShow {
             url: '/api/orders/' + this.id,
             data: { status: '' + statusString },
             onSuccess: (response, status, error) => {
+                this.populateForm(response);
                 this.setStatusMessage(statusString);
                 this.setActionBtn(statusString);
                 this.swalAlerts[statusString](this.id);

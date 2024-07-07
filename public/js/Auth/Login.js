@@ -4,11 +4,11 @@ import Modal from '../components/Modal.js';
 export default class Login {
     constructor() {
         this.modal = null;
-        // if path is /login do not show modal
         this.render();
         this.validate();
         return this.modal;
     }
+
 
     render() {
         this.modal = new Modal({
