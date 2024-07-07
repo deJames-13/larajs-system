@@ -118,7 +118,6 @@ export default class DataTable {
     }
 
     makeFileButtons() {
-        // TODO: PDF
         const buttons = {
             pdf: {
                 label: "PDF",
@@ -345,7 +344,6 @@ export default class DataTable {
 
 
     render() {
-        // TODO: PDF and EXCEL (import/export)
         const topBar = `
 			<h1 class="text-3xl font-extrabold">${this.tableTitle}</h1>
             <div class="divider m-0"></div>

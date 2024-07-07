@@ -16,7 +16,6 @@ const isValid = () => {
 
 const validateForm = () => {
 
-    // TODO: FIX: THIS SHIT
     var rules = {};
     var messages = {};
     for (var key in { ...formData, ...address }) {

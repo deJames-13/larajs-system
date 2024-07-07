@@ -10,12 +10,14 @@ export default class UserFormPage {
         this.user = null;
         this.userId = null;
         this.userForm = new UserForm();
+        this.onUpdate = null;
         this.form = this.userForm.getForm();
     }
 
     init() {
         this.render();
         this.form = $('#form-wrapper form');
+        this.handleImageUpload();
         return this.modal;
     }
 
@@ -77,6 +79,26 @@ export default class UserFormPage {
     }
 
 
+    handleImageUpload() {
+        // if an image is inputted in the input-image, preview it in profile-image
+        const inputImage = this.form.find('#input-image');
+        const profileImage = this.form.find('#profile-image');
+        inputImage.change(() => {
+            const file = inputImage[0].files[0];
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                profileImage.attr('src', e.target.result);
+            }
+            reader.readAsDataURL(file);
+        });
+    }
+
+    handleInvalidInput(errors) {
+        Object.keys(errors).map(e => {
+            const errorId = this.form.find(`[data-error-id="${e}"]`);
+            errorId.text(errors[e]);
+        });
+    }
     validate() {
         const requiredFields = ['first_name', 'last_name', 'username', 'email', 'phone_number', 'address_1', 'address_2', 'city', 'province', 'country', 'zip_code', 'birthdate'];
 

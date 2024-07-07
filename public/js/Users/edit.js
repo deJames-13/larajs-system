@@ -12,9 +12,6 @@ export default class UserEdit extends UserFormPage {
         });
         this.bindAction();
         this.onUpdate = onUpdate;
-
-        this.handleImageUpload();
-
     }
 
     makeTop() {
@@ -86,30 +83,6 @@ export default class UserEdit extends UserFormPage {
         });
     }
 
-
-    handleImageUpload() {
-        // if an image is inputted in the input-image, preview it in profile-image
-        const inputImage = this.form.find('#input-image');
-        const profileImage = this.form.find('#profile-image');
-        inputImage.change(() => {
-            const file = inputImage[0].files[0];
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                profileImage.attr('src', e.target.result);
-            }
-            reader.readAsDataURL(file);
-        });
-    }
-
-
-    handleInvalidInput(errors) {
-        Object.keys(errors).map(e => {
-            const errorId = this.form.find(`[data-error-id="${e}"]`);
-            errorId.text(errors[e]);
-        });
-    }
-
-
     populateForm(data) {
         // console.log(this.user);
         if (!this.user) return console.log('No user profile found');
@@ -121,7 +94,7 @@ export default class UserEdit extends UserFormPage {
 
         if (!this.user.info) return;
         if (this.user.images.length > 0) {
-            this.form.find('#profile-image').attr('src', this.usur_profile.images[0].path);
+            this.form.find('#profile-image').attr('src', this.user.images[0].path);
         }
 
         Object.keys(this.user.info).map((key) => {
