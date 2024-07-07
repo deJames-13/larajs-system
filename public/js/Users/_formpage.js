@@ -10,7 +10,7 @@ export default class UserFormPage {
         this.user = null;
         this.userId = null;
         this.userForm = new UserForm();
-        this.onUpdate = null;
+        this.handleUpdate = null;
         this.form = this.userForm.getForm();
     }
 
@@ -18,7 +18,6 @@ export default class UserFormPage {
         this.render();
         this.form = $('#form-wrapper form');
         this.handleImageUpload();
-        return this.modal;
     }
 
     makeTop() {
@@ -32,7 +31,12 @@ export default class UserFormPage {
         `;
     }
     makeAction() {
-        return ``
+        return `
+        <div id="form-actions" style="display: none;" class="absolute bottom-0 left-0  py-4 flex gap-4 px-8 justify-end w-full">
+            <button data-action="save" type="button" class="btn btn-primary" id="btn_save_user">Save</button>
+            <button data-action="cancel" type="button" class="btn btn-ghost hover:bg-red-400" id="btn_cancel_user">Cancel</button>
+        </div>
+    `
     }
 
 
@@ -54,20 +58,36 @@ export default class UserFormPage {
 
 
     submitForm() {
-        $('name[input-error]').text('');
-        this.form.validate();
-        if (!this.form.valid()) {
-            return;
-        }
-        const formData = new FormData(this.form[0]);
+        $('.text-error').text('');
         return new Promise((resolve, reject) => {
+            this.validate();
+            if (!this.form.valid()) {
+                Swal.fire({
+                    title: 'Input Error',
+                    text: 'Form Invalid! Please fill in all required fields',
+                    icon: 'error',
+                    confirmButtonText: 'Ok'
+                });
+                reject();
+                return;
+            }
+            const formData = new FormData(this.form[0]);
+            let address = [
+                formData.get('address_1'),
+                formData.get('address_2'),
+                formData.get('city'),
+                formData.get('province'),
+                formData.get('country'),
+            ].join(',');
+            formData.set('address', address);
+
             ajaxRequest.post({
-                url: `/api/users/${this.userId}`,
+                url: `/api/users${this.userId ? '/' + this.userId : ''}`,
                 data: formData,
                 onSuccess: (response) => {
                     $('#form-actions').hide();
                     this.user = response;
-                    this.populateForm();
+                    try { this.populateForm(); } catch (e) { }
                     resolve(response);
                 },
                 onError: (response) => {
@@ -94,6 +114,7 @@ export default class UserFormPage {
     }
 
     handleInvalidInput(errors) {
+        if (!errors) return;
         Object.keys(errors).map(e => {
             const errorId = this.form.find(`[data-error-id="${e}"]`);
             errorId.text(errors[e]);

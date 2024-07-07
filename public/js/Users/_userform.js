@@ -8,7 +8,6 @@ export default class UserForm extends FormCard {
 
     }
 
-
     additionalFields() {
         return `
         	<!--USER IMAGE -->

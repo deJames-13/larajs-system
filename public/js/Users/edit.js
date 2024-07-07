@@ -10,23 +10,13 @@ export default class UserEdit extends UserFormPage {
         this.fetchUser(userId).then((response) => {
             this.populateForm()
         });
+        this.handleUpdate = onUpdate;
         this.bindAction();
-        this.onUpdate = onUpdate;
     }
 
     makeTop() {
         return `<h1 class="text-2xl font-extrabold">Edit User #${this.userId}</h1>`
     }
-
-    makeAction() {
-        return `
-        <div id="form-actions" style="display: none;" class="absolute bottom-0 left-0  py-4 flex gap-4 px-8 justify-end w-full">
-            <button data-action="save" type="button" class="btn btn-primary" id="btn_edit_user">Save</button>
-            <button data-action="cancel" type="button" class="btn btn-ghost hover:bg-red-400" id="btn_edit_user">Cancel</button>
-        </div>
-    `
-    }
-
     bindAction() {
         $(this.form).change(() => {
             $('#form-actions').show();
@@ -34,14 +24,14 @@ export default class UserEdit extends UserFormPage {
         $('#form-actions button').click((e) => {
             const action = $(e.target).data('action');
             if (action === 'save') {
-                this.onSave();
+                this.onSubmit();
             } else {
                 this.onCancel();
             }
         });
     }
 
-    onSave() {
+    onSubmit() {
         Swal.fire({
             title: 'Are you sure?',
             text: "You are about to save changes on this user's information.",
@@ -51,17 +41,20 @@ export default class UserEdit extends UserFormPage {
             cancelButtonColor: '#d33',
             confirmButtonText: 'Save'
         }).then((result) => {
-            if (result.isConfirmed) {
-                this.submitForm().then((response) => {
-                    this.onUpdate();
-                    Swal.fire(
-                        'Saved!',
-                        'User information has been updated.',
-                        'success'
-                    );
-                    $('#form-actions').hide();
-                });
-            }
+            if (result.isConfirmed) this.handleSubmit();
+        });
+    }
+
+    handleSubmit() {
+        this.submitForm().then((response) => {
+            this.handleUpdate();
+            this.populateForm();
+            Swal.fire(
+                'Saved!',
+                'User information has been updated.',
+                'success'
+            );
+            $('#form-actions').hide();
         });
     }
 

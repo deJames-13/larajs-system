@@ -336,7 +336,7 @@ export default class DataTable {
     }
 
     updateTable(data = null, raw = false) {
-        if (!data) return this.render().fetchData({ onFetch: this.queryCallback });
+        if (!data) return this.fetchData({ onFetch: this.queryCallback });
         this.table = raw ? data : this.makeTable(data);
         this.element.find('#datatable').html(this.createTable());
     }
