@@ -6,7 +6,6 @@ let item = {
 };
 
 const init = () => {
-    // TODO: STOCK Validation
     // QUANTITY COUNTER
     $('#add_qty').click(function () {
         var quantity = parseInt($('#quantity_count').text());

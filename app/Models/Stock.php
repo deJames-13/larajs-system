@@ -11,6 +11,10 @@ class Stock extends Model
     use HasFactory;
     public $timestamps = false;
     protected $guarded = [];
+    protected $table = 'stocks';
+    protected $primaryKey = 'product_sku_code';
+
+    protected $fillable = ['product_sku_code', 'quantity'];
 
     public function product()
     {

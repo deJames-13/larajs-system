@@ -1,57 +1,57 @@
 
 export default class UserCard {
-  constructor({ target, user }) {
-    this.target = target;
-    this.user = user;
-    this.card = null;
-    this.viewMore = false;
+    constructor({ target, user }) {
+        this.target = target;
+        this.user = user;
+        this.card = null;
+        this.viewMore = false;
 
-    return this.render();
-  }
-
-  setUser(user) {
-    this.user = user;
-    this.render();
-  }
-
-  static init({ target, user = {} }) {
-    const userCard = new UserCard({ target, user });
-    return userCard;
-  }
-
-  moveTo(target) {
-    $('#' + target).prepend(this.card);
-    this.card.fadeIn();
-    return this;
-  }
-
-  show() {
-    $(this.target).prepend(this.card);
-    this.card.fadeIn();
-    return this;
-  }
-
-  hide() {
-    this.card.fadeOut();
-    $(this.target).append(this.card);
-    return this;
-  }
-
-  setViewMore(isView) {
-    this.viewMore = isView;
-    if (isView) {
-      this.card.find("#view-profile").hide()
-      this.card.find("#view-more").show()
+        return this.render();
     }
-    else {
-      this.card.find("#view-profile").show()
-      this.card.find("#view-more").hide()
-    }
-  }
 
-  render() {
-    const image = this.user.images && this.user.images.length > 0 && this.user.images[0].path;
-    const HTML = `
+    setUser(user) {
+        this.user = user;
+        this.render();
+    }
+
+    static init({ target, user = {} }) {
+        const userCard = new UserCard({ target, user });
+        return userCard;
+    }
+
+    moveTo(target) {
+        $('#' + target).prepend(this.card);
+        this.card.fadeIn();
+        return this;
+    }
+
+    show() {
+        $(this.target).prepend(this.card);
+        this.card.fadeIn();
+        return this;
+    }
+
+    hide() {
+        this.card.fadeOut();
+        $(this.target).append(this.card);
+        return this;
+    }
+
+    setViewMore(isView) {
+        this.viewMore = isView;
+        if (isView) {
+            this.card.find("#view-profile").hide()
+            this.card.find("#view-more").show()
+        }
+        else {
+            this.card.find("#view-profile").show()
+            this.card.find("#view-more").hide()
+        }
+    }
+
+    render() {
+        const image = this.user.images && this.user.images.length > 0 && this.user.images[0].path;
+        const HTML = `
       <div id="user-card" style="display: none" class="sm:hidden sm:w-0 md:w-full md:flex flex-col space-y-4 ">
         <h2 class="text-2xl font-extrabold">${this.user.fullname || 'Your Profile'}</h2>
         <div class="flex space-x-4 items-center">
@@ -69,11 +69,11 @@ export default class UserCard {
               ${this.user.email || 'email@example.com'}
             </span>
 
-            <div id="view-more"> 
+            <div id="view-more">
               <span id="profile-address" class="text-gray-700 text-xs">
                 ${this.user.info.address + ' ' + this.user.info.zip_code || ''}
               </span>
-              <br />    
+              <br />
               <span id="profile-phone" class="text-gray-700 text-xs">
                 ${this.user.info.phone_number || ''}
               </span>
@@ -88,8 +88,8 @@ export default class UserCard {
       </div>
     `;
 
-    this.card = $(HTML);
+        this.card = $(HTML);
 
-    return this;
-  }
+        return this;
+    }
 }

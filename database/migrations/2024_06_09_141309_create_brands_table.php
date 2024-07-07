@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('brands', function (Blueprint $table) {
             $table->id();
 
-            // TODO: Fill up columns
             $table->string('name');
             $table->string('company')->nullable();
             $table->string('website')->nullable();
