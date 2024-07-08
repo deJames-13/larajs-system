@@ -1,12 +1,12 @@
-## All TODO's HERE
+# All TODO's HERE
 
-### Prio
+## Prio
+
 - [x] SEEDERS
 - [x] OrderSeeder
 - [x] PromoSeeder
-- [x] BrandSeeder 
+- [x] BrandSeeder
 - [x] CategorySeeder
-
 
 - [x] Fix email data
 - [x] Fix auth ajax
@@ -16,3 +16,11 @@
 - [x] Fix authentication with ajax
 - [x] Make profile page
 - [x] Manage profile - edit/delete/deactivate
+
+## [!IMPORTANT]
+
+- [ ] MP7 User Management, admin user deactivation/deletion and user profile management
+- [ ] Product - Brand relationship, brand quick add/modal ui
+- [ ] Product - Category relationship, category quick add/modal ui
+- [ ] Product - Promo relationship, promo quick add/modal ui
+

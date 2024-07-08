@@ -3,6 +3,7 @@ export default class UserCard {
     constructor({ target, user }) {
         this.target = target;
         this.user = user;
+        this.info = user.info || {};
         this.card = null;
         this.viewMore = false;
 
@@ -71,11 +72,11 @@ export default class UserCard {
 
             <div id="view-more">
               <span id="profile-address" class="text-gray-700 text-xs">
-                ${this.user.info.address + ' ' + this.user.info.zip_code || ''}
+                ${(this.info.address || '') + ' ' + (this.info.zip_code || '')}
               </span>
               <br />
               <span id="profile-phone" class="text-gray-700 text-xs">
-                ${this.user.info.phone_number || ''}
+                ${this.info.phone_number || ''}
               </span>
             </div>
 
