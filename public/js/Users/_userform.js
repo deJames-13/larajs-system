@@ -4,12 +4,12 @@ export default class UserForm extends FormCard {
         super({});
         this.setFields();
         this.render();
-        this.form.prepend(this.additionalFields());
+        this.addEventListeners();
 
     }
 
     additionalFields() {
-        return `
+        const userImage = `
         	<!--USER IMAGE -->
 			<div class="flex justify-center">
 				<div class="avatar">
@@ -24,6 +24,12 @@ export default class UserForm extends FormCard {
 					class="max-w-sm file-input file-input-bordered file-input-primary" name="images[]">
 			</div>
         `
+        const additionalFields = ``;
+
+
+        this.form.prepend(userImage);
+
+
     }
 
     setFields() {

@@ -54,7 +54,7 @@ class AuthController extends Controller
         if (auth()->attempt($data)) {
             $user = \App\Models\User::where('email', $data['email'])->first();
 
-            $token = $user->createToken('api-token')->plainTextToken;
+            $token = $user->createToken('api-token')->plainTextToken; // laravel sanctum
             $request->session()->regenerate();
             $request->session()->put('api-token', $token);
 
