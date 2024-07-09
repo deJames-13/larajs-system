@@ -77,7 +77,7 @@ export default class UserEdit extends UserFormPage {
     }
 
     populateForm(data) {
-        // console.log(this.user);
+        console.log(this.user);
         if (!this.user) return console.log('No user profile found');
 
         Object.keys(this.user).map((key) => {

@@ -72,6 +72,7 @@ export default class UserFormPage {
                 return;
             }
             const formData = new FormData(this.form[0]);
+            console.log(formData);
             let address = [
                 formData.get('address_1'),
                 formData.get('address_2'),
@@ -91,6 +92,15 @@ export default class UserFormPage {
                     resolve(response);
                 },
                 onError: (response) => {
+                    // if 422
+                    if (response.status == 422) {
+                        Swal.fire({
+                            title: 'Input Error',
+                            text: response.responseJSON.message,
+                            icon: 'error',
+                            confirmButtonText: 'Ok'
+                        });
+                    }
                     this.handleInvalidInput(response.responseJSON.errors);
                     reject(response);
                 }
@@ -115,6 +125,7 @@ export default class UserFormPage {
 
     handleInvalidInput(errors) {
         if (!errors) return;
+
         Object.keys(errors).map(e => {
             const errorId = this.form.find(`[data-error-id="${e}"]`);
             errorId.text(errors[e]);
