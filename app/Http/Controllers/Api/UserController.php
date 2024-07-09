@@ -91,6 +91,7 @@ class UserController extends Controller
             'password' => 'sometimes',
             'password_confirmation' => 'sometimes|same:password',
             'role' => 'sometimes|in:admin,customer',
+            'status' => 'sometimes|in:active,inactive',
         ]);
         $userInfo = $request->validate([
             'first_name' => 'sometimes|string',
@@ -118,6 +119,10 @@ class UserController extends Controller
 
         if (isset($userInfo)) {
             $user->info()->updateOrCreate([], $userInfo);
+        }
+
+        if ($user->id == auth()->id() && $user->role != 'admin') {
+            auth()->logout();
         }
 
         $this->handleImageUpload($request, $user);
