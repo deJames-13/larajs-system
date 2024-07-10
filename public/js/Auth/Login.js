@@ -30,7 +30,7 @@ export default class Login {
                     <input type="password" id="password" name="password" placeholder="Password" class="input input-bordered"
                         required>
                 </div>
-        
+
                 <div class="form-control mt-6">
                     <button type="button" id="form-submit" class="btn btn-primary">Log in</button>
                 </div>
@@ -43,7 +43,7 @@ export default class Login {
             `,
             destroyOnClose: true,
             isShown: true,
-        });
+        }).modal;
 
         this.modal.find('#form-submit').on('click', () => {
             this.isValid() && this.handleOnSubmit();
