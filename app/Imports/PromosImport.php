@@ -22,6 +22,8 @@ class PromosImport implements ToCollection, WithHeadingRow
                     'description' => $row['description'],
                     'status' => $row['status'],
                     'discount' => $row['discount'],
+                    'start_date' => \Carbon\Carbon::parse($row['start_date']),
+                    'end_date' => \Carbon\Carbon::parse($row['end_date']),
                 ]
             );
         }
