@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Brand;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BrandResource;
-use Barryvdh\Debugbar\Facades\Debugbar;
+use App\Models\Brand;
+use Illuminate\Http\Request;
 
 class BrandController extends Controller
 {
     public function search()
     {
         $brand = Brand::filter(request(['search']))->get();
+
         return BrandResource::collection($brand);
     }
 
@@ -24,6 +24,7 @@ class BrandController extends Controller
     public function show(string $id)
     {
         $res = new BrandResource(Brand::where('id', $id)->first());
+
         return $res;
     }
 
@@ -45,6 +46,7 @@ class BrandController extends Controller
         $this->handleImageUpload($request, $brand, $image_id);
 
         $res = new BrandResource($brand);
+
         return response($res, 201, ['message' => 'Brand added successfully!']);
     }
 
@@ -59,29 +61,43 @@ class BrandController extends Controller
         ]);
 
         $brand = Brand::where('id', $id)->first();
-        if (!$brand) return response(null, 404, ['message' => 'Brand not found!']);
+        if (! $brand) {
+            return response(null, 404, ['message' => 'Brand not found!']);
+        }
 
         $brand->update($data);
 
         $res = new BrandResource($brand);
+
         return response($res, 200, ['message' => 'Brand updated successfully!']);
     }
 
-    public function destroy(Request $request, string $id)
+    public function destroy(string $id)
     {
         $brand = Brand::where('id', $id)->first();
-        if (!$brand) return response(null, 404, ['message' => 'Brand not found!']);
+        if (! $brand) {
+            return response(null, 404, ['message' => 'Brand not found!']);
+        }
 
         $brand->delete();
+
         return response(null, 204, ['message' => 'Brand deleted successfully!']);
     }
 
-    public function restore(Request $request, string $id)
+    public function restore(string $id)
     {
         $brand = Brand::withTrashed()->where('id', $id)->first();
-        if (!$brand) return response(null, 404, ['message' => 'Brand not found!']);
+        if (! $brand) {
+            return response(null, 404, ['message' => 'Brand not found!']);
+        }
 
         $brand->restore();
+
         return response(null, 200, ['message' => 'Brand restored successfully!']);
+    }
+
+    public function status(Request $request, string $id)
+    {
+        $this->handleStatus($request, Brand::class, $id);
     }
 }

@@ -152,4 +152,9 @@ class UserController extends Controller
 
         return response(new UserResource($user));
     }
+
+    public function status(Request $request, string $id)
+    {
+        $this->handleStatus($request, User::class, $id);
+    }
 }

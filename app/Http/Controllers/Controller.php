@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Storage;
 
 abstract class Controller
 {
-    public function handleProfileImage($request, $user) {}
+    // public function handleProfileImage($request, $user) {}
 
     public function handleImageUpload($request, $model, $image_id = null)
     {
@@ -47,15 +47,15 @@ abstract class Controller
 
     public function handleStatus($request, $model, $id)
     {
-
-        if ($request->has('status')) {
-            $model = $model::find($id);
-            $model->status = $request->status;
-            $model->save();
-
-            return 1;
+        if (! $request->has('status')) {
+            return 0;
         }
+        $status = $request->validate(['status' => 'required|in:active,inactive']);
+        $model = $model::find($id);
+        $model->status = $status;
+        $model->save();
 
-        return 0;
+        return 1;
+
     }
 }
