@@ -55,7 +55,7 @@ export default class SignUp {
             `,
             destroyOnClose: true,
             isShown: true,
-        });
+        }).modal;
 
         $('#form-submit').on('click', () => {
             this.isValid() && this.handleOnSubmit();

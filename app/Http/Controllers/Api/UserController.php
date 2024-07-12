@@ -50,6 +50,8 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+        Debugbar::info($request);
+
         $userData = $request->validate([
             'username' => 'required|unique:users',
             'email' => 'required|email|unique:users',
@@ -62,14 +64,16 @@ class UserController extends Controller
             'phone_number' => 'required|string|unique:customers,phone_number',
             'address' => 'required|string',
             'zip_code' => 'required|string',
-            'profile_image' => 'required|image',
+            'profile_image' => 'sometimes|image',
         ]);
+        Debugbar::info($userData);
+        Debugbar::info($userInfo);
 
         $userData['password'] = bcrypt($userData['password']);
         $user = User::create($userData);
 
-        if (isset($userInfo['info'])) {
-            $user->info()->create($userInfo['info']);
+        if ($userInfo) {
+            $user->info()->create($userInfo);
         }
 
         return response(new UserResource($user));
@@ -87,6 +91,7 @@ class UserController extends Controller
             'password' => 'sometimes',
             'password_confirmation' => 'sometimes|same:password',
             'role' => 'sometimes|in:admin,customer',
+            'status' => 'sometimes|in:active,inactive',
         ]);
         $userInfo = $request->validate([
             'first_name' => 'sometimes|string',
@@ -114,6 +119,10 @@ class UserController extends Controller
 
         if (isset($userInfo)) {
             $user->info()->updateOrCreate([], $userInfo);
+        }
+
+        if ($user->id == auth()->id() && $user->role != 'admin') {
+            auth()->logout();
         }
 
         $this->handleImageUpload($request, $user);

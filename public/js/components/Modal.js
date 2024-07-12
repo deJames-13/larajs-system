@@ -18,7 +18,7 @@ export default class Modal {
         this.modal = null;
         this.render();
         this.init();
-        return this.modal;
+        return this;
 
     }
     init() {

@@ -4,13 +4,12 @@ export default class UserForm extends FormCard {
         super({});
         this.setFields();
         this.render();
-        this.form.prepend(this.additionalFields());
+        this.additionalFields();
 
     }
 
-
     additionalFields() {
-        return `
+        const userImage = `
         	<!--USER IMAGE -->
 			<div class="flex justify-center">
 				<div class="avatar">
@@ -25,10 +24,32 @@ export default class UserForm extends FormCard {
 					class="max-w-sm file-input file-input-bordered file-input-primary" name="images[]">
 			</div>
         `
+        const additionalFields = `
+            <div class="my-4 flex gap-4">
+                <div className="flex gap-4 items-center">
+                    <label for="role">Select Role: </label>
+                    <select id="role" name="role" class="select select-bordered select-sm w-full max-w-xs">
+                        <option id="customer" value="customer">Customer</option>
+                        <option id="admin" value="admin">Admin</option>
+                    </select>
+                </div>
+                <div className="flex gap-4 items-center">
+                    <label for="statud">Select Status: </label>
+                    <select id="status" name="status" class="select select-bordered select-sm w-full max-w-xs">
+                        <option id="active" value="active">Active</option>
+                        <option id="inactive" value="inactive">Inactive</option>
+                    </select>
+                </div>
+            </div>
+        `;
+
+
+        this.form.prepend(userImage);
+        this.form.append(additionalFields);
     }
 
     setFields() {
-        const fields = {
+        this.fields = {
             fullname: [
                 { id: 'first_name', label: 'First Name', className: 'col-span-2', type: 'text' },
                 { id: 'last_name', label: 'Last Name', className: 'col-span-2', type: 'text' }
@@ -53,7 +74,6 @@ export default class UserForm extends FormCard {
                 { id: 'age', label: 'Age', className: 'text-gray-600', type: 'text', isEnabled: false },
             ]
         }
-        this.fields = fields;
     }
 
 }
