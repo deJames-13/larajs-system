@@ -241,8 +241,39 @@ export default class ProfileForm extends FormCard {
         });
     }
 
-    handleDelete() {}
-    handleDeactivate() {}
+    handleDelete() {
+        ajaxRequest.post({
+            url: "/api/profile/delete/" + this.user_profile.id,
+            onSuccess: (response) => {
+                console.log(response);
+                Swal.fire({
+                    title: "Account deleted!",
+                    text: "Returning to homepage...",
+                    icon: "info",
+                });
+            },
+            onError: (response) => {
+                console.log(response);
+            },
+        });
+    }
+    handleDeactivate() {
+        ajaxRequest.post({
+            url: "/api/profile/deactivate/" + this.user_profile.id,
+            data: { status: "inactive" },
+            onSuccess: (response) => {
+                console.log(response);
+                Swal.fire({
+                    title: "Account deactivated!",
+                    text: "Returning to homepage...",
+                    icon: "info",
+                });
+            },
+            onError: (response) => {
+                console.log(response);
+            },
+        });
+    }
 
     confirmWithPassword() {
         Swal.fire({

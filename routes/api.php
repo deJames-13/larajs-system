@@ -57,6 +57,7 @@ foreach ($crud as $prefix => $config) {
     Route::get("/$prefix", [$controller, 'index'])->name($prefix.'.all')->middleware($middleware);
     Route::get("/$prefix/{id}", [$controller, 'show'])->name($prefix.'.get')->middleware($middleware);
 
+    // include auth:sanctum middleware
     array_unshift($middleware, 'auth:sanctum');
 
     // Crud Functions
@@ -95,8 +96,14 @@ Route::post('/search', [SearchController::class, 'search']);
 Route::group(['middleware' => 'auth:sanctum'], function () {
     // PROFILE
     Route::post('/confirm-password', [UserController::class, 'confirmPassword']);
-    Route::get('/profile', [UserController::class, 'profile']);
-    Route::match(['put', 'post'], '/profile/update/{id}', [UserController::class, 'update']);
+
+    Route::prefix('profile')->group(function () {
+        Route::get('/', [UserController::class, 'profile']);
+        Route::match(['put', 'post'], '/update/{id}', [UserController::class, 'update']);
+        Route::match(['put', 'post'], '/deactivate/{id}', [UserController::class, 'status']);
+        Route::match(['post'], '/delete/{id}', [UserController::class, 'destroy']);
+
+    });
 
     // Cart
     Route::prefix('cart')->group(function () {
