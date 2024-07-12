@@ -1,4 +1,4 @@
-import UserEdit from "../Users/edit.js";
+import UserEdit from "./edit.js";
 
 let defaultProps = {
     userId: null,
@@ -9,6 +9,7 @@ export default class OnBoarding extends UserEdit {
     constructor(props = {}) {
         super(props);
         Object.assign(this, defaultProps, props);
+        this.disableClosing = true;
     }
 
     init() {
@@ -49,6 +50,9 @@ export default class OnBoarding extends UserEdit {
                 "success",
             );
             $("#form-actions").hide();
+
+            $("#user_edit_modal").fadeOut();
+            $("#user_edit_modal").remove();
         });
     }
     onCancel() {

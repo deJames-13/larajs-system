@@ -12,6 +12,7 @@ export default class UserFormPage {
         this.fetchUrl = `/api/users/`;
         this.userForm = new UserForm();
         this.handleUpdate = null;
+        this.disableClosing = false;
         this.form = this.userForm.getForm();
     }
 
@@ -207,6 +208,7 @@ export default class UserFormPage {
             content: this.makeContent(),
             action: this.makeAction(),
             destroyOnClose: true,
+            disableClosing: this.disableClosing,
         });
     }
 }

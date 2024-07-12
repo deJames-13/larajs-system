@@ -1,6 +1,6 @@
 import logout from "../Auth/logout.js";
 import ajaxRequest from "../assets/ajaxRequest.js";
-import Onboarding from "../components/Onboarding.js";
+import Onboarding from "./_onboarding.js";
 
 export default class User {
     constructor() {

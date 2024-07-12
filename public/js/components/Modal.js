@@ -7,6 +7,7 @@ const defaultProps = {
     destroyOnClose: false,
     isShown: false,
     onEscClose: true,
+    disableClosing: false,
     width: "sm",
 };
 
@@ -25,9 +26,16 @@ export default class Modal {
         $(`[data-open-modal="${this.id}"]`).on("click", () => {
             this.open();
         });
+        !this.disableClosing && this.handleClosing();
+        this.disableClosing && $("[data-close-modal]").remove();
+        this.isShown && this.open();
+    }
+
+    handleClosing() {
         this.modal.find("[data-close-modal]").click("click", () => {
             this.close();
         });
+
         this.backDropExit &&
             this.modal.find("[data-modal-backdrop]").click("click", () => {
                 this.close();
@@ -39,7 +47,6 @@ export default class Modal {
                     this.close();
                 }
             });
-        this.isShown && this.open();
     }
 
     open() {
