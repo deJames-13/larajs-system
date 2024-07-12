@@ -12,6 +12,7 @@ const logout = () => {
             url: "/logout",
             data: data,
             onSuccess: (response) => {
+                window.location.href = "/";
                 resolve(response);
             },
             onError: (xhr) => {

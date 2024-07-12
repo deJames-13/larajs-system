@@ -99,8 +99,9 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
     Route::prefix('profile')->group(function () {
         Route::get('/', [UserController::class, 'profile']);
-        Route::match(['put', 'post'], '/update/{id}', [UserController::class, 'update']);
-        Route::match(['put', 'post'], '/deactivate/{id}', [UserController::class, 'status']);
+        Route::get('/{id}', [UserController::class, 'profile']);
+        Route::match(['put', 'post'], '/{id}', [UserController::class, 'update']);
+        Route::match(['put', 'post'], '/status/{id}', [UserController::class, 'status']);
         Route::match(['post'], '/delete/{id}', [UserController::class, 'destroy']);
 
     });

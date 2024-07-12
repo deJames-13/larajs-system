@@ -129,9 +129,9 @@ class UserController extends Controller
             $user->info()->updateOrCreate([], $userInfo);
         }
 
-        if ($user->id == auth()->id() && $user->role != 'admin') {
-            auth()->logout();
-        }
+        // if ($user->id == auth()->id() && $user->role != 'admin') {
+        //     auth()->logout();
+        // }
 
         $this->handleImageUpload($request, $user);
 

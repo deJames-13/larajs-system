@@ -1,5 +1,5 @@
 const defaultProps = {
-    id: 'my_modal_1',
+    id: "my_modal_1",
     top: `<h3 class="font-bold text-lg">Hello!</h3>`,
     content: `<p class="py-4">Press ESC key or click the button below to close</p>`,
     action: ``,
@@ -7,9 +7,8 @@ const defaultProps = {
     destroyOnClose: false,
     isShown: false,
     onEscClose: true,
-    width: 'sm'
-
-}
+    width: "sm",
+};
 
 export default class Modal {
     constructor(props = {}) {
@@ -19,26 +18,27 @@ export default class Modal {
         this.render();
         this.init();
         return this;
-
     }
     init() {
         this.modal = $(`#${this.id}`);
 
-        $(`[data-open-modal="${this.id}"]`).on('click', () => {
+        $(`[data-open-modal="${this.id}"]`).on("click", () => {
             this.open();
         });
-        this.modal.find('[data-close-modal]').click('click', () => {
+        this.modal.find("[data-close-modal]").click("click", () => {
             this.close();
         });
-        this.backDropExit && this.modal.find('[data-modal-backdrop]').click('click', () => {
-            this.close();
-        });
-
-        this.onEscClose && $(document).on('keydown', (e) => {
-            if (e.key === 'Escape') {
+        this.backDropExit &&
+            this.modal.find("[data-modal-backdrop]").click("click", () => {
                 this.close();
-            }
-        });
+            });
+
+        this.onEscClose &&
+            $(document).on("keydown", (e) => {
+                if (e.key === "Escape") {
+                    this.close();
+                }
+            });
         this.isShown && this.open();
     }
 
@@ -50,7 +50,6 @@ export default class Modal {
         this.modal.fadeOut();
         this.destroyOnClose && this.modal.remove();
     }
-
 
     render() {
         const modal = `
@@ -77,10 +76,6 @@ export default class Modal {
         </div>
         `;
 
-        $('#app').prepend(modal);
-
-
-
+        $("#app").prepend(modal);
     }
-
 }

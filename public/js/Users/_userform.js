@@ -1,11 +1,10 @@
-import FormCard from '../components/Form.js';
+import FormCard from "../components/Form.js";
 export default class UserForm extends FormCard {
     constructor() {
         super({});
         this.setFields();
         this.render();
         this.additionalFields();
-
     }
 
     additionalFields() {
@@ -23,9 +22,9 @@ export default class UserForm extends FormCard {
 				<input id="input-image" type="file" accept="image/*"
 					class="max-w-sm file-input file-input-bordered file-input-primary" name="images[]">
 			</div>
-        `
+        `;
         const additionalFields = `
-            <div class="my-4 flex gap-4">
+            <div id="priviliges" class="my-4 flex gap-4">
                 <div className="flex gap-4 items-center">
                     <label for="role">Select Role: </label>
                     <select id="role" name="role" class="select select-bordered select-sm w-full max-w-xs">
@@ -43,7 +42,6 @@ export default class UserForm extends FormCard {
             </div>
         `;
 
-
         this.form.prepend(userImage);
         this.form.append(additionalFields);
     }
@@ -51,29 +49,94 @@ export default class UserForm extends FormCard {
     setFields() {
         this.fields = {
             fullname: [
-                { id: 'first_name', label: 'First Name', className: 'col-span-2', type: 'text' },
-                { id: 'last_name', label: 'Last Name', className: 'col-span-2', type: 'text' }
+                {
+                    id: "first_name",
+                    label: "First Name",
+                    className: "col-span-2",
+                    type: "text",
+                },
+                {
+                    id: "last_name",
+                    label: "Last Name",
+                    className: "col-span-2",
+                    type: "text",
+                },
             ],
             credentials: [
-                { id: 'username', label: 'Username', className: 'col-span-1', type: 'text' },
-                { id: 'email', label: 'Email Address', className: 'xl:col-span-2', type: 'email' },
-                { id: 'phone_number', label: 'Phone Number', className: 'col-span-1', type: 'text' },
+                {
+                    id: "username",
+                    label: "Username",
+                    className: "col-span-1",
+                    type: "text",
+                },
+                {
+                    id: "email",
+                    label: "Email Address",
+                    className: "xl:col-span-2",
+                    type: "email",
+                },
+                {
+                    id: "phone_number",
+                    label: "Phone Number",
+                    className: "col-span-1",
+                    type: "text",
+                },
             ],
             address: [
-                { id: 'address_1', label: 'House Number, Building, Street Address*', className: 'col-span-4', type: 'text' },
-                { id: 'address_2', label: 'Village / Subdivision, Barangay *', className: 'col-span-4', type: 'text' },
+                {
+                    id: "address_1",
+                    label: "House Number, Building, Street Address*",
+                    className: "col-span-4",
+                    type: "text",
+                },
+                {
+                    id: "address_2",
+                    label: "Village / Subdivision, Barangay *",
+                    className: "col-span-4",
+                    type: "text",
+                },
             ],
             address3: [
-                { id: 'city', label: 'City / Municipality*', className: 'col-span-1', type: 'text' },
-                { id: 'province', label: 'Province*', className: 'col-span-1', type: 'text' },
-                { id: 'country', label: 'Country*', className: 'col-span-1', type: 'text' },
-                { id: 'zip_code', label: 'Zip Code*', className: 'col-span-1', type: 'text' },
+                {
+                    id: "city",
+                    label: "City / Municipality*",
+                    className: "col-span-1",
+                    type: "text",
+                },
+                {
+                    id: "province",
+                    label: "Province*",
+                    className: "col-span-1",
+                    type: "text",
+                },
+                {
+                    id: "country",
+                    label: "Country*",
+                    className: "col-span-1",
+                    type: "text",
+                },
+                {
+                    id: "zip_code",
+                    label: "Zip Code*",
+                    className: "col-span-1",
+                    type: "text",
+                },
             ],
             account: [
-                { id: 'birthdate', label: 'Birthday', className: 'text-gray-600', type: 'date' },
-                { id: 'age', label: 'Age', className: 'text-gray-600', type: 'text', isEnabled: false },
-            ]
-        }
+                {
+                    id: "birthdate",
+                    label: "Birthday",
+                    className: "text-gray-600",
+                    type: "date",
+                },
+                {
+                    id: "age",
+                    label: "Age",
+                    className: "text-gray-600",
+                    type: "text",
+                    isEnabled: false,
+                },
+            ],
+        };
     }
-
 }

@@ -1,4 +1,5 @@
 import ajaxRequest from "../../assets/ajaxRequest.js";
+import logout from "../../Auth/logout.js";
 import FormCard from "../../components/Form.js";
 
 export default class ProfileForm extends FormCard {
@@ -253,7 +254,9 @@ export default class ProfileForm extends FormCard {
                     text: "Returning to homepage...",
                     icon: "info",
                 }).then(() => {
-                    window.location.href = "/";
+                    logout().then(() => {
+                        window.location.href = "/";
+                    });
                 });
             },
             onError: (response) => {
@@ -263,7 +266,7 @@ export default class ProfileForm extends FormCard {
     }
     handleDeactivate() {
         ajaxRequest.post({
-            url: "/api/profile/deactivate/" + this.user_profile.id,
+            url: "/api/profile/status/" + this.user_profile.id,
             data: { status: "inactive" },
             onSuccess: (response) => {
                 console.log(response);
@@ -272,7 +275,9 @@ export default class ProfileForm extends FormCard {
                     text: "Returning to homepage...",
                     icon: "info",
                 }).then(() => {
-                    window.location.href = "/";
+                    logout().then(() => {
+                        window.location.href = "/";
+                    });
                 });
             },
             onError: (response) => {
