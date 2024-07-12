@@ -30,7 +30,7 @@ class UserController extends Controller
         $user = auth()->user();
         $res = new UserResource($user);
 
-        return response(new UserResource($user));
+        return response($res);
     }
 
     public function search()
