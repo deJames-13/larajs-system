@@ -7,6 +7,7 @@ use App\Http\Resources\UserResource;
 use App\Models\User;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Http\Request;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class UserController extends Controller
 {
@@ -156,11 +157,22 @@ class UserController extends Controller
 
     public function status(Request $request, string $id)
     {
-        if ($this->handleStatus($request, User::class, $id)) {
-            auth()->logout();
-            $request->session()->forget('api-token');
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
+        if (! $this->handleStatus($request, User::class, $id)) {
+            return;
         }
+        if (auth()->user()->id == $id && $request->status == 'inactive') {
+            $accessToken = $request->bearerToken();
+            $token = PersonalAccessToken::findToken($accessToken);
+            if ($token) {
+                $token->delete();
+            }
+        }
+
+        if (request()->ajax()) {
+            return response(new UserResource(User::find($id)));
+        }
+
+        return redirect('/');
+
     }
 }

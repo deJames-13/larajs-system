@@ -51,13 +51,13 @@ abstract class Controller
         if (! $request->has('status')) {
             return 0;
         }
-        $status = $request->validate(['status' => 'required|in:active,inactive']);
-        $model = $model::find($id);
+        $data = $request->validate(['status' => 'required|in:active,inactive']);
+        $model = $model::findOrFail($id);
 
-        Debugbar::info([$model, $status]);
+        Debugbar::info([$model, $data]);
 
-        // $model->status = $status;
-        // $model->save();
+        $model->status = $data['status'];
+        $model->save();
 
         return 1;
 
