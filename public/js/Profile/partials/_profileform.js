@@ -223,6 +223,7 @@ export default class ProfileForm extends FormCard {
             confirmButtonText: "Yes, deactivate it!",
         }).then((result) => {
             if (result.isConfirmed) {
+                this.handleDeactivate();
             }
         });
     }
@@ -237,6 +238,7 @@ export default class ProfileForm extends FormCard {
             confirmButtonText: "Yes, delete it!",
         }).then((result) => {
             if (result.isConfirmed) {
+                this.handleDelete();
             }
         });
     }
@@ -250,6 +252,8 @@ export default class ProfileForm extends FormCard {
                     title: "Account deleted!",
                     text: "Returning to homepage...",
                     icon: "info",
+                }).then(() => {
+                    window.location.href = "/";
                 });
             },
             onError: (response) => {
@@ -267,6 +271,8 @@ export default class ProfileForm extends FormCard {
                     title: "Account deactivated!",
                     text: "Returning to homepage...",
                     icon: "info",
+                }).then(() => {
+                    window.location.href = "/";
                 });
             },
             onError: (response) => {
@@ -291,11 +297,11 @@ export default class ProfileForm extends FormCard {
                         url: "/api/confirm-password",
                         data: { password },
                         onSuccess: (response) => {
-                            // console.log(response);
-                            resolve();
+                            console.log(response);
+                            resolve(response);
                         },
                         onError: (response) => {
-                            // console.log(response);
+                            console.log(response);
                             Swal.showValidationMessage(
                                 "Error: Password confirmation failed",
                             );

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Image;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Support\Facades\Storage;
 
 abstract class Controller
@@ -52,8 +53,11 @@ abstract class Controller
         }
         $status = $request->validate(['status' => 'required|in:active,inactive']);
         $model = $model::find($id);
-        $model->status = $status;
-        $model->save();
+
+        Debugbar::info([$model, $status]);
+
+        // $model->status = $status;
+        // $model->save();
 
         return 1;
 

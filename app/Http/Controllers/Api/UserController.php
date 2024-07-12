@@ -140,8 +140,9 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = User::find($id);
-        $user->delete();
+        Debugbar::info($user);
 
+        // $user->delete();
         return response()->json(null, 204);
     }
 
@@ -155,6 +156,11 @@ class UserController extends Controller
 
     public function status(Request $request, string $id)
     {
-        $this->handleStatus($request, User::class, $id);
+        if ($this->handleStatus($request, User::class, $id)) {
+            auth()->logout();
+            $request->session()->forget('api-token');
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+        }
     }
 }
