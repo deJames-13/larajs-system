@@ -1,21 +1,20 @@
 <?php
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\AuthController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\UserController;
-use App\Http\Controllers\TableController;
-use App\Http\Controllers\SearchController;
-use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\BrandController;
+use App\Http\Controllers\Api\CartController;
+use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ChartController;
 use App\Http\Controllers\Api\OrderController;
-use App\Http\Controllers\Api\PromoController;
 use App\Http\Controllers\Api\ProductController;
-use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\PromoController;
+use App\Http\Controllers\Api\UserController;
+// use App\Http\Controllers\AuthController;
+use App\Http\Controllers\SearchController;
+use App\Http\Controllers\TableController;
+use Illuminate\Support\Facades\Route;
 
-Route::get("/test", function () {
-    return response()->json(["message" => "API is working"]);
+Route::get('/test', function () {
+    return response()->json(['message' => 'API is working']);
 });
 
 // API AUTH: cant do this, need to handle tokens
@@ -25,99 +24,103 @@ Route::get("/test", function () {
 //     Route::post("/register", [AuthController::class, "store"]);
 // });
 
-
-
-
-
 // add from here on out: make sure there are 3 functions in controller: store - destroy - update
 $crud = [
-    "products" => [
-        "controller" => ProductController::class,
+    'products' => [
+        'controller' => ProductController::class,
     ],
 
-    "promos" => [
-        "controller" => PromoController::class,
+    'promos' => [
+        'controller' => PromoController::class,
     ],
 
-    "brands" => [
-        "controller" => BrandController::class,
+    'brands' => [
+        'controller' => BrandController::class,
     ],
 
-    "categories" => [
-        "controller" => CategoryController::class,
+    'categories' => [
+        'controller' => CategoryController::class,
     ],
 
-    "users" => [
-        "controller" => UserController::class,
-        "middleware" => ['auth:sanctum', 'role:admin'],
+    'users' => [
+        'controller' => UserController::class,
+        'middleware' => ['auth:sanctum', 'role:admin'],
     ],
     // "comments"?
 ];
 
-
-
 foreach ($crud as $prefix => $config) {
-    $controller = $config["controller"];
-    $middleware = isset($config["middleware"]) ? $config["middleware"] : [];
+    $controller = $config['controller'];
+    $middleware = isset($config['middleware']) ? $config['middleware'] : [];
     $middleware = is_array($middleware) ? $middleware : [$middleware];
 
-    Route::get("/$prefix", [$controller, "index"])->name($prefix . ".all")->middleware($middleware);
-    Route::get("/$prefix/{id}", [$controller, "show"])->name($prefix . ".get")->middleware($middleware);
+    Route::get("/$prefix", [$controller, 'index'])->name($prefix.'.all')->middleware($middleware);
+    Route::get("/$prefix/{id}", [$controller, 'show'])->name($prefix.'.get')->middleware($middleware);
 
-    array_unshift($middleware, "auth:sanctum");
+    // include auth:sanctum middleware
+    array_unshift($middleware, 'auth:sanctum');
 
     // Crud Functions
-    Route::post("/$prefix", [$controller, "store"])
-        ->name($prefix . ".store")
+    Route::post("/$prefix", [$controller, 'store'])
+        ->name($prefix.'.store')
         ->middleware($middleware);
 
-    Route::delete("/$prefix/{id}", [$controller, "destroy"])
-        ->name($prefix . ".destroy")
+    Route::delete("/$prefix/{id}", [$controller, 'destroy'])
+        ->name($prefix.'.destroy')
         ->middleware($middleware);
 
-    Route::match(["put", "post"], "/$prefix/{id}", [$controller, "update"])
-        ->name($prefix . ".update")
+    Route::match(['put', 'post'], "/$prefix/{id}", [$controller, 'update'])
+        ->name($prefix.'.update')
         ->middleware($middleware);
 
     // TABLES
-    Route::get("/tables/" . $prefix, [TableController::class, $prefix])
+    Route::get('/tables/'.$prefix, [TableController::class, $prefix])
         ->middleware($middleware);
 
     // EXPORTS
-    Route::get("/exports/$prefix/{type}", [TableController::class, $prefix . "Export"])
+    Route::get("/exports/$prefix/{type}", [TableController::class, $prefix.'Export'])
         ->middleware($middleware);
+
+    // STATUS
+    Route::post("/$prefix/status/{id}", [$controller, 'status'])
+        ->name($prefix.'.status')
+        ->middleware($middleware);
+
 }
 
-
 // Search Functions
-Route::get("/autocomplete", [SearchController::class, "autocomplete"]);
-Route::post("/search", [SearchController::class, "search"]);
-
-
-
+Route::get('/autocomplete', [SearchController::class, 'autocomplete']);
+Route::post('/search', [SearchController::class, 'search']);
 
 // MANUALLY ADDED
-Route::group(["middleware" => "auth:sanctum"], function () use ($crud) {
+Route::group(['middleware' => 'auth:sanctum'], function () {
     // PROFILE
-    Route::post("/confirm-password", [UserController::class, "confirmPassword"]);
-    Route::get("/profile", [UserController::class, "profile"]);
-    Route::match(["put", "post"], "/profile/update/{id}", [UserController::class, "update"]);
+    Route::post('/confirm-password', [UserController::class, 'confirmPassword']);
+
+    Route::prefix('profile')->group(function () {
+        Route::get('/', [UserController::class, 'profile']);
+        Route::get('/{id}', [UserController::class, 'profile']);
+        Route::match(['put', 'post'], '/{id}', [UserController::class, 'update']);
+        Route::match(['put', 'post'], '/status/{id}', [UserController::class, 'status']);
+        Route::match(['post'], '/delete/{id}', [UserController::class, 'destroy']);
+
+    });
 
     // Cart
-    Route::prefix("cart")->group(function () {
-        Route::get("/", [CartController::class, "index"]);
-        Route::post("/", [CartController::class, "store"]);
-        Route::put("/", [CartController::class, "update"]);
-        Route::delete("/{id}", [CartController::class, "destroy"]);
+    Route::prefix('cart')->group(function () {
+        Route::get('/', [CartController::class, 'index']);
+        Route::post('/', [CartController::class, 'store']);
+        Route::put('/', [CartController::class, 'update']);
+        Route::delete('/{id}', [CartController::class, 'destroy']);
     });
 
     // orders/checkout
-    Route::get("/tables/orders", [TableController::class, "orders"]);
-    Route::prefix("orders")->group(function () {
-        Route::post("/checkout", [OrderController::class, "store"]);
-        Route::get("/", [OrderController::class, "index"]);
-        Route::get("/{id}", [OrderController::class, "show"]);
-        Route::put("/{id}", [OrderController::class, "update"]);
+    Route::get('/tables/orders', [TableController::class, 'orders']);
+    Route::prefix('orders')->group(function () {
+        Route::post('/checkout', [OrderController::class, 'store']);
+        Route::get('/', [OrderController::class, 'index']);
+        Route::get('/{id}', [OrderController::class, 'show']);
+        Route::put('/{id}', [OrderController::class, 'update']);
     });
 
     // CHARTS

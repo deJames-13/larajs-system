@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\User;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
+use App\Models\User;
 use Barryvdh\Debugbar\Facades\Debugbar;
+use Illuminate\Http\Request;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class UserController extends Controller
 {
@@ -14,37 +15,44 @@ class UserController extends Controller
     {
         $user = auth()->user();
         $password = request()->get('password');
-        if (!auth()->guard('web')->attempt(['username' => $user->username, 'password' => $password])) {
-            return response()->json(["message" => "Unauthorized"], 401);
+        if (! auth()->guard('web')->attempt(['username' => $user->username, 'password' => $password])) {
+            return response()->json(['message' => 'Unauthorized'], 401);
         }
-        return response()->json(["message" => "Authorized"]);
+
+        return response()->json(['message' => 'Authorized']);
     }
+
     public function profile()
     {
         // check if logged in
-        if (!auth()->check()) {
-            return response()->json(["message" => "Unauthorized"], 401);
+        if (! auth()->check()) {
+            return response()->json(['message' => 'Unauthorized'], 401);
         }
         $user = auth()->user();
         $res = new UserResource($user);
-        return response(new UserResource($user));
+
+        return response($res);
     }
+
     public function search()
     {
         $search = request()->get('search');
         $user = User::filter($search)->get();
+
         return response(UserResource::collection($user));
     }
 
     public function index()
     {
         $users = User::all();
+
         return response(UserResource::collection($users));
     }
 
-    public function show($id)
+    public function show(string $id)
     {
         $user = User::find($id);
+
         return response(new UserResource($user));
     }
 
@@ -79,15 +87,15 @@ class UserController extends Controller
         return response(new UserResource($user));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, string $id)
     {
         // dd($request->hasFile('images'));
         // dd($request);
 
         Debugbar::info($request);
         $userData = $request->validate([
-            'username' => 'sometimes|unique:users,username,' . $id . ',id',
-            'email' => 'sometimes|email|unique:users,email,' . $id . ',id',
+            'username' => 'sometimes|unique:users,username,'.$id.',id',
+            'email' => 'sometimes|email|unique:users,email,'.$id.',id',
             'password' => 'sometimes',
             'password_confirmation' => 'sometimes|same:password',
             'role' => 'sometimes|in:admin,customer',
@@ -96,16 +104,16 @@ class UserController extends Controller
         $userInfo = $request->validate([
             'first_name' => 'sometimes|string',
             'last_name' => 'sometimes|string',
-            'phone_number' => 'sometimes|string|unique:customers,phone_number,' . $id . ',user_id',
+            'phone_number' => 'sometimes|string|unique:customers,phone_number,'.$id.',user_id',
             'address' => 'sometimes|string',
             'zip_code' => 'sometimes|string',
             'profile_image' => 'sometimes|image',
         ]);
-        // image 
+        // image
 
         $user = User::find($id);
-        if (!$user) {
-            return response()->json(["message" => "User not found"], 404);
+        if (! $user) {
+            return response()->json(['message' => 'User not found'], 404);
         }
 
         // manage password changing
@@ -121,21 +129,21 @@ class UserController extends Controller
             $user->info()->updateOrCreate([], $userInfo);
         }
 
-        if ($user->id == auth()->id() && $user->role != 'admin') {
-            auth()->logout();
-        }
+        // if ($user->id == auth()->id() && $user->role != 'admin') {
+        //     auth()->logout();
+        // }
 
         $this->handleImageUpload($request, $user);
-
 
         return response(new UserResource($user->fresh()));
     }
 
-
     public function destroy($id)
     {
         $user = User::find($id);
-        $user->delete();
+        Debugbar::info($user);
+
+        // $user->delete();
         return response()->json(null, 204);
     }
 
@@ -143,6 +151,28 @@ class UserController extends Controller
     {
         $user = User::withTrashed()->find($id);
         $user->restore();
+
         return response(new UserResource($user));
+    }
+
+    public function status(Request $request, string $id)
+    {
+        if (! $this->handleStatus($request, User::class, $id)) {
+            return;
+        }
+        if (auth()->user()->id == $id && $request->status == 'inactive') {
+            $accessToken = $request->bearerToken();
+            $token = PersonalAccessToken::findToken($accessToken);
+            if ($token) {
+                $token->delete();
+            }
+        }
+
+        if (request()->ajax()) {
+            return response(new UserResource(User::find($id)));
+        }
+
+        return redirect('/');
+
     }
 }

@@ -3,8 +3,9 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Symfony\Component\HttpFoundation\Response;
 
 class Authenticate
@@ -19,12 +20,18 @@ class Authenticate
         $header = $request->header('Authorization');
         if ($header) {
             $token = substr($header, 7);
-            $user = \Laravel\Sanctum\PersonalAccessToken::findToken($token)->tokenable;
-            if ($user) {
+            $pat = \Laravel\Sanctum\PersonalAccessToken::findToken($token);
+            if ($pat) {
+                $user = $pat->tokenable;
                 auth()->login($user);
+            } else {
+                Auth::guard('web')->logout();
+                Session::flush();
+
+                return abort(403, 'Forbidden');
+
             }
         }
-
 
         return $next($request);
     }
