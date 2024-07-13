@@ -20,7 +20,7 @@ class UserResource extends JsonResource
         return [
             ...$main,
             'fullname' => $this->whenLoaded('info', fn () => $this->info->fullName()),
-            'info' => $this->whenLoaded('info', fn () => $this->info),
+            'info' => $this->whenLoaded('info', fn () => new CustomerResource($this->info)),
 
             'images' => $this->whenLoaded('images', fn () => $this->images),
 

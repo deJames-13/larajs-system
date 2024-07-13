@@ -25,8 +25,8 @@ export default class UsersPage extends TablePage {
             const info = user.info || {};
             return {
                 ID: `${user.id}`,
-                Name: `
-                <div class="flex items-center gap-3">
+                User: `
+                <div class="flex items-center gap-3 w-72 text-wrap overflow-x-auto">
                     <div class="avatar">
                     <div class="mask mask-squircle h-12 w-12">
                         <img
@@ -42,11 +42,14 @@ export default class UsersPage extends TablePage {
                     <div class="text-sm opacity-50">
                         ${user.email}
                     </div>
+
+                     <div class="text-xs opacity-70 text-wrap">
+                        <span>${info.address || "N/A"}</span>
+                      </div>
                     </div>
                 </div>
                 `,
                 "Phone Number": `${info.phone_number || "N/A"}`,
-                Address: `${info.address || "N/A"}`,
                 Role: `${user.role}`,
                 "Account Status": `
                 <div class="badge ${this.statusColors[user.status]} gap-2">

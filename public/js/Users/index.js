@@ -11,7 +11,7 @@ export default class User {
 
     init() {
         this.fetchUser().then(() => {
-            console.log(this.user);
+            // console.log(this.user);
             if (!this.user) return;
             this.checkStatus();
             this.checkInfo();
@@ -44,9 +44,14 @@ export default class User {
         return new Promise((resolve, reject) => {
             ajaxRequest.get({
                 url: "/api/profile",
-                onSuccess: (response) =>
-                    this.handleResponse(response) && resolve(response),
-                onError: (error) => this.hanndleError(error) && reject(error),
+                onSuccess: (response) => {
+                    this.handleResponse(response);
+                    resolve(response);
+                },
+                onError: (error) => {
+                    this.hanndleError(error);
+                    reject(error);
+                },
             });
         });
     }
