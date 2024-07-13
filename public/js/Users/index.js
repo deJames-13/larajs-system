@@ -23,27 +23,30 @@ export default class User {
         return this.user;
     }
 
+    handleResponse(response) {
+        this.user = response;
+        const imgSrc =
+            (this.user.images &&
+                this.user.images.length > 0 &&
+                this.user.images[0].path) ||
+            "https://via.placeholder.com/150";
+        $("#profile-image").attr("src", imgSrc);
+    }
+
+    hanndleError(error) {
+        // 401
+        if (error.status === 401) return reject(error);
+        console.error("Failed to fetch user data:", error);
+        return reject(error);
+    }
+
     fetchUser() {
         return new Promise((resolve, reject) => {
             ajaxRequest.get({
                 url: "/api/profile",
-                onSuccess: (response) => {
-                    this.user = response;
-                    const imgSrc =
-                        (this.user.images &&
-                            this.user.images.length > 0 &&
-                            this.user.images[0].path) ||
-                        "https://via.placeholder.com/150";
-                    $("#profile-image").attr("src", imgSrc);
-
-                    return resolve(response);
-                },
-                onError: (error) => {
-                    // 401
-                    if (error.status === 401) return reject(error);
-                    console.error("Failed to fetch user data:", error);
-                    return reject(error);
-                },
+                onSuccess: (response) =>
+                    this.handleResponse(response) && resolve(response),
+                onError: (error) => this.hanndleError(error) && reject(error),
             });
         });
     }
