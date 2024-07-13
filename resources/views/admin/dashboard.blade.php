@@ -1,9 +1,9 @@
 <x-layouts.default :page="'dashboard'" :title="'Dashboard'">
 
-    <div class="mx-auto container w-screen flex gap-8">
+    <div class="mx-auto container w-screen flex gap-8 flex-col lg:flex-row">
 
         {{-- side-bar --}}
-        <div class="hidden sm:block left py-8  container max-h-[1000px] sm:36 lg:w-64">
+        <div class="hidden md:block left py-8  container max-h-[1000px] sm:36 lg:w-64">
             <div id="dashboard-sidebar" class="w-full rounded-xl shadow-xl border p-4"></div>
         </div>
 
