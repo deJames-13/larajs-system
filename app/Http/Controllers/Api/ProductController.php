@@ -141,7 +141,7 @@ class ProductController extends Controller
         return response(null, 200, ['message' => 'Product restored successfully!']);
     }
 
-    public function restoreAll()
+    public function thrashed()
     {
         $page = request('page') ?? 1;
         $limit = request('limit') ?? 20;

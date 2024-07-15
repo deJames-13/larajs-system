@@ -96,7 +96,7 @@ class BrandController extends Controller
         return response(null, 200, ['message' => 'Brand restored successfully!']);
     }
 
-    public function restoreAll() {}
+    public function thrashed() {}
 
     public function status(Request $request, string $id)
     {

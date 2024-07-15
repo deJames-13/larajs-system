@@ -102,7 +102,7 @@ class PromoController extends Controller
         return response(null, 200, ['message' => 'Promo restored successfully!']);
     }
 
-    public function restoreAll() {}
+    public function thrashed() {}
 
     public function status(Request $request, string $id)
     {

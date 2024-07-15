@@ -249,8 +249,25 @@ export default class DataTable {
             });
         });
 
-        $("#btn-restore-" + this.tableName).one("click", () => {
-            // window.location.href = "/admin/" + this.tableName + "/restore-all";
+
+        $('#alt-action').hide();
+
+        $("#btn-trash-" + this.tableName).on("click", () => {
+            this.showThrashed();
+            $("#btn-trash-" + this.tableName).hide();
+            $("#btn-table-" + this.tableName).show();
+            $('#actions').hide();
+            $('#alt-action').show();
+        });
+
+        $("#btn-table-" + this.tableName).on("click", () => {
+            this.showNotThrashed();
+            $("#btn-table-" + this.tableName).hide();
+            $("#btn-trash-" + this.tableName).show();
+            $('#actions').show();
+            $('#alt-action').hide();
+
+
         });
 
         $("#btn-add-" + this.tableName).one("click", () => {
@@ -290,15 +307,28 @@ export default class DataTable {
                     <i class="fas fa-plus"></i>
                     <span>Add</span>
                 </button>
-                <button id="btn-restore-${this.tableName}" class="btn btn-sm text-white bg-primary inline-block self-end">
-                    <span>Restore</span>
+                <button id="btn-trash-${this.tableName}" class="btn btn-sm text-white bg-primary inline-block self-end">
+                    <span>Trash</span>
+                </button>
+                <button style="display: none;" id="btn-table-${this.tableName}" class="btn btn-sm text-white bg-primary inline-block self-end">
+                    <span>View Table</span>
                 </button>
             </div>
         </div>
         `;
     }
 
-    showThrashed(){}
+    showThrashed(){
+        this.baseApi = "/api/thrashed/";
+        this.updateTable();
+    }
+
+    showNotThrashed(){
+        this.baseApi = "/api/tables/";
+        this.updateTable();
+    }
+
+
 
     createTable() {
         if (this.table.length === 0) {

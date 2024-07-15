@@ -57,8 +57,9 @@ foreach ($crud as $prefix => $config) {
     Route::get("/$prefix", [$controller, 'index'])->name($prefix.'.all')->middleware($middleware);
     Route::get("/$prefix/{id}", [$controller, 'show'])->name($prefix.'.get')->middleware($middleware);
 
-    // include auth:sanctum middleware
-    array_unshift($middleware, 'auth:sanctum');
+    // include auth:sanctum middleware, only for authenticated users
+
+    $middleware = array_merge(['role:admin', 'auth:sanctum'], $middleware);
 
     // Crud Functions
 
@@ -80,6 +81,11 @@ foreach ($crud as $prefix => $config) {
     // RESTORE
     Route::post("/$prefix/restore/{id}", [$controller, 'restore'])
         ->name($prefix.'.restore')
+        ->middleware($middleware);
+
+    // THRASHED - this is where my code is
+    Route::get('/thrashed/'.$prefix, [$controller, 'thrashed'])
+        ->name($prefix.'.thrashed')
         ->middleware($middleware);
 
     // TABLES

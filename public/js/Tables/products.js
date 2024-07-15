@@ -25,10 +25,13 @@ export default class ProductsPage extends TablePage {
                     ${product.status}
                 </div>`,
             "": `
-            <div class="print:hidden w-full flex items-center justify-end gap-3">
+            <div id="actions" class="print:hidden w-full flex items-center justify-end gap-3">
                 <a href="/products/${product.id}" class="btn btn-xs btn-primary">View</a>
                 <a href="/admin/products/edit/${product.id}/" class="btn btn-xs btn-secondary">Edit</a>
                 <button id="row-delete__${product.id}" data-id="${product.id}" class="row-delete btn btn-xs bg-red-400">Delete</button>
+            </div>
+            <div id="alt-action" class="print:hidden w-full flex items-center justify-end gap-3">
+                <button id="row-restore__${product.id}" data-id="${product.id}" class="row-restore btn btn-xs bg-red-400">Restore</button>
             </div>
             `,
         }));
