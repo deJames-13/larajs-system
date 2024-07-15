@@ -233,10 +233,13 @@ export default class DataTable {
 
     bindActions() {
         $(document).on("click", ".row-delete", (e) => {
-            this.confirmAction(() => this.onDelete($(e.target).data("id")));
+            const id = $(e.target).data("id");
+            console.log(id);
+            this.confirmAction(() => this.onDelete(id));
         });
         $(document).on("click", ".row-restore", (e) => {
-            this.confirmAction(() => this.onRestore($(e.target).data("id")));
+            const id = $(e.target).data("id");
+            this.confirmAction(() => this.onRestore(id));
         });
 
 
@@ -282,8 +285,7 @@ export default class DataTable {
             confirmButtonText: "Yes!",
         }).then((result) => {
             if (result.isConfirmed) {
-                const id = $(e.target).data("id");
-                callback(id);
+                callback();
             }
         });
 

@@ -138,7 +138,7 @@ class ProductController extends Controller
 
         $product->restore();
 
-        return response(null, 200, ['message' => 'Product restored successfully!']);
+        return response([], 200, ['message' => 'Product restored successfully!']);
     }
 
     public function thrashed()
