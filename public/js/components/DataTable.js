@@ -64,24 +64,22 @@ export default class DataTable {
         this.element.printThis({ pageTitle: `${this.tableTitle}` });
     }
 
-    // bindImport() {
-    //     const form = $('#import-form');
-    //     form.submit((e) => {
-    //         e.preventDefault();
-    //         const formData = new FormData(form[0]);
-    //         ajaxRequest.post({
-    //             url: '/api/imports/' + this.tableName,
-    //             token: document.querySelector('meta[name="api-token"]').getAttribute('content'),
-    //             data: formData,
-    //             onSuccess: (response) => {
-    //                 console.log(response);
-    //             },
-    //             onError: (error) => console.log(error)
-    //         });
-    //     });
-    // }
+    importExcel() {
+        const formData = new FormData($("#import-form")[0]);
+        ajaxRequest.post({
+            url: `/admin/${this.tableName}`,
+            data: formData,
+            onSuccess: (response) => {
+                Swal.fire("Success!", "File Imported successfully", "success");
+                this.updateTable();
+            },
+            onError: (response) => {
+                Swal.fire("Oops!", "Something went wrong...", "error");
+            },
+        });
+    }
 
-    makeExport(type = "xlsx") {
+    exportTo(type = "xlsx") {
         let fileType = "xlsx";
         let mimeType =
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
@@ -112,14 +110,17 @@ export default class DataTable {
                 a.click();
             });
     }
+
     makePdf() {
         window.location.href = "/admin/pdf/" + this.tableName;
     }
+
     makeExcel() {
-        this.makeExport("xlsx");
+        this.exportTo("xlsx");
     }
+
     makeCsv() {
-        this.makeExport("csv");
+        this.exportTo("csv");
     }
 
     makeFileButtons() {
@@ -230,40 +231,37 @@ export default class DataTable {
         });
     }
 
-    importExcel() {
-        const formData = new FormData($("#import-form")[0]);
-        ajaxRequest.post({
-            url: `/admin/${this.tableName}`,
-            data: formData,
-            onSuccess: (response) => {
-                Swal.fire("Success!", "File Imported successfully", "success");
-                this.updateTable();
-            },
-            onError: (response) => {
-                Swal.fire("Oops!", "Something went wrong...", "error");
-            },
-        });
-    }
     bindActions() {
         $(document).on("click", ".row-delete", (e) => {
-            Swal.fire({
-                title: "Are you sure?",
-                text: "You won't be able to revert this!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, delete it!",
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    const id = $(e.target).data("id");
-                    this.onDelete(id);
-                }
-            });
+            const id = $(e.target).data("id");
+            console.log(id);
+            this.confirmAction(() => this.onDelete(id));
+        });
+        $(document).on("click", ".row-restore", (e) => {
+            const id = $(e.target).data("id");
+            this.confirmAction(() => this.onRestore(id));
         });
 
-        $("#btn-restore-" + this.tableName).one("click", () => {
-            window.location.href = "/admin/" + this.tableName + "/restore";
+
+
+        $('#alt-action').hide();
+
+        $("#btn-trash-" + this.tableName).on("click", () => {
+            this.showThrashed();
+            $("#btn-trash-" + this.tableName).hide();
+            $("#btn-table-" + this.tableName).show();
+            $('.actions').hide();
+            $('.alt-action').show();
+        });
+
+        $("#btn-table-" + this.tableName).on("click", () => {
+            this.showNotThrashed();
+            $("#btn-table-" + this.tableName).hide();
+            $("#btn-trash-" + this.tableName).show();
+            $('.actions').show();
+            $('.alt-action').hide();
+
+
         });
 
         $("#btn-add-" + this.tableName).one("click", () => {
@@ -273,6 +271,36 @@ export default class DataTable {
         $("#import-form").on("submit", (e) => {
             e.preventDefault();
             this.importExcel();
+        });
+    }
+
+    confirmAction(callback = () => {}){
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes!",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                callback();
+            }
+        });
+
+    }
+
+    onRestore(id) {
+        ajaxRequest.put({
+            url: `/api/${this.tableName}/${id}/restore`,
+            onSuccess: (response) => {
+            Swal.fire("Restored!", "Row has been restored.", "success");
+            this.updateTable();
+            },
+            onError: (response) => {
+            Swal.fire("Oops!", "Something went wrong...", "error");
+            },
         });
     }
 
@@ -288,6 +316,44 @@ export default class DataTable {
             },
         });
     }
+
+    actions() {
+        return `
+        <div class="py-4 w-full overflow-auto flex flex-col-reverse gap-2 lg:flex-row justify-between items-center">
+            <form id='import-form' method='POST' enctype='multipart/form-data' action='/admin/${this.tableName}'
+                class="flex flex-col-reverse lg:flex-row gap-2 lg:items-center">
+                <!-- {{ csrf_field() }} -->
+                <input type="file" id="uploadName" name="item_upload" class="file-input file-input-sm  w-full max-w-xs" required>
+                <button id="import-form-submit" type="submit" class="btn btn-info btn-sm btn-primary ">Import Excel File</button>
+            </form>
+            <div class="flex space-x-2 justify-end align-items-center">
+                <button id="btn-add-${this.tableName}" class="btn btn-sm text-white btn-success inline-block self-end">
+                    <i class="fas fa-plus"></i>
+                    <span>Add</span>
+                </button>
+                <button id="btn-trash-${this.tableName}" class="btn btn-sm text-white bg-primary inline-block self-end">
+                    <span>Trash</span>
+                </button>
+                <button style="display: none;" id="btn-table-${this.tableName}" class="btn btn-sm text-white bg-primary inline-block self-end">
+                    <span>View Table</span>
+                </button>
+            </div>
+        </div>
+        `;
+    }
+
+    showThrashed(){
+        this.baseApi = "/api/thrashed/";
+        this.updateTable();
+    }
+
+    showNotThrashed(){
+        this.baseApi = "/api/tables/";
+        this.updateTable();
+    }
+
+
+
     createTable() {
         if (this.table.length === 0) {
             return `<div id="datatable" class="w-full overflow-auto text-center">No data found</div>`;
@@ -318,28 +384,6 @@ export default class DataTable {
         </div>
 
 
-        `;
-    }
-
-    actions() {
-        return `
-        <div class="py-4 w-full overflow-auto flex flex-col-reverse gap-2 lg:flex-row justify-between items-center">
-            <form id='import-form' method='POST' enctype='multipart/form-data' action='/admin/${this.tableName}'
-                class="flex flex-col-reverse lg:flex-row gap-2 lg:items-center">
-                <!-- {{ csrf_field() }} -->
-                <input type="file" id="uploadName" name="item_upload" class="file-input file-input-sm  w-full max-w-xs" required>
-                <button id="import-form-submit" type="submit" class="btn btn-info btn-sm btn-primary ">Import Excel File</button>
-            </form>
-            <div class="flex space-x-2 justify-end align-items-center">
-                <button id="btn-add-${this.tableName}" class="btn btn-sm text-white btn-success inline-block self-end">
-                    <i class="fas fa-plus"></i>
-                    <span>Add</span>
-                </button>
-                <button id="btn-restore-${this.tableName}" class="btn btn-sm text-white bg-primary inline-block self-end">
-                    <span>Restore</span>
-                </button>
-            </div>
-        </div>
         `;
     }
 

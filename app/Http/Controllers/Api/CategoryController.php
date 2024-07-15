@@ -94,6 +94,8 @@ class CategoryController extends Controller
         return response(null, 200, ['message' => 'category restored successfully!']);
     }
 
+    public function thrashed() {}
+
     public function status(Request $request, string $id)
     {
         $this->handleStatus($request, Category::class, $id);

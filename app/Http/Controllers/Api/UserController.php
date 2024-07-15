@@ -155,6 +155,8 @@ class UserController extends Controller
         return response(new UserResource($user));
     }
 
+    public function thrashed() {}
+
     public function status(Request $request, string $id)
     {
         if (! $this->handleStatus($request, User::class, $id)) {
