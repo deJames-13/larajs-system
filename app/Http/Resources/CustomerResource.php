@@ -14,6 +14,12 @@ class CustomerResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            ...parent::toArray($request),
+
+            'created_at' => str_replace('T', ' ', explode('.', $this->created_at)[0]),
+            'updated_at' => str_replace('T', ' ', explode('.', $this->updated_at)[0]),
+
+        ];
     }
 }

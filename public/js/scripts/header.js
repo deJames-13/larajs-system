@@ -1,21 +1,12 @@
-import ajaxRequest from '../assets/ajaxRequest.js';
+import ajaxRequest from "../assets/ajaxRequest.js";
+import User from "../Users/index.js";
 var user = null;
-const showLoader = () => { $('.search-loader').show(); }
-const hideLoader = () => { $('.search-loader').hide(); }
-
-
-const fetchProfile = () => {
-    ajaxRequest.get({
-        url: '/api/profile',
-        onSuccess: (response) => {
-            user = response;
-            $('#profile-image').attr('src', response.images && response.images.length > 0 && response.images[0].path);
-        },
-        onError: (error) => {
-            console.log(error);
-        }
-    });
-}
+const showLoader = () => {
+    $(".search-loader").show();
+};
+const hideLoader = () => {
+    $(".search-loader").hide();
+};
 
 const fetchAutoComplete = (term) => {
     showLoader();
@@ -34,7 +25,7 @@ const fetchAutoComplete = (term) => {
             showLoader: false,
         });
     });
-}
+};
 
 const searchSuggestion = async (term) => {
     // console.log(term);
@@ -46,30 +37,39 @@ const searchSuggestion = async (term) => {
         console.error("Failed to fetch autocomplete data:", error);
         return [];
     }
-}
+};
 
 const handleAutoComplete = () => {
-
-    if (!$('#search-input').length) return;
-    $('#search-input').autocomplete({
-        source: function (request, response) {
-            searchSuggestion(request.term).then(data => {
-                response(data);
-            }).catch(error => {
-                console.error("Error fetching autocomplete suggestions:", error);
-                response([]);
-            });
-        },
-        delay: 500,
-        minLength: 3,
-    }).data('ui-autocomplete')._renderItem = function (ul, item) {
-        item.label = item.label.length > 50 ? item.label.substring(0, 50) + '...' : item.label;
+    if (!$("#search-input").length) return;
+    $("#search-input")
+        .autocomplete({
+            source: function (request, response) {
+                searchSuggestion(request.term)
+                    .then((data) => {
+                        response(data);
+                    })
+                    .catch((error) => {
+                        console.error(
+                            "Error fetching autocomplete suggestions:",
+                            error,
+                        );
+                        response([]);
+                    });
+            },
+            delay: 500,
+            minLength: 3,
+        })
+        .data("ui-autocomplete")._renderItem = function (ul, item) {
+        item.label =
+            item.label.length > 50
+                ? item.label.substring(0, 50) + "..."
+                : item.label;
 
         switch (item.type) {
-            case 'category':
+            case "category":
                 item.url = `/categories/${item.id}`;
                 break;
-            case 'promos':
+            case "promos":
                 item.url = `/promos/${item.id}`;
                 break;
             default:
@@ -77,27 +77,35 @@ const handleAutoComplete = () => {
                 break;
         }
 
-        return $('<li>')
-            .addClass('cursor-pointer hover:bg-primary hover:bg-opacity-10 hover:scale-105 transition-all ease-in')
-            .append(`
-                <a href="${item.url || '#'}" class="autocomplete-item">
+        return $("<li>")
+            .addClass(
+                "cursor-pointer hover:bg-primary hover:bg-opacity-10 hover:scale-105 transition-all ease-in",
+            )
+            .append(
+                `
+                <a href="${item.url || "#"}" class="autocomplete-item">
                     <div class="autocomplete-label font-bold">${item.label}</div>
                     <div class="type text-xs font-light text-ellipsis uppercase">From: ${item.type}</div>
                 </a>
-                `)
+                `,
+            )
             .appendTo(ul);
-    }
-
-}
+    };
+};
 
 $(document).ready(function () {
-    if (window.location.pathname === '/login' || window.location.pathname === '/register') $('.auth-dropdown').hide();
+    if (
+        window.location.pathname === "/login" ||
+        window.location.pathname === "/register"
+    )
+        $(".auth-dropdown").hide();
 
-    $("#search-button").on('click', () => {
+    $("#search-button").on("click", () => {
         const search = $("#search-input").val();
         if (search) window.location.href = `/search?q=${search}`;
     });
 
     hideLoader();
     handleAutoComplete();
-})
+    user = new User().init();
+});

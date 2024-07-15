@@ -11,6 +11,7 @@ class AuthController extends Controller
     {
         return view('auth.register');
     }
+
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -26,9 +27,7 @@ class AuthController extends Controller
         $request->session()->put('api-token', $token);
         auth()->login($user);
 
-
         // EMAIL CODE HERE
-
 
         if (request()->ajax()) {
             return response()->json([
@@ -36,12 +35,15 @@ class AuthController extends Controller
                 'user' => $user,
             ], 200);
         }
+
         return redirect('/');
     }
+
     public function login()
     {
         return view('auth.login');
     }
+
     public function authenticate(Request $request)
     {
 
@@ -49,7 +51,6 @@ class AuthController extends Controller
             'email' => 'required|email',
             'password' => 'required',
         ]);
-
 
         if (auth()->attempt($data)) {
             $user = \App\Models\User::where('email', $data['email'])->first();
@@ -65,6 +66,7 @@ class AuthController extends Controller
                 return response()->json([
                     'message' => 'success',
                     'user' => $user,
+                    'token' => $token,
                 ], 200);
             }
 
@@ -77,17 +79,24 @@ class AuthController extends Controller
             ], 422);
         }
 
-
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ]);
     }
+
     public function logout(Request $request)
     {
+        // dd($request);
         auth()->logout();
         $request->session()->forget('api-token');
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
+        if (request()->ajax()) {
+            return response()->json([
+                'message' => 'success',
+            ], 200);
+        }
 
         return redirect('/');
     }

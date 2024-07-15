@@ -19,8 +19,20 @@
 
 ## [!IMPORTANT]
 
-- [ ] MP7 User Management, admin user deactivation/deletion and user profile management
+- [x] MP7 User Management, admin user deactivation/deletion and user profile management
 - [ ] Product - Brand relationship, brand quick add/modal ui
 - [ ] Product - Category relationship, category quick add/modal ui
 - [ ] Product - Promo relationship, promo quick add/modal ui
+- [ ] FINALIZE - Product CRUD
+- [ ] FINALIZE DASHBOARD ADMIN
+- [ ] START Shop UI - 
+    - [ ] Filtering, 
+    - [ ] Sorting, 
+    - [ ] Searching, 
+    - [ ] Pagination - 
+        - [ ]     Product, 
+        - [ ]     Brand, 
+        - [ ]     Category, 
+        - [ ]     Promo
+
 

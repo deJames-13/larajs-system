@@ -83,13 +83,21 @@ background-color: rgba(0, 0, 0, 0.3);
 
 
 .sidebar-link {
-  @apply btn btn-outline border-none justify-start btn-primary text-primary  w-full transition-all ease-in  hover:font-extrabold hover:scale-105 hover:text-lg ;
+  @apply btn btn-outline
+    border-none btn-primary
+    text-primary w-full transition-all ease-in
+    hover:font-extrabold hover:scale-105 hover:text-lg
+    lg:justify-start sm:justify-center
+    ;
 }
 
 
 
 .active-sidebar-link {
-  @apply btn justify-start btn-primary text-white text-lg font-semibold ;
+  @apply btn btn-primary
+  text-white text-lg font-semibold
+  lg:justify-start sm:justify-center
+  ;
 }
 
 
@@ -204,3 +212,4 @@ background-color: rgba(0, 0, 0, 0.3);
       background-position: -200% 0;
     }
   }
+
