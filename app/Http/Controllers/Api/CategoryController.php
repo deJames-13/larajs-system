@@ -86,18 +86,27 @@ class CategoryController extends Controller
     {
         $category = Category::withTrashed()->where('id', $id)->first();
         if (! $category) {
-            return response(null, 404, ['message' => 'category not found!']);
+            return response(null, 404, ['message' => 'Category not found!']);
         }
 
         $category->restore();
 
-        return response(null, 200, ['message' => 'category restored successfully!']);
+        return response([], 200, ['message' => 'Category restored successfully!']);
     }
 
-    public function thrashed() {}
-
-    public function status(Request $request, string $id)
+    public function thrashed()
     {
-        $this->handleStatus($request, Category::class, $id);
+        $page = request('page') ?? 1;
+        $limit = request('limit') ?? 20;
+        $order = request('order') ?? 'desc';
+        $search = request(['search']) ?? null;
+
+        $categories = Category::onlyTrashed()
+            ->filter($search)
+            ->orderBy('updated_at', $order)
+            ->paginate($limit, ['*'], 'page', $page);
+
+        return CategoryResource::collection($categories);
     }
+
 }

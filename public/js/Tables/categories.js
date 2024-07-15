@@ -7,31 +7,35 @@ export default class CategoriesPage extends TablePage {
             table: 'categories',
         });
     }
+
     static init({ target }) {
         const instance = new CategoriesPage({ target });
         return instance;
     }
 
     makeTable(data) {
-        console.log(data);
         return data.map(category => {
-            return {
+            const isThrashed = category.deleted_at !== null;
+            return ({
                 "ID": `${category.id}`,
                 "Name": `${category.name}`,
                 "Slug": `${category.slug}`,
                 "Description": `${category.description}`,
                 "Status": `
-                <div class="badge ${this.statusColors[category.status]} gap-2">
-                    ${category.status}
-                </div>`,
+                    <div class="badge ${this.statusColors[category.status]} gap-2">
+                        ${category.status}
+                    </div>`,
                 "": `
-                <div class="print:hidden flex items-center justify-end w-full gap-3">
+                <div name="actions" class=" ${isThrashed ? "hidden" : "flex"} actions print:hidden w-full items-center justify-end gap-3">
                     <a href="/categories/${category.id}" class="btn btn-xs btn-primary">View</a>
                     <a href="/admin/categories/edit/${category.id}/" class="btn btn-xs btn-secondary">Edit</a>
                     <button id="row-delete__${category.id}" data-id="${category.id}" class="row-delete btn btn-xs bg-red-400">Delete</button>
                 </div>
-            `,
-            };
+                <div name="alt-action" class=" ${!isThrashed ? "hidden" : "flex"} alt-action print:hidden w-full items-center justify-end gap-3">
+                    <button id="row-restore__${category.id}" data-id="${category.id}" class="row-restore btn btn-xs text-white bg-green-400">Restore</button>
+                </div>
+                `,
+            });
         });
     }
 }
