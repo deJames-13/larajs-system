@@ -79,7 +79,7 @@ foreach ($crud as $prefix => $config) {
         ->middleware($middleware);
 
     // RESTORE
-    Route::post("/$prefix/restore/{id}", [$controller, 'restore'])
+    Route::post("/$prefix/{id}/restore", [$controller, 'restore'])
         ->name($prefix.'.restore')
         ->middleware($middleware);
 

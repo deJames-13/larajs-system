@@ -233,21 +233,12 @@ export default class DataTable {
 
     bindActions() {
         $(document).on("click", ".row-delete", (e) => {
-            Swal.fire({
-                title: "Are you sure?",
-                text: "You won't be able to revert this!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, delete it!",
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    const id = $(e.target).data("id");
-                    this.onDelete(id);
-                }
-            });
+            this.confirmAction(() => this.onDelete($(e.target).data("id")));
         });
+        $(document).on("click", ".row-restore", (e) => {
+            this.confirmAction(() => this.onRestore($(e.target).data("id")));
+        });
+
 
 
         $('#alt-action').hide();
@@ -256,16 +247,16 @@ export default class DataTable {
             this.showThrashed();
             $("#btn-trash-" + this.tableName).hide();
             $("#btn-table-" + this.tableName).show();
-            $('#actions').hide();
-            $('#alt-action').show();
+            $('.actions').hide();
+            $('.alt-action').show();
         });
 
         $("#btn-table-" + this.tableName).on("click", () => {
             this.showNotThrashed();
             $("#btn-table-" + this.tableName).hide();
             $("#btn-trash-" + this.tableName).show();
-            $('#actions').show();
-            $('#alt-action').hide();
+            $('.actions').show();
+            $('.alt-action').hide();
 
 
         });
@@ -277,6 +268,37 @@ export default class DataTable {
         $("#import-form").on("submit", (e) => {
             e.preventDefault();
             this.importExcel();
+        });
+    }
+
+    confirmAction(callback = () => {}){
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes!",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const id = $(e.target).data("id");
+                callback(id);
+            }
+        });
+
+    }
+
+    onRestore(id) {
+        ajaxRequest.put({
+            url: `/api/${this.tableName}/${id}/restore`,
+            onSuccess: (response) => {
+            Swal.fire("Restored!", "Row has been restored.", "success");
+            this.updateTable();
+            },
+            onError: (response) => {
+            Swal.fire("Oops!", "Something went wrong...", "error");
+            },
         });
     }
 
