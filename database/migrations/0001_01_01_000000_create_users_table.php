@@ -25,7 +25,6 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-
         Schema::create('customers', function (Blueprint $table) {
             $table->foreignId('user_id')->primary()->constrained()->onDelete('cascade');
             $table->string('first_name');
@@ -34,10 +33,10 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->string('zip_code')->nullable();
             $table->string('profile_image')->nullable();
+            $table->date('birthdate')->nullable();
+
             $table->timestamps();
         });
-
-
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();

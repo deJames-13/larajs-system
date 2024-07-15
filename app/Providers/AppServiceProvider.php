@@ -16,6 +16,9 @@ class AppServiceProvider extends ServiceProvider
         $loader->alias('Debugbar', \Barryvdh\Debugbar\Facades\Debugbar::class);
         $loader->alias('Excel', \Maatwebsite\Excel\Facades\Excel::class);
         $loader->alias('Pdf', \Barryvdh\DomPDF\Facade\Pdf::class);
+        if ($this->app->isLocal()) {
+            $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
+        }
     }
 
     /**

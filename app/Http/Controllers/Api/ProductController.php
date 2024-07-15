@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Product;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
+use App\Models\Product;
 use Barryvdh\Debugbar\Facades\Debugbar;
+use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
@@ -14,15 +14,16 @@ class ProductController extends Controller
     {
         // TODO: Implement sorting and other filters
         $product = Product::filter(request(['search']))->get();
+
         return ProductResource::collection($product);
     }
+
     public function index()
     {
         $page = request('page') ?? 1;
         $limit = request('limit') ?? 20;
-        $order =    request('order') ?? 'desc';
+        $order = request('order') ?? 'desc';
         $search = request(['search']) ?? null;
-
 
         $products = Product::filter($search)
             ->with([
@@ -33,12 +34,13 @@ class ProductController extends Controller
             ->orderBy('updated_at', $order)
             ->paginate($limit, ['*'], 'page', $page);
 
-
         return ProductResource::collection($products);
     }
+
     public function show(string $id)
     {
         $res = new ProductResource(Product::where('id', $id)->first());
+
         return $res;
     }
 
@@ -64,11 +66,13 @@ class ProductController extends Controller
         $image_id = $data['image_id'] ?? null;
         $product = Product::create($data);
 
-        if ($stock) $product->stock()->create(['quantity' => $stock]);
+        if ($stock) {
+            $product->stock()->create(['quantity' => $stock]);
+        }
         $this->handleImageUpload($request, $product, $image_id);
 
-
         $res = new ProductResource($product);
+
         return response($res, 201, ['message' => 'Product added successfully!']);
     }
 
@@ -76,13 +80,13 @@ class ProductController extends Controller
     {
         $data = $request->validate([
             'name' => 'sometimes|string',
-            'sku_code' => 'sometimes|string|unique:products,sku_code,' . $id . ',id',
+            'sku_code' => 'sometimes|string|unique:products,sku_code,'.$id.',id',
             'stock' => 'sometimes|numeric',
             'description' => 'sometimes|string',
             'specifications' => 'sometimes|string',
             'status' => 'required|string|in:active,inactive',
             'price' => 'sometimes|numeric',
-            'image_id' => 'sometimes|numeric'
+            'image_id' => 'sometimes|numeric',
         ]);
         // Debugbar::info($request);
 
@@ -92,9 +96,12 @@ class ProductController extends Controller
         unset($data['image_id']);
 
         $product = Product::where('id', $id)->first();
-        if (!$product) return response(null, 404, ['message' => 'Product not found!']);
-        if ($stock) $product->stock()->update(['quantity' => $stock]);
-
+        if (! $product) {
+            return response(null, 404, ['message' => 'Product not found!']);
+        }
+        if ($stock) {
+            $product->stock()->update(['quantity' => $stock]);
+        }
 
         $product->update($data);
 
@@ -102,37 +109,65 @@ class ProductController extends Controller
 
         $res = new ProductResource($product);
 
-
         // Debugbar::info($res);
         return response($res, 200, ['message' => 'Product updated successfully!']);
     }
-    public function destroy(Request $request, string $id)
+
+    public function destroy(string $id)
     {
         $product = Product::where('id', $id)->first();
-        if (!$product) return response(null, 404, ['message' => 'Product not found!']);
+        if (! $product) {
+            return response(null, 404, ['message' => 'Product not found!']);
+        }
 
         // also delete the images
         $product->images()->delete();
 
         // softDeletes
         $product->delete();
+
         return response(null, 204, ['message' => 'Product deleted successfully!']);
     }
-    public function restore(Request $request, string $id)
+
+    public function restore(string $id)
     {
         $product = Product::withTrashed()->where('id', $id)->first();
-        if (!$product) return response(null, 404, ['message' => 'Product not found!']);
+        if (! $product) {
+            return response(null, 404, ['message' => 'Product not found!']);
+        }
 
         $product->restore();
-        return response(null, 200, ['message' => 'Product restored successfully!']);
+
+        return response([], 200, ['message' => 'Product restored successfully!']);
     }
 
-
-    public function attachBrand()
+    public function thrashed()
     {
+        $page = request('page') ?? 1;
+        $limit = request('limit') ?? 20;
+        $order = request('order') ?? 'desc';
+        $search = request(['search']) ?? null;
+
+        $products = Product::onlyTrashed()
+            ->filter($search)
+            ->with([
+                // 'images',
+                'brands',
+                // 'categories',
+            ])
+            ->orderBy('updated_at', $order)
+            ->paginate($limit, ['*'], 'page', $page);
+
+        return ProductResource::collection($products);
+
     }
 
-    public function attachCategory()
+    public function attachBrand() {}
+
+    public function attachCategory() {}
+
+    public function status(Request $request, string $id)
     {
+        $this->handleStatus($request, Product::class, $id);
     }
 }

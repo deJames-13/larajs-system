@@ -12,19 +12,15 @@ export default class MainPage {
 
     render() {
         const HTML = `
-        <div class="rounded-t-lg overflow-clip">
-            <div class="custom-circle-border bottom-pattern p-10">
-
-                <h1 class="text-5xl">HATDOG</h1>
-                <h1 class="text-5xl">HATDOG</h1>
-                <h1 class="text-5xl">HATDOG</h1>
-                <h1 class="text-5xl">HATDOG</h1>
-                <h1 class="text-5xl">HATDOG</h1>
-                <h1 class="text-5xl">HATDOG</h1>
-                <h1 class="text-5xl">HATDOG</h1>
-                
+            <div class="rounded-t-lg overflow-clip">
+            <div class="custom-circle-border bottom-pattern p-10 relative">
+                <div class="textcontainer relative z-10">
+                <h1>Welcome to</h1>
+                <h2>GlitzVogue!</h2>
+                <p>Where we cater to individuals regardless of gender to suffice your needs and wants in terms of cosmetic products</p>
+                </div>
             </div>
-        </div>
+            </div>
         `;
         $(this.target).html(HTML);
     }

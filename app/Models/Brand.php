@@ -9,7 +9,8 @@ use Laravel\Scout\Searchable;
 
 class Brand extends Model
 {
-    use HasFactory, SoftDeletes, Searchable;
+    use HasFactory, Searchable, SoftDeletes;
+
     protected $guarded = [];
 
     protected $fillable = [
@@ -24,11 +25,11 @@ class Brand extends Model
     public function scopeFilter($query, array $filters)
     {
         $query->when($filters['search'] ?? null, function ($query, $search) {
-            $query->where('name', 'like', '%' . $search . '%')
-                ->orWhere('company', 'like', '%' . $search . '%')
-                ->orWhere('website', 'like', '%' . $search . '%')
-                ->orWhere('description', 'like', '%' . $search . '%')
-                ->orWhere('status', 'like', '%' . $search . '%');
+            $query->where('name', 'like', '%'.$search.'%')
+                ->orWhere('company', 'like', '%'.$search.'%')
+                ->orWhere('website', 'like', '%'.$search.'%')
+                ->orWhere('description', 'like', '%'.$search.'%')
+                ->orWhere('status', 'like', '%'.$search.'%');
         });
     }
 
@@ -36,6 +37,7 @@ class Brand extends Model
     {
         return $this->belongsToMany(Product::class, 'product_brands', 'brand_id', 'product_id');
     }
+
     public function images()
     {
         return $this->belongsToMany(Image::class, 'brand_images', 'brand_id', 'image_id');

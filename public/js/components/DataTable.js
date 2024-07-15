@@ -1,22 +1,22 @@
-import ajaxRequest from '/js/assets/ajaxRequest.js';
+import ajaxRequest from "/js/assets/ajaxRequest.js";
 import Pagination from "/js/components/Paginate.js";
 
 const defaultProps = {
-    baseApi: '/api/tables/',
+    baseApi: "/api/tables/",
     data: [],
     fileButtons: [],
     limit: 10,
-    makeTable: () => { },
+    makeTable: () => {},
     maxLimit: 50,
     minLimit: 10,
-    parent: '',
+    parent: "",
     table: [],
-    tableId: '',
-    tableName: '',
-    tableTitle: '',
+    tableId: "",
+    tableName: "",
+    tableTitle: "",
     withImport: true,
     withActions: true,
-}
+};
 
 // DOCS HERE
 /**
@@ -39,17 +39,17 @@ const defaultProps = {
 export default class DataTable {
     constructor(props = {}) {
         Object.assign(this, defaultProps, props);
-        this.tableId = this.tableId || this.tableName + 'Table';
+        this.tableId = this.tableId || this.tableName + "Table";
 
         // TODO: Other queries like sorting
         this.query = {
-            search: '',
+            search: "",
             limit: this.limit,
             minLimit: this.minLimit,
             maxLimit: this.maxLimit,
             page: 1,
-        }
-        this.html = '';
+        };
+        this.html = "";
         this.element = null;
         this.showPrint = this.showPrint.bind(this);
         this.makePdf = this.makePdf.bind(this);
@@ -64,80 +64,86 @@ export default class DataTable {
         this.element.printThis({ pageTitle: `${this.tableTitle}` });
     }
 
-    // bindImport() {
-    //     const form = $('#import-form');
-    //     form.submit((e) => {
-    //         e.preventDefault();
-    //         const formData = new FormData(form[0]);
-    //         ajaxRequest.post({
-    //             url: '/api/imports/' + this.tableName,
-    //             token: document.querySelector('meta[name="api-token"]').getAttribute('content'),
-    //             data: formData,
-    //             onSuccess: (response) => {
-    //                 console.log(response);
-    //             },
-    //             onError: (error) => console.log(error)
-    //         });
-    //     });
-    // }
+    importExcel() {
+        const formData = new FormData($("#import-form")[0]);
+        ajaxRequest.post({
+            url: `/admin/${this.tableName}`,
+            data: formData,
+            onSuccess: (response) => {
+                Swal.fire("Success!", "File Imported successfully", "success");
+                this.updateTable();
+            },
+            onError: (response) => {
+                Swal.fire("Oops!", "Something went wrong...", "error");
+            },
+        });
+    }
 
-    makeExport(type = 'xlsx') {
-        let fileType = 'xlsx';
-        let mimeType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+    exportTo(type = "xlsx") {
+        let fileType = "xlsx";
+        let mimeType =
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
-        if (type === 'csv') {
-            fileType = 'csv';
-            mimeType = 'text/csv';
+        if (type === "csv") {
+            fileType = "csv";
+            mimeType = "text/csv";
         }
 
-        fetch('/api/exports/' + this.tableName + '/' + fileType, {
-            method: 'GET',
+        fetch("/api/exports/" + this.tableName + "/" + fileType, {
+            method: "GET",
             headers: {
-                'Accept': mimeType,
-                'Authorization': 'Bearer ' + document.querySelector('meta[name="api-token"]').getAttribute('content')
-            }
+                Accept: mimeType,
+                Authorization:
+                    "Bearer " +
+                    document
+                        .querySelector('meta[name="api-token"]')
+                        .getAttribute("content"),
+            },
         })
-            .then(response => response.blob())
-            .then(blob => {
+            .then((response) => response.blob())
+            .then((blob) => {
                 const fileUrl = URL.createObjectURL(blob);
-                const a = document.createElement('a');
+                const a = document.createElement("a");
                 a.href = fileUrl;
-                const fileName = `${this.tableName}-${new Date().toISOString().replace('.', '-')}`;
+                const fileName = `${this.tableName}-${new Date().toISOString().replace(".", "-")}`;
                 a.download = `${fileName}.${fileType}`;
                 a.click();
             });
     }
+
     makePdf() {
-        window.location.href = '/admin/pdf/' + this.tableName;
+        window.location.href = "/admin/pdf/" + this.tableName;
     }
+
     makeExcel() {
-        this.makeExport('xlsx');
+        this.exportTo("xlsx");
     }
+
     makeCsv() {
-        this.makeExport('csv');
+        this.exportTo("csv");
     }
 
     makeFileButtons() {
         const buttons = {
             pdf: {
                 label: "PDF",
-                callback: this.makePdf
+                callback: this.makePdf,
             },
             csv: {
                 label: "CSV",
-                callback: this.makeCsv
+                callback: this.makeCsv,
             },
             excel: {
                 label: "Excel",
-                callback: this.makeExcel
+                callback: this.makeExcel,
             },
             print: {
                 label: "Print",
-                callback: this.showPrint
+                callback: this.showPrint,
             },
-        }
-        const html = this.fileButtons.map(btn => {
-            if (!buttons[btn]) return '';
+        };
+        const html = this.fileButtons.map((btn) => {
+            if (!buttons[btn]) return "";
 
             const b = $(`<button>`, {
                 id: `btn-${btn}`,
@@ -145,62 +151,76 @@ export default class DataTable {
                 text: buttons[btn].label,
             });
             b.click(buttons[btn].callback);
-            const parent = $('#file-buttons');
+            const parent = $("#file-buttons");
             parent.append(b);
-
         });
     }
 
     paginate(response) {
-        $('#paginations').empty();
+        $("#paginations").empty();
         const { links, meta } = response;
         if (links && (links.next || links.prev || meta.current_page > 1)) {
-            const pagination = new Pagination(links, meta.current_page).render('#paginations');
-            pagination.onClick((page) => this.handleQuery({ ...this.query, page: page }, this.queryCallback));
+            const pagination = new Pagination(links, meta.current_page).render(
+                "#paginations",
+            );
+            pagination.onClick((page) =>
+                this.handleQuery(
+                    { ...this.query, page: page },
+                    this.queryCallback,
+                ),
+            );
         }
     }
 
-    fetchData({ onFetch = () => { }, baseApi = null, query = {} }) {
+    fetchData({ onFetch = () => {}, baseApi = null, query = {} }) {
         query = { ...this.query, ...query };
-        const qstr = Object.keys(query).reduce((result, key) => `${result}${key}=${query[key]}&`, '');
+        const qstr = Object.keys(query).reduce(
+            (result, key) => `${result}${key}=${query[key]}&`,
+            "",
+        );
         const url = baseApi ?? this.baseApi + this.tableName + "?" + qstr; //console.log(url);
-        const token = document.querySelector('meta[name="api-token"]').getAttribute('content');
-        this.tableName && ajaxRequest.get({
-            url: url,
-            token: token,
-            onSuccess: (response) => {
-                // console.log(response);
-                onFetch(response); // maketable
+        const token = document
+            .querySelector('meta[name="api-token"]')
+            .getAttribute("content");
+        this.tableName &&
+            ajaxRequest.get({
+                url: url,
+                token: token,
+                onSuccess: (response) => {
+                    // console.log(response);
+                    onFetch(response); // maketable
 
-
-                this.data = response.data;
-                this.paginate(response);
-                return response;
-            },
-            onError: (error) => console.log(error)
-        });
+                    this.data = response.data;
+                    this.paginate(response);
+                    return response;
+                },
+                onError: (error) => console.log(error),
+            });
     }
 
-    handleQuery(query, callback = () => { }) {
-        this.searchTerm = query.search || '';
+    handleQuery(query, callback = () => {}) {
+        this.searchTerm = query.search || "";
         this.fetchData({
             table: this.tableName,
             query: query,
-            onFetch: (response) => callback(response)
+            onFetch: (response) => callback(response),
         });
     }
 
     getInput(id, value) {
-        if (id == 'limit') {
-            value = Math.max(this.query.minLimit, Math.min(this.query.maxLimit, value));
+        if (id == "limit") {
+            value = Math.max(
+                this.query.minLimit,
+                Math.min(this.query.maxLimit, value),
+            );
         }
-        this.query[id] = value
+        this.query[id] = value;
         return this.query;
     }
 
-    onQuery(callback = () => { }, delay = 500) {
+    onQuery(callback = () => {}, delay = 500) {
         let timeoutId = null;
-        $(`#search, #limit`).on('input', (e) => {
+        $(`#search, #limit`).on("input", (e) => {
             const query = this.getInput(e.target.id, e.target.value);
             if (timeoutId) {
                 clearTimeout(timeoutId);
@@ -211,58 +231,76 @@ export default class DataTable {
         });
     }
 
-    importExcel() {
-        const formData = new FormData($('#import-form')[0]);
-        ajaxRequest.post({
-            url: `/admin/${this.tableName}`,
-            data: formData,
-            onSuccess: (response) => {
-                Swal.fire(
-                    'Success!',
-                    'File Imported successfully',
-                    'success'
-                )
-                this.updateTable();
-            },
-            onError: (response) => {
-                Swal.fire(
-                    'Oops!',
-                    'Something went wrong...',
-                    'error'
-                )
-            },
+    bindActions() {
+        $(document).on("click", ".row-delete", (e) => {
+            const id = $(e.target).data("id");
+            console.log(id);
+            this.confirmAction(() => this.onDelete(id));
+        });
+        $(document).on("click", ".row-restore", (e) => {
+            const id = $(e.target).data("id");
+            this.confirmAction(() => this.onRestore(id));
+        });
+
+
+
+        $('#alt-action').hide();
+
+        $("#btn-trash-" + this.tableName).on("click", () => {
+            this.showThrashed();
+            $("#btn-trash-" + this.tableName).hide();
+            $("#btn-table-" + this.tableName).show();
+            $('.actions').hide();
+            $('.alt-action').show();
+        });
+
+        $("#btn-table-" + this.tableName).on("click", () => {
+            this.showNotThrashed();
+            $("#btn-table-" + this.tableName).hide();
+            $("#btn-trash-" + this.tableName).show();
+            $('.actions').show();
+            $('.alt-action').hide();
+
+
+        });
+
+        $("#btn-add-" + this.tableName).one("click", () => {
+            window.location.href = "/admin/" + this.tableName + "/create";
+        });
+
+        $("#import-form").on("submit", (e) => {
+            e.preventDefault();
+            this.importExcel();
+        });
+    }
+
+    confirmAction(callback = () => {}){
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes!",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                callback();
+            }
         });
 
     }
-    bindActions() {
-        $(document).on('click', '.row-delete', (e) => {
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    const id = $(e.target).data('id');
-                    this.onDelete(id);
-                }
-            });
-        });
 
-        $('#btn-restore-' + this.tableName).one('click', () => {
-            window.location.href = '/admin/' + this.tableName + '/restore';
-        });
-
-        $('#btn-add-' + this.tableName).one('click', () => {
-            window.location.href = '/admin/' + this.tableName + '/create';
-        });
-
-        $('#import-form').on('submit', (e) => {
-            e.preventDefault();
-            this.importExcel();
+    onRestore(id) {
+        ajaxRequest.put({
+            url: `/api/${this.tableName}/${id}/restore`,
+            onSuccess: (response) => {
+            Swal.fire("Restored!", "Row has been restored.", "success");
+            this.updateTable();
+            },
+            onError: (response) => {
+            Swal.fire("Oops!", "Something went wrong...", "error");
+            },
         });
     }
 
@@ -270,78 +308,90 @@ export default class DataTable {
         ajaxRequest.delete({
             url: `/api/${this.tableName}/${id}`,
             onSuccess: (response) => {
-                Swal.fire(
-                    'Deleted!',
-                    'Row has been deleted.',
-                    'success'
-                )
+                Swal.fire("Deleted!", "Row has been deleted.", "success");
                 this.updateTable();
             },
             onError: (response) => {
-                Swal.fire(
-                    'Oops!',
-                    'Something went wrong...',
-                    'error'
-                )
+                Swal.fire("Oops!", "Something went wrong...", "error");
             },
         });
-    }
-    createTable() {
-        if (this.table.length === 0) {
-            return `<div id="datatable" class="container overflow-x-auto text-center">No data found</div>`
-        }
-        const columns = Object.keys(this.table[0]).filter(col => typeof this.table[0][col] === 'string');
-        return `
-        <div id="datatable" class="py-8 print:my-4 w-full print:overflow-visible overflow-auto flex items-center justify-center">
-            <table id="${this.tableId}" class="table table-xs table-auto h-full w-full ">
-                <thead>
-                    <tr>
-                        ${columns.map(column => `<th>${column}</th>`).join('')}
-                    </tr>
-                </thead>
-                <tbody>
-                    ${this.table.map(row => `
-                    <tr class="hover:border-secondary hover:bg-secondary hover:bg-opacity-20 hover:border-y-2 hover:scale-95 transition-all ease-in">
-                        ${columns.map(column => `<td class="">${row[column]}</td>`).join('')}
-                    </tr>
-                `).join('')}
-                </tbody>
-            </table>
-        </div>
-
-
-        `
     }
 
     actions() {
         return `
-        <div class="py-4 container flex flex-col-reverse gap-2 lg:flex-row justify-between items-center">
+        <div class="py-4 w-full overflow-auto flex flex-col-reverse gap-2 lg:flex-row justify-between items-center">
             <form id='import-form' method='POST' enctype='multipart/form-data' action='/admin/${this.tableName}'
                 class="flex flex-col-reverse lg:flex-row gap-2 lg:items-center">
                 <!-- {{ csrf_field() }} -->
                 <input type="file" id="uploadName" name="item_upload" class="file-input file-input-sm  w-full max-w-xs" required>
                 <button id="import-form-submit" type="submit" class="btn btn-info btn-sm btn-primary ">Import Excel File</button>
             </form>
-            <div class="container flex space-x-2 justify-end align-items-center">
+            <div class="flex space-x-2 justify-end align-items-center">
                 <button id="btn-add-${this.tableName}" class="btn btn-sm text-white btn-success inline-block self-end">
                     <i class="fas fa-plus"></i>
                     <span>Add</span>
                 </button>
-                <button id="btn-restore-${this.tableName}" class="btn btn-sm text-white bg-primary inline-block self-end">
-                    <span>Restore</span>
+                <button id="btn-trash-${this.tableName}" class="btn btn-sm text-white bg-primary inline-block self-end">
+                    <span>Trash</span>
+                </button>
+                <button style="display: none;" id="btn-table-${this.tableName}" class="btn btn-sm text-white bg-primary inline-block self-end">
+                    <span>View Table</span>
                 </button>
             </div>
         </div>
-        `
+        `;
+    }
+
+    showThrashed(){
+        this.baseApi = "/api/thrashed/";
+        this.updateTable();
+    }
+
+    showNotThrashed(){
+        this.baseApi = "/api/tables/";
+        this.updateTable();
+    }
+
+
+
+    createTable() {
+        if (this.table.length === 0) {
+            return `<div id="datatable" class="w-full overflow-auto text-center">No data found</div>`;
+        }
+        const columns = Object.keys(this.table[0]).filter(
+            (col) => typeof this.table[0][col] === "string",
+        );
+        return `
+        <div id="datatable" class="py-8 w-full overflow-auto flex print:my-4 print:overflow-visible">
+            <table id="${this.tableId}" class="table table-xs table-auto h-full w-full">
+                <thead>
+                    <tr>
+                        ${columns.map((column) => `<th>${column}</th>`).join("")}
+                    </tr>
+                </thead>
+                <tbody>
+                    ${this.table
+                        .map(
+                            (row) => `
+                    <tr class="hover:border-secondary hover:bg-secondary hover:bg-opacity-20 hover:border-y-2 hover:scale-95 transition-all ease-in">
+                        ${columns.map((column) => `<td class="">${row[column]}</td>`).join("")}
+                    </tr>
+                `,
+                        )
+                        .join("")}
+                </tbody>
+            </table>
+        </div>
+
+
+        `;
     }
 
     updateTable(data = null, raw = false) {
         if (!data) return this.fetchData({ onFetch: this.queryCallback });
         this.table = raw ? data : this.makeTable(data);
-        this.element.find('#datatable').html(this.createTable());
+        this.element.find("#datatable").html(this.createTable());
     }
-
-
 
     render() {
         const topBar = `
@@ -372,20 +422,17 @@ export default class DataTable {
             `;
 
         this.html = topBar;
-        this.html += this.withActions ? this.actions() : '';
-        this.html += this.createTable();//+ importForm;
+        this.html += this.withActions ? this.actions() : "";
+        this.html += this.createTable(); //+ importForm;
         this.element = $(`${this.parent} `).html(this.html);
-
-
 
         this.makeFileButtons();
         this.bindActions();
         this.onQuery(this.queryCallback);
 
-        Object.keys(this.query).map(key => {
+        Object.keys(this.query).map((key) => {
             $(`#${key}`).val(this.query[key]);
-        })
-        return this
-
+        });
+        return this;
     }
 }
