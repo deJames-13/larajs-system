@@ -141,6 +141,27 @@ class ProductController extends Controller
         return response(null, 200, ['message' => 'Product restored successfully!']);
     }
 
+    public function restoreAll()
+    {
+        $page = request('page') ?? 1;
+        $limit = request('limit') ?? 20;
+        $order = request('order') ?? 'desc';
+        $search = request(['search']) ?? null;
+
+        $products = Product::onlyTrashed()
+            ->filter($search)
+            ->with([
+                // 'images',
+                'brands',
+                // 'categories',
+            ])
+            ->orderBy('updated_at', $order)
+            ->paginate($limit, ['*'], 'page', $page);
+
+        return ProductResource::collection($products);
+
+    }
+
     public function attachBrand() {}
 
     public function attachCategory() {}

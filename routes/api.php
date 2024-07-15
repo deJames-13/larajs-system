@@ -61,16 +61,25 @@ foreach ($crud as $prefix => $config) {
     array_unshift($middleware, 'auth:sanctum');
 
     // Crud Functions
+
+    // CREATE
     Route::post("/$prefix", [$controller, 'store'])
         ->name($prefix.'.store')
         ->middleware($middleware);
 
+    // DELETE
     Route::delete("/$prefix/{id}", [$controller, 'destroy'])
         ->name($prefix.'.destroy')
         ->middleware($middleware);
 
+    // UPDATE
     Route::match(['put', 'post'], "/$prefix/{id}", [$controller, 'update'])
         ->name($prefix.'.update')
+        ->middleware($middleware);
+
+    // RESTORE
+    Route::post("/$prefix/restore/{id}", [$controller, 'restore'])
+        ->name($prefix.'.restore')
         ->middleware($middleware);
 
     // TABLES

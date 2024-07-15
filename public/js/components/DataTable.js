@@ -64,24 +64,22 @@ export default class DataTable {
         this.element.printThis({ pageTitle: `${this.tableTitle}` });
     }
 
-    // bindImport() {
-    //     const form = $('#import-form');
-    //     form.submit((e) => {
-    //         e.preventDefault();
-    //         const formData = new FormData(form[0]);
-    //         ajaxRequest.post({
-    //             url: '/api/imports/' + this.tableName,
-    //             token: document.querySelector('meta[name="api-token"]').getAttribute('content'),
-    //             data: formData,
-    //             onSuccess: (response) => {
-    //                 console.log(response);
-    //             },
-    //             onError: (error) => console.log(error)
-    //         });
-    //     });
-    // }
+    importExcel() {
+        const formData = new FormData($("#import-form")[0]);
+        ajaxRequest.post({
+            url: `/admin/${this.tableName}`,
+            data: formData,
+            onSuccess: (response) => {
+                Swal.fire("Success!", "File Imported successfully", "success");
+                this.updateTable();
+            },
+            onError: (response) => {
+                Swal.fire("Oops!", "Something went wrong...", "error");
+            },
+        });
+    }
 
-    makeExport(type = "xlsx") {
+    exportTo(type = "xlsx") {
         let fileType = "xlsx";
         let mimeType =
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
@@ -112,14 +110,17 @@ export default class DataTable {
                 a.click();
             });
     }
+
     makePdf() {
         window.location.href = "/admin/pdf/" + this.tableName;
     }
+
     makeExcel() {
-        this.makeExport("xlsx");
+        this.exportTo("xlsx");
     }
+
     makeCsv() {
-        this.makeExport("csv");
+        this.exportTo("csv");
     }
 
     makeFileButtons() {
@@ -230,20 +231,6 @@ export default class DataTable {
         });
     }
 
-    importExcel() {
-        const formData = new FormData($("#import-form")[0]);
-        ajaxRequest.post({
-            url: `/admin/${this.tableName}`,
-            data: formData,
-            onSuccess: (response) => {
-                Swal.fire("Success!", "File Imported successfully", "success");
-                this.updateTable();
-            },
-            onError: (response) => {
-                Swal.fire("Oops!", "Something went wrong...", "error");
-            },
-        });
-    }
     bindActions() {
         $(document).on("click", ".row-delete", (e) => {
             Swal.fire({
@@ -263,7 +250,7 @@ export default class DataTable {
         });
 
         $("#btn-restore-" + this.tableName).one("click", () => {
-            window.location.href = "/admin/" + this.tableName + "/restore";
+            // window.location.href = "/admin/" + this.tableName + "/restore-all";
         });
 
         $("#btn-add-" + this.tableName).one("click", () => {
@@ -288,6 +275,31 @@ export default class DataTable {
             },
         });
     }
+
+    actions() {
+        return `
+        <div class="py-4 w-full overflow-auto flex flex-col-reverse gap-2 lg:flex-row justify-between items-center">
+            <form id='import-form' method='POST' enctype='multipart/form-data' action='/admin/${this.tableName}'
+                class="flex flex-col-reverse lg:flex-row gap-2 lg:items-center">
+                <!-- {{ csrf_field() }} -->
+                <input type="file" id="uploadName" name="item_upload" class="file-input file-input-sm  w-full max-w-xs" required>
+                <button id="import-form-submit" type="submit" class="btn btn-info btn-sm btn-primary ">Import Excel File</button>
+            </form>
+            <div class="flex space-x-2 justify-end align-items-center">
+                <button id="btn-add-${this.tableName}" class="btn btn-sm text-white btn-success inline-block self-end">
+                    <i class="fas fa-plus"></i>
+                    <span>Add</span>
+                </button>
+                <button id="btn-restore-${this.tableName}" class="btn btn-sm text-white bg-primary inline-block self-end">
+                    <span>Restore</span>
+                </button>
+            </div>
+        </div>
+        `;
+    }
+
+    showThrashed(){}
+
     createTable() {
         if (this.table.length === 0) {
             return `<div id="datatable" class="w-full overflow-auto text-center">No data found</div>`;
@@ -318,28 +330,6 @@ export default class DataTable {
         </div>
 
 
-        `;
-    }
-
-    actions() {
-        return `
-        <div class="py-4 w-full overflow-auto flex flex-col-reverse gap-2 lg:flex-row justify-between items-center">
-            <form id='import-form' method='POST' enctype='multipart/form-data' action='/admin/${this.tableName}'
-                class="flex flex-col-reverse lg:flex-row gap-2 lg:items-center">
-                <!-- {{ csrf_field() }} -->
-                <input type="file" id="uploadName" name="item_upload" class="file-input file-input-sm  w-full max-w-xs" required>
-                <button id="import-form-submit" type="submit" class="btn btn-info btn-sm btn-primary ">Import Excel File</button>
-            </form>
-            <div class="flex space-x-2 justify-end align-items-center">
-                <button id="btn-add-${this.tableName}" class="btn btn-sm text-white btn-success inline-block self-end">
-                    <i class="fas fa-plus"></i>
-                    <span>Add</span>
-                </button>
-                <button id="btn-restore-${this.tableName}" class="btn btn-sm text-white bg-primary inline-block self-end">
-                    <span>Restore</span>
-                </button>
-            </div>
-        </div>
         `;
     }
 
