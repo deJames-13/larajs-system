@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Order;
-use Illuminate\Http\Request;
-use App\Mail\OrderStatusNotifier;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Mail;
 use App\Http\Resources\OrderResource;
+use App\Mail\OrderStatusNotifier;
+use App\Models\Order;
 use Barryvdh\Debugbar\Facades\Debugbar;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
-    // INFO: For user api fetch 
+    // INFO: For user api fetch
     public function index(Request $request)
     {
         $status = $request->query('status') ?? 'all';
@@ -29,7 +29,7 @@ class OrderController extends Controller
             'products' => function ($query) {
                 $query->withPivot('quantity');
             },
-            'customer'
+            'customer',
         ]);
 
         if ($request->user()->role === 'admin') {
@@ -38,9 +38,9 @@ class OrderController extends Controller
         $orders->orderBy('updated_at', 'desc');
 
         $page = $orders->paginate($limit);
+
         return OrderResource::collection($page);
     }
-
 
     // INFO: For admin api fetch
     public function show(string $id)
@@ -49,21 +49,21 @@ class OrderController extends Controller
             'products' => function ($query) {
                 $query->withPivot('quantity');
             },
-            'customer', 'customer.info'
+            'customer', 'customer.info',
         ])->findOrFail($id);
-        if (!$order) {
+        if (! $order) {
             return response(
                 [],
                 404,
                 [
-                    'message' => 'Order not found'
+                    'message' => 'Order not found',
                 ]
             );
         }
+
         // Debugbar::info($order);
         return new OrderResource($order);
     }
-
 
     // INFO: Order Processing
     public function store(Request $request)
@@ -75,7 +75,7 @@ class OrderController extends Controller
                 'products' => 'required|array',
                 'products.*.id' => 'required|exists:products,id',
                 'products.*.quantity' => 'required|integer|min:1',
-                'customer_info' => 'sometimes'
+                'customer_info' => 'sometimes',
             ]
         );
 
@@ -100,18 +100,15 @@ class OrderController extends Controller
         $order->load(['products', 'customer']);
         $res = (new OrderResource($order));
 
-
         // remove cart base on user id
         $user->products()->detach();
-
-
 
         // Debugbar::info($res);
         return response(
             $res,
             201,
             [
-                'message' => 'Order has been placed successfully'
+                'message' => 'Order has been placed successfully',
             ]
         );
     }
@@ -119,7 +116,6 @@ class OrderController extends Controller
     // INFO: Order Update
     public function update(Request $request, string $id)
     {
-
 
         $data = $request->validate(
             [
@@ -133,20 +129,16 @@ class OrderController extends Controller
         );
 
         $isAdmin = $request->user()->role === 'admin';
-        $isRequestCancel =  $data['status'] === 'cancelled';
+        $isRequestCancel = $data['status'] === 'cancelled';
 
-        if (!$isAdmin && !$isRequestCancel) {
+        if (! $isAdmin && ! $isRequestCancel) {
             abort(403, 'You are not allowed to perform this action');
         }
-
 
         // Debugbar::info($data);
         $order = Order::findOrFail($id);
 
-        if ($data['status'] === 'cancelled') {
-            // $order->products()->detach();
-        }
-
+        // WARNING: ??
         if (isset($data['products'])) {
             $order->products()->sync(
                 collect($data['products'])->mapWithKeys(
@@ -156,13 +148,26 @@ class OrderController extends Controller
                 )
             );
         }
+        // if ($data['status'] === 'cancelled') {
+        //     // $order->products()->detach();
+        // }
+
+        if ($data['status'] === 'completed') {
+            // update stocks of each products in order
+            $order->products->each(
+                function ($product) {
+                    $product->stock->quantity -= $product->pivot->quantity;
+                    $product->stock->save();
+                }
+            );
+        }
 
         $order->update(
             [
                 'status' => $data['status'],
                 'shipping_address' => $data['shipping_address'] ?? $order->shipping_address,
                 'updated_at' => now(),
-                'paid_date' => $data['status'] === 'completed' ? now() : null
+                'paid_date' => $data['status'] === 'completed' ? now() : null,
 
             ]
         );
@@ -172,7 +177,7 @@ class OrderController extends Controller
         $order->load(['products', 'customer']);
         $res = new OrderResource($order);
 
-        Debugbar::info('Sending: ' . $order->customer->email);
+        Debugbar::info('Sending: '.$order->customer->email);
         Mail::to($order->customer->email)->send(new OrderStatusNotifier($order));
 
         return $res;
@@ -186,7 +191,6 @@ class OrderController extends Controller
         }
         $order->delete();
     }
-
 
     public function restore(Request $request, Order $order)
     {

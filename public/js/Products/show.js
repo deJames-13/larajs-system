@@ -2,24 +2,30 @@
 import ajaxRequest from '../assets/ajaxRequest.js';
 let item = {
     id: parseInt($('.info-container').data('id')),
+    itemQuantity: parseInt($('#item_quantity').data('item-quantity')),
+    itemPrice: parseFloat($('#price').data('price')),
     price: parseFloat($('#price').data('price')),
+    quantity: parseInt($('#quantity_count').text()),
 };
 
 const init = () => {
     // QUANTITY COUNTER
     $('#add_qty').click(function () {
-        var quantity = parseInt($('#quantity_count').text());
-        $('#quantity_count').text(quantity + 1);
-        var price = (quantity + 1) * item.price;
-        $('#price').text('PHP ' + price.toFixed(2));
+        item.quantity = parseInt($('#quantity_count').text());
+
+        if (item.quantity < item.itemQuantity) {
+            $('#quantity_count').text(item.quantity + 1);
+            item.itemPrice = (item.quantity + 1) * item.price;
+            $('#price').text('PHP ' + item.itemPrice.toFixed(2));
+        }
     });
 
     $('#sub_qty').click(function () {
-        var quantity = parseInt($('#quantity_count').text());
-        if (quantity > 1) {
-            $('#quantity_count').text(quantity - 1);
-            var price = (quantity - 1) * item.price;
-            $('#price').text('PHP ' + price.toFixed(2));
+        item.quantity = parseInt($('#quantity_count').text());
+        if (item.quantity > 1) {
+            $('#quantity_count').text(item.quantity - 1);
+            item.itemPrice = (item.quantity - 1) * item.price;
+            $('#price').text('PHP ' + item.itemPrice.toFixed(2));
         }
     });
 }
@@ -32,7 +38,7 @@ $(document).on('click', '#cart-add', function () {
     const token = document.querySelector('meta[name="api-token"]').getAttribute('content');
     var data = new FormData();
     data.append("product_id", item.id);
-    data.append("quantity", parseInt($('#quantity_count').text()));
+    data.append("quantity", item.quantity);
     console.log(data);
 
     ajaxRequest.post({
