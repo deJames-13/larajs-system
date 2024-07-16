@@ -18,24 +18,6 @@ const defaultProps = {
   withActions: true
 };
 
-// DOCS HERE
-/**
- * DataTable class
-    * @param {Object} props - The properties of the DataTable
-    * @param {string} props.parent - The parent element to render the DataTable
-    * @param {string} props.tableId - The id of the table element
-    * @param {string} props.tableName - The name of the table
-    * @param {string} props.tableTitle - The title of the table
-    * @param {number} props.limit - The limit of the table
-    * @param {number} props.minLimit - The minimum limit of the table
-    * @param {number} props.maxLimit - The maximum limit of the table
-    * @param {Array} props.data - The data of the table
-    * @param {Array} props.table - The table of the data
-    * @param {Array} props.fileButtons - The file buttons of the table
-    * @param {Function} props.makeTable - The function to make the table
-    * @returns {Object} - The DataTable object
-
- */
 export default class DataTable {
   constructor(props = {}) {
     Object.assign(this, defaultProps, props);
