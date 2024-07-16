@@ -90,6 +90,12 @@
 
 
 	@push('scripts')
-		<script type="module" src="{{ asset('js/Products/edit.js') }}"></script>
+		<script type="module">
+			import ProductsEdit from "{{ asset('js/Products/edit.js') }}"
+			// Initialize ProductsEdit class when document is ready
+			$(document).ready(() => {
+				new ProductsEdit();
+			});
+		</script>
 	@endpush
 </x-layouts.default>

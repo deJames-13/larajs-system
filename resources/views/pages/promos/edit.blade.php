@@ -82,6 +82,12 @@
 	</x-card.page>
 
 	@push('scripts')
-		<script type="module" src="{{ asset('js/Promos/edit.js') }}"></script>
+		<script type="module">
+			// Initialize PromosEdit class when document is ready
+			import PromosEdit from "{{ asset('js/Promos/edit.js') }}";
+			$(document).ready(() => {
+				new PromosEdit();
+			});
+		</script>
 	@endpush
 </x-layouts.default>

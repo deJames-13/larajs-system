@@ -73,6 +73,11 @@
 	</x-card.page>
 
 	@push('scripts')
-		<script type="module" src="{{ asset('js/Brands/create.js') }}"></script>
+		<script type="module">
+			import BrandsCreate from "{{ asset('js/Brands/create.js') }}";
+			$(document).ready(() => {
+				new BrandsCreate();
+			});
+		</script>
 	@endpush
 </x-layouts.default>

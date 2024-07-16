@@ -7,10 +7,7 @@ export default class OrdersPage extends TablePage {
       table: "orders",
       withActions: true
     });
-  }
-  static init({ target }) {
-    const instance = new OrdersPage({ target });
-    return instance;
+    $("#action-buttons").remove();
   }
   makeTable(data) {
     return data.map(order => {

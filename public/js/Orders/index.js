@@ -60,14 +60,6 @@ export default class OrderManager {
           $("#search-bar").hide();
         }
         return response;
-      },
-      onError: error => {
-        console.log(error);
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "Something went wrong!"
-        });
       }
     });
   }
@@ -91,14 +83,6 @@ export default class OrderManager {
       onSuccess: (response, status, error) => {
         this.setStatus(statusString);
         swalAlerts[statusString](id);
-      },
-      onError: error => {
-        console.log(error);
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "Something went wrong!"
-        });
       }
     });
   }

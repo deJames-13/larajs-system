@@ -240,8 +240,8 @@ export default class DataTable {
       $(".alt-action").hide();
     });
 
-    $("#btn-add-" + this.tableName).one("click", () => {
-      window.location.href = "/admin/" + this.tableName + "/create";
+    $("#btn-add-" + this.tableName).on("click", () => {
+      // window.location.href = "/admin/" + this.tableName + "/create";
     });
 
     $("#import-form").on("submit", e => {
@@ -294,13 +294,13 @@ export default class DataTable {
 
   actions() {
     return /* HTML */ `
-      <div class="print:hidden py-4 w-full overflow-auto flex flex-col-reverse gap-2 lg:flex-row justify-between items-center">
-        <form id="import-form" method="POST" enctype="multipart/form-data" action="/admin/${this.tableName}" class="flex flex-col-reverse lg:flex-row gap-2 lg:items-center">
+      <div class="print:hidden py-4 w-full overflow-auto flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
+        <form id="import-form" method="POST" enctype="multipart/form-data" action="/admin/${this.tableName}" class="flex flex-col lg:flex-row gap-2 lg:items-center">
           <!-- {{ csrf_field() }} -->
           <input type="file" id="uploadName" name="item_upload" class="file-input file-input-sm  w-full max-w-xs" required />
           <button id="import-form-submit" type="submit" class="btn btn-info btn-sm btn-primary ">Import Excel File</button>
         </form>
-        <div class="flex space-x-2 justify-end align-items-center">
+        <div id="action-buttons" class="flex space-x-2 justify-end align-items-center">
           <button id="btn-add-${this.tableName}" class="btn btn-sm text-white btn-success inline-block self-end">
             <i class="fas fa-plus"></i>
             <span>Add</span>
@@ -363,7 +363,7 @@ export default class DataTable {
 
   render() {
     const topBar = `
-			<h1 class="text-3xl font-extrabold">${this.tableTitle}</h1>
+			      <h1 class="text-3xl font-extrabold">${this.tableTitle}</h1>
             <div class="divider m-0"></div>
 
             <div id="search-bar" class="py-4 print:w-0 print:hidden" >

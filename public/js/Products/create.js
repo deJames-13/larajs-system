@@ -24,8 +24,10 @@ export default class ProductsCreate {
         if (this.carousel) this.carousel.next();
       });
 
-      // Initially show save and cancel buttons
-      $("#save-item, #cancel").removeClass("hidden");
+      $("#save-item, #cancel").hide();
+      $("#item-form").change(() => {
+        $("#save-item, #cancel").show();
+      });
     });
   }
 
@@ -42,7 +44,9 @@ export default class ProductsCreate {
       }).then(result => {
         if (result.isConfirmed) {
           $("#item-form").trigger("reset");
-          $("#save-item, #cancel").addClass("hidden");
+          $("#save-item, #cancel").hide();
+          $("input").removeClass("border-red-400");
+          $("#item-form").validate().resetForm();
         }
       });
     });
@@ -162,8 +166,3 @@ export default class ProductsCreate {
     });
   }
 }
-
-// Initialize ProductsCreate class when document is ready
-$(document).ready(() => {
-  new ProductsCreate();
-});

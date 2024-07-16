@@ -10,11 +10,6 @@ export default class UsersPage extends TablePage {
       table: "users"
     });
   }
-  static init({ target }) {
-    const instance = new UsersPage({ target });
-    return instance;
-  }
-
   makeTable(data) {
     return data.map(user => {
       const image = (user.images && user.images.length > 0 && user.images[0].path) || "https://placehold.it/100x100";

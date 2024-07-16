@@ -82,6 +82,11 @@
 
 
 	@push('scripts')
-		<script type="module" src="{{ asset('js/Products/create.js') }}"></script>
+		<script type="module">
+			import ProductsCreate from "{{ asset('js/Products/create.js') }}"
+			$(document).ready(() => {
+				new ProductsCreate();
+			});
+		</script>
 	@endpush
 </x-layouts.default>

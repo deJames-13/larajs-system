@@ -4,10 +4,18 @@ const showLoading = () => $("#loading").show();
 const hideLoading = () => $("#loading").hide();
 // ##########################################################################
 // HANDLERS
+const defaultError = (response, status, xhr) => {
+  Swal.fire({
+    icon: "error",
+    title: response.statusText ? response.statusText : "An error occurred!",
+    text: response.responseJSON.message ? `${response.responseJSON.message}.` : "Oops... Something went wrong!"
+  }).then(() => {
+    window.history.back();
+  });
+};
 const handleError = callback => (response, status, xhr) => {
   isShowLoading && hideLoading();
   callback(response, status, xhr);
-  // console.error('Error:', response);
 };
 
 const handleSuccess = callback => (response, status, xhr) => {
@@ -34,7 +42,7 @@ const getHeaders = (token = null, headers = {}) => {
 };
 // ##########################################################################
 // AJAX CALL
-const ajaxCall = ({ url, method, onSuccess = () => {}, onError = () => {}, data = {}, token = null, headers = {}, settings = {}, showLoader = true }) => {
+const ajaxCall = ({ url, method, onSuccess = () => {}, onError = defaultError, data = {}, token = null, headers = {}, settings = {}, showLoader = true }) => {
   const isFormData = data instanceof FormData;
   isShowLoading = showLoader;
   isShowLoading && showLoading();

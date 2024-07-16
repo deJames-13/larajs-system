@@ -92,7 +92,15 @@ $(document).ready(function () {
     const search = $("#search-input").val();
     if (search) window.location.href = `/search?q=${search}`;
   });
+  // $(window).scroll(function () {
+  //   var currentScroll = $(this).scrollTop();
 
+  //   if (currentScroll > 0) {
+  //     $("#search-bar").slideUp();
+  //   } else {
+  //     $("#search-bar").slideDown();
+  //   }
+  // });
   hideLoader();
   handleAutoComplete();
   user = new User().init();

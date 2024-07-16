@@ -106,14 +106,6 @@ export default class BrandsEdit {
           this.populateForm(this.brand);
         }
         return {};
-      },
-      onError: error => {
-        console.log(error);
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "Something went wrong!"
-        });
       }
     });
   }
@@ -141,8 +133,3 @@ export default class BrandsEdit {
     });
   }
 }
-
-// Initialize BrandsEdit class when document is ready
-$(document).ready(() => {
-  new BrandsEdit();
-});

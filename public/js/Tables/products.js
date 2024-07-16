@@ -7,11 +7,6 @@ export default class ProductsPage extends TablePage {
       table: "products"
     });
   }
-  static init({ target }) {
-    const instance = new ProductsPage({ target });
-    return instance;
-  }
-
   makeTable(data) {
     return data.map(product => {
       const isThrashed = product.deleted_at !== null;
@@ -28,7 +23,7 @@ export default class ProductsPage extends TablePage {
         "": `
             <div name="actions" class=" ${isThrashed ? "hidden" : "flex"} actions print:hidden w-full items-center justify-end gap-3">
                 <a href="/products/${product.id}" class="btn btn-xs btn-primary">View</a>
-                <a href="/admin/products/edit/${product.id}/" class="btn btn-xs btn-secondary">Edit</a>
+                <button id="row-edit__${product.id}" data-id="${product.id}" class="row-edit btn btn-xs bg-secondary text-white">Edit</button>
                 <button id="row-delete__${product.id}" data-id="${product.id}" class="row-delete btn btn-xs bg-red-400">Delete</button>
             </div>
             <div name="alt-action" class=" ${!isThrashed ? "hidden" : "flex"} alt-action print:hidden w-full items-center justify-end gap-3">

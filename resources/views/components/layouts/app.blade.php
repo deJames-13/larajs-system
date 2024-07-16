@@ -81,9 +81,9 @@
 			</script>
 		@endif
 		<script>
-			$(document).on("click", '.back', function() {
-				window.history.back();
-			});
+			// $(document).on("click", '.back', function() {
+			// 	window.history.back();
+			// });
 
 			// hide loading overlay
 			$(document).ready(function() {

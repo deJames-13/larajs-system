@@ -3,21 +3,30 @@ const defaultProps = {
   target: null,
   name: "page",
   type: "form",
-  form: null
+  form: null,
+  exitPage: () => {}
 };
 export default class FormPage {
   constructor(props = {}) {
     Object.assign(this, defaultProps, props);
+    return this;
   }
   init() {
     this.render();
-    this.form.html(this.makeFields());
+    this.form && this.form.html(this.makeFields());
+    this.bindEvents();
+    this.handleForm();
   }
-
+  handleForm() {}
+  bindEvents() {
+    $("#back-button").on("click", () => {
+      this.exitPage();
+    });
+  }
   makeFields() {
     if (!this.form) return;
     return /* HTML */ `
-      <div id="image-container" class="flex flex-col space-y-2 border-r-2 border-opacity-25 left image-container border-secondary ">
+      <div id="image-container" class="flex flex-col space-y-2 border-opacity-25 left image-container border-secondary ">
         <div>
           <div class="relative ">
             <button type="button" class="z-[100] top-1/2  absolute prev m-4 hover:scale-110 transition-all hover:text-primary">
@@ -39,7 +48,7 @@ export default class FormPage {
   }
 
   render() {
-    if (!this.id) return;
+    if (!this.id && this.type === "edit") return;
     const HTML = /* HTML */ `
       <div class="page container mx-auto px-6 py-12">
         <div class="flex flex-col space-y-4">
@@ -48,7 +57,7 @@ export default class FormPage {
             <div class="flex justify-end space-x-2 actions">
               <button id="save-item" class="hidden btn btn-success">Save</button>
               <button id="cancel" class="hidden btn btn-error">Cancel</button>
-              <button class="back btn btn-secondary">Back</button>
+              <button id="back-button" class="back btn btn-secondary">Back</button>
             </div>
           </div>
           <div class="divider"></div>
@@ -57,12 +66,13 @@ export default class FormPage {
             data-id="${this.id}"
             id="item-form"
             enctype="multipart/form-data"
-            class="container grid grid-cols-1 gap-4 border border-opacity-25 rounded-md shadow-md lg:grid-cols-2 border-secondary"
+            class="container grid grid-cols-1 gap-4 border border-opacity-25 rounded-md shadow-md lg:grid-cols-1 border-secondary"
           ></form>
         </div>
       </div>
     `;
-    const page = $(this.target).html(HTML);
+    const page = $(this.target);
+    page.html(HTML);
     this.form = page.find("#item-form");
   }
 }

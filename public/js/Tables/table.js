@@ -1,5 +1,16 @@
+import BrandsForm from "../Brands/form.js";
+import CategoriesForm from "../Categories/form.js";
 import DataTable from "../components/DataTable.js";
+import ProductsForm from "../Products/form.js";
+import PromosForm from "../Promos/form.js";
 import { statusColors } from "./config.js";
+
+const formPages = {
+  products: ProductsForm,
+  categories: CategoriesForm,
+  brands: BrandsForm,
+  promos: PromosForm
+};
 
 export default class TablePage {
   constructor({ target, table = null, title = null, withActions = true }) {
@@ -38,17 +49,67 @@ export default class TablePage {
     this.render(this.target);
     this.setDataTable();
     this.bindEvents();
+    this.handlePage();
   }
-  bindEvents() {}
+  bindEvents() {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    $(document)
+      .off()
+      .on("click", ".row-edit", e => {
+        const id = e.target.dataset.id;
+        urlParams.set("action", "edit");
+        urlParams.set("id", id);
+        const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+        window.history.pushState({}, null, newUrl);
+        this.formPage(id);
+      });
+
+    $("#btn-add-" + this.table)
+      .off()
+      .on("click", () => {
+        urlParams.set("action", "create");
+        const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+        window.history.pushState({}, null, newUrl);
+        this.formPage();
+      });
+  }
+  handlePage() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get("id");
+    if (urlParams.get("action") === "edit" && id) {
+      this.formPage(id);
+    } else if (urlParams.get("action") === "create") {
+      this.formPage();
+    }
+  }
+  formPage(id) {
+    const FormPage = formPages[this.table];
+    if (!FormPage) return;
+    new FormPage({
+      id: id,
+      target: this.target,
+      name: this.table + `${id ? " #" + id : ""}`,
+      type: id ? "edit" : "create",
+      exitPage: () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.delete("action");
+        urlParams.delete("id");
+        const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+        window.history.pushState({}, null, newUrl);
+        this.init();
+      }
+    });
+  }
 
   render(target) {
     $(target).html("");
 
     const page = `
         <div class="flex flex-col space-y-4 items-center justify-center pb-12">
-			<div class=" w-full print:m-0 print:overflow-visible overflow-x-auto" id="table-wrapper">
-			</div>
-		</div>
+          <div class=" w-full print:m-0 print:overflow-visible overflow-x-auto" id="table-wrapper">
+          </div>
+        </div>
         `;
     $(target).html(page);
   }

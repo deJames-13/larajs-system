@@ -29,10 +29,7 @@ export default class ProductsEdit {
         if (this.carousel) this.carousel.next();
       });
 
-      // Initially hide save and cancel buttons
       $("#save-item, #cancel").hide();
-
-      // Show save and cancel buttons when form is changed
       $("#item-form").change(() => {
         $("#save-item, #cancel").show();
       });
@@ -164,14 +161,6 @@ export default class ProductsEdit {
           this.loadCarousel();
           this.populateForm(response.data);
         }
-      },
-      onError: error => {
-        console.log(error);
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "Something went wrong!"
-        });
       }
     });
   }
@@ -210,8 +199,3 @@ export default class ProductsEdit {
     });
   }
 }
-
-// Initialize ProductsEdit class when document is ready
-$(document).ready(() => {
-  new ProductsEdit();
-});

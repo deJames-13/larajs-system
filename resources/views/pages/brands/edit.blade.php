@@ -68,6 +68,12 @@
 	</x-card.page>
 
 	@push('scripts')
-		<script type="module" src="{{ asset('js/Brands/edit.js') }}"></script>
+		<script type="module">
+			// Initialize BrandsEdit class when document is ready
+			import BrandsEdit from "{{ asset('js/Brands/edit.js') }}";
+			$(document).ready(() => {
+				new BrandsEdit();
+			});
+		</script>
 	@endpush
 </x-layouts.default>
