@@ -34,6 +34,7 @@
     - [ ]     Brand,
     - [ ]     Category,
     - [ ]     Promo
+- [ ] Staff Privileges
 
 ## Front End
 
