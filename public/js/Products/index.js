@@ -48,7 +48,7 @@ export default class Products {
             this.fetchItems();
             // move to top
             isAutoScrolling = true;
-            $("html, body").animate({ scrollTop: scrollHeight * 0.08 }, 500, () => {
+            $("html, body").animate({ scrollTop: scrollHeight * 0.05 }, 500, () => {
               isAutoScrolling = false;
             });
           }
@@ -60,7 +60,7 @@ export default class Products {
             this.page--;
             this.fetchItems();
             isAutoScrolling = true;
-            $("html, body").animate({ scrollTop: scrollHeight - windowHeight }, 500, () => {
+            $("html, body").animate({ scrollTop: scrollHeight - windowHeight + 200 }, 500, () => {
               isAutoScrolling = false;
             });
           }
