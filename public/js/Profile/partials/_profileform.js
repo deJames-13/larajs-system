@@ -25,7 +25,7 @@ export default class ProfileForm extends FormCard {
           resolve(this.user_profile); // Resolve the promise with the profile data
         },
         onError: response => {
-          console.log(response);
+          // console.log(response);
           reject(response); // Reject the promise on error
         }
       });
@@ -123,9 +123,9 @@ export default class ProfileForm extends FormCard {
         {
           id: "age",
           label: "Age",
-          className: "text-gray-600",
-          type: "text",
-          isEnabled: false
+          className: "text-gray-600 border-none decoration-none",
+          type: "number",
+          isDisabled: true
         }
       ]
     };
@@ -187,8 +187,11 @@ export default class ProfileForm extends FormCard {
         });
       }
 
-      if (key === "birthdate") this.form.find(`#${key}`).val(this.user_profile[key].split("T")[0]);
-      else this.form.find(`#${key}`).val(this.user_profile.info[key]);
+      if (key === "birthdate") {
+        this.form.find(`#${key}`).val(this.user_profile.info[key] ? this.user_profile.info[key].split("T")[0] : "");
+      } else {
+        this.form.find(`#${key}`).val(this.user_profile.info[key]);
+      }
     });
   }
 
@@ -328,7 +331,7 @@ export default class ProfileForm extends FormCard {
 
   onSubmit() {
     this.validate();
-    console.log(this.form.valid());
+    // console.log(this.form.valid());
     if (!this.form.valid()) return;
     Swal.fire({
       title: "Are you sure?",
@@ -383,10 +386,7 @@ export default class ProfileForm extends FormCard {
 
       return acc;
     }, {});
-    console.log({
-      rules: rules,
-      messages: messages
-    });
+
     this.form.validate({
       rules: rules,
       messages: messages,
@@ -410,7 +410,7 @@ export default class ProfileForm extends FormCard {
 
     const formData = new FormData(this.form[0]);
     ajaxRequest.post({
-      url: "/api/profile/update/" + this.user_profile.id,
+      url: "/api/profile/" + this.user_profile.id,
       data: formData,
       onSuccess: response => {
         this.user_profile = response;

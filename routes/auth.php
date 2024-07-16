@@ -6,14 +6,16 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\Api\ChartController;
+// INFO: REMOVE COMMENTS AFTER 
+
 
 $crud = [
     "products",
-    "promos",
-    "brands",
-    "categories",
-    "users",
-    // "comments"?
+    // INFO: CONVERTED to JS/JQUERY
+    // "promos",
+    // "brands",
+    // "categories",
+    // "users",
 ];
 
 Route::post("/admin/orders", [TableController::class, "ordersImport"])->name("imports.orders");
@@ -47,13 +49,13 @@ Route::group(["middleware" => "auth"], function () use ($crud) {
     Route::group(["prefix" => "admin", "middleware" => ["role:admin"]], function () use ($crud) {
 
         foreach ($crud as $prefix) {
+            // INFO: CONVERTED to JS/JQUERY
             // TABLE pages
-            Route::post("/$prefix", [TableController::class, $prefix])->name("tables.$prefix");
-            Route::get("/$prefix", [TableController::class, $prefix])->name("tables.$prefix");
-
+            // Route::post("/$prefix", [TableController::class, $prefix])->name("tables.$prefix");
+            // Rouute::get("/$prefix", [TableController::class, $prefix])->name("tables.$prefix");
             // CREATE and EDIT pages
-            Route::get("/$prefix/create", [PageController::class, $prefix . "Create"])->name("$prefix.create");
-            Route::get("/$prefix/edit/{id}", [PageController::class, $prefix . "Edit"])->name("$prefix.edit");
+            // Route::get("/$prefix/create", [PageController::class, $prefix . "Create"])->name("$prefix.create");
+            // Route::get("/$prefix/edit/{id}", [PageController::class, $prefix . "Edit"])->name("$prefix.edit");
 
             // PDFS
             Route::get("/pdf/$prefix", [PdfController::class, $prefix . "Pdf"])->name("pdf.$prefix");
@@ -61,9 +63,9 @@ Route::group(["middleware" => "auth"], function () use ($crud) {
             // Imports
             Route::post("/$prefix", [TableController::class, $prefix . "Import"])->name("imports.$prefix");
         }
-        Route::get("/orders", [TableController::class, "orders"])->name("tables.orders");
+        // Route::get("/orders", [TableController::class, "orders"])->name("tables.orders");
 
-
+        // TODO: Convert to JS/JQUERY
         // CHARTS
         $charts = [
             'orderPerMonth' => 'order-per-month',
@@ -87,5 +89,3 @@ Route::group(["middleware" => "auth"], function () use ($crud) {
     //##################################################################################################################
 
 });
-
-

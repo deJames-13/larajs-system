@@ -16,8 +16,7 @@ composer install --ignore-platform-req=ext-gd
 cp .env.example .env
 php artisan key:generate
 php artisan storage:link
-php artisan vendor:publish --provider="Attrixtech\LaravelIcons\LaravelIconsServiceProvider" 
-php artisan vendor:publish --provider="Laravel\Scout\ScoutServiceProvider"                                                                                                  
+php artisan vendor:publish --provider="Laravel\Scout\ScoutServiceProvider"
 npm install
 
 
@@ -62,12 +61,12 @@ MEILISEARCH_KEY=masterKey
 
 
 # Accounts
-admin: 
+admin:
     'username' => 'admin',
     'email' => 'admin@example.dev',
     password: password
 
-customer: 
+customer:
     'username' => 'johndoe',
     'email' => 'johndoe@example.dev',
     password: password
