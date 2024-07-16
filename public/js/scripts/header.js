@@ -103,5 +103,7 @@ $(document).ready(function () {
   // });
   hideLoader();
   handleAutoComplete();
+  // if in /profile page do not initialize user
+  if (window.location.pathname.includes("/profile")) return;
   user = new User().init();
 });

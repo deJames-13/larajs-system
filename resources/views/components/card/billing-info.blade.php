@@ -137,7 +137,7 @@
 		@push('scripts')
 			<script>
 				var strAddress = "{{ $info->address }}"
-				var addr = strAddress.split(', ');
+				var addr = strAddress.split(',');
 				var formData = {
 					first_name: '',
 					last_name: '',
@@ -155,7 +155,7 @@
 
 				if (addr.length > 1) {
 					Object.keys(address).forEach(function(key, index) {
-						address[key] = addr[index];
+						address[key] = addr[index].trim();
 						$('#' + key).val(addr[index]);
 					});
 				}
