@@ -56,15 +56,20 @@ class CategoryController extends Controller
             'name' => 'required|string',
             'description' => 'required|string',
             'status' => 'required|string',
+            'image_id' => 'sometimes|numeric',
         ]);
 
+        $image_id = $data['image_id'] ?? null;
+        unset($data['image_id']);
+
         $category = Category::where('id', $id)->first();
-        if (! $category) {
+        if (!$category) {
             return response(null, 404, ['message' => 'Category not found!']);
         }
 
         $category->update($data);
 
+        $this->handleImageUpload($request, $category, $image_id);
         $res = new CategoryResource($category);
 
         return response($res, 200, ['message' => 'category updated successfully!']);
@@ -73,7 +78,7 @@ class CategoryController extends Controller
     public function destroy(Request $request, string $id)
     {
         $category = Category::where('id', $id)->first();
-        if (! $category) {
+        if (!$category) {
             return response(null, 404, ['message' => 'category not found!']);
         }
 
@@ -85,8 +90,9 @@ class CategoryController extends Controller
     public function restore(string $id)
     {
         $category = Category::withTrashed()->where('id', $id)->first();
-        if (! $category) {
-            return response(null, 404, ['message' => 'Category not found!']);
+
+        if (!$category) {
+            return response(null, 404, ['message' => 'category not found!']);
         }
 
         $category->restore();
@@ -95,6 +101,10 @@ class CategoryController extends Controller
     }
 
     public function thrashed()
+    {
+    }
+
+    public function status(Request $request, string $id)
     {
         $page = request('page') ?? 1;
         $limit = request('limit') ?? 20;

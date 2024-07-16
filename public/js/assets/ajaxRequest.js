@@ -4,102 +4,75 @@ const showLoading = () => $("#loading").show();
 const hideLoading = () => $("#loading").hide();
 // ##########################################################################
 // HANDLERS
-const handleError = (callback) => (response, status, xhr) => {
-    isShowLoading && hideLoading();
-    callback(response, status, xhr);
-    // console.error('Error:', response);
+const handleError = callback => (response, status, xhr) => {
+  isShowLoading && hideLoading();
+  callback(response, status, xhr);
+  // console.error('Error:', response);
 };
 
-const handleSuccess = (callback) => (response, status, xhr) => {
-    isShowLoading && hideLoading();
-    callback(response, status, xhr);
+const handleSuccess = callback => (response, status, xhr) => {
+  isShowLoading && hideLoading();
+  callback(response, status, xhr);
 };
 // ##########################################################################
 // HEADER
 const getHeaders = (token = null, headers = {}) => {
-    const csrfToken = document
-        .querySelector('meta[name="csrf-token"]')
-        .getAttribute("content");
-    token =
-        token ||
-        document
-            .querySelector('meta[name="api-token"]')
-            .getAttribute("content") ||
-        null;
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+  token = token || document.querySelector('meta[name="api-token"]').getAttribute("content") || null;
 
-    let defaultHeaders = {
-        Accept: "application/json",
-        "X-Requested-With": "XMLHttpRequest",
-    };
-    if (csrfToken) {
-        defaultHeaders["X-CSRF-TOKEN"] = csrfToken;
-    }
-    if (token) {
-        defaultHeaders["Authorization"] = "Bearer " + token;
-    }
-    return { ...defaultHeaders, ...headers };
+  let defaultHeaders = {
+    Accept: "application/json",
+    "X-Requested-With": "XMLHttpRequest"
+  };
+  if (csrfToken) {
+    defaultHeaders["X-CSRF-TOKEN"] = csrfToken;
+  }
+  if (token) {
+    defaultHeaders["Authorization"] = "Bearer " + token;
+  }
+  return { ...defaultHeaders, ...headers };
 };
 // ##########################################################################
 // AJAX CALL
-const ajaxCall = ({
-    url,
-    method,
-    onSuccess = () => {},
-    onError = () => {},
-    data = {},
-    token = null,
-    headers = {},
-    settings = {},
-    showLoader = true,
-}) => {
-    const isFormData = data instanceof FormData;
-    isShowLoading = showLoader;
-    isShowLoading && showLoading();
+const ajaxCall = ({ url, method, onSuccess = () => {}, onError = () => {}, data = {}, token = null, headers = {}, settings = {}, showLoader = true }) => {
+  const isFormData = data instanceof FormData;
+  isShowLoading = showLoader;
+  isShowLoading && showLoading();
 
-    const defaultSettings = {
-        async: true,
-        crossDomain: true,
-        url: url,
-        method: method,
-        data:
-            method === "GET"
-                ? undefined
-                : isFormData
-                  ? data
-                  : JSON.stringify(data),
-        contentType:
-            method === "GET"
-                ? undefined
-                : isFormData
-                  ? false
-                  : "application/json",
-        processData: !isFormData,
-        dataType: "json",
-        headers: getHeaders(token, headers),
-        error: handleError(onError),
-        success: handleSuccess(onSuccess),
-    };
-    // console.log({ ...defaultSettings, ...settings });
-    $.ajax({ ...defaultSettings, ...settings });
+  const defaultSettings = {
+    async: true,
+    crossDomain: true,
+    url: url,
+    method: method,
+    data: method === "GET" ? undefined : isFormData ? data : JSON.stringify(data),
+    contentType: method === "GET" ? undefined : isFormData ? false : "application/json",
+    processData: !isFormData,
+    dataType: "json",
+    headers: getHeaders(token, headers),
+    error: handleError(onError),
+    success: handleSuccess(onSuccess)
+  };
+  // console.log({ ...defaultSettings, ...settings });
+  $.ajax({ ...defaultSettings, ...settings });
 };
 // ##########################################################################
 // AJAX REQUEST
 const ajaxRequest = {
-    get: (options) => {
-        ajaxCall({ ...options, method: "GET" });
-    },
-    post: (options) => {
-        ajaxCall({ ...options, method: "POST" });
-    },
-    put: (options) => {
-        ajaxCall({ ...options, method: "PUT" });
-    },
-    delete: (options) => {
-        ajaxCall({ ...options, method: "DELETE" });
-    },
-    init: () => {
-        $(document).ajaxStart(showLoading).ajaxStop(hideLoading);
-    },
+  get: options => {
+    ajaxCall({ ...options, method: "GET" });
+  },
+  post: options => {
+    ajaxCall({ ...options, method: "POST" });
+  },
+  put: options => {
+    ajaxCall({ ...options, method: "PUT" });
+  },
+  delete: options => {
+    ajaxCall({ ...options, method: "DELETE" });
+  },
+  init: () => {
+    $(document).ajaxStart(showLoading).ajaxStop(hideLoading);
+  }
 };
 // ##########################################################################
 
@@ -155,4 +128,3 @@ export default ajaxRequest;
 //         console.log(response);
 //     },
 // });
-

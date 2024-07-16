@@ -1,4 +1,4 @@
-import TablePage from './table.js';
+import TablePage from "./table.js";
 
 export default class CategoriesPage extends TablePage {
     constructor({ target }) {

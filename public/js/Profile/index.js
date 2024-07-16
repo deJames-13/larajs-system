@@ -9,63 +9,62 @@ import MainPage from "./main.js";
 import MyOrders from "./orders.js";
 
 export default class ProfilePage {
-    banner = null;
-    UserCard = null;
-    user_profile = null;
-    sidebar = '#profile-sidebar';
-    content = '#profile-content';
-    url = 'main';
-    profile = new ProfileForm({ onUpdate: this.updateProfile.bind(this) });
+  banner = null;
+  UserCard = null;
+  user_profile = null;
+  sidebar = "#profile-sidebar";
+  content = "#profile-content";
+  url = "main";
+  profile = new ProfileForm({ onUpdate: this.updateProfile.bind(this) });
 
-    constructor() {
-        this.init();
+  constructor() {
+    this.init();
+  }
+
+  async init() {
+    try {
+      this.user_profile = await this.profile.getProfile();
+      this.UserCard = UserCard.init({ target: this.sidebar, user: this.user_profile });
+      NavSideBar.init({ callback: this.gotoPage.bind(this) });
+      this.gotoPage(this.url);
+    } catch (error) {
+      console.error("Failed to initialize profile page:", error);
     }
+  }
 
-    async init() {
-        try {
-            this.user_profile = await this.profile.getProfile();
-            this.UserCard = UserCard.init({ target: this.sidebar, user: this.user_profile });
-            NavSideBar.init({ callback: this.gotoPage.bind(this) });
-            this.gotoPage(this.url);
-        } catch (error) {
-            console.error("Failed to initialize profile page:", error);
-        }
+  loadMainPage() {
+    const main = MainPage.init();
+    this.UserCard.moveTo(main.id);
+    this.UserCard.setViewMore(true);
+  }
+
+  updateProfile(user) {
+    this.user_profile = user;
+    this.UserCard.setUser(user);
+  }
+
+  gotoPage(url) {
+    $(this.content).empty();
+    this.UserCard.show().setViewMore(false);
+
+    this.url = url;
+
+    const pages = {
+      main: () => this.loadMainPage(),
+      "edit-profile": () => {
+        ProfileEdit.init({ profile: this.profile });
+        this.UserCard.hide();
+      },
+      cart: () => MyCart.init(),
+      orders: () => MyOrders.init()
+    };
+
+    if (pages[url]) {
+      pages[url]();
+    } else {
+      console.error(`No page found for URL: ${url}`);
     }
-
-    loadMainPage() {
-        const main = MainPage.init();
-        this.UserCard.moveTo(main.id);
-        this.UserCard.setViewMore(true);
-    }
-
-    updateProfile(user) {
-        this.user_profile = user;
-        this.UserCard.setUser(user);
-    }
-
-
-    gotoPage(url) {
-        $(this.content).empty();
-        this.UserCard.show().setViewMore(false);
-
-        this.url = url;
-
-        const pages = {
-            'main': () => this.loadMainPage(),
-            'edit-profile': () => {
-                ProfileEdit.init({ profile: this.profile });
-                this.UserCard.hide();
-            },
-            'cart': () => MyCart.init(),
-            'orders': () => MyOrders.init(),
-        };
-
-        if (pages[url]) {
-            pages[url]();
-        } else {
-            console.error(`No page found for URL: ${url}`);
-        }
-    }
+  }
 }
 
 new ProfilePage();

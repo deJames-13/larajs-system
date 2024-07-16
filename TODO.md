@@ -26,7 +26,7 @@
 - [ ] FINALIZE - Product CRUD
 - [ ] FINALIZE DASHBOARD ADMIN
 - [ ] START Shop UI - 
-    - [ ] Filtering, 
+    - [ ] Filtering,   
     - [ ] Sorting, 
     - [ ] Searching, 
     - [ ] Pagination - 
@@ -34,5 +34,8 @@
         - [ ]     Brand, 
         - [ ]     Category, 
         - [ ]     Promo
+
+
+
 
 

@@ -69,7 +69,7 @@ foreach ($crud as $prefix => $config) {
         ->middleware($middleware);
 
     // DELETE
-    Route::delete("/$prefix/{id}", [$controller, 'destroy'])
+    Route::match(['delete', 'post'], "/$prefix/{id}", [$controller, 'destroy'])
         ->name($prefix.'.destroy')
         ->middleware($middleware);
 

@@ -35,6 +35,7 @@ export default class PromosPage extends TablePage {
                     <a href="/admin/promos/edit/${promo.id}/" class="btn btn-xs btn-secondary">Edit</a>
                     <button id="row-delete__${promo.id}" data-id="${promo.id}" class="row-delete btn btn-xs bg-red-400">Delete</button>
                 </div>
+
                 <div name="alt-action" class=" ${!isThrashed ? "hidden" : "flex"} alt-action print:hidden w-full items-center justify-end gap-3">
                     <button id="row-restore__${promo.id}" data-id="${promo.id}" class="row-restore btn btn-xs text-white bg-green-400">Restore</button>
                 </div>

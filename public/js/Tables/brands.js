@@ -1,3 +1,4 @@
+
 import TablePage from './table.js';
 
 export default class BrandsPage extends TablePage {

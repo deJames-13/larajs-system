@@ -2,22 +2,22 @@ import ajaxRequest from "../assets/ajaxRequest.js";
 import Modal from "../components/Modal.js";
 
 export default class SignUp {
-    constructor() {
-        this.modal = null;
-        // if path is /register do not show modal
-        this.render();
-        this.validate();
-        return this.modal;
-    }
-    render() {
-        this.modal = new Modal({
-            id: "signup_modal",
-            top: `
+  constructor() {
+    this.modal = null;
+    // if path is /register do not show modal
+    this.render();
+    this.validate();
+    return this.modal;
+  }
+  render() {
+    this.modal = new Modal({
+      id: "signup_modal",
+      top: `
                 <div class="flex items-center space-x-2">
                 <h3 class="font-extrabold uppercase text-3xl">Sign Up</h3>
                 </div>
             `,
-            content: `
+      content: `
             <form id="signup-form" method="POST">
                 <div class="form-control">
                     <label for="username" class="label">Username</label>
@@ -53,100 +53,95 @@ export default class SignUp {
                 </div>
             </form>
             `,
-            destroyOnClose: true,
-            isShown: true,
-        }).modal;
+      destroyOnClose: true,
+      isShown: true
+    }).modal;
 
-        $("#form-submit").on("click", () => {
-            this.isValid() && this.handleOnSubmit();
-        });
-    }
+    $("#form-submit").on("click", () => {
+      this.isValid() && this.handleOnSubmit();
+    });
+  }
 
-    validate = () => {
-        $("#signup-form").validate({
-            rules: {
-                email: {
-                    required: true,
-                    email: true,
-                },
-                password: {
-                    required: true,
-                    rangelength: [8, 16],
-                },
-                username: {
-                    required: true,
-                    minlength: 4,
-                    pattern: /^[a-zA-Z0-9_]+$/,
-                },
-                password_confirmation: {
-                    required: true,
-                    equalTo: "#password",
-                },
-            },
-            messages: {
-                email: {
-                    required: "Email is required",
-                    email: "Email is invalid",
-                },
-                password: {
-                    required: "Password is required",
-                    minlength: "Password must be at least 8-16 characters",
-                },
-                username: {
-                    required: "Username is required",
-                    minlength: "Username must be at least 4 characters",
-                    pattern:
-                        "Username must contain only letters, numbers, or underscores",
-                },
-                password_confirmation: {
-                    required: "Password Confirmation is required",
-                    equalTo: "Password Confirmation must match Password",
-                },
-            },
-            errorElement: "span",
-            errorPlacement: function (error, element) {
-                error.addClass("text-red-400 text-sm italic my-1");
-                element.addClass("border-red-400");
-                error.insertAfter(element);
-            },
-        });
-    };
+  validate = () => {
+    $("#signup-form").validate({
+      rules: {
+        email: {
+          required: true,
+          email: true
+        },
+        password: {
+          required: true,
+          rangelength: [8, 16]
+        },
+        username: {
+          required: true,
+          minlength: 4,
+          pattern: /^[a-zA-Z0-9_]+$/
+        },
+        password_confirmation: {
+          required: true,
+          equalTo: "#password"
+        }
+      },
+      messages: {
+        email: {
+          required: "Email is required",
+          email: "Email is invalid"
+        },
+        password: {
+          required: "Password is required",
+          minlength: "Password must be at least 8-16 characters"
+        },
+        username: {
+          required: "Username is required",
+          minlength: "Username must be at least 4 characters",
+          pattern: "Username must contain only letters, numbers, or underscores"
+        },
+        password_confirmation: {
+          required: "Password Confirmation is required",
+          equalTo: "Password Confirmation must match Password"
+        }
+      },
+      errorElement: "span",
+      errorPlacement: function (error, element) {
+        error.addClass("text-red-400 text-sm italic my-1");
+        element.addClass("border-red-400");
+        error.insertAfter(element);
+      }
+    });
+  };
 
-    isValid() {
-        return $("#signup-form").valid();
-    }
+  isValid() {
+    return $("#signup-form").valid();
+  }
 
-    handleInvalid = (errors) => {
-        Object.keys(errors).forEach((key) => {
-            $(`#${key}`).addClass("border-red-400");
-            $(`#${key}`).after(
-                `<span class="text-red-400 text-sm italic my-1">${errors[key]}</span>`,
-            );
-        });
-    };
+  handleInvalid = errors => {
+    Object.keys(errors).forEach(key => {
+      $(`#${key}`).addClass("border-red-400");
+      $(`#${key}`).after(`<span class="text-red-400 text-sm italic my-1">${errors[key]}</span>`);
+    });
+  };
 
-    handleOnSubmit = () => {
-        // remove all errors
-        $(".input-error").removeClass("input-error");
-        $(".text-error").remove();
+  handleOnSubmit = () => {
+    // remove all errors
+    $(".input-error").removeClass("input-error");
+    $(".text-error").remove();
 
-        var formData = new FormData($("#signup-form")[0]);
-        // console.log(formData);
-        const token = document
-            .querySelector('meta[name="csrf-token"]')
-            .getAttribute("content");
-        ajaxRequest.post({
-            url: "/register",
-            data: formData,
-            onSuccess: (response) => {
-                console.log(response);
-                this.modal.remove();
-                window.location.href = "/";
-            },
-            onError: (xhr) => {
-                console.log(xhr);
-                this.handleInvalid(xhr.responseJSON.errors || {});
-            },
-        });
-    };
+    var formData = new FormData($("#signup-form")[0]);
+    // console.log(formData);
+    const token = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+    ajaxRequest.post({
+      url: "/register",
+      data: formData,
+      onSuccess: response => {
+        console.log(response);
+        this.modal.remove();
+        window.location.href = "/";
+      },
+      onError: xhr => {
+        console.log(xhr);
+        this.handleInvalid(xhr.responseJSON.errors || {});
+      }
+    });
+  };
 }
