@@ -1,21 +1,20 @@
 export default class Order {
-    constructor(order) {
-        this.order = order;
-        this.total = 0;
-    }
+  constructor(order) {
+    this.order = order;
+    this.total = 0;
+  }
 
+  renderItems(item) {
+    var unit_price = parseFloat(item.price) * parseFloat(item.order_quantity);
+    this.total = this.total + unit_price;
 
-    renderItems(item) {
-        var unit_price = parseFloat(item.price) * parseFloat(item.order_quantity);
-        this.total = this.total + unit_price;
-
-        return `
+    return `
         
         <div id="item__${this.order.id}__${item.id}" class="w-full container flex space-x-2 items-center">
             <div class="flex-grow flex items-start space-x-1">
                 <!-- Image -->
                 <div class="max-w-[90px] m-0 rounded">
-                    <img src="${item.image_path ?? 'https://placehold.co/400x600?text=item'}" class="m-0 object-center w-full cursor-zoom-in"
+                    <img src="${item.image_path ?? "https://placehold.co/400x600?text=item"}" class="m-0 object-center w-full cursor-zoom-in"
                         alt="product image">
                 </div>
                 <!-- Product -->
@@ -49,13 +48,15 @@ export default class Order {
                 </div>
             </div>
         </div>
-        `
-    }
+        `;
+  }
 
-    render() {
-        return `
+  render() {
+    return /* HTML */ `
         <!-- ORDER -->
-        <div data-id="${this.order.id}" id="order-card__${this.order.id}" class="order-card hover:bg-gray-400 hover:bg-opacity-20 hover:shadow-xl hover:border-black transition-all ease-in prose container rounded border px-4 py-6">
+        <div data-id="${this.order.id}" id="order-card__${
+      this.order.id
+    }" class="order-card hover:bg-gray-400 hover:bg-opacity-20 hover:shadow-xl hover:border-black transition-all ease-in prose container rounded border px-4 py-6">
 
             <!-- Order Item Header -->
             <div   class="cursor-pointer flex flex-col space-y-2 md:space-y-0 md:flex-row md:justify-between md:items-center">
@@ -67,7 +68,7 @@ export default class Order {
                     </h4>
                     <p class="m-0 link text-xs text-gray-600 italic hover:text-primary no-underline">Order Date:
                         <span id="order_date__${this.order.id}">
-                            ${this.order.created_at.replace('T', ' ').split('.')[0]}
+                            ${this.order.created_at.replace("T", " ").split(".")[0]}
                         </span>
                     </p>
                 </div>
@@ -91,7 +92,11 @@ export default class Order {
             
             <!-- Items List -->
             <div id="order-item-list__${this.order.id}" class="container flex flex-col space-y-2">
-                ${this.order.products.map(it => { return this.renderItems(it); }).join('\n')}
+                ${this.order.products
+                  .map(it => {
+                    return this.renderItems(it);
+                  })
+                  .join("\n")}
             </div>
 
             <div class="m-0 divider"></div>
@@ -120,7 +125,6 @@ export default class Order {
 
             </div>
         </div>
-        `
-    }
-
+        `;
+  }
 }

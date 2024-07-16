@@ -37,7 +37,5 @@
 
 
 
-## IMAGES
-- [ ] Promos
 
 
