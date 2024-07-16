@@ -32,9 +32,7 @@ export default class PromosPage extends TablePage {
                 <div class="print:hidden flex items-center justify-end w-full gap-3">
                     <a href="/promos/${promo.id}" class="btn btn-xs btn-primary">View</a>
                     <a href="/admin/promos/edit/${promo.id}/" class="btn btn-xs btn-secondary">Edit</a>
-                    <form id="row_delete__${promo.id}" data-id="${promo.id}" method="POST">
-                        <button type="submit" data-id="${promo.id}" class="row-delete btn btn-xs bg-red-400">Delete</button>
-                    </form>
+                    <button id="row-delete__${promo.id}" data-id="${promo.id}" class="row-delete btn btn-xs bg-red-400">Delete</button>
                 </div>
             `,
             };

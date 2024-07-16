@@ -319,7 +319,7 @@ export default class DataTable {
 
     actions() {
         return `
-        <div class="py-4 w-full overflow-auto flex flex-col-reverse gap-2 lg:flex-row justify-between items-center">
+        <div class="print:hidden py-4 w-full overflow-auto flex flex-col-reverse gap-2 lg:flex-row justify-between items-center">
             <form id='import-form' method='POST' enctype='multipart/form-data' action='/admin/${this.tableName}'
                 class="flex flex-col-reverse lg:flex-row gap-2 lg:items-center">
                 <!-- {{ csrf_field() }} -->
