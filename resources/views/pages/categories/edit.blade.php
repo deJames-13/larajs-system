@@ -55,6 +55,12 @@
 	</x-card.page>
 
 	@push('scripts')
-		<script type="module" src="{{ asset('js/Categories/edit.js') }}"></script>
+		<script type="module">
+			// Initialize CategoriesEdit class when document is ready
+			import CategoriesEdit from "{{ asset('js/Categories/edit.js') }}";
+			$(document).ready(() => {
+				new CategoriesEdit();
+			});
+		</script>
 	@endpush
 </x-layouts.default>

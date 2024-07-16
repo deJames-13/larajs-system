@@ -12,7 +12,6 @@ class PromoController extends Controller
     public function search()
     {
         $promo = Promos::filter(request(['search']))->get();
-
         return PromoResource::collection($promo);
     }
 
@@ -23,10 +22,9 @@ class PromoController extends Controller
 
     public function show(string $id)
     {
-        $res = new PromoResource(Promos::where('id', $id)->first());
-
-        return $res;
+        return $this->getResource($id, Promos::class, PromoResource::class);
     }
+
 
     public function store(Request $request)
     {
@@ -126,5 +124,4 @@ class PromoController extends Controller
 
         return PromoResource::collection($promos);
     }
-
 }

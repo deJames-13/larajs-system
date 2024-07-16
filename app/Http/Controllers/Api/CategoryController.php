@@ -12,7 +12,6 @@ class CategoryController extends Controller
     public function search()
     {
         $category = Category::filter(request(['search']))->get();
-
         return CategoryResource::collection($category);
     }
 
@@ -23,9 +22,7 @@ class CategoryController extends Controller
 
     public function show(string $id)
     {
-        $res = new CategoryResource(Category::where('id', $id)->first());
-
-        return $res;
+        return $this->getResource($id, Category::class, CategoryResource::class);
     }
 
     public function store(Request $request)
@@ -118,5 +115,4 @@ class CategoryController extends Controller
 
         return CategoryResource::collection($categories);
     }
-
 }

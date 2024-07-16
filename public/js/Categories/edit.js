@@ -31,10 +31,7 @@ export default class CategoriesEdit {
         if (this.carousel) this.carousel.next();
       });
 
-      // Initially hide save and cancel buttons
       $("#save-item, #cancel").hide();
-
-      // On form change, show save and cancel buttons
       $("#item-form").change(() => {
         $("#save-item, #cancel").show();
       });
@@ -128,14 +125,6 @@ export default class CategoriesEdit {
           this.loadCarousel();
           this.populateForm(response.data);
         }
-      },
-      onError: error => {
-        console.log(error);
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "Something went wrong!"
-        });
       }
     });
   }
@@ -183,8 +172,3 @@ export default class CategoriesEdit {
     });
   }
 }
-
-// Initialize CategoriesEdit class when document is ready
-$(document).ready(() => {
-  new CategoriesEdit();
-});

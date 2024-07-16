@@ -12,7 +12,6 @@ class BrandController extends Controller
     public function search()
     {
         $brand = Brand::filter(request(['search']))->get();
-
         return BrandResource::collection($brand);
     }
 
@@ -23,10 +22,9 @@ class BrandController extends Controller
 
     public function show(string $id)
     {
-        $res = new BrandResource(Brand::where('id', $id)->first());
-
-        return $res;
+        return $this->getResource($id, Brand::class, BrandResource::class);
     }
+
 
     public function store(Request $request)
     {
@@ -121,5 +119,4 @@ class BrandController extends Controller
 
         return BrandResource::collection($brands);
     }
-
 }

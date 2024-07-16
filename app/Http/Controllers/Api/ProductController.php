@@ -14,7 +14,6 @@ class ProductController extends Controller
     {
         // TODO: Implement sorting and other filters
         $product = Product::filter(request(['search']))->get();
-
         return ProductResource::collection($product);
     }
 
@@ -39,9 +38,7 @@ class ProductController extends Controller
 
     public function show(string $id)
     {
-        $res = new ProductResource(Product::where('id', $id)->first());
-
-        return $res;
+        return $this->getResource($id, Product::class, ProductResource::class);
     }
 
     public function store(Request $request)

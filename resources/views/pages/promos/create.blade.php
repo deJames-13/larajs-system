@@ -86,6 +86,11 @@
 	</x-card.page>
 
 	@push('scripts')
-		<script type="module" src="{{ asset('js/Promos/create.js') }}"></script>
+		<script type="module">
+			import PromosCreate from "{{ asset('js/Promos/create.js') }}";
+			$(document).ready(() => {
+				new PromosCreate();
+			});
+		</script>
 	@endpush
 </x-layouts.default>

@@ -67,6 +67,11 @@
 	</x-card.page>
 
 	@push('scripts')
-		<script type="module" src="{{ asset('js/Categories/create.js') }}"></script>
+		<script type="module">
+			import CategoriesCreate from "{{ asset('js/Categories/create.js') }}";
+			$(document).ready(() => {
+				new CategoriesCreate();
+			});
+		</script>
 	@endpush
 </x-layouts.default>

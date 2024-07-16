@@ -107,14 +107,6 @@ export default class PromosEdit {
           return response.data;
         }
         return {};
-      },
-      onError: error => {
-        console.log(error);
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "Something went wrong!"
-        });
       }
     });
   }
@@ -227,8 +219,3 @@ export default class PromosEdit {
     });
   }
 }
-
-// Initialize PromoEdit class when document is ready
-$(document).ready(() => {
-  new PromosEdit();
-});

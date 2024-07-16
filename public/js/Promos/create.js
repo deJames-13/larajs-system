@@ -25,8 +25,10 @@ export default class PromosCreate {
       });
     });
 
-    // Initially show save and cancel buttons
-    $("#save-item, #cancel").removeClass("hidden");
+    $("#save-item, #cancel").hide();
+    $("#item-form").change(() => {
+      $("#save-item, #cancel").show();
+    });
   }
 
   setupForm() {
@@ -42,7 +44,9 @@ export default class PromosCreate {
       }).then(result => {
         if (result.isConfirmed) {
           $("#item-form").trigger("reset");
-          $("#save-item, #cancel").addClass("hidden");
+          $("#save-item, #cancel").hide();
+          $("input").removeClass("border-red-400");
+          $("#item-form").validate().resetForm();
         }
       });
     });
@@ -160,8 +164,3 @@ export default class PromosCreate {
     });
   }
 }
-
-// Initialize Create class when document is ready
-$(document).ready(() => {
-  new PromosCreate();
-});
