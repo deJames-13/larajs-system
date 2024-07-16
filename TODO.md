@@ -25,17 +25,16 @@
 - [ ] Product - Promo relationship, promo quick add/modal ui
 - [ ] FINALIZE - Product CRUD
 - [ ] FINALIZE DASHBOARD ADMIN
-- [ ] START Shop UI - 
-    - [ ] Filtering,   
-    - [ ] Sorting, 
-    - [ ] Searching, 
-    - [ ] Pagination - 
-        - [ ]     Product, 
-        - [ ]     Brand, 
-        - [ ]     Category, 
-        - [ ]     Promo
+- [ ] START Shop UI -
+  - [ ] Filtering,
+  - [ ] Sorting,
+  - [ ] Searching,
+  - [ ] Pagination -
+    - [ ]     Product,
+    - [ ]     Brand,
+    - [ ]     Category,
+    - [ ]     Promo
 
+## Front End
 
-
-
-
+- [ ] fix cart in header

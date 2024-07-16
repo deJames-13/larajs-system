@@ -19,9 +19,11 @@ export default class FormPage {
   }
   handleForm() {}
   bindEvents() {
-    $("#back-button").on("click", () => {
-      this.exitPage();
-    });
+    $("#back-button")
+      .off()
+      .on("click", () => {
+        this.exitPage();
+      });
   }
   makeFields() {
     if (!this.form) return;

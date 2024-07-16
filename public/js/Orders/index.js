@@ -34,14 +34,14 @@ export default class OrderManager {
     ajaxRequest.get({
       url: "/api/orders?" + q,
       onSuccess: response => {
-        // console.log(response);
+        console.log(response);
 
         $("#no-orders").removeClass("hidden");
         const orders = response.data;
         if (orders.length > 0) {
           $("#no-orders").addClass("hidden");
         }
-
+        $("#tab-content").empty();
         orders.forEach(order => {
           order.statusMessage = statuses[`${order.status}`].message;
           order.statusIcon = statuses[`${order.status}`].icon;
@@ -70,7 +70,7 @@ export default class OrderManager {
   }
 
   goToPage(page, statusStr) {
-    const res = this.getItems(page, statusStr);
+    this.getItems(page, statusStr);
   }
 
   // INFO: CRUD: UPDATE
@@ -100,7 +100,7 @@ export default class OrderManager {
       // console.log(id);
       this.switchTabs(id);
       this.statusStr = id.split("-")[1];
-      const res = this.getItems(1, this.statusStr);
+      this.getItems(1, this.statusStr);
     });
 
     // INFO: VIEW ORDER

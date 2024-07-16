@@ -52,7 +52,7 @@ const checkout = payload => {
         confirmButtonText: "OK"
       }).then(result => {
         if (result.isConfirmed) {
-          window.location.href = "/orders";
+          window.location.href = "/profile?page=orders";
         }
       });
     },
@@ -84,7 +84,7 @@ const fetchItems = () => {
     onSuccess: ({ data }) => {
       $("#form-submit").show();
 
-      console.log(data);
+      // console.log(data);
       data.forEach(product => {
         product.quantity = product.item_quantity;
         product.total = product.price * product.quantity;
