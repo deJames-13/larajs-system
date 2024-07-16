@@ -100,7 +100,7 @@ class BrandController extends Controller
 
         $brand->restore();
 
-        return response(null, 200, ['message' => 'Brand restored successfully!']);
+        return response([], 200, ['message' => 'Brand restored successfully!']);
     }
 
     public function thrashed()
@@ -109,6 +109,17 @@ class BrandController extends Controller
 
     public function status(Request $request, string $id)
     {
-        $this->handleStatus($request, Brand::class, $id);
+        $page = request('page') ?? 1;
+        $limit = request('limit') ?? 20;
+        $order = request('order') ?? 'desc';
+        $search = request(['search']) ?? null;
+
+        $brands = Brand::onlyTrashed()
+            ->filter($search)
+            ->orderBy('updated_at', $order)
+            ->paginate($limit, ['*'], 'page', $page);
+
+        return BrandResource::collection($brands);
     }
+
 }

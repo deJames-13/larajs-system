@@ -104,15 +104,27 @@ class PromoController extends Controller
 
         $promo->restore();
 
-        return response(null, 200, ['message' => 'Promo restored successfully!']);
+        return response([], 200, ['message' => 'Promo restored successfully!']);
     }
 
     public function thrashed()
+
     {
     }
 
     public function status(Request $request, string $id)
     {
-        $this->handleStatus($request, Promos::class, $id);
+        $page = request('page') ?? 1;
+        $limit = request('limit') ?? 20;
+        $order = request('order') ?? 'desc';
+        $search = request(['search']) ?? null;
+
+        $promos = Promos::onlyTrashed()
+            ->filter($search)
+            ->orderBy('updated_at', $order)
+            ->paginate($limit, ['*'], 'page', $page);
+
+        return PromoResource::collection($promos);
     }
+
 }
