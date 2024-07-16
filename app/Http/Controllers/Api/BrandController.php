@@ -35,6 +35,7 @@ class BrandController extends Controller
             'company' => 'required|string',
             'website' => 'required|string',
             'description' => 'required|string',
+            'image_id' => 'sometimes|numeric',
             'status' => 'required|string',
         ]);
 
@@ -58,15 +59,21 @@ class BrandController extends Controller
             'website' => 'required|string',
             'description' => 'required|string',
             'status' => 'required|string',
+            'image_id' => 'sometimes|numeric',
+
         ]);
 
+        $image_id = $data['image_id'] ?? null;
+        unset($data['image_id']);
+
         $brand = Brand::where('id', $id)->first();
-        if (! $brand) {
+        if (!$brand) {
             return response(null, 404, ['message' => 'Brand not found!']);
         }
 
         $brand->update($data);
 
+        $this->handleImageUpload($request, $brand, $image_id);
         $res = new BrandResource($brand);
 
         return response($res, 200, ['message' => 'Brand updated successfully!']);
@@ -75,7 +82,7 @@ class BrandController extends Controller
     public function destroy(string $id)
     {
         $brand = Brand::where('id', $id)->first();
-        if (! $brand) {
+        if (!$brand) {
             return response(null, 404, ['message' => 'Brand not found!']);
         }
 
@@ -87,7 +94,7 @@ class BrandController extends Controller
     public function restore(string $id)
     {
         $brand = Brand::withTrashed()->where('id', $id)->first();
-        if (! $brand) {
+        if (!$brand) {
             return response(null, 404, ['message' => 'Brand not found!']);
         }
 
@@ -96,7 +103,9 @@ class BrandController extends Controller
         return response(null, 200, ['message' => 'Brand restored successfully!']);
     }
 
-    public function thrashed() {}
+    public function thrashed()
+    {
+    }
 
     public function status(Request $request, string $id)
     {

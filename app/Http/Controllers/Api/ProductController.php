@@ -79,7 +79,7 @@ class ProductController extends Controller
     {
         $data = $request->validate([
             'name' => 'sometimes|string',
-            'sku_code' => 'sometimes|string|unique:products,sku_code,'.$id.',id',
+            'sku_code' => 'sometimes|string|unique:products,sku_code,' . $id . ',id',
             'stock' => 'sometimes|numeric',
             'description' => 'sometimes|string',
             'specifications' => 'sometimes|string',
@@ -90,13 +90,13 @@ class ProductController extends Controller
         Debugbar::info($request);
 
         $stock = $data['stock'] ?? null;
-        $image_id = $data['image_id'] ?? null;
         unset($data['stock']);
+        $image_id = $data['image_id'] ?? null;
         unset($data['image_id']);
 
         Debugbar::info($stock);
         $product = Product::where('id', $id)->first();
-        if (! $product) {
+        if (!$product) {
             return response(null, 404, ['message' => 'Product not found!']);
         }
         if ($stock) {
@@ -119,7 +119,7 @@ class ProductController extends Controller
     public function destroy(string $id)
     {
         $product = Product::where('id', $id)->first();
-        if (! $product) {
+        if (!$product) {
             return response(null, 404, ['message' => 'Product not found!']);
         }
 
@@ -135,7 +135,7 @@ class ProductController extends Controller
     public function restore(string $id)
     {
         $product = Product::withTrashed()->where('id', $id)->first();
-        if (! $product) {
+        if (!$product) {
             return response(null, 404, ['message' => 'Product not found!']);
         }
 
@@ -162,12 +162,15 @@ class ProductController extends Controller
             ->paginate($limit, ['*'], 'page', $page);
 
         return ProductResource::collection($products);
-
     }
 
-    public function attachBrand() {}
+    public function attachBrand()
+    {
+    }
 
-    public function attachCategory() {}
+    public function attachCategory()
+    {
+    }
 
     public function status(Request $request, string $id)
     {

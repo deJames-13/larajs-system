@@ -19,11 +19,12 @@ export default class PromosEdit {
 
         this.promo = this.fetchPromo(this.id);
 
-        $('#image-input').change(() => {
-            const imagesInput = Array.from($('#image-input')[0].files).map(file => URL.createObjectURL(file));
-            this.images = this.images.concat(imagesInput);
-            this.loadCarousel();
+           $('#image-input').change(() => {
+            this.images = Array.from($('#image-input')[0].files).map(file => URL.createObjectURL(file));
+            this.carousel = new Carousel('.item-carousel', this.images, '.prev', '.next');
         });
+
+
 
         $('.prev').click(() => {
             if (this.carousel) this.carousel.prev();

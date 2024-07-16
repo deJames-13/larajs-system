@@ -18,9 +18,8 @@ export default class ProductsEdit {
             const id = $('#item-form').data('id');
             this.fetchItem(id);
 
-            $('#image-input').change(() => {
+           $('#image-input').change(() => {
                 const images = Array.from($('#image-input')[0].files).map(file => URL.createObjectURL(file));
-                images.shift();
                 this.carousel = new Carousel('.item-carousel', images, '.prev', '.next');
             });
 
@@ -164,11 +163,6 @@ export default class ProductsEdit {
                 if (response.data) {
                     if (response.data.images && response.data.images.length > 0) {
                         this.images = response.data.images.map(image => '/' + image.path);
-                        // remove first image
-                        this.images.shift();
-                        //
-
-
                     }
                     this.loadCarousel();
                     this.populateForm(response.data);

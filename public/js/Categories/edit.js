@@ -20,10 +20,10 @@ export default class CategoriesEdit {
             this.fetchCategory(id);
 
             // CAROUSEL
-            $('#image-input').change(() => {
-                const images = Array.from($('#image-input')[0].files).map(file => URL.createObjectURL(file));
-                this.carousel = new Carousel('.item-carousel', images, '.prev', '.next');
-            });
+           $('#image-input').change(() => {
+            const images = Array.from($('#image-input')[0].files).map(file => URL.createObjectURL(file));
+            this.carousel = new Carousel('.item-carousel', images, '.prev', '.next');
+        });
 
             $('.prev').click(() => {
                 if (this.carousel) this.carousel.prev();

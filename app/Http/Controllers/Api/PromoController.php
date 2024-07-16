@@ -39,6 +39,7 @@ class PromoController extends Controller
             'discount' => 'required|numeric',
             'start_date' => 'required|date',
             'end_date' => 'required|date',
+            'image_id' => 'sometimes|numeric',
         ]);
 
         $image_id = $data['image_id'] ?? null;
@@ -64,15 +65,19 @@ class PromoController extends Controller
             'discount' => 'sometimes|numeric',
             'start_date' => 'sometimes|date',
             'end_date' => 'sometimes|date',
+            'image_id' => 'sometimes|numeric',
         ]);
+        $image_id = $data['image_id'] ?? null;
+        unset($data['image_id']);
 
         $promo = Promos::where('id', $id)->first();
-        if (! $promo) {
+        if (!$promo) {
             return response(null, 404, ['message' => 'Promo not found!']);
         }
 
         $promo->update($data);
 
+        $this->handleImageUpload($request, $promo, $image_id);
         $res = new PromoResource($promo);
 
         return response($res, 200, ['message' => 'Promo updated successfully!']);
@@ -81,7 +86,7 @@ class PromoController extends Controller
     public function destroy(string $id)
     {
         $promo = Promos::where('id', $id)->first();
-        if (! $promo) {
+        if (!$promo) {
             return response(null, 404, ['message' => 'Promo not found!']);
         }
 
@@ -93,7 +98,7 @@ class PromoController extends Controller
     public function restore(string $id)
     {
         $promo = Promos::withTrashed()->where('id', $id)->first();
-        if (! $promo) {
+        if (!$promo) {
             return response(null, 404, ['message' => 'Promo not found!']);
         }
 
@@ -102,7 +107,9 @@ class PromoController extends Controller
         return response(null, 200, ['message' => 'Promo restored successfully!']);
     }
 
-    public function thrashed() {}
+    public function thrashed()
+    {
+    }
 
     public function status(Request $request, string $id)
     {
