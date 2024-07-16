@@ -30,7 +30,7 @@ export default class FormCard {
       <div class="form-control">
         <label class="input-group input-group-md">
           <span class="text-sm text-gray-500">${item.label}</span>
-          <input type="${item.type}" id="${item.id}" name="${item.id}" class="input input-bordered input-sm ${item.className}" ${item.isEnable ? "" : "disabled"} />
+          <input type="${item.type}" id="${item.id}" name="${item.id}" class="input input-bordered input-sm ${item.className}" ${item.isDisabled ? "disabled" : ""} />
         </label>
       </div>
     `;
@@ -56,20 +56,14 @@ export default class FormCard {
         .prop("outerHTML");
     });
 
-    return `
-
-		<form action="#" id="form-card" class="h-full px-4 py-8 rounded-lg bg-base-100 border flex flex-col justify-center ">
-
-			<!--USER INFO -->
-			<div class="">
-				<div class="w-full text-black flex flex-col justify-center space-y-8">
-                    ${formFields.join("")}
-			    </div>
-			</div>
-
-		</form>
-
-        `;
+    return /* HTML */ `
+      <form action="#" id="form-card" class="h-full px-4 py-8 rounded-lg bg-base-100 border flex flex-col justify-center ">
+        <!--USER INFO -->
+        <div class="">
+          <div class="w-full text-black flex flex-col justify-center space-y-8">${formFields.join("")}</div>
+        </div>
+      </form>
+    `;
   }
 
   render() {

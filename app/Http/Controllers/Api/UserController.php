@@ -70,6 +70,7 @@ class UserController extends Controller
             'address' => 'required|string',
             'zip_code' => 'required|string',
             'profile_image' => 'sometimes|image',
+            'birthdate' => 'sometimes|date',
         ]);
         Debugbar::info($userData);
         Debugbar::info($userInfo);
@@ -105,6 +106,7 @@ class UserController extends Controller
             'address' => 'sometimes|string',
             'zip_code' => 'sometimes|string',
             'profile_image' => 'sometimes|image',
+            'birthdate' => 'sometimes|date',
         ]);
         // image
 

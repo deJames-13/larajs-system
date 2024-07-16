@@ -14,6 +14,8 @@ const defaultProps = {
   tableId: "",
   tableName: "",
   tableTitle: "",
+  html: "",
+  element: null,
   withImport: true,
   withActions: true
 };
@@ -31,14 +33,12 @@ export default class DataTable {
       maxLimit: this.maxLimit,
       page: 1
     };
-    this.html = "";
-    this.element = null;
     this.showPrint = this.showPrint.bind(this);
     this.makePdf = this.makePdf.bind(this);
     this.makeExcel = this.makeExcel.bind(this);
     this.makeCsv = this.makeCsv.bind(this);
-
     this.queryCallback = ({ data }) => this.updateTable(data);
+
     return this.render().fetchData({ onFetch: this.queryCallback });
   }
 
