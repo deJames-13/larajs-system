@@ -22,7 +22,7 @@ const defaultProps = {
       value: "option-3"
     }
   ],
-  placeholder: "Select options:",
+  placeholder: "Select options: ",
   count: 5
 };
 
@@ -168,7 +168,7 @@ export default class MultipleSelect {
         <div tabindex="0" role="button" class="w-full flex gap-2 p-2 px-4 border rounded-lg border-primary m-1 bg-transparent">
           <div className="flex items-center">
             <i class="fas fa-caret-down"></i>
-            <span class="placeholder"> Select options </span>
+            <span class="placeholder">${this.placeholder}</span>
           </div>
           <ul id="options-list" class="relative options flex flex-wrap gap-2"></ul>
         </div>

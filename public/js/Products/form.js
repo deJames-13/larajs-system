@@ -70,7 +70,8 @@ export default class ProductsForm extends FormPage {
     this.msCategories = new MultipleSelect({
       target: $("#categories-select"),
       options: this.categories.options,
-      selectedOptions: this.categories.selected
+      selectedOptions: this.categories.selected,
+      placeholder: "Select categories: "
     });
     this.getCategories();
     this.getBrands();
