@@ -2,7 +2,7 @@ import ajaxRequest from "/js/assets/ajaxRequest.js";
 import Pagination from "/js/components/Paginate.js";
 
 const defaultProps = {
-  baseApi: "/api/tables/",
+  baseApi: "/api/",
   data: [],
   fileButtons: [],
   limit: 10,
@@ -299,12 +299,12 @@ export default class DataTable {
   }
 
   showThrashed() {
-    this.baseApi = "/api/thrashed/";
+    this.baseApi = this.baseApi + "thrashed/";
     this.updateTable();
   }
 
   showNotThrashed() {
-    this.baseApi = "/api/tables/";
+    this.baseApi = this.baseApi.replace("thrashed/", "");
     this.updateTable();
   }
 

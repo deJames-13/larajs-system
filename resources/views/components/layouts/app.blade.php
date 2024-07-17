@@ -47,7 +47,7 @@
 
 		{{-- Loading overlay --}}
 		@if ($loading)
-			<div id="loading"
+			<div id="loading" style="display:hidden;"
 				class="print:hidden z-[100] fixed top-0 w-screen h-screen grid place-content-center bg-gray-500 bg-opacity-20">
 				<div class="div text-xl font-bold flex flex-col items-center justify-center">
 					<h2>

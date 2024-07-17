@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Http\Resources\CategoryResource;
+use Exception;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\CategoryResource;
 
 class CategoryController extends Controller
 {
@@ -15,16 +17,26 @@ class CategoryController extends Controller
         return CategoryResource::collection($category);
     }
 
+
     public function index()
     {
-        return CategoryResource::collection(Category::all());
+        try {
+            return $this->getResources(Category::class, CategoryResource::class);
+        } catch (Exception $ex) {
+            Log::error($ex->getMessage());
+            return response()->json(['message' => $ex->getMessage()], 404);
+        }
     }
 
     public function show(string $id)
     {
-        return $this->getResource($id, Category::class, CategoryResource::class);
+        try {
+            return $this->getResource($id, Category::class, CategoryResource::class);
+        } catch (Exception $ex) {
+            Log::error($ex->getMessage());
+            return response()->json(['message' => $ex->getMessage()], 404);
+        }
     }
-
     public function store(Request $request)
     {
         $data = $request->validate([

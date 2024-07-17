@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use Exception;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
-use App\Models\User;
 use Barryvdh\Debugbar\Facades\Debugbar;
-use Illuminate\Http\Request;
 use Laravel\Sanctum\PersonalAccessToken;
 
 class UserController extends Controller
@@ -44,13 +46,22 @@ class UserController extends Controller
 
     public function index()
     {
-        $users = User::all();
-        return response(UserResource::collection($users));
+        try {
+            return $this->getResources(User::class, UserResource::class);
+        } catch (Exception $ex) {
+            Log::error($ex->getMessage());
+            return response()->json(['message' => $ex->getMessage()], 404);
+        }
     }
 
     public function show(string $id)
     {
-        return $this->getResource($id, User::class, UserResource::class);
+        try {
+            return $this->getResource($id, User::class, UserResource::class);
+        } catch (Exception $ex) {
+            Log::error($ex->getMessage());
+            return response()->json(['message' => $ex->getMessage()], 404);
+        }
     }
 
     public function store(Request $request)

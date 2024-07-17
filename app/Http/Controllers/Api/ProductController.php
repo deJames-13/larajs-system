@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use Exception;
+use App\Models\Product;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
-use App\Models\Product;
 use Barryvdh\Debugbar\Facades\Debugbar;
-use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
@@ -26,9 +28,9 @@ class ProductController extends Controller
 
         $products = Product::filter($search)
             ->with([
-                // 'images',
+                'images',
                 'brands',
-                // 'categories',
+                'categories',
             ])
             ->orderBy('updated_at', $order)
             ->paginate($limit, ['*'], 'page', $page);
@@ -38,7 +40,12 @@ class ProductController extends Controller
 
     public function show(string $id)
     {
-        return $this->getResource($id, Product::class, ProductResource::class);
+        try {
+            return $this->getResource($id, Product::class, ProductResource::class);
+        } catch (Exception $ex) {
+            Log::error($ex->getMessage());
+            return response()->json(['message' => $ex->getMessage()], 404);
+        }
     }
 
     public function store(Request $request)

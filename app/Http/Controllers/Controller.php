@@ -11,14 +11,13 @@ use Illuminate\Http\Resources\Json\JsonResource;
 abstract class Controller
 {
 
-    public function getResources(Model $model, JsonResource $resource)
+    public function getResources($model, $resource)
     {
         $page = request('page') ?? 1;
         $limit = request('limit') ?? 10;
         $order =    request('order') ?? 'desc';
 
-        // meili search
-        $data = $model::search(request(['search']))
+        $data = $model::filter(request(['search']))
             ->orderBy('updated_at', $order)
             ->paginate($limit, ['*'], 'page', $page);
 
@@ -28,7 +27,7 @@ abstract class Controller
         return $response;
     }
 
-    public function getResource($id, Model $model, JsonResource $resource)
+    public function getResource($id, $model, $resource)
     {
         $data = $model::find($id);
         if (!$data) {

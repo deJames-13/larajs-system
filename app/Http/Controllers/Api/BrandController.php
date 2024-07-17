@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Http\Resources\BrandResource;
+use Exception;
 use App\Models\Brand;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\BrandResource;
 
 class BrandController extends Controller
 {
@@ -17,13 +19,24 @@ class BrandController extends Controller
 
     public function index()
     {
-        return BrandResource::collection(Brand::all());
+        try {
+            return $this->getResources(Brand::class, BrandResource::class);
+        } catch (Exception $ex) {
+            Log::error($ex->getMessage());
+            return response()->json(['message' => $ex->getMessage()], 404);
+        }
     }
 
     public function show(string $id)
     {
-        return $this->getResource($id, Brand::class, BrandResource::class);
+        try {
+            return $this->getResource($id, Brand::class, BrandResource::class);
+        } catch (Exception $ex) {
+            Log::error($ex->getMessage());
+            return response()->json(['message' => $ex->getMessage()], 404);
+        }
     }
+
 
 
     public function store(Request $request)

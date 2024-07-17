@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Http\Resources\PromoResource;
+use Exception;
 use App\Models\Promos;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\PromoResource;
 
 class PromoController extends Controller
 {
@@ -17,12 +19,22 @@ class PromoController extends Controller
 
     public function index()
     {
-        return PromoResource::collection(Promos::all());
+        try {
+            return $this->getResources(Promos::class, PromoResource::class);
+        } catch (Exception $ex) {
+            Log::error($ex->getMessage());
+            return response()->json(['message' => $ex->getMessage()], 404);
+        }
     }
 
     public function show(string $id)
     {
-        return $this->getResource($id, Promos::class, PromoResource::class);
+        try {
+            return $this->getResource($id, Promos::class, PromoResource::class);
+        } catch (Exception $ex) {
+            Log::error($ex->getMessage());
+            return response()->json(['message' => $ex->getMessage()], 404);
+        }
     }
 
 
