@@ -158,7 +158,7 @@ export default class PromosCreate {
         Object.keys(xhr.responseJSON.errors).forEach(field => {
           let input = $(`#${field}`);
           input.addClass("input-error");
-          input.after(`<p class="text-error text-sm">${response.errors[field]}</p>`);
+          input.after(`<p class="text-error text-sm">${xhr.responseJSON.errors[field]}</p>`);
         });
       }
     });

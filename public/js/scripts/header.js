@@ -86,24 +86,29 @@ const handleAutoComplete = () => {
 };
 
 $(document).ready(function () {
-  if (window.location.pathname === "/login" || window.location.pathname === "/register") $(".auth-dropdown").hide();
-
   $("#search-button").on("click", () => {
     const search = $("#search-input").val();
     if (search) window.location.href = `/search?q=${search}`;
   });
-  // $(window).scroll(function () {
-  //   var currentScroll = $(this).scrollTop();
+  $(window).scroll(function () {
+    var currentScroll = $(this).scrollTop();
 
-  //   if (currentScroll > 0) {
-  //     $("#search-bar").slideUp();
-  //   } else {
-  //     $("#search-bar").slideDown();
-  //   }
-  // });
+    const headerHeight = $("header").height();
+    if (currentScroll > headerHeight) {
+      $("#search-bar").slideUp();
+    } else {
+      $("#search-bar").slideDown();
+    }
+  });
   hideLoader();
   handleAutoComplete();
-  // if in /profile page do not initialize user
+  uiRules();
   if (window.location.pathname.includes("/profile")) return;
   user = new User().init();
 });
+
+const uiRules = () => {
+  if (window.location.pathname === "/login" || window.location.pathname === "/register") $(".auth-dropdown").hide();
+  // if in dashboard remove #shop-navigation
+  if (window.location.pathname.includes("/dashboard")) $("#shop-navigation").remove();
+};

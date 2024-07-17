@@ -2,7 +2,7 @@ import ajaxRequest from "/js/assets/ajaxRequest.js";
 import Pagination from "/js/components/Paginate.js";
 
 const defaultProps = {
-  baseApi: "/api/tables/",
+  baseApi: "/api/",
   data: [],
   fileButtons: [],
   limit: 10,
@@ -39,7 +39,30 @@ export default class DataTable {
     this.makeCsv = this.makeCsv.bind(this);
     this.queryCallback = ({ data }) => this.updateTable(data);
 
-    return this.render().fetchData({ onFetch: this.queryCallback });
+    this.init();
+    return this;
+  }
+
+  init() {
+    this.render();
+    this.makeFileButtons();
+    this.bindActions();
+    this.onQuery(this.queryCallback);
+
+    Object.keys(this.query).map(key => {
+      $(`#${key}`).val(this.query[key]);
+    });
+
+    this.fetchData({ onFetch: this.queryCallback });
+    this.checkParams();
+  }
+
+  checkParams() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const table = urlParams.get("table");
+    if (table === "thrashed") {
+      this.showThrashed();
+    }
   }
 
   showPrint() {
@@ -49,7 +72,7 @@ export default class DataTable {
   importExcel() {
     const formData = new FormData($("#import-form")[0]);
     ajaxRequest.post({
-      url: `/admin/${this.tableName}`,
+      url: `/import/${this.tableName}`,
       data: formData,
       onSuccess: response => {
         Swal.fire("Success!", "File Imported successfully", "success");
@@ -89,7 +112,7 @@ export default class DataTable {
   }
 
   makePdf() {
-    window.location.href = "/admin/pdf/" + this.tableName;
+    window.location.href = "/pdf/" + this.tableName;
   }
 
   makeExcel() {
@@ -194,18 +217,17 @@ export default class DataTable {
   }
 
   bindActions() {
-    $(document).on("click", ".row-delete", e => {
-      const id = $(e.target).data("id");
-      console.log(id);
-      this.confirmAction(() => this.onDelete(id));
+    $(document).ready(() => {
+      $(document).on("click", ".row-delete", e => {
+        const id = $(e.target).data("id");
+        this.confirmAction(() => this.handleDelete(id));
+      });
+      $(document).on("click", ".row-restore", e => {
+        const id = $(e.target).data("id");
+        this.confirmAction(() => this.handleRestore(id));
+      });
     });
-    $(document).on("click", ".row-restore", e => {
-      const id = $(e.target).data("id");
-      this.confirmAction(() => this.onRestore(id));
-    });
-
     $("#alt-action").hide();
-
     $("#btn-trash-" + this.tableName).on("click", () => {
       this.showThrashed();
       $("#btn-trash-" + this.tableName).hide();
@@ -213,7 +235,6 @@ export default class DataTable {
       $(".actions").hide();
       $(".alt-action").show();
     });
-
     $("#btn-table-" + this.tableName).on("click", () => {
       this.showNotThrashed();
       $("#btn-table-" + this.tableName).hide();
@@ -221,11 +242,6 @@ export default class DataTable {
       $(".actions").show();
       $(".alt-action").hide();
     });
-
-    $("#btn-add-" + this.tableName).on("click", () => {
-      // window.location.href = "/admin/" + this.tableName + "/create";
-    });
-
     $("#import-form").on("submit", e => {
       e.preventDefault();
       this.importExcel();
@@ -248,7 +264,7 @@ export default class DataTable {
     });
   }
 
-  onRestore(id) {
+  handleRestore(id) {
     ajaxRequest.put({
       url: `/api/${this.tableName}/${id}/restore`,
       onSuccess: response => {
@@ -261,7 +277,7 @@ export default class DataTable {
     });
   }
 
-  onDelete(id) {
+  handleDelete(id) {
     ajaxRequest.delete({
       url: `/api/${this.tableName}/${id}`,
       onSuccess: response => {
@@ -277,7 +293,7 @@ export default class DataTable {
   actions() {
     return /* HTML */ `
       <div class="print:hidden py-4 w-full overflow-auto flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
-        <form id="import-form" method="POST" enctype="multipart/form-data" action="/admin/${this.tableName}" class="flex flex-col lg:flex-row gap-2 lg:items-center">
+        <form id="import-form" method="POST" enctype="multipart/form-data" action="/import/${this.tableName}" class="flex flex-col lg:flex-row gap-2 lg:items-center">
           <!-- {{ csrf_field() }} -->
           <input type="file" id="uploadName" name="item_upload" class="file-input file-input-sm  w-full max-w-xs" required />
           <button id="import-form-submit" type="submit" class="btn btn-info btn-sm btn-primary ">Import Excel File</button>
@@ -299,12 +315,19 @@ export default class DataTable {
   }
 
   showThrashed() {
-    this.baseApi = "/api/thrashed/";
+    this.baseApi = this.baseApi + "thrashed/";
     this.updateTable();
+
+    $("#table-title").after(`<h2 class="text-xl font-bold text-gray-600 text-left"> Retrieve thrashed records. </h2>`);
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set("table", "thrashed");
+    const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+    window.history.pushState({}, null, newUrl);
   }
 
   showNotThrashed() {
-    this.baseApi = "/api/tables/";
+    this.baseApi = this.baseApi.replace("thrashed/", "");
+    $("#table-title").next().remove();
     this.updateTable();
   }
 
@@ -344,45 +367,36 @@ export default class DataTable {
   }
 
   render() {
-    const topBar = `
-			      <h1 class="text-3xl font-extrabold">${this.tableTitle}</h1>
-            <div class="divider m-0"></div>
+    const topBar = /* HTML */ `
+      <h1 id="table-title" class="text-3xl font-extrabold">${this.tableTitle}</h1>
 
-            <div id="search-bar" class="py-4 print:w-0 print:hidden" >
-                <div class="flex justify-end space-x-4 items-center">
-                    <i class="aspect-square fas fa-magnifying-glass"></i>
-                    <span>Search</span>
-                    <input id="search" type="text" placeholder="" class="input input-bordered input-sm max-h-[35px]">
-                </div>
-            </div>
-            <div class="print:w-0 print:hidden flex justify-between items-end space-x-2 py-4">
-                <div class="w-full flex flex-wrap gap-2">
-                    <div id="file-buttons" class="flex flex-wrap gap-2 items-center">
+      <div class="divider m-0"></div>
 
-                    </div>
-                    <div id="limit-wrapper" class="container">
-                        <span>Items: </span>
-                        <input id="limit" type="number" min='10' value='10' max='50' class="input input-bordered input-sm max-w-[69px] max-h-[35px]" />
-                    </div>
-                </div>
+      <div id="search-bar" class="py-4 print:w-0 print:hidden">
+        <div class="flex justify-end space-x-4 items-center">
+          <i class="aspect-square fas fa-magnifying-glass"></i>
+          <span>Search</span>
+          <input id="search" type="text" placeholder="" class="input input-bordered input-sm max-h-[35px]" />
+        </div>
+      </div>
+      <div class="print:w-0 print:hidden flex justify-between items-end space-x-2 py-4">
+        <div class="w-full flex flex-wrap gap-2">
+          <div id="file-buttons" class="flex flex-wrap gap-2 items-center"></div>
+          <div id="limit-wrapper" class="container">
+            <span>Items: </span>
+            <input id="limit" type="number" min="10" value="10" max="50" class="input input-bordered input-sm max-w-[69px] max-h-[35px]" />
+          </div>
+        </div>
 
-                <div id="paginations" class="container flex justify-end items-end">
-                </div>
-            </div>
-            `;
+        <div id="paginations" class="container flex justify-end items-end"></div>
+      </div>
+    `;
 
     this.html = topBar;
     this.html += this.withActions ? this.actions() : "";
-    this.html += this.createTable(); //+ importForm;
+    this.html += this.createTable();
     this.element = $(`${this.parent} `).html(this.html);
 
-    this.makeFileButtons();
-    this.bindActions();
-    this.onQuery(this.queryCallback);
-
-    Object.keys(this.query).map(key => {
-      $(`#${key}`).val(this.query[key]);
-    });
     return this;
   }
 }

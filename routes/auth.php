@@ -9,14 +9,6 @@ use App\Http\Controllers\Api\ChartController;
 // INFO: REMOVE COMMENTS AFTER 
 
 
-$crud = [
-    "products",
-    // INFO: CONVERTED to JS/JQUERY
-    // "promos",
-    // "brands",
-    // "categories",
-    // "users",
-];
 
 Route::post("/admin/orders", [TableController::class, "ordersImport"])->name("imports.orders");
 // Guess ONLY
@@ -30,7 +22,7 @@ Route::group(["middleware" => "guest"], function () {
 });
 
 // Auth ONLY
-Route::group(["middleware" => "auth"], function () use ($crud) {
+Route::group(["middleware" => "auth"], function () {
     Route::post("/logout", [AuthController::class, "logout"])->name("logout");
 
     // PROFILE
@@ -46,43 +38,40 @@ Route::group(["middleware" => "auth"], function () use ($crud) {
 
     //##################################################################################################################
     // ADMIN ONLY
-    Route::group(["prefix" => "admin", "middleware" => ["role:admin"]], function () use ($crud) {
-
-        foreach ($crud as $prefix) {
-            // INFO: CONVERTED to JS/JQUERY
-            // TABLE pages
-            // Route::post("/$prefix", [TableController::class, $prefix])->name("tables.$prefix");
-            // Rouute::get("/$prefix", [TableController::class, $prefix])->name("tables.$prefix");
-            // CREATE and EDIT pages
-            // Route::get("/$prefix/create", [PageController::class, $prefix . "Create"])->name("$prefix.create");
-            // Route::get("/$prefix/edit/{id}", [PageController::class, $prefix . "Edit"])->name("$prefix.edit");
-
-            // PDFS
-            Route::get("/pdf/$prefix", [PdfController::class, $prefix . "Pdf"])->name("pdf.$prefix");
-
-            // Imports
-            Route::post("/$prefix", [TableController::class, $prefix . "Import"])->name("imports.$prefix");
-        }
-        // Route::get("/orders", [TableController::class, "orders"])->name("tables.orders");
-
-        // TODO: Convert to JS/JQUERY
-        // CHARTS
-        $charts = [
-            'orderPerMonth' => 'order-per-month',
-            'customerPerAddress' => 'customer-per-address',
-            'productsSold' => 'products-sold',
-            'ordersRevenue' => 'orders-revenue',
-        ];
-        foreach ($charts as $chart => $url) {
-            Route::get("/charts/$url", [ChartController::class, $chart]);
-        }
-    });
-
+    $prefix = "admin";
+    $crud = [
+        "products",
+    ];
+    // CHART PAGES: TODO: convert to js/jquery
+    $charts = [
+        'orderPerMonth' => 'order-per-month',
+        'customerPerAddress' => 'customer-per-address',
+        'productsSold' => 'products-sold',
+        'ordersRevenue' => 'orders-revenue',
+    ];
     // ADMIN DASHBOARD
     $adminPages = [
         "dashboard" => "/dashboard",
         "users" => "/users",
     ];
+
+    foreach ($crud as $prefix) {
+        // PDFS
+        Route::get("/pdf/$prefix", [PdfController::class, $prefix . "Pdf"])
+            ->name("pdf.$prefix")
+            ->middleware("role:admin");
+        // Imports
+        Route::post("/import/$prefix", [TableController::class, $prefix . "Import"])
+            ->name("imports.$prefix")
+            ->middleware("role:admin");
+    }
+
+    foreach ($charts as $chart => $url) {
+        Route::get("/$prefix/charts/$url", [ChartController::class, $chart])
+            ->name('charts.' . $chart)
+            ->middleware("role:admin");
+    }
+
     foreach ($adminPages as $page => $url) {
         Route::get($url, [PageController::class, $page])->name("admin.$page");
     }

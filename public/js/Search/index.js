@@ -82,6 +82,10 @@ export default class SearchPage {
   onSearch(s) {
     if (s.length >= 3) {
       this.fetchSearch();
+      // update url params q=s
+      const url = new URL(window.location.href);
+      url.searchParams.set("q", s);
+      window.history.pushState({}, "", url);
     }
   }
 
