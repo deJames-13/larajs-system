@@ -48,7 +48,7 @@ $crud = [
 
     'users' => [
         'controller' => UserController::class,
-        'middleware' => ['auth:sanctum', 'role:admin'],
+        'middleware' => ['role:admin'],
     ],
     // "comments"?
 ];
@@ -60,44 +60,45 @@ foreach ($crud as $prefix => $config) {
 
     // prevent non-ajax requests
     array_push($middleware, 'only.ajax');
-    Route::get("/$prefix", [$controller, 'index'])->name($prefix . '.all')->middleware($middleware);
-    Route::get("/$prefix/{id}", [$controller, 'show'])->name($prefix . '.get')->middleware($middleware);
+    Route::get("/$prefix", [$controller, 'index'])->name($prefix.'.all')->middleware($middleware);
+    Route::get("/$prefix/{id}", [$controller, 'show'])->name($prefix.'.get')->middleware($middleware);
 
     // include auth:sanctum middleware, only for authenticated users
-    $middleware = array_merge(['role:admin', 'auth:sanctum'], $middleware);
+    array_push($middleware, 'auth:sanctum');
+    array_push($middleware, 'role:staff,admin');
 
     // CREATE
     Route::post("/$prefix", [$controller, 'store'])
-        ->name($prefix . '.store')
+        ->name($prefix.'.store')
         ->middleware($middleware);
 
     // DELETE
     Route::match(['delete'], "/$prefix/{id}", [$controller, 'destroy'])
-        ->name($prefix . '.destroy')
+        ->name($prefix.'.destroy')
         ->middleware($middleware);
 
     // UPDATE
     Route::match(['put', 'post'], "/$prefix/{id}", [$controller, 'update'])
-        ->name($prefix . '.update')
+        ->name($prefix.'.update')
         ->middleware($middleware);
 
     // RESTORE
     Route::match(['put', 'post'], "/$prefix/{id}/restore", [$controller, 'restore'])
-        ->name($prefix . '.restore')
+        ->name($prefix.'.restore')
         ->middleware($middleware);
 
     // THRASHED - this is where my code is
-    Route::get('/thrashed/' . $prefix, [$controller, 'thrashed'])
-        ->name($prefix . '.thrashed')
+    Route::get('/thrashed/'.$prefix, [$controller, 'thrashed'])
+        ->name($prefix.'.thrashed')
         ->middleware($middleware);
 
     // EXPORTS
-    Route::get("/exports/$prefix/{type}", [TableController::class, $prefix . 'Export'])
+    Route::get("/exports/$prefix/{type}", [TableController::class, $prefix.'Export'])
         ->middleware($middleware);
 
     // STATUS
     Route::post("/$prefix/status/{id}", [$controller, 'status'])
-        ->name($prefix . '.status')
+        ->name($prefix.'.status')
         ->middleware($middleware);
 }
 
@@ -140,6 +141,6 @@ Route::group(['middleware' => 'auth:sanctum', 'only.ajax'], function () {
     ];
     // no need to touch
     foreach ($charts as $chart => $url) {
-        Route::get("/charts/$url", [ChartController::class, $chart]);
+        Route::get("/charts/$url", [ChartController::class, $chart])->middleware(['auth:sanctum', 'role:staff,admin', 'only.ajax']);
     }
 });

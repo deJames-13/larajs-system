@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
+
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class UserSeeder extends Seeder
@@ -15,16 +16,24 @@ class UserSeeder extends Seeder
     {
         $adminExists = User::query()->where('email', 'admin@example.dev')->exists();
         $customerExists = User::query()->where('email', 'johndoe@example.dev')->exists();
+        $staffExists = User::query()->where('email', 'staff@example.dev')->exists();
 
-        if (!$adminExists) {
+        if (! $adminExists) {
             User::factory()->create([
                 'username' => 'admin',
                 'email' => 'admin@example.dev',
                 'role' => 'admin',
             ]);
         }
+        if (! $staffExists) {
+            User::factory()->create([
+                'username' => 'staff',
+                'email' => 'staff@example.dev',
+                'role' => 'staff',
+            ]);
+        }
 
-        if (!$customerExists) {
+        if (! $customerExists) {
             $user = User::factory()->create([
                 'username' => 'johndoe',
                 'email' => 'johndoe@example.dev',

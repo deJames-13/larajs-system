@@ -167,7 +167,8 @@ export default class MultipleSelect {
 
   render() {
     const HTML = /* HTML */ `
-      <div class="dropdown dropdown-hover w-full">
+      <div class="dropdown dropdown-hover
+       w-full">
         <div tabindex="0" role="button" class="w-full flex gap-2 p-2 px-4 border rounded-lg border-primary bg-transparent">
           <div className="flex items-center">
             <i class="fas fa-caret-down"></i>

@@ -1,7 +1,10 @@
+import { getUser } from "../../assets/getUser.js";
 import SideBar from "../../components/SideBar.js";
 
 export default class DashboardSideBar extends SideBar {
   constructor({ target, onClick = () => {} }) {
+    const user = getUser();
+    console.log(user);
     const sidebar = [
       {
         text: "Main Page",
@@ -34,11 +37,13 @@ export default class DashboardSideBar extends SideBar {
         icon: "fas fa-percent",
         url: "promos"
       },
-      {
-        text: "Users",
-        icon: "fas fa-users",
-        url: "users"
-      },
+      (user &&
+        user.role === "admin" && {
+          text: "Users",
+          icon: "fas fa-users",
+          url: "users"
+        }) ||
+        {},
       {
         text: "Charts",
         icon: "fas fa-chart-line",

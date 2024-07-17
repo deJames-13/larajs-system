@@ -104,7 +104,7 @@ $(document).ready(function () {
   handleAutoComplete();
   uiRules();
   if (window.location.pathname.includes("/profile")) return;
-  user = new User().init();
+  new User().init();
 });
 
 const uiRules = () => {
