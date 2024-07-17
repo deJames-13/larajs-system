@@ -24,7 +24,7 @@
 
 			<div class="_skeleton actions  flex space-x-2 items-center print:hidden">
 				<button id="btn-verify" class="action-button btn bg-green-400">
-					@role('admin')
+					@role('admin,staff')
 						Verify and Accept
 					@else
 						View Receipt
@@ -42,7 +42,7 @@
 
 
 		{{-- Cancelling the order --}}
-		@role('admin')
+		@role('admin,staff')
 			<div id="cancelling-form" class="print:hidden">
 
 				{{-- Text area --}}

@@ -42,8 +42,8 @@ export default class UserFormPage {
       ajaxRequest.get({
         url: this.fetchUrl + id,
         onSuccess: response => {
-          this.user = response;
-          resolve(response);
+          this.user = response.data;
+          resolve(response.data);
         },
         onError: error => {
           console.log(error);

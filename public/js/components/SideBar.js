@@ -5,6 +5,7 @@ export default class SideBar {
             { text: 'Home', url: '/', icon: 'fas fa-home',  isActive: true },
         ]
          */
+
     this.links = links;
     this.target = target;
     this.onClick = onClick;
@@ -35,6 +36,7 @@ export default class SideBar {
   }
 
   createLink({ icon, text, url = "#", isActive = false, type = "link" }) {
+    if (type == "link" && !text) return /* HTML */ ``;
     if (isActive) this.currentUrl = url;
 
     const link = /* HTML */ `

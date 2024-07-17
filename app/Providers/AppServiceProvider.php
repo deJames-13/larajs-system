@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -26,8 +25,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        \Illuminate\Support\Facades\Blade::if('role', function ($role) {
-            return auth()->check() && auth()->user()->role == $role;
+        \Illuminate\Support\Facades\Blade::if('role', function ($roles) {
+            if (! auth()->check()) {
+                return false;
+            }
+
+            $rolesArray = explode(',', $roles);
+
+            return in_array(auth()->user()->role, $rolesArray);
         });
     }
 }
