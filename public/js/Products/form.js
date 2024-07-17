@@ -1,3 +1,4 @@
+import AddCategory from "../Categories/add-modal.js";
 import MultipleSelect from "../components/MultipleSelect.js";
 import FormPage from "../layouts/FormPage.js";
 import ProductsCreate from "./create.js";
@@ -38,7 +39,6 @@ export default class ProductsForm extends FormPage {
           label: category.name
         };
       });
-      console.log(this.msCategories);
       this.msCategories && this.msCategories.setOptions(this.categories.options).update();
     });
   }
@@ -90,6 +90,14 @@ export default class ProductsForm extends FormPage {
       });
     }
   }
+
+  bindEvents() {
+    super.bindEvents();
+    $("#add-category").on("click", () => {
+      new AddCategory();
+    });
+  }
+
   makeFields() {
     var html = super.makeFields();
     html += /* HTML */ `
@@ -147,19 +155,18 @@ export default class ProductsForm extends FormPage {
                 <option value="">Select a brand</option>
               </select>
             </div>
-            <button class="btn btn-outline btn-primary">
+            <button type="button" class="btn btn-outline btn-primary">
               <i class="fas fa-plus"></i>
               <span> Add Brand </span>
             </button>
           </div>
           <!-- Item Categories // Multi select component -->
-          <!-- Item Brand Select -->
-          <div class="flex gap-4 items-end">
+          <div class="flex gap-4 items-end m-1">
             <div class="flex flex-grow flex-col space-y-2">
               <label for="categories" class="text-lg font-semibold">Categories</label>
               <div id="categories-select"></div>
             </div>
-            <button class="btn btn-outline btn-primary">
+            <button type="button" id="add-category" class="btn btn-outline btn-primary">
               <i class="fas fa-plus"></i>
               <span> Add Category </span>
             </button>
