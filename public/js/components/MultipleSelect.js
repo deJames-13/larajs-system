@@ -175,7 +175,7 @@ export default class MultipleSelect {
           </div>
           <ul id="options-list" class="relative options flex flex-wrap gap-2"></ul>
         </div>
-        <div class="dropdown-content my-2 mb-12 menu bg-base-100 rounded-lg z-[1] container max-w-sm p-2 shadow border gap-2">
+        <div class="dropdown-content my-2 pb-12 menu bg-base-100 rounded-lg z-[1] container max-w-sm p-2 shadow border gap-2">
           <div id="filter-options">
             <input type="text" class="input input-bordered rounded-md w-full" placeholder="Filter" />
           </div>
