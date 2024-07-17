@@ -31,7 +31,10 @@ export default class ProductsForm extends FormPage {
     const query = {
       limit: 100
     };
+    $("#mini-loader").show();
     return this.fetch("categories", query).then(categories => {
+      $("#mini-loader").hide();
+
       this.categories.data = categories;
       this.categories.options = categories.map(category => {
         return {
@@ -69,6 +72,8 @@ export default class ProductsForm extends FormPage {
 
     this.msCategories = new MultipleSelect({
       target: $("#categories-select"),
+      id: "categories",
+      name: "categories",
       options: this.categories.options,
       selectedOptions: this.categories.selected,
       placeholder: "Select categories: "
@@ -95,6 +100,10 @@ export default class ProductsForm extends FormPage {
     super.bindEvents();
     $("#add-category").on("click", () => {
       new AddCategory();
+    });
+
+    $(document).on("click", "[data-select-event]", e => {
+      $("#save-item, #cancel").show();
     });
   }
 
@@ -163,7 +172,10 @@ export default class ProductsForm extends FormPage {
           <!-- Item Categories // Multi select component -->
           <div class="flex gap-4 items-end m-1">
             <div class="flex flex-grow flex-col space-y-2">
-              <label for="categories" class="text-lg font-semibold">Categories</label>
+              <div class="flex items-center">
+                <span id="mini-loader" class="loading loading-spinner text-primary"></span>
+                <label for="categories" class="text-lg font-semibold">Categories</label>
+              </div>
               <div id="categories-select"></div>
             </div>
             <button type="button" id="add-category" class="btn btn-outline btn-primary">

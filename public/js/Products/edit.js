@@ -35,6 +35,8 @@ export default class ProductsEdit {
         if (this.carousel) this.carousel.next();
       });
 
+      // if the number of categories[] is changed show the save button
+
       $("#save-item, #cancel").hide();
       $("#item-form").change(() => {
         $("#save-item, #cancel").show();
@@ -186,6 +188,7 @@ export default class ProductsEdit {
 
     const formData = new FormData(form);
     formData.append("_method", "PUT");
+    console.log(formData);
     const token = document.querySelector('meta[name="api-token"]').getAttribute("content");
 
     ajaxRequest.post({

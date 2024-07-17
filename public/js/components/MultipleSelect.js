@@ -101,7 +101,9 @@ export default class MultipleSelect {
   makeOption(option) {
     const HTML = /* HTML */ `
       <li data-option data-option-value="${option.value}">
-        <button type="button" class="option hover:border hover:border-b-2 border-primary capitalize duration-300" data-value="${option.value}">${option.label}</button>
+        <button type="button" data-select-event class="option hover:border hover:border-b-2 border-primary capitalize duration-300" data-value="${option.value}">
+          ${option.label}
+        </button>
       </li>
     `;
     const el = $(HTML);
@@ -117,9 +119,10 @@ export default class MultipleSelect {
       <li data-tag data-tag-value="${option.value}">
         <div class="tag text-sm font-semibold p-1 px-2 rounded-sm bg-gray-300 capitalize hover:text-primary">
           <span>${option.label}</span>
-          <button type="button" class="remove-selected btn btn-xs btn-ghost">
+          <button type="button" data-select-event class="remove-selected btn btn-xs btn-ghost">
             <i class="fas fa-times"></i>
           </button>
+          <input type="hidden" name="${this.name}[]" value="${option.value}" id="${this.id}" />
         </div>
       </li>
     `;
@@ -172,7 +175,7 @@ export default class MultipleSelect {
           </div>
           <ul id="options-list" class="relative options flex flex-wrap gap-2"></ul>
         </div>
-        <div class="dropdown-content my-2 menu bg-base-100 rounded-lg z-[1] container max-w-sm p-2 shadow border gap-2">
+        <div class="dropdown-content my-2 mb-12 menu bg-base-100 rounded-lg z-[1] container max-w-sm p-2 shadow border gap-2">
           <div id="filter-options">
             <input type="text" class="input input-bordered rounded-md w-full" placeholder="Filter" />
           </div>
