@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -21,6 +22,8 @@ class UserResource extends JsonResource
             ...$main,
             'fullname' => $this->whenLoaded('info', fn () => $this->info->fullName()),
             'info' => $this->whenLoaded('info', fn () => new CustomerResource($this->info)),
+            // calculate age based on birthdate
+            'age' => $this->whenLoaded('info', fn () => $this->info->birthdate ? Carbon::parse($this->info->birthdate)->age : null),
 
             'images' => $this->whenLoaded('images', fn () => $this->images),
 

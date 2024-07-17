@@ -1,28 +1,29 @@
 import UserFormPage from "./_formpage.js";
 export default class UserView extends UserFormPage {
-    constructor({ userId }) {
-        super();
-        this.userId = userId;
-        this.id = "user_view_modal";
-        this.width = "3xl";
-        this.init();
-    }
+  constructor({ userId }) {
+    super();
+    this.userId = userId;
+    this.id = "user_view_modal";
+    this.width = "3xl";
+    this.init();
+  }
 
-    init(){
-        this.fetchUser(this.userId).then((response) => {
-            super.init();
-            console.log(this.user);
-        });
-    }
+  init() {
+    this.fetchUser(this.userId).then(response => {
+      super.init();
+      console.log(this.user);
+    });
+  }
 
-    makeTop() {
-        return `<h1 class="text-2xl font-extrabold">View User #${this.userId}</h1>`;
-    }
-    makeContent() {
-        if (!this.user) return '';
-        const image = this.user.images.length > 0 ? this.user.images[0].path : "https://via.placeholder.com/150";
-        const info = this.user.info ||  {}; const noinfo = "No information available";
-        return `
+  makeTop() {
+    return /* HTML */ `<h1 class="text-2xl font-extrabold">View User #${this.userId}</h1>`;
+  }
+  makeContent() {
+    if (!this.user) return "";
+    const image = this.user.images.length > 0 ? this.user.images[0].path : "https://via.placeholder.com/150";
+    const info = this.user.info || {};
+    const noinfo = "No information available";
+    return `
             <div class="py-4 flex flex-col gap-8 ">
                 <div class="flex p-4 gap-4 border shadow-xl rounded-lg">
                    <div class="avatar p-4">
@@ -108,5 +109,5 @@ export default class UserView extends UserFormPage {
 
             </div>
         `;
-    }
+  }
 }

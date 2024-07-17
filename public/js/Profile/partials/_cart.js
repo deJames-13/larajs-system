@@ -1,11 +1,11 @@
 export default class CartPage {
-    constructor({ target }) {
-        this.target = target;
-        return this.render();
-    }
+  constructor({ target }) {
+    this.target = target;
+    return this.render();
+  }
 
-    render() {
-        const HTML = `
+  render() {
+    const HTML = /* HTML */ `
         <div class="p-4 flex flex-col space-y-4">
             <div class="top flex flex-col lg:flex-row justify-between lg:items-center">
                 <h2 class="text-2xl font-extrabold">Shopping Cart</h2>
@@ -71,8 +71,8 @@ export default class CartPage {
             </div>
         </div>
 
-        `
-        $(this.target).html(HTML);
-        return this;
-    }
+        `;
+    $(this.target).html(HTML);
+    return this;
+  }
 }

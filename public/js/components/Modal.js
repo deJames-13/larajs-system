@@ -1,65 +1,65 @@
 const defaultProps = {
-    id: "my_modal_1",
-    top: `<h3 class="font-bold text-lg">Hello!</h3>`,
-    content: `<p class="py-4">Press ESC key or click the button below to close</p>`,
-    action: ``,
-    backDropExit: true,
-    destroyOnClose: false,
-    isShown: false,
-    onEscClose: true,
-    disableClosing: false,
-    width: "sm",
+  id: "my_modal_1",
+  top: `<h3 class="font-bold text-lg">Hello!</h3>`,
+  content: `<p class="py-4">Press ESC key or click the button below to close</p>`,
+  action: ``,
+  backDropExit: true,
+  destroyOnClose: false,
+  isShown: false,
+  onEscClose: true,
+  disableClosing: false,
+  width: "sm"
 };
 
 export default class Modal {
-    constructor(props = {}) {
-        Object.assign(this, defaultProps, props);
+  constructor(props = {}) {
+    Object.assign(this, defaultProps, props);
 
-        this.modal = null;
-        this.render();
-        this.init();
-        return this;
-    }
-    init() {
-        this.modal = $(`#${this.id}`);
+    this.modal = null;
+    this.render();
+    this.init();
+    return this;
+  }
+  init() {
+    this.modal = $(`#${this.id}`);
 
-        $(`[data-open-modal="${this.id}"]`).on("click", () => {
-            this.open();
-        });
-        !this.disableClosing && this.handleClosing();
-        this.disableClosing && $("[data-close-modal]").remove();
-        this.isShown && this.open();
-    }
+    $(`[data-open-modal="${this.id}"]`).on("click", () => {
+      this.open();
+    });
+    !this.disableClosing && this.handleClosing();
+    this.disableClosing && $("[data-close-modal]").remove();
+    this.isShown && this.open();
+  }
 
-    handleClosing() {
-        this.modal.find("[data-close-modal]").click("click", () => {
-            this.close();
-        });
+  handleClosing() {
+    this.modal.find("[data-close-modal]").click("click", () => {
+      this.close();
+    });
 
-        this.backDropExit &&
-            this.modal.find("[data-modal-backdrop]").click("click", () => {
-                this.close();
-            });
+    this.backDropExit &&
+      this.modal.find("[data-modal-backdrop]").click("click", () => {
+        this.close();
+      });
 
-        this.onEscClose &&
-            $(document).on("keydown", (e) => {
-                if (e.key === "Escape") {
-                    this.close();
-                }
-            });
-    }
+    this.onEscClose &&
+      $(document).on("keydown", e => {
+        if (e.key === "Escape") {
+          this.close();
+        }
+      });
+  }
 
-    open() {
-        this.modal.show();
-    }
+  open() {
+    this.modal.show();
+  }
 
-    close() {
-        this.modal.fadeOut();
-        this.destroyOnClose && this.modal.remove();
-    }
+  close() {
+    this.modal.fadeOut();
+    this.destroyOnClose && this.modal.remove();
+  }
 
-    render() {
-        const modal = `
+  render() {
+    const modal = `
         <div id="${this.id}"  style="display: none;" class="z-[100] fixed w-screen h-screen top-0 left-0 flex items-center">
 
             <div id="modal-backdrop" data-modal-backdrop class="fixed w-screen h-screen bg-black bg-opacity-35"></div>
@@ -83,6 +83,6 @@ export default class Modal {
         </div>
         `;
 
-        $("#app").prepend(modal);
-    }
+    $("#app").prepend(modal);
+  }
 }

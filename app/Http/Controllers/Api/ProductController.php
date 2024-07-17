@@ -14,7 +14,6 @@ class ProductController extends Controller
     {
         // TODO: Implement sorting and other filters
         $product = Product::filter(request(['search']))->get();
-
         return ProductResource::collection($product);
     }
 
@@ -39,9 +38,7 @@ class ProductController extends Controller
 
     public function show(string $id)
     {
-        $res = new ProductResource(Product::where('id', $id)->first());
-
-        return $res;
+        return $this->getResource($id, Product::class, ProductResource::class);
     }
 
     public function store(Request $request)
@@ -66,9 +63,8 @@ class ProductController extends Controller
         $image_id = $data['image_id'] ?? null;
         $product = Product::create($data);
 
-        if ($stock) {
-            $product->stock()->create(['quantity' => $stock]);
-        }
+        $product->stock()->create(['quantity' => $stock ? $stock : 0]);
+
         $this->handleImageUpload($request, $product, $image_id);
 
         $res = new ProductResource($product);
@@ -80,7 +76,7 @@ class ProductController extends Controller
     {
         $data = $request->validate([
             'name' => 'sometimes|string',
-            'sku_code' => 'sometimes|string|unique:products,sku_code,'.$id.',id',
+            'sku_code' => 'sometimes|string|unique:products,sku_code,' . $id . ',id',
             'stock' => 'sometimes|numeric',
             'description' => 'sometimes|string',
             'specifications' => 'sometimes|string',
@@ -88,21 +84,25 @@ class ProductController extends Controller
             'price' => 'sometimes|numeric',
             'image_id' => 'sometimes|numeric',
         ]);
-        // Debugbar::info($request);
+        Debugbar::info($request);
 
         $stock = $data['stock'] ?? null;
-        $image_id = $data['image_id'] ?? null;
         unset($data['stock']);
+        $image_id = $data['image_id'] ?? null;
         unset($data['image_id']);
 
+        Debugbar::info($stock);
         $product = Product::where('id', $id)->first();
-        if (! $product) {
+        if (!$product) {
             return response(null, 404, ['message' => 'Product not found!']);
         }
         if ($stock) {
-            $product->stock()->update(['quantity' => $stock]);
+            $product->stock()->update(
+                ['quantity' => $stock]
+            );
         }
 
+        Debugbar::info($product->stock());
         $product->update($data);
 
         $this->handleImageUpload($request, $product, $image_id);
@@ -116,7 +116,7 @@ class ProductController extends Controller
     public function destroy(string $id)
     {
         $product = Product::where('id', $id)->first();
-        if (! $product) {
+        if (!$product) {
             return response(null, 404, ['message' => 'Product not found!']);
         }
 
@@ -132,7 +132,7 @@ class ProductController extends Controller
     public function restore(string $id)
     {
         $product = Product::withTrashed()->where('id', $id)->first();
-        if (! $product) {
+        if (!$product) {
             return response(null, 404, ['message' => 'Product not found!']);
         }
 
@@ -159,12 +159,15 @@ class ProductController extends Controller
             ->paginate($limit, ['*'], 'page', $page);
 
         return ProductResource::collection($products);
-
     }
 
-    public function attachBrand() {}
+    public function attachBrand()
+    {
+    }
 
-    public function attachCategory() {}
+    public function attachCategory()
+    {
+    }
 
     public function status(Request $request, string $id)
     {
