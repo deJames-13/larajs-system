@@ -28,7 +28,6 @@ class ProductController extends Controller
 
         $products = Product::filter($search)
             ->with([
-                'images',
                 'brands',
                 'categories',
             ])
@@ -41,7 +40,10 @@ class ProductController extends Controller
     public function show(string $id)
     {
         try {
-            return $this->getResource($id, Product::class, ProductResource::class);
+            return $this->getResource($id, Product::class, ProductResource::class, [
+                'brands',
+                'categories',
+            ]);
         } catch (Exception $ex) {
             Log::error($ex->getMessage());
             return response()->json(['message' => $ex->getMessage()], 404);
@@ -158,9 +160,8 @@ class ProductController extends Controller
         $products = Product::onlyTrashed()
             ->filter($search)
             ->with([
-                // 'images',
                 'brands',
-                // 'categories',
+                'categories',
             ])
             ->orderBy('updated_at', $order)
             ->paginate($limit, ['*'], 'page', $page);

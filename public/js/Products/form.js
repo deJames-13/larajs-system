@@ -2,8 +2,21 @@ import MultipleSelect from "../components/MultipleSelect.js";
 import FormPage from "../layouts/FormPage.js";
 import ProductsCreate from "./create.js";
 import ProductsEdit from "./edit.js";
-
 export default class ProductsForm extends FormPage {
+  msCategories = null;
+
+  categories = {
+    data: [],
+    selected: [],
+    options: []
+  };
+  brands = {
+    data: [],
+    selected: [],
+    options: []
+  };
+  formInstance = null;
+
   constructor(props = {}) {
     super(props);
     this.init();
@@ -11,22 +24,68 @@ export default class ProductsForm extends FormPage {
 
   init() {
     super.init();
+  }
 
-    new MultipleSelect({
-      target: "#categories-select"
-    })
-      .getComponent()
-      .prop("outerHTML");
+  async getCategories() {
+    const query = {
+      limit: 100
+    };
+    return this.fetch("categories", query).then(categories => {
+      this.categories.data = categories;
+      this.categories.options = categories.map(category => {
+        return {
+          value: category.id,
+          label: category.name
+        };
+      });
+      console.log(this.msCategories);
+      this.msCategories && this.msCategories.setOptions(this.categories.options).update();
+    });
+  }
+
+  async getBrands() {
+    const query = {
+      limit: 100
+    };
+    return this.fetch("brands", query).then(brands => {
+      this.brands.data = brands;
+      this.brands.options = brands.map(brand => {
+        return {
+          value: brand.id,
+          label: brand.name
+        };
+      });
+    });
+  }
+
+  selectCetegories(item) {
+    if (!item.categories) return;
+    this.categories.selected = item.categories.map(category => {
+      return {
+        value: category.id,
+        label: category.name
+      };
+    });
+
+    this.msCategories = new MultipleSelect({
+      target: $("#categories-select"),
+      options: this.categories.options,
+      selectedOptions: this.categories.selected
+    });
+    this.getCategories();
+    this.getBrands();
   }
 
   handleForm() {
     if (this.type === "edit") {
       $(document).ready(() => {
-        new ProductsEdit();
+        this.formInstance = new ProductsEdit({
+          onReady: item => this.selectCetegories(item)
+        });
       });
     } else if (this.type === "create") {
       $(document).ready(() => {
-        new ProductsCreate();
+        this.formInstance = new ProductsCreate();
       });
     }
   }

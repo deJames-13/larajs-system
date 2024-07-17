@@ -145,6 +145,23 @@ export default class MultipleSelect {
     });
   }
 
+  setOptions(options) {
+    this.options = options;
+    return this;
+  }
+
+  setSelection(selectedOptions) {
+    this.selectedOptions = selectedOptions;
+    return this;
+  }
+
+  update() {
+    this.filterOptions();
+    this.tagsWrapper.html(this.makeTags(this.selectedOptions));
+    this.dropdown.html(this.makeOptions(this.options));
+    return this;
+  }
+
   render() {
     const HTML = /* HTML */ `
       <div class="dropdown dropdown-hover w-full">

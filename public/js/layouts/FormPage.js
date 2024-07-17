@@ -1,3 +1,4 @@
+import ajaxRequest from "../assets/ajaxRequest.js";
 const defaultProps = {
   id: null,
   target: null,
@@ -25,6 +26,21 @@ export default class FormPage {
         this.exitPage();
       });
   }
+  async fetch(path, query = {}) {
+    let qString = "?";
+    Object.keys(query).forEach(key => {
+      qString += key + "=" + query[key] + "&";
+    });
+    qString = qString.slice(0, -1);
+    return new Promise((resolve, reject) => {
+      ajaxRequest.get({
+        url: "/api/" + path + qString,
+        onSuccess: response => resolve(response.data),
+        onError: error => reject(error)
+      });
+    });
+  }
+
   makeFields() {
     if (!this.form) return;
     return /* HTML */ `

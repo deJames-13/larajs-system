@@ -1,7 +1,6 @@
+import { hideLoading, showLoading } from "./loading.js";
 // LOADING SPINNER
 var isShowLoading = false;
-const showLoading = () => $("#loading").show();
-const hideLoading = () => $("#loading").hide();
 // ##########################################################################
 // HANDLERS
 const defaultError = (response, status, xhr) => {

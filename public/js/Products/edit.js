@@ -2,13 +2,19 @@ import ajaxRequest from "../assets/ajaxRequest.js";
 import Carousel from "../components/Carousel.js";
 
 export default class ProductsEdit {
-  constructor() {
+  constructor({ onReady = () => {} }) {
+    this.item = null;
     this.carousel = null;
     this.images = ["https://placehold.co/400x600?text=item"];
     this.init();
     this.setupForm();
     this.setupValidation();
     this.id = $("#item-form").data("id");
+    this.onReady = onReady;
+  }
+
+  ready(callback) {
+    callback(this.item);
   }
 
   init() {
@@ -159,15 +165,18 @@ export default class ProductsEdit {
             this.images = response.data.images.map(image => "/" + image.path);
           }
           this.loadCarousel();
-          this.populateForm(response.data);
+          this.item = response.data;
+          this.populateForm(this.item);
         }
       }
     });
   }
 
-  populateForm(item) {
-    Object.keys(item).forEach(key => {
-      $(`#${key}`).val(item[key]);
+  populateForm(item = {}) {
+    this.ready(this.onReady);
+
+    Object.keys(this.item).forEach(key => {
+      $(`#${key}`).val(this.item[key]);
     });
   }
 
@@ -186,7 +195,6 @@ export default class ProductsEdit {
       onSuccess: response => {
         Swal.fire("Item Updated!", "Your item has been updated.", "success").then(() => {
           $("#save-item, #cancel").hide();
-          // window.location.href = '/admin/products';
         });
       },
       onError: xhr => {
