@@ -168,16 +168,16 @@ class ProductController extends Controller
         return ProductResource::collection($products);
     }
 
+    public function status(Request $request, string $id)
+    {
+        $this->handleStatus($request, Product::class, $id);
+    }
+
     public function attachBrand()
     {
     }
 
     public function attachCategory()
     {
-    }
-
-    public function status(Request $request, string $id)
-    {
-        $this->handleStatus($request, Product::class, $id);
     }
 }

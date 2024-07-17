@@ -111,10 +111,6 @@ class CategoryController extends Controller
 
     public function thrashed()
     {
-    }
-
-    public function status(Request $request, string $id)
-    {
         $page = request('page') ?? 1;
         $limit = request('limit') ?? 20;
         $order = request('order') ?? 'desc';
@@ -126,5 +122,9 @@ class CategoryController extends Controller
             ->paginate($limit, ['*'], 'page', $page);
 
         return CategoryResource::collection($categories);
+    }
+
+    public function status(Request $request, string $id)
+    {
     }
 }

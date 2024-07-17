@@ -60,44 +60,44 @@ foreach ($crud as $prefix => $config) {
 
     // prevent non-ajax requests
     array_push($middleware, 'only.ajax');
-    Route::get("/$prefix", [$controller, 'index'])->name($prefix.'.all')->middleware($middleware);
-    Route::get("/$prefix/{id}", [$controller, 'show'])->name($prefix.'.get')->middleware($middleware);
+    Route::get("/$prefix", [$controller, 'index'])->name($prefix . '.all')->middleware($middleware);
+    Route::get("/$prefix/{id}", [$controller, 'show'])->name($prefix . '.get')->middleware($middleware);
 
     // include auth:sanctum middleware, only for authenticated users
     $middleware = array_merge(['role:admin', 'auth:sanctum'], $middleware);
 
     // CREATE
     Route::post("/$prefix", [$controller, 'store'])
-        ->name($prefix.'.store')
+        ->name($prefix . '.store')
         ->middleware($middleware);
 
     // DELETE
-    Route::match(['delete', 'post'], "/$prefix/{id}", [$controller, 'destroy'])
-        ->name($prefix.'.destroy')
+    Route::match(['delete'], "/$prefix/{id}", [$controller, 'destroy'])
+        ->name($prefix . '.destroy')
         ->middleware($middleware);
 
     // UPDATE
     Route::match(['put', 'post'], "/$prefix/{id}", [$controller, 'update'])
-        ->name($prefix.'.update')
+        ->name($prefix . '.update')
         ->middleware($middleware);
 
     // RESTORE
     Route::match(['put', 'post'], "/$prefix/{id}/restore", [$controller, 'restore'])
-        ->name($prefix.'.restore')
+        ->name($prefix . '.restore')
         ->middleware($middleware);
 
     // THRASHED - this is where my code is
-    Route::get('/thrashed/'.$prefix, [$controller, 'thrashed'])
-        ->name($prefix.'.thrashed')
+    Route::get('/thrashed/' . $prefix, [$controller, 'thrashed'])
+        ->name($prefix . '.thrashed')
         ->middleware($middleware);
 
     // EXPORTS
-    Route::get("/exports/$prefix/{type}", [TableController::class, $prefix.'Export'])
+    Route::get("/exports/$prefix/{type}", [TableController::class, $prefix . 'Export'])
         ->middleware($middleware);
 
     // STATUS
     Route::post("/$prefix/status/{id}", [$controller, 'status'])
-        ->name($prefix.'.status')
+        ->name($prefix . '.status')
         ->middleware($middleware);
 }
 

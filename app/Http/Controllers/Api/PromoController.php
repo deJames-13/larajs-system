@@ -118,11 +118,6 @@ class PromoController extends Controller
     }
 
     public function thrashed()
-
-    {
-    }
-
-    public function status(Request $request, string $id)
     {
         $page = request('page') ?? 1;
         $limit = request('limit') ?? 20;
@@ -135,5 +130,9 @@ class PromoController extends Controller
             ->paginate($limit, ['*'], 'page', $page);
 
         return PromoResource::collection($promos);
+    }
+
+    public function status(Request $request, string $id)
+    {
     }
 }

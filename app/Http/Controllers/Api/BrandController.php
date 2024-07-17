@@ -116,10 +116,6 @@ class BrandController extends Controller
 
     public function thrashed()
     {
-    }
-
-    public function status(Request $request, string $id)
-    {
         $page = request('page') ?? 1;
         $limit = request('limit') ?? 20;
         $order = request('order') ?? 'desc';
@@ -131,5 +127,9 @@ class BrandController extends Controller
             ->paginate($limit, ['*'], 'page', $page);
 
         return BrandResource::collection($brands);
+    }
+
+    public function status(Request $request, string $id)
+    {
     }
 }
