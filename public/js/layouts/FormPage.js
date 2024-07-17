@@ -1,3 +1,4 @@
+import ajaxRequest from "../assets/ajaxRequest.js";
 const defaultProps = {
   id: null,
   target: null,
@@ -25,6 +26,22 @@ export default class FormPage {
         this.exitPage();
       });
   }
+  async fetch(path, query = {}) {
+    let qString = "?";
+    Object.keys(query).forEach(key => {
+      qString += key + "=" + query[key] + "&";
+    });
+    qString = qString.slice(0, -1);
+    return new Promise((resolve, reject) => {
+      ajaxRequest.get({
+        showLoader: false,
+        url: "/api/" + path + qString,
+        onSuccess: response => resolve(response.data),
+        onError: error => reject(error)
+      });
+    });
+  }
+
   makeFields() {
     if (!this.form) return;
     return /* HTML */ `
@@ -52,9 +69,9 @@ export default class FormPage {
   render() {
     if (!this.id && this.type === "edit") return;
     const HTML = /* HTML */ `
-      <div class="page container mx-auto px-6 py-12">
-        <div class="flex flex-col space-y-4">
-          <div class="flex items-center justify-between top">
+      <div class="page container mx-auto px-6 h-full">
+        <div class="relative flex flex-col space-y-4">
+          <div class="sticky top-0 flex items-center justify-between top p-1 bg-base-100 z-[10]">
             <h1 class="text-3xl font-extrabold capitalize">${this.type} ${this.name}</h1>
             <div class="flex justify-end space-x-2 actions">
               <button id="save-item" class="hidden btn btn-success">Save</button>

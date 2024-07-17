@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use Exception;
+use App\Models\Product;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
-use App\Models\Product;
 use Barryvdh\Debugbar\Facades\Debugbar;
-use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
@@ -26,9 +28,8 @@ class ProductController extends Controller
 
         $products = Product::filter($search)
             ->with([
-                // 'images',
                 'brands',
-                // 'categories',
+                'categories',
             ])
             ->orderBy('updated_at', $order)
             ->paginate($limit, ['*'], 'page', $page);
@@ -38,7 +39,15 @@ class ProductController extends Controller
 
     public function show(string $id)
     {
-        return $this->getResource($id, Product::class, ProductResource::class);
+        try {
+            return $this->getResource($id, Product::class, ProductResource::class, [
+                'brands',
+                'categories',
+            ]);
+        } catch (Exception $ex) {
+            Log::error($ex->getMessage());
+            return response()->json(['message' => $ex->getMessage()], 404);
+        }
     }
 
     public function store(Request $request)
@@ -64,6 +73,9 @@ class ProductController extends Controller
         $product = Product::create($data);
 
         $product->stock()->create(['quantity' => $stock ? $stock : 0]);
+        $product->categories()->attach($data['categories'] ?? []);
+        $product->brands()->attach($data['brands'] ?? []);
+
 
         $this->handleImageUpload($request, $product, $image_id);
 
@@ -74,6 +86,7 @@ class ProductController extends Controller
 
     public function update(Request $request, string $id)
     {
+        Debugbar::info($request);
         $data = $request->validate([
             'name' => 'sometimes|string',
             'sku_code' => 'sometimes|string|unique:products,sku_code,' . $id . ',id',
@@ -83,15 +96,17 @@ class ProductController extends Controller
             'status' => 'required|string|in:active,inactive',
             'price' => 'sometimes|numeric',
             'image_id' => 'sometimes|numeric',
+            'brands' => 'sometimes|array',
+            'brands.*' => 'sometimes|numeric',
+            'categories' => 'sometimes|array',
+            'categories.*' => 'sometimes|numeric',
         ]);
-        Debugbar::info($request);
 
         $stock = $data['stock'] ?? null;
         unset($data['stock']);
         $image_id = $data['image_id'] ?? null;
         unset($data['image_id']);
 
-        Debugbar::info($stock);
         $product = Product::where('id', $id)->first();
         if (!$product) {
             return response(null, 404, ['message' => 'Product not found!']);
@@ -102,8 +117,10 @@ class ProductController extends Controller
             );
         }
 
-        Debugbar::info($product->stock());
         $product->update($data);
+        $product->categories()->sync($data['categories'] ?? []);
+        $product->brands()->sync($data['brands'] ?? []);
+
 
         $this->handleImageUpload($request, $product, $image_id);
 
@@ -151,9 +168,8 @@ class ProductController extends Controller
         $products = Product::onlyTrashed()
             ->filter($search)
             ->with([
-                // 'images',
                 'brands',
-                // 'categories',
+                'categories',
             ])
             ->orderBy('updated_at', $order)
             ->paginate($limit, ['*'], 'page', $page);
@@ -161,16 +177,12 @@ class ProductController extends Controller
         return ProductResource::collection($products);
     }
 
-    public function attachBrand()
-    {
-    }
-
-    public function attachCategory()
-    {
-    }
-
     public function status(Request $request, string $id)
     {
         $this->handleStatus($request, Product::class, $id);
+    }
+
+    public function attachBrand()
+    {
     }
 }

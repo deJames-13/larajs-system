@@ -1,4 +1,4 @@
-<x-layouts.default>
+<x-layouts.app :title="'404'" :page="'404'" :loading="false">
 	<div class="grid place-items-center h-screen">
 		<div class="prose lg:prose-xl">
 			<h1>
@@ -13,4 +13,4 @@
 			</a>
 		</div>
 	</div>
-</x-layouts.default>
+</x-layouts.app>

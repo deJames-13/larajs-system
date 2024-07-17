@@ -14,13 +14,13 @@ const defaultProps = {
 export default class Modal {
   constructor(props = {}) {
     Object.assign(this, defaultProps, props);
-
     this.modal = null;
-    this.render();
     this.init();
     return this;
   }
   init() {
+    this.render();
+
     this.modal = $(`#${this.id}`);
 
     $(`[data-open-modal="${this.id}"]`).on("click", () => {

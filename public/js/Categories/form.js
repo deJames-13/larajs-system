@@ -15,7 +15,7 @@ export default class CategoriesForm extends FormPage {
       });
     } else if (this.type === "create") {
       $(document).ready(() => {
-        new CategoriesCreate();
+        new CategoriesCreate({ target: this.target });
       });
     }
   }
@@ -31,6 +31,12 @@ export default class CategoriesForm extends FormPage {
           <div class="flex flex-col space-y-2">
             <label for="name" class="text-lg font-semibold">Category Name</label>
             <input type="text" name="name" id="name" class="input input-bordered" placeholder="Enter category name" />
+          </div>
+
+          <!-- Category Slug Input -->
+          <div class="flex flex-col space-y-2">
+            <label for="slug" class="text-lg font-semibold">Slug</label>
+            <input type="text" name="slug" id="slug" class="input input-bordered" placeholder="Enter category slug" />
           </div>
 
           <!-- Category Status Input -->
