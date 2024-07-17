@@ -1,3 +1,4 @@
+import MultipleSelect from "../components/MultipleSelect.js";
 import FormPage from "../layouts/FormPage.js";
 import ProductsCreate from "./create.js";
 import ProductsEdit from "./edit.js";
@@ -6,6 +7,16 @@ export default class ProductsForm extends FormPage {
   constructor(props = {}) {
     super(props);
     this.init();
+  }
+
+  init() {
+    super.init();
+
+    new MultipleSelect({
+      target: "#categories-select"
+    })
+      .getComponent()
+      .prop("outerHTML");
   }
 
   handleForm() {
@@ -67,9 +78,36 @@ export default class ProductsForm extends FormPage {
               <option value="inactive">Inactive</option>
             </select>
           </div>
+
+          <!-- Item Brand Select -->
+          <div class="flex gap-4 items-end">
+            <div class="flex flex-grow flex-col space-y-2">
+              <label for="brand_id" class="text-lg font-semibold">Brand</label>
+              <select name="brand_id" id="brand_id" class="select select-bordered">
+                <option value="">Select a brand</option>
+              </select>
+            </div>
+            <button class="btn btn-outline btn-primary">
+              <i class="fas fa-plus"></i>
+              <span> Add Brand </span>
+            </button>
+          </div>
+          <!-- Item Categories // Multi select component -->
+          <!-- Item Brand Select -->
+          <div class="flex gap-4 items-end">
+            <div class="flex flex-grow flex-col space-y-2">
+              <label for="categories" class="text-lg font-semibold">Categories</label>
+              <div id="categories-select"></div>
+            </div>
+            <button class="btn btn-outline btn-primary">
+              <i class="fas fa-plus"></i>
+              <span> Add Category </span>
+            </button>
+          </div>
         </div>
       </div>
     `;
+
     return html;
   }
 }

@@ -4,20 +4,39 @@ namespace App\Http\Controllers;
 
 use App\Models\Image;
 use Barryvdh\Debugbar\Facades\Debugbar;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 abstract class Controller
 {
 
-    public function getResource($id, $model, $resource)
+    public function getResources(Model $model, JsonResource $resource)
+    {
+        $page = request('page') ?? 1;
+        $limit = request('limit') ?? 10;
+        $order =    request('order') ?? 'desc';
+
+        // meili search
+        $data = $model::search(request(['search']))
+            ->orderBy('updated_at', $order)
+            ->paginate($limit, ['*'], 'page', $page);
+
+
+        $response = $resource::collection($data);
+
+        return $response;
+    }
+
+    public function getResource($id, Model $model, JsonResource $resource)
     {
         $data = $model::find($id);
         if (!$data) {
             return response()->json(['message' => 'Resource not found'], 404);
         }
-        $res = new $resource($data);
+        $response = new $resource($data);
 
-        return $res;
+        return $response;
     }
 
     public function handleImageUpload($request, $model, $image_id = null)
