@@ -25,14 +25,18 @@ const defaultProps = {
   ],
   placeholder: "Select options: ",
   count: 5,
-  source: () => {}
+  source: () => {
+    return new Promise((resolve, reject) => {
+      resolve([], []);
+    });
+  }
 };
 
 export default class MultipleSelect {
   dropdown = null;
   component = null;
   tagsWrapper = null;
-
+  searchInput = null;
   constructor(props = {}) {
     Object.assign(this, defaultProps, props);
     this.selectedOptions = this.selectedOptions || [];
@@ -151,12 +155,12 @@ export default class MultipleSelect {
   }
 
   setOptions(options) {
-    this.options = options;
+    this.options = options || [];
     return this;
   }
 
   setSelection(selectedOptions) {
-    this.selectedOptions = selectedOptions;
+    this.selectedOptions = selectedOptions || [];
     return this;
   }
 
@@ -167,14 +171,29 @@ export default class MultipleSelect {
     return this;
   }
 
+  onSearch(value) {
+    this._source({ search: value });
+  }
+
   bindEvents() {
     const doSearch = debounce(() => {
       this.onSearch(this.searchInput.val());
     }, 500);
 
     this.searchInput.on("keyup", doSearch);
+  }
 
-    this.searchBtn.on("click", () => {});
+  _source(query = {}) {
+    if (typeof this.source !== "function") return;
+    const res = this.source(query);
+    res instanceof Promise &&
+      res.then((options, selectedOptions) => {
+        console.log(options);
+
+        selectedOptions && this.setSelection(selectedOptions);
+        options && this.setOptions(options);
+        this.update();
+      });
   }
 
   render() {
@@ -193,7 +212,7 @@ export default class MultipleSelect {
         </div>
         <div class="dropdown-content my-2 pb-12 menu bg-base-100 rounded-lg z-[1] container max-w-sm p-2 shadow border gap-2">
           <div id="filter-options">
-            <input type="text" class="input input-bordered rounded-md w-full" placeholder="Filter" />
+            <input id="filter-input" type="text" class="input input-bordered rounded-md w-full" placeholder="Filter" />
           </div>
           <ul id="select-dropdown" tabindex="0"></ul>
         </div>
@@ -203,12 +222,9 @@ export default class MultipleSelect {
     this.component = $(HTML);
     this.dropdown = $(this.component).find("#select-dropdown");
     this.tagsWrapper = $(this.component).find("#options-list");
+    this.searchInput = $(this.component).find("#filter-input");
     this.target && $(this.target).append(this.component);
 
-    this.source().then((options, selectedOptions) => {
-      this.setSelection(selectedOptions);
-      this.setOptions(options);
-      this.update();
-    });
+    this._source({});
   }
 }
