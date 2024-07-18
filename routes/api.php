@@ -24,7 +24,11 @@ Route::get('/test', function () {
 //     Route::post("/register", [AuthController::class, "store"]);
 // });
 
-// add from here on out: make sure there are 3 functions in controller: store - destroy - update
+// Search Functions
+Route::get('/autocomplete', [SearchController::class, 'autocomplete']);
+Route::post('/search', [SearchController::class, 'search']);
+
+// CRUD
 $crud = [
     'products' => [
         'controller' => ProductController::class,
@@ -44,7 +48,7 @@ $crud = [
 
     'users' => [
         'controller' => UserController::class,
-        'middleware' => ['auth:sanctum', 'role:admin'],
+        'middleware' => ['role:admin'],
     ],
     // "comments"?
 ];
@@ -54,14 +58,14 @@ foreach ($crud as $prefix => $config) {
     $middleware = isset($config['middleware']) ? $config['middleware'] : [];
     $middleware = is_array($middleware) ? $middleware : [$middleware];
 
+    // prevent non-ajax requests
+    array_push($middleware, 'only.ajax');
     Route::get("/$prefix", [$controller, 'index'])->name($prefix.'.all')->middleware($middleware);
     Route::get("/$prefix/{id}", [$controller, 'show'])->name($prefix.'.get')->middleware($middleware);
 
     // include auth:sanctum middleware, only for authenticated users
-
-    $middleware = array_merge(['role:admin', 'auth:sanctum'], $middleware);
-
-    // Crud Functions
+    array_push($middleware, 'auth:sanctum');
+    array_push($middleware, 'role:staff,admin');
 
     // CREATE
     Route::post("/$prefix", [$controller, 'store'])
@@ -69,7 +73,7 @@ foreach ($crud as $prefix => $config) {
         ->middleware($middleware);
 
     // DELETE
-    Route::delete("/$prefix/{id}", [$controller, 'destroy'])
+    Route::match(['delete'], "/$prefix/{id}", [$controller, 'destroy'])
         ->name($prefix.'.destroy')
         ->middleware($middleware);
 
@@ -88,10 +92,6 @@ foreach ($crud as $prefix => $config) {
         ->name($prefix.'.thrashed')
         ->middleware($middleware);
 
-    // TABLES
-    Route::get('/tables/'.$prefix, [TableController::class, $prefix])
-        ->middleware($middleware);
-
     // EXPORTS
     Route::get("/exports/$prefix/{type}", [TableController::class, $prefix.'Export'])
         ->middleware($middleware);
@@ -100,15 +100,10 @@ foreach ($crud as $prefix => $config) {
     Route::post("/$prefix/status/{id}", [$controller, 'status'])
         ->name($prefix.'.status')
         ->middleware($middleware);
-
 }
 
-// Search Functions
-Route::get('/autocomplete', [SearchController::class, 'autocomplete']);
-Route::post('/search', [SearchController::class, 'search']);
-
 // MANUALLY ADDED
-Route::group(['middleware' => 'auth:sanctum'], function () {
+Route::group(['middleware' => 'auth:sanctum', 'only.ajax'], function () {
     // PROFILE
     Route::post('/confirm-password', [UserController::class, 'confirmPassword']);
 
@@ -118,7 +113,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::match(['put', 'post'], '/{id}', [UserController::class, 'update']);
         Route::match(['put', 'post'], '/status/{id}', [UserController::class, 'status']);
         Route::match(['post'], '/delete/{id}', [UserController::class, 'destroy']);
-
     });
 
     // Cart
@@ -130,7 +124,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     });
 
     // orders/checkout
-    Route::get('/tables/orders', [TableController::class, 'orders']);
     Route::prefix('orders')->group(function () {
         Route::post('/checkout', [OrderController::class, 'store']);
         Route::get('/', [OrderController::class, 'index']);
@@ -148,6 +141,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     ];
     // no need to touch
     foreach ($charts as $chart => $url) {
-        Route::get("/charts/$url", [ChartController::class, $chart]);
+        Route::get("/charts/$url", [ChartController::class, $chart])->middleware(['auth:sanctum', 'role:staff,admin', 'only.ajax']);
     }
 });

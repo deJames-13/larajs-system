@@ -31,6 +31,13 @@
 						{{ $item->sku_code }}
 					</p>
 				</div>
+				{{-- Item SKU Code Input --}}
+				<div class="flex items-center space-x-2">
+					<label for="sku_code" class="text-xs text-gray-500">Available:</label>
+					<p id="item_quantity" data-item-quantity="{{ $item->stock->quantity }}" class="text-xs text-gray-500">
+						{{ $item->stock->quantity }}
+					</p>
+				</div>
 				<div class="divider"></div>
 				{{-- Item Description Input --}}
 				<div class="flex flex-col space-y-2">
@@ -52,7 +59,7 @@
 						<label for="quantity" class="text-xs text-gray-500">Quantity</label>
 						<div name="quantity" id="quantity" class="flex flex-row items-center space-x-2">
 							<button id="sub_qty" class="aspect-square w-10 flex items-center justify-center">
-								<x-icons.minus></x-icons.minus>
+								<fas class="fa-minus"></fas>
 							</button>
 							<div>
 								<p class=" aspect-square w-10 content-center text-center font-bold text-md" id="quantity_count">
@@ -60,7 +67,7 @@
 								</p>
 							</div>
 							<button id="add_qty" class="aspect-square w-10 flex items-center justify-center">
-								<x-icons.plus></x-icons.plus>
+								<fas class="fa-plus"></fas>
 							</button>
 						</div>
 					</div>

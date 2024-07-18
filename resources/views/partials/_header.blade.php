@@ -44,19 +44,7 @@
 		@guest
 			<script type="module" src="{{ asset('js/Auth/index.js') }}"></script>
 		@endguest
-		<script type="text/javascript">
-			$(document).ready(function() {
-				$(window).scroll(function() {
-					var currentScroll = $(this).scrollTop();
 
-					if (currentScroll > 0) {
-						$('#search-bar').slideUp();
-					} else {
-						$('#search-bar').slideDown();
-					}
-				});
-			})
-		</script>
 		<script type="module" src="{{ asset('js/scripts/header.js') }}"></script>
 	@endpush
 

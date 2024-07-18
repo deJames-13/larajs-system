@@ -33,29 +33,7 @@ use App\Imports\UsersImport;
 
 class TableController extends Controller
 {
-
-    #1 - Products
-    public function users()
-    {
-        if (request()->ajax()) {
-
-            $page = request('page') ?? 1;
-            $limit = request('limit') ?? 10;
-            $order =    request('order') ?? 'desc';
-
-
-            $user = User::filter(request(['search']))
-                ->orderBy('updated_at', $order)
-                ->paginate($limit, ['*'], 'page', $page);
-
-
-            $response = UserResource::collection($user);
-
-            // Debugbar::info($response);
-            return $response;
-        }
-        return view('admin.tables.users');
-    }
+    #1 User 
     public function usersExport(string $type)
     {
         Debugbar::info($type);
@@ -82,28 +60,7 @@ class TableController extends Controller
     }
 
 
-    #1 - Products
-    public function products()
-    {
-        if (request()->ajax()) {
-
-            $page = request('page') ?? 1;
-            $limit = request('limit') ?? 10;
-            $order =    request('order') ?? 'desc';
-
-
-            $products = Product::filter(request(['search']))
-                ->orderBy('updated_at', $order)
-                ->paginate($limit, ['*'], 'page', $page);
-
-
-            $response = ProductResource::collection($products);
-
-            // Debugbar::info($response);
-            return $response;
-        }
-        return view('admin.tables.products');
-    }
+    #2 Product
     public function productsExport(string $type)
     {
         Debugbar::info($type);
@@ -129,37 +86,7 @@ class TableController extends Controller
         return response()->json(['success' => 'Excel file Imported Successfully']);
     }
 
-    #2 - Orders
-    public function orders()
-    {
-        if (request()->ajax()) {
-
-            $page = request('page') ?? 1;
-            $limit = request('limit') ?? 10;
-            $order =    request('order') ?? 'desc';
-
-
-            $orders = Order::query()
-                ->with([
-                    'products' => function ($query) {
-                        $query->withPivot('quantity');
-                    },
-                    'customer',
-                    'customer.info'
-                ])
-                ->filter(request(['search']))
-                ->orderBy('updated_at', $order)
-                ->paginate($limit, ['*'], 'page', $page);
-
-
-            $response = OrderResource::collection($orders);
-
-            Debugbar::info($response);
-            return $response;
-        }
-        return view('admin.tables.orders');
-    }
-
+    #3 Order
     public function ordersExport(string $type)
     {
         Debugbar::info($type);
@@ -168,11 +95,8 @@ class TableController extends Controller
         if ($type == 'csv') {
             $fileType = \Maatwebsite\Excel\Excel::CSV;
         }
-
-
         return Excel::download(new OrdersExport, $fileName, $fileType);
     }
-
     public function ordersImport(Request $request)
     {
         $request->validate([
@@ -186,24 +110,8 @@ class TableController extends Controller
         return response()->json(['success' => 'Excel file Imported Successfully']);
     }
 
-    #3 - Promos
 
-    public function promos()
-    {
-        if (request()->ajax()) {
-            $page = request('page') ?? 1;
-            $limit = request('limit') ?? 10;
-            $order = request('order') ?? 'desc';
-
-            $promos = Promos::filter(request(['search']))
-                ->orderBy('updated_at', $order)
-                ->paginate($limit, ['*'], 'page', $page);
-
-            return PromoResource::collection($promos);
-        }
-
-        return view('admin.tables.promos');
-    }
+    #4 Promo
     public function promosExport(string $type)
     {
         Debugbar::info($type);
@@ -216,7 +124,6 @@ class TableController extends Controller
 
         return Excel::download(new PromosExport, $fileName, $fileType);
     }
-
     public function promosImport(Request $request)
     {
         $request->validate([
@@ -231,24 +138,7 @@ class TableController extends Controller
     }
 
 
-    #4 - Brands
-
-    public function brands()
-    {
-        if (request()->ajax()) {
-            $page = request('page') ?? 1;
-            $limit = request('limit') ?? 10;
-            $order = request('order') ?? 'desc';
-
-            $brands = Brand::filter(request(['search']))
-                ->orderBy('updated_at', $order)
-                ->paginate($limit, ['*'], 'page', $page);
-
-            return BrandResource::collection($brands);
-        }
-
-        return view('admin.tables.brands');
-    }
+    #5 Brand
     public function brandsExport(string $type)
     {
         Debugbar::info($type);
@@ -261,7 +151,6 @@ class TableController extends Controller
 
         return Excel::download(new BrandsExport, $fileName, $fileType);
     }
-
     public function brandsImport(Request $request)
     {
         $request->validate([
@@ -275,25 +164,7 @@ class TableController extends Controller
         return response()->json(['success' => 'Excel file Imported Successfully']);
     }
 
-
-    #5 - Categories
-
-    public function categories()
-    {
-        if (request()->ajax()) {
-            $page = request('page') ?? 1;
-            $limit = request('limit') ?? 10;
-            $order = request('order') ?? 'desc';
-
-            $categories = Category::filter(request(['search']))
-                ->orderBy('updated_at', $order)
-                ->paginate($limit, ['*'], 'page', $page);
-
-            return CategoryResource::collection($categories);
-        }
-
-        return view('admin.tables.categories');
-    }
+    #6 Category
     public function categoriesExport(string $type)
     {
         Debugbar::info($type);
@@ -306,7 +177,6 @@ class TableController extends Controller
 
         return Excel::download(new CategoriesExport, $fileName, $fileType);
     }
-
     public function categoriesImport(Request $request)
     {
         $request->validate([

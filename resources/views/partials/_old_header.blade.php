@@ -18,7 +18,7 @@
 				<div class="flex items-center justify-center space-x-1">
 					<input type="text" placeholder="Search items" class="input input-bordered w-24 md:w-auto" />
 					<div class="btn btn-ghost rounded-full aspect-square">
-						<x-icons.search />
+						<i class="fas fa-magnifying-glass"></i>
 					</div>
 				</div>
 			</div>

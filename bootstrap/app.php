@@ -18,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => App\Http\Middleware\CheckRole::class,
             'verified' => App\Http\Middleware\EnsureEmailIsVerified::class,
+            'only.ajax' => \App\Http\Middleware\OnlyAjax::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

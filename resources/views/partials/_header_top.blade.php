@@ -9,7 +9,7 @@
 				<span class="text-xs font-bold">Contact Us</span>
 			</div>
 
-			@role('admin')
+			@role('admin,staff')
 				@if (!($page === 'dashboard' || $page === 'dashboard'))
 					<div class="cursor-pointer space-x-1 flex items-center">
 						<i class="fas fa-cog"></i>

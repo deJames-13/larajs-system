@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use Exception;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
-use App\Models\User;
 use Barryvdh\Debugbar\Facades\Debugbar;
-use Illuminate\Http\Request;
 use Laravel\Sanctum\PersonalAccessToken;
 
 class UserController extends Controller
@@ -15,7 +17,7 @@ class UserController extends Controller
     {
         $user = auth()->user();
         $password = request()->get('password');
-        if (! auth()->guard('web')->attempt(['username' => $user->username, 'password' => $password])) {
+        if (!auth()->guard('web')->attempt(['username' => $user->username, 'password' => $password])) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
@@ -25,7 +27,7 @@ class UserController extends Controller
     public function profile()
     {
         // check if logged in
-        if (! auth()->check()) {
+        if (!auth()->check()) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
         $user = auth()->user();
@@ -44,16 +46,22 @@ class UserController extends Controller
 
     public function index()
     {
-        $users = User::all();
-
-        return response(UserResource::collection($users));
+        try {
+            return $this->getResources(User::class, UserResource::class);
+        } catch (Exception $ex) {
+            Log::error($ex->getMessage());
+            return response()->json(['message' => $ex->getMessage()], 404);
+        }
     }
 
     public function show(string $id)
     {
-        $user = User::find($id);
-
-        return response(new UserResource($user));
+        try {
+            return $this->getResource($id, User::class, UserResource::class);
+        } catch (Exception $ex) {
+            Log::error($ex->getMessage());
+            return response()->json(['message' => $ex->getMessage()], 404);
+        }
     }
 
     public function store(Request $request)
@@ -64,7 +72,7 @@ class UserController extends Controller
             'username' => 'required|unique:users',
             'email' => 'required|email|unique:users',
             'password' => 'required|confirmed',
-            'role' => 'sometimes|in:admin,customer',
+            'role' => 'sometimes|in:admin,customer,staff',
         ]);
         $userInfo = $request->validate([
             'first_name' => 'required|string',
@@ -73,6 +81,7 @@ class UserController extends Controller
             'address' => 'required|string',
             'zip_code' => 'required|string',
             'profile_image' => 'sometimes|image',
+            'birthdate' => 'sometimes|date',
         ]);
         Debugbar::info($userData);
         Debugbar::info($userInfo);
@@ -94,25 +103,26 @@ class UserController extends Controller
 
         Debugbar::info($request);
         $userData = $request->validate([
-            'username' => 'sometimes|unique:users,username,'.$id.',id',
-            'email' => 'sometimes|email|unique:users,email,'.$id.',id',
+            'username' => 'sometimes|unique:users,username,' . $id . ',id',
+            'email' => 'sometimes|email|unique:users,email,' . $id . ',id',
             'password' => 'sometimes',
             'password_confirmation' => 'sometimes|same:password',
-            'role' => 'sometimes|in:admin,customer',
+            'role' => 'sometimes|in:admin,customer,staff',
             'status' => 'sometimes|in:active,inactive',
         ]);
         $userInfo = $request->validate([
             'first_name' => 'sometimes|string',
             'last_name' => 'sometimes|string',
-            'phone_number' => 'sometimes|string|unique:customers,phone_number,'.$id.',user_id',
+            'phone_number' => 'sometimes|string|unique:customers,phone_number,' . $id . ',user_id',
             'address' => 'sometimes|string',
             'zip_code' => 'sometimes|string',
             'profile_image' => 'sometimes|image',
+            'birthdate' => 'sometimes|date',
         ]);
         // image
 
         $user = User::find($id);
-        if (! $user) {
+        if (!$user) {
             return response()->json(['message' => 'User not found'], 404);
         }
 
@@ -155,11 +165,13 @@ class UserController extends Controller
         return response(new UserResource($user));
     }
 
-    public function thrashed() {}
+    public function thrashed()
+    {
+    }
 
     public function status(Request $request, string $id)
     {
-        if (! $this->handleStatus($request, User::class, $id)) {
+        if (!$this->handleStatus($request, User::class, $id)) {
             return;
         }
         if (auth()->user()->id == $id && $request->status == 'inactive') {
@@ -175,6 +187,5 @@ class UserController extends Controller
         }
 
         return redirect('/');
-
     }
 }

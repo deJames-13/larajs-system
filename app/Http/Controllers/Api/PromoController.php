@@ -2,31 +2,41 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Http\Resources\PromoResource;
+use Exception;
 use App\Models\Promos;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\PromoResource;
 
 class PromoController extends Controller
 {
     public function search()
     {
         $promo = Promos::filter(request(['search']))->get();
-
         return PromoResource::collection($promo);
     }
 
     public function index()
     {
-        return PromoResource::collection(Promos::all());
+        try {
+            return $this->getResources(Promos::class, PromoResource::class);
+        } catch (Exception $ex) {
+            Log::error($ex->getMessage());
+            return response()->json(['message' => $ex->getMessage()], 404);
+        }
     }
 
     public function show(string $id)
     {
-        $res = new PromoResource(Promos::where('id', $id)->first());
-
-        return $res;
+        try {
+            return $this->getResource($id, Promos::class, PromoResource::class);
+        } catch (Exception $ex) {
+            Log::error($ex->getMessage());
+            return response()->json(['message' => $ex->getMessage()], 404);
+        }
     }
+
 
     public function store(Request $request)
     {
@@ -39,6 +49,7 @@ class PromoController extends Controller
             'discount' => 'required|numeric',
             'start_date' => 'required|date',
             'end_date' => 'required|date',
+            'image_id' => 'sometimes|numeric',
         ]);
 
         $image_id = $data['image_id'] ?? null;
@@ -64,15 +75,19 @@ class PromoController extends Controller
             'discount' => 'sometimes|numeric',
             'start_date' => 'sometimes|date',
             'end_date' => 'sometimes|date',
+            'image_id' => 'sometimes|numeric',
         ]);
+        $image_id = $data['image_id'] ?? null;
+        unset($data['image_id']);
 
         $promo = Promos::where('id', $id)->first();
-        if (! $promo) {
+        if (!$promo) {
             return response(null, 404, ['message' => 'Promo not found!']);
         }
 
         $promo->update($data);
 
+        $this->handleImageUpload($request, $promo, $image_id);
         $res = new PromoResource($promo);
 
         return response($res, 200, ['message' => 'Promo updated successfully!']);
@@ -81,7 +96,7 @@ class PromoController extends Controller
     public function destroy(string $id)
     {
         $promo = Promos::where('id', $id)->first();
-        if (! $promo) {
+        if (!$promo) {
             return response(null, 404, ['message' => 'Promo not found!']);
         }
 
@@ -93,19 +108,31 @@ class PromoController extends Controller
     public function restore(string $id)
     {
         $promo = Promos::withTrashed()->where('id', $id)->first();
-        if (! $promo) {
+        if (!$promo) {
             return response(null, 404, ['message' => 'Promo not found!']);
         }
 
         $promo->restore();
 
-        return response(null, 200, ['message' => 'Promo restored successfully!']);
+        return response([], 200, ['message' => 'Promo restored successfully!']);
     }
 
-    public function thrashed() {}
+    public function thrashed()
+    {
+        $page = request('page') ?? 1;
+        $limit = request('limit') ?? 20;
+        $order = request('order') ?? 'desc';
+        $search = request(['search']) ?? null;
+
+        $promos = Promos::onlyTrashed()
+            ->filter($search)
+            ->orderBy('updated_at', $order)
+            ->paginate($limit, ['*'], 'page', $page);
+
+        return PromoResource::collection($promos);
+    }
 
     public function status(Request $request, string $id)
     {
-        $this->handleStatus($request, Promos::class, $id);
     }
 }

@@ -2,31 +2,42 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Http\Resources\BrandResource;
+use Exception;
 use App\Models\Brand;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\BrandResource;
 
 class BrandController extends Controller
 {
     public function search()
     {
         $brand = Brand::filter(request(['search']))->get();
-
         return BrandResource::collection($brand);
     }
 
     public function index()
     {
-        return BrandResource::collection(Brand::all());
+        try {
+            return $this->getResources(Brand::class, BrandResource::class);
+        } catch (Exception $ex) {
+            Log::error($ex->getMessage());
+            return response()->json(['message' => $ex->getMessage()], 404);
+        }
     }
 
     public function show(string $id)
     {
-        $res = new BrandResource(Brand::where('id', $id)->first());
-
-        return $res;
+        try {
+            return $this->getResource($id, Brand::class, BrandResource::class);
+        } catch (Exception $ex) {
+            Log::error($ex->getMessage());
+            return response()->json(['message' => $ex->getMessage()], 404);
+        }
     }
+
+
 
     public function store(Request $request)
     {
@@ -35,6 +46,7 @@ class BrandController extends Controller
             'company' => 'required|string',
             'website' => 'required|string',
             'description' => 'required|string',
+            'image_id' => 'sometimes|numeric',
             'status' => 'required|string',
         ]);
 
@@ -58,15 +70,21 @@ class BrandController extends Controller
             'website' => 'required|string',
             'description' => 'required|string',
             'status' => 'required|string',
+            'image_id' => 'sometimes|numeric',
+
         ]);
 
+        $image_id = $data['image_id'] ?? null;
+        unset($data['image_id']);
+
         $brand = Brand::where('id', $id)->first();
-        if (! $brand) {
+        if (!$brand) {
             return response(null, 404, ['message' => 'Brand not found!']);
         }
 
         $brand->update($data);
 
+        $this->handleImageUpload($request, $brand, $image_id);
         $res = new BrandResource($brand);
 
         return response($res, 200, ['message' => 'Brand updated successfully!']);
@@ -75,7 +93,7 @@ class BrandController extends Controller
     public function destroy(string $id)
     {
         $brand = Brand::where('id', $id)->first();
-        if (! $brand) {
+        if (!$brand) {
             return response(null, 404, ['message' => 'Brand not found!']);
         }
 
@@ -87,19 +105,31 @@ class BrandController extends Controller
     public function restore(string $id)
     {
         $brand = Brand::withTrashed()->where('id', $id)->first();
-        if (! $brand) {
+        if (!$brand) {
             return response(null, 404, ['message' => 'Brand not found!']);
         }
 
         $brand->restore();
 
-        return response(null, 200, ['message' => 'Brand restored successfully!']);
+        return response([], 200, ['message' => 'Brand restored successfully!']);
     }
 
-    public function thrashed() {}
+    public function thrashed()
+    {
+        $page = request('page') ?? 1;
+        $limit = request('limit') ?? 20;
+        $order = request('order') ?? 'desc';
+        $search = request(['search']) ?? null;
+
+        $brands = Brand::onlyTrashed()
+            ->filter($search)
+            ->orderBy('updated_at', $order)
+            ->paginate($limit, ['*'], 'page', $page);
+
+        return BrandResource::collection($brands);
+    }
 
     public function status(Request $request, string $id)
     {
-        $this->handleStatus($request, Brand::class, $id);
     }
 }

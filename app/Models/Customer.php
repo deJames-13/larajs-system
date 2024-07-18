@@ -10,7 +10,7 @@ class Customer extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'user_id', 'first_name', 'last_name', 'phone_number', 'address', 'zip_code'
+        'user_id', 'first_name', 'last_name', 'phone_number', 'address', 'zip_code', 'profile_image', 'birthdate',
     ];
     protected $primaryKey = 'user_id';
     public $incrementing = false;

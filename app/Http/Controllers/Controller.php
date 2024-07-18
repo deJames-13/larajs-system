@@ -4,17 +4,48 @@ namespace App\Http\Controllers;
 
 use App\Models\Image;
 use Barryvdh\Debugbar\Facades\Debugbar;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 abstract class Controller
 {
-    // public function handleProfileImage($request, $user) {}
+
+    public function getResources($model, $resource, $with = [])
+    {
+        Debugbar::info(request());
+        $page = request('page') ?? 1;
+        $limit = request('limit') ?? 10;
+        $order =    request('order') ?? 'desc';
+
+        $data = $model::filter(request(['search']))
+            ->orderBy('updated_at', $order)
+            ->paginate($limit, ['*'], 'page', $page);
+
+        $data->load($with);
+        $response = $resource::collection($data);
+
+        return $response;
+    }
+
+    public function getResource($id, $model, $resource, $with = [])
+    {
+        $data = $model::find($id);
+        $data->load($with);
+
+        if (!$data) {
+            return response()->json(['message' => 'Resource not found'], 404);
+        }
+        $response = new $resource($data);
+
+        return $response;
+    }
 
     public function handleImageUpload($request, $model, $image_id = null)
     {
         if ($image_id) {
             $image = Image::find($image_id);
-            if (! $image) {
+            if (!$image) {
                 return 0;
             }
             $model->images()->save($image);
@@ -25,9 +56,9 @@ abstract class Controller
 
             foreach ($images as $image) {
                 $fileName = $image->getClientOriginalName();
-                $imageName = time().'_'.$fileName;
+                $imageName = time() . '_' . $fileName;
                 $modelName = strtolower(class_basename($model));
-                $imagePath = $image->storeAs('public/'.$modelName, $imageName);
+                $imagePath = $image->storeAs('public/' . $modelName, $imageName);
 
                 $model->images->each(function ($image) {
                     Storage::delete(str_replace('storage', 'public', $image->path));
@@ -48,7 +79,7 @@ abstract class Controller
 
     public function handleStatus($request, $model, $id)
     {
-        if (! $request->has('status')) {
+        if (!$request->has('status')) {
             return 0;
         }
         $data = $request->validate(['status' => 'required|in:active,inactive']);
@@ -60,6 +91,5 @@ abstract class Controller
         $model->save();
 
         return 1;
-
     }
 }

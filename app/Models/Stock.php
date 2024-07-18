@@ -2,19 +2,26 @@
 
 namespace App\Models;
 
-use App\Models\Product;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Stock extends Model
 {
     use HasFactory;
+
     public $timestamps = false;
+
     protected $guarded = [];
+
     protected $table = 'stocks';
+
     protected $primaryKey = 'product_sku_code';
 
-    protected $fillable = ['product_sku_code', 'quantity'];
+    protected $keyType = 'string';
+
+    public $incrementing = false;
+
+    // protected $fillable = ['product_sku_code', 'quantity'];
 
     public function product()
     {

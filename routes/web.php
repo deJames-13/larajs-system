@@ -15,9 +15,11 @@ Route::get('/cart', [PageController::class, 'cart'])->name('cart');
 
 $crud = [
     'product',
-    'brand',
-    'promo',
-    'category',
+    // INFO: CONVERTED to JS/JQUERY
+    // "promos",
+    // "brands",
+    // "categories",
+    // "users",
 ];
 
 // TO FIX
