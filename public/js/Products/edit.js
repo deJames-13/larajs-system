@@ -2,7 +2,7 @@ import ajaxRequest from "../assets/ajaxRequest.js";
 import Carousel from "../components/Carousel.js";
 
 export default class ProductsEdit {
-  constructor({ onReady = () => {} }) {
+  constructor({ getItem = () => {} }) {
     this.item = null;
     this.carousel = null;
     this.images = ["https://placehold.co/400x600?text=item"];
@@ -10,11 +10,7 @@ export default class ProductsEdit {
     this.setupForm();
     this.setupValidation();
     this.id = $("#item-form").data("id");
-    this.onReady = onReady;
-  }
-
-  ready(callback) {
-    callback(this.item);
+    this.getItem = getItem;
   }
 
   init() {
@@ -175,7 +171,7 @@ export default class ProductsEdit {
   }
 
   populateForm(item = {}) {
-    this.ready(this.onReady);
+    this.getItem(item);
 
     Object.keys(this.item).forEach(key => {
       $(`#${key}`).val(this.item[key]);

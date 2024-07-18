@@ -60,7 +60,7 @@ class AuthController extends Controller
             $request->session()->put('api-token', $token);
 
             // dd(session('api-token'));
-            Debugbar::info($token);
+            // Debugbar::info($token);
 
             if (request()->ajax()) {
                 return response()->json([

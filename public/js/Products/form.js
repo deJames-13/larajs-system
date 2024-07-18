@@ -62,8 +62,8 @@ export default class ProductsForm extends FormPage {
   }
 
   selectCetegories(item) {
-    if (!item.categories) return;
-    this.categories.selected = item.categories.map(category => {
+    const categories = (item && item.categories) ?? [];
+    this.categories.selected = categories.map(category => {
       return {
         value: category.id,
         label: category.name
@@ -86,7 +86,7 @@ export default class ProductsForm extends FormPage {
     if (this.type === "edit") {
       $(document).ready(() => {
         this.formInstance = new ProductsEdit({
-          onReady: item => this.selectCetegories(item)
+          getItem: item => this.selectCetegories(item)
         });
       });
     } else if (this.type === "create") {
