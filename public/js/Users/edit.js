@@ -11,7 +11,7 @@ export default class UserEdit extends UserFormPage {
   init() {
     super.init();
     this.fetchUser(this.userId).then(response => {
-      this.populateForm();
+      this.populateForm(response);
     });
     this.handleUpdate = this.onUpdate;
     this.bindAction();
@@ -103,7 +103,7 @@ export default class UserEdit extends UserFormPage {
         });
       }
 
-      if (key === "birthdate") this.form.find(`#${key}`).val(this.user[key].split("T")[0]);
+      if (key === "birthdate") this.form.find(`#${key}`).val(this.user.info[key].split("T")[0]);
       else this.form.find(`#${key}`).val(this.user.info[key]);
     });
   }

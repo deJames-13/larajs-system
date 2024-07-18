@@ -27,12 +27,14 @@ export default class UserForm extends FormCard {
         <div className="flex gap-4 items-center">
           <label for="role">Select Role: </label>
           <select id="role" name="role" class="select select-bordered select-sm w-full max-w-xs">
-            <option id="customer" value="customer">Customer</option>
+            <!-- hardcoded lol-->
             <option id="admin" value="admin">Admin</option>
+            <option id="customer" value="customer">Customer</option>
+            <option id="staff" value="staff">Staff</option>
           </select>
         </div>
         <div className="flex gap-4 items-center">
-          <label for="statud">Select Status: </label>
+          <label for="status">Select Status: </label>
           <select id="status" name="status" class="select select-bordered select-sm w-full max-w-xs">
             <option id="active" value="active">Active</option>
             <option id="inactive" value="inactive">Inactive</option>

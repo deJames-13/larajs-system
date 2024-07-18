@@ -72,7 +72,7 @@ class UserController extends Controller
             'username' => 'required|unique:users',
             'email' => 'required|email|unique:users',
             'password' => 'required|confirmed',
-            'role' => 'sometimes|in:admin,customer',
+            'role' => 'sometimes|in:admin,customer,staff',
         ]);
         $userInfo = $request->validate([
             'first_name' => 'required|string',
@@ -107,7 +107,7 @@ class UserController extends Controller
             'email' => 'sometimes|email|unique:users,email,' . $id . ',id',
             'password' => 'sometimes',
             'password_confirmation' => 'sometimes|same:password',
-            'role' => 'sometimes|in:admin,customer',
+            'role' => 'sometimes|in:admin,customer,staff',
             'status' => 'sometimes|in:active,inactive',
         ]);
         $userInfo = $request->validate([

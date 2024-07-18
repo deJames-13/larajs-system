@@ -167,7 +167,8 @@ export default class MultipleSelect {
 
   render() {
     const HTML = /* HTML */ `
-      <div class="dropdown dropdown-hover w-full">
+      <div class="dropdown dropdown-hover
+       w-full">
         <div tabindex="0" role="button" class="w-full flex gap-2 p-2 px-4 border rounded-lg border-primary bg-transparent">
           <div className="flex items-center">
             <i class="fas fa-caret-down"></i>
@@ -175,7 +176,7 @@ export default class MultipleSelect {
           </div>
           <ul id="options-list" class="relative options flex flex-wrap gap-2"></ul>
         </div>
-        <div class="dropdown-content my-2 mb-12 menu bg-base-100 rounded-lg z-[1] container max-w-sm p-2 shadow border gap-2">
+        <div class="dropdown-content my-2 pb-12 menu bg-base-100 rounded-lg z-[1] container max-w-sm p-2 shadow border gap-2">
           <div id="filter-options">
             <input type="text" class="input input-bordered rounded-md w-full" placeholder="Filter" />
           </div>

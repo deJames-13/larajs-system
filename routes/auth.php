@@ -59,21 +59,23 @@ Route::group(["middleware" => "auth"], function () {
         // PDFS
         Route::get("/pdf/$prefix", [PdfController::class, $prefix . "Pdf"])
             ->name("pdf.$prefix")
-            ->middleware("role:admin");
+            ->middleware("role:staff,admin");
         // Imports
         Route::post("/import/$prefix", [TableController::class, $prefix . "Import"])
             ->name("imports.$prefix")
-            ->middleware("role:admin");
+            ->middleware("role:staff,admin");
     }
 
     foreach ($charts as $chart => $url) {
         Route::get("/$prefix/charts/$url", [ChartController::class, $chart])
             ->name('charts.' . $chart)
-            ->middleware("role:admin");
+            ->middleware("role:staff,admin");
     }
 
     foreach ($adminPages as $page => $url) {
-        Route::get($url, [PageController::class, $page])->name("admin.$page");
+        Route::get($url, [PageController::class, $page])
+            ->name("admin.$page")
+            ->middleware("role:staff,admin");
     }
     //##################################################################################################################
 

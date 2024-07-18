@@ -34,7 +34,8 @@
     - [ ]     Brand,
     - [ ]     Category,
     - [ ]     Promo
-- [ ] Staff Privileges
+- [x] Staff Privileges
+  - [ ] DEBUG and TEST
 
 ## Front End
 
