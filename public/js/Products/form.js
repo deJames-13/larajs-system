@@ -27,7 +27,7 @@ export default class ProductsForm extends FormPage {
     super.init();
   }
 
-  async getCategories() {
+  async categories() {
     const query = {
       limit: 100
     };
@@ -46,7 +46,7 @@ export default class ProductsForm extends FormPage {
     });
   }
 
-  async getBrands() {
+  async brands() {
     const query = {
       limit: 100
     };
@@ -61,7 +61,7 @@ export default class ProductsForm extends FormPage {
     });
   }
 
-  selectCetegories(item) {
+  selectedCetegories(item) {
     const categories = (item && item.categories) ?? [];
     this.categories.selected = categories.map(category => {
       return {
@@ -78,16 +78,13 @@ export default class ProductsForm extends FormPage {
       selectedOptions: this.categories.selected,
       placeholder: "Select categories: "
     });
-    this.getCategories();
-    this.getBrands();
+    this.categories();
   }
 
   handleForm() {
     if (this.type === "edit") {
       $(document).ready(() => {
-        this.formInstance = new ProductsEdit({
-          getItem: item => this.selectCetegories(item)
-        });
+        this.formInstance = new ProductsEdit().then(response => {});
       });
     } else if (this.type === "create") {
       $(document).ready(() => {
@@ -173,7 +170,6 @@ export default class ProductsForm extends FormPage {
           <div class="flex gap-4 items-end m-1">
             <div class="flex flex-grow flex-col space-y-2">
               <div class="flex items-center">
-                <span id="mini-loader" class="loading loading-spinner text-primary"></span>
                 <label for="categories" class="text-lg font-semibold">Categories</label>
               </div>
               <div id="categories-select"></div>

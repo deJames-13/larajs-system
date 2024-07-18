@@ -32,13 +32,9 @@ export default class FormPage {
       qString += key + "=" + query[key] + "&";
     });
     qString = qString.slice(0, -1);
-    return new Promise((resolve, reject) => {
-      ajaxRequest.get({
-        showLoader: false,
-        url: "/api/" + path + qString,
-        onSuccess: response => resolve(response.data),
-        onError: error => reject(error)
-      });
+    return ajaxRequest.get({
+      showLoader: false,
+      url: "/api/" + path + qString
     });
   }
 

@@ -1,3 +1,4 @@
+import { debounce } from "../assets/debounce.js";
 /* 
 option = {
   label: "Option 1",
@@ -23,7 +24,8 @@ const defaultProps = {
     }
   ],
   placeholder: "Select options: ",
-  count: 5
+  count: 5,
+  source: () => {}
 };
 
 export default class MultipleSelect {
@@ -160,19 +162,32 @@ export default class MultipleSelect {
 
   update() {
     this.filterOptions();
-    this.tagsWrapper.html(this.makeTags(this.selectedOptions));
-    this.dropdown.html(this.makeOptions(this.options));
+    this.selectedOptions && this.tagsWrapper.html(this.makeTags(this.selectedOptions));
+    this.options && this.dropdown.html(this.makeOptions(this.options));
     return this;
+  }
+
+  bindEvents() {
+    const doSearch = debounce(() => {
+      this.onSearch(this.searchInput.val());
+    }, 500);
+
+    this.searchInput.on("keyup", doSearch);
+
+    this.searchBtn.on("click", () => {});
   }
 
   render() {
     const HTML = /* HTML */ `
-      <div class="dropdown dropdown-hover
-       w-full">
+      <div
+        class="dropdown dropdown-hover
+       w-full"
+      >
         <div tabindex="0" role="button" class="w-full flex gap-2 p-2 px-4 border rounded-lg border-primary bg-transparent">
-          <div className="flex items-center">
+          <div className="flex items-center gap-1">
             <i class="fas fa-caret-down"></i>
             <span class="placeholder">${this.placeholder}</span>
+            <span id="mini-loader" class="loading loading-spinner text-primary"></span>
           </div>
           <ul id="options-list" class="relative options flex flex-wrap gap-2"></ul>
         </div>
@@ -190,10 +205,10 @@ export default class MultipleSelect {
     this.tagsWrapper = $(this.component).find("#options-list");
     this.target && $(this.target).append(this.component);
 
-    // filter options and selectedOptions so that they don't have the same values
-    this.filterOptions();
-
-    this.options.length && this.dropdown.html(this.makeOptions(this.options));
-    this.selectedOptions.length && this.tagsWrapper.html(this.makeTags(this.selectedOptions));
+    this.source().then((options, selectedOptions) => {
+      this.setSelection(selectedOptions);
+      this.setOptions(options);
+      this.update();
+    });
   }
 }

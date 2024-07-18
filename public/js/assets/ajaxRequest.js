@@ -60,25 +60,25 @@ const ajaxCall = ({ url, method, onSuccess = () => {}, onError = defaultError, d
     success: handleSuccess(onSuccess)
   };
   // console.log({ ...defaultSettings, ...settings });
-  $.ajax({ ...defaultSettings, ...settings });
+  return $.ajax({ ...defaultSettings, ...settings });
 };
 // ##########################################################################
 // AJAX REQUEST
 const ajaxRequest = {
   get: options => {
-    ajaxCall({ ...options, method: "GET" });
+    return ajaxCall({ ...options, method: "GET" });
   },
   post: options => {
-    ajaxCall({ ...options, method: "POST" });
+    return ajaxCall({ ...options, method: "POST" });
   },
   put: options => {
-    ajaxCall({ ...options, method: "PUT" });
+    return ajaxCall({ ...options, method: "PUT" });
   },
   delete: options => {
-    ajaxCall({ ...options, method: "DELETE" });
+    return ajaxCall({ ...options, method: "DELETE" });
   },
   init: () => {
-    $(document).ajaxStart(showLoading).ajaxStop(hideLoading);
+    return $(document).ajaxStart(showLoading).ajaxStop(hideLoading);
   }
 };
 // ##########################################################################

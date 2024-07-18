@@ -1,3 +1,4 @@
+import logout from "../Auth/logout.js";
 import Tables from "../Tables/tables.js";
 import DashboardSideBar from "./components/sidebar.js";
 import MainPage from "./partials/_main.js";
@@ -29,10 +30,10 @@ class Dashboard {
       promos: () => this.tables.getPromos(),
       categories: () => this.tables.getCategories(),
       orders: () => this.tables.getOrders(),
-      users: () => this.tables.getUsers()
+      users: () => this.tables.getUsers(),
+      logout: logout
     };
-
-    pages[url]();
+    pages[url] && pages[url]();
   }
 }
 
