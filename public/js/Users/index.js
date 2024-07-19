@@ -32,24 +32,19 @@ export default class User {
 
   hanndleError(error) {
     // 401
-    if (error.status === 401) return reject(error);
+    if (error.status === 401) return;
     console.error("Failed to fetch user data:", error);
-    return reject(error);
   }
 
   fetchUser() {
-    return new Promise((resolve, reject) => {
-      ajaxRequest.get({
-        url: "/api/profile",
-        onSuccess: response => {
-          this.handleResponse(response);
-          resolve(response);
-        },
-        onError: error => {
-          this.hanndleError(error);
-          reject(error);
-        }
-      });
+    return ajaxRequest.get({
+      url: "/api/profile",
+      onSuccess: response => {
+        this.handleResponse(response);
+      },
+      onError: error => {
+        this.hanndleError(error);
+      }
     });
   }
 

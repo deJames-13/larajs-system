@@ -4,19 +4,13 @@ import FormPage from "../layouts/FormPage.js";
 import ProductsCreate from "./create.js";
 import ProductsEdit from "./edit.js";
 export default class ProductsForm extends FormPage {
+  formInstance = null;
   msCategories = null;
-
   categories = {
     data: [],
     selected: [],
     options: []
   };
-  brands = {
-    data: [],
-    selected: [],
-    options: []
-  };
-  formInstance = null;
 
   constructor(props = {}) {
     super(props);
@@ -27,66 +21,48 @@ export default class ProductsForm extends FormPage {
     super.init();
   }
 
-  async getCategories() {
-    const query = {
-      limit: 100
+  async fetchCategories({ query = {} }) {
+    const q = {
+      limit: 100,
+      ...query
     };
     $("#mini-loader").show();
-    return this.fetch("categories", query).then(categories => {
+    return this.fetch("categories", q).then(({ data }) => {
       $("#mini-loader").hide();
-
-      this.categories.data = categories;
-      this.categories.options = categories.map(category => {
-        return {
-          value: category.id,
-          label: category.name
-        };
-      });
-      this.msCategories && this.msCategories.setOptions(this.categories.options).update();
+      this.categories.data = data;
+      this.categories.options = this.mapOptions(data);
     });
   }
 
-  async getBrands() {
-    const query = {
-      limit: 100
-    };
-    return this.fetch("brands", query).then(brands => {
-      this.brands.data = brands;
-      this.brands.options = brands.map(brand => {
-        return {
-          value: brand.id,
-          label: brand.name
-        };
+  mapOptions(options) {
+    return options.map(option => {
+      return { value: option.id, label: option.name };
+    });
+  }
+
+  multiSelectSource(query = {}) {
+    return new Promise((resolve, reject) => {
+      this.fetchCategories({ query }).then(() => {
+        resolve(this.categories.options, this.categories.selected);
       });
     });
   }
 
-  selectCetegories(item) {
-    if (!item.categories) return;
-    this.categories.selected = item.categories.map(category => {
-      return {
-        value: category.id,
-        label: category.name
-      };
-    });
-
+  setMultiSelect() {
     this.msCategories = new MultipleSelect({
-      target: $("#categories-select"),
-      id: "categories",
       name: "categories",
-      options: this.categories.options,
-      selectedOptions: this.categories.selected,
-      placeholder: "Select categories: "
+      target: $("#categories-select"),
+      source: this.multiSelectSource.bind(this)
     });
-    this.getCategories();
-    this.getBrands();
   }
 
   handleForm() {
+    this.setMultiSelect();
     if (this.type === "edit") {
       $(document).ready(() => {
-        this.formInstance = new ProductsEdit({
-          onReady: item => this.selectCetegories(item)
+        this.formInstance = new ProductsEdit().then(({ data }) => {
+          this.categories.selected = this.mapOptions(data.categories);
+          this.msCategories && this.msCategories.setSelection(this.categories.selected).update();
         });
       });
     } else if (this.type === "create") {
@@ -173,7 +149,6 @@ export default class ProductsForm extends FormPage {
           <div class="flex gap-4 items-end m-1">
             <div class="flex flex-grow flex-col space-y-2">
               <div class="flex items-center">
-                <span id="mini-loader" class="loading loading-spinner text-primary"></span>
                 <label for="categories" class="text-lg font-semibold">Categories</label>
               </div>
               <div id="categories-select"></div>

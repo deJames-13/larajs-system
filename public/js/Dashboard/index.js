@@ -1,3 +1,4 @@
+import logout from "../Auth/logout.js";
 import Tables from "../Tables/tables.js";
 import Charts from "../Charts/charts.js";
 import DashboardSideBar from "./components/sidebar.js";
@@ -30,7 +31,8 @@ class Dashboard {
       categories: () => this.tables.getCategories(),
       orders: () => this.tables.getOrders(),
       users: () => this.tables.getUsers(),
-      charts: () => this.showAllCharts()
+      charts: () => this.showAllCharts(),
+      logout: logout
     };
 
     if (pages[url]) {

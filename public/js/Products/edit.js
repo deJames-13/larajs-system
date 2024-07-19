@@ -2,49 +2,38 @@ import ajaxRequest from "../assets/ajaxRequest.js";
 import Carousel from "../components/Carousel.js";
 
 export default class ProductsEdit {
-  constructor({ onReady = () => {} }) {
+  constructor() {
+    this.id = $("#item-form").data("id");
     this.item = null;
     this.carousel = null;
     this.images = ["https://placehold.co/400x600?text=item"];
-    this.init();
-    this.setupForm();
-    this.setupValidation();
-    this.id = $("#item-form").data("id");
-    this.onReady = onReady;
-  }
-
-  ready(callback) {
-    callback(this.item);
+    return this.init();
   }
 
   init() {
-    $(document).ready(() => {
-      const id = $("#item-form").data("id");
-      this.fetchItem(id);
-
-      $("#image-input").change(() => {
-        const images = Array.from($("#image-input")[0].files).map(file => URL.createObjectURL(file));
-        this.carousel = new Carousel(".item-carousel", images, ".prev", ".next");
-      });
-
-      $(".prev").click(() => {
-        if (this.carousel) this.carousel.prev();
-      });
-
-      $(".next").click(() => {
-        if (this.carousel) this.carousel.next();
-      });
-
-      // if the number of categories[] is changed show the save button
-
-      $("#save-item, #cancel").hide();
-      $("#item-form").change(() => {
-        $("#save-item, #cancel").show();
-      });
-    });
+    this.bindEvents();
+    this.setupValidation();
+    return this.fetchItem(this.id);
   }
 
-  setupForm() {
+  bindEvents() {
+    $("#image-input").change(() => {
+      const images = Array.from($("#image-input")[0].files).map(file => URL.createObjectURL(file));
+      this.carousel = new Carousel(".item-carousel", images, ".prev", ".next");
+    });
+
+    $(".prev").click(() => {
+      if (this.carousel) this.carousel.prev();
+    });
+
+    $(".next").click(() => {
+      if (this.carousel) this.carousel.next();
+    });
+
+    $("#save-item, #cancel").hide();
+    $("#item-form").change(() => {
+      $("#save-item, #cancel").show();
+    });
     $("#cancel").click(() => {
       Swal.fire({
         title: "Are you sure?",
@@ -62,7 +51,6 @@ export default class ProductsEdit {
         }
       });
     });
-
     $("#save-item").click(() => {
       $("#item-form").submit();
     });
@@ -151,34 +139,35 @@ export default class ProductsEdit {
       }
     });
   }
+
   loadCarousel() {
     this.carousel = new Carousel(".item-carousel", this.images, ".prev", ".next");
   }
+  populateForm(item = {}) {
+    this.item = item;
+    Object.keys(this.item).forEach(key => {
+      $(`#${key}`).val(this.item[key]);
+    });
+  }
+
+  onResponse(response) {
+    if (response.data) {
+      if (response.data.images && response.data.images.length > 0) {
+        this.images = response.data.images.map(image => "/" + image.path);
+      }
+      this.loadCarousel();
+      this.populateForm(response.data);
+    }
+  }
+
   fetchItem(id) {
     $("#image-input").val("");
     $(".input-error").removeClass("input-error");
     $(".text-error").remove();
 
-    ajaxRequest.get({
+    return ajaxRequest.get({
       url: "/api/products/" + id,
-      onSuccess: response => {
-        if (response.data) {
-          if (response.data.images && response.data.images.length > 0) {
-            this.images = response.data.images.map(image => "/" + image.path);
-          }
-          this.loadCarousel();
-          this.item = response.data;
-          this.populateForm(this.item);
-        }
-      }
-    });
-  }
-
-  populateForm(item = {}) {
-    this.ready(this.onReady);
-
-    Object.keys(this.item).forEach(key => {
-      $(`#${key}`).val(this.item[key]);
+      onSuccess: response => this.onResponse(response)
     });
   }
 
@@ -197,6 +186,7 @@ export default class ProductsEdit {
       token: token,
       onSuccess: response => {
         Swal.fire("Item Updated!", "Your item has been updated.", "success").then(() => {
+          this.onResponse(response);
           $("#save-item, #cancel").hide();
         });
       },

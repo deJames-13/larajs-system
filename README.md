@@ -5,6 +5,7 @@
 REQUIRED SOFTWARE / CLI: meilisearch
 # Install Meilisearch
 curl -L https://install.meilisearch.com | sh
+composer require meilisearch/meilisearch-php http-interop/http-factory-guzzle
 
 
 

@@ -93,22 +93,28 @@ export default class DataTable {
       mimeType = "text/csv";
     }
 
-    fetch("/api/exports/" + this.tableName + "/" + fileType, {
-      method: "GET",
+    $.ajax({
+      url: "/api/exports/" + this.tableName + "/" + fileType,
+      type: "GET",
       headers: {
         Accept: mimeType,
-        Authorization: "Bearer " + document.querySelector('meta[name="api-token"]').getAttribute("content")
-      }
-    })
-      .then(response => response.blob())
-      .then(blob => {
+        Authorization: "Bearer " + $('meta[name="api-token"]').attr("content")
+      },
+      xhrFields: {
+        responseType: "blob" // Set the response type to blob
+      },
+      success: blob => {
         const fileUrl = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = fileUrl;
         const fileName = `${this.tableName}-${new Date().toISOString().replace(".", "-")}`;
         a.download = `${fileName}.${fileType}`;
         a.click();
-      });
+      },
+      error: function (xhr, status, error) {
+        console.error("Request failed: " + status + ", " + error);
+      }
+    });
   }
 
   makePdf() {

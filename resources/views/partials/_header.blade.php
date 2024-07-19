@@ -17,7 +17,7 @@
 
 		@if ($isShown)
 			{{-- SEARCH BAR --}}
-			@role('admin')
+			@role('admin,staff')
 				@include('partials._search_bar', ['headerTitle' => $title, 'url' => route('admin.dashboard')])
 			@else
 				@include('partials._search_bar')

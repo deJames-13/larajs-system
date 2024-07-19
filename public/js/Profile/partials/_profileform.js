@@ -16,19 +16,12 @@ export default class ProfileForm extends FormCard {
   }
 
   async fetchProfile() {
-    return new Promise((resolve, reject) => {
-      ajaxRequest.get({
-        url: "/api/profile",
-        onSuccess: response => {
-          this.user_profile = response;
-          this.populateForm();
-          resolve(this.user_profile); // Resolve the promise with the profile data
-        },
-        onError: response => {
-          // console.log(response);
-          reject(response); // Reject the promise on error
-        }
-      });
+    return ajaxRequest.get({
+      url: "/api/profile",
+      onSuccess: response => {
+        this.user_profile = response;
+        this.populateForm();
+      }
     });
   }
 
@@ -248,9 +241,7 @@ export default class ProfileForm extends FormCard {
           text: "Returning to homepage...",
           icon: "info"
         }).then(() => {
-          logout().then(() => {
-            window.location.href = "/";
-          });
+          logout();
         });
       },
       onError: response => {
@@ -269,9 +260,7 @@ export default class ProfileForm extends FormCard {
           text: "Returning to homepage...",
           icon: "info"
         }).then(() => {
-          logout().then(() => {
-            window.location.href = "/";
-          });
+          logout();
         });
       },
       onError: response => {
@@ -279,8 +268,20 @@ export default class ProfileForm extends FormCard {
       }
     });
   }
-
-  confirmWithPassword() {
+  _confirmWithPassword(password) {
+    return ajaxRequest.post({
+      url: "/api/confirm-password",
+      data: { password },
+      onSuccess: response => {
+        console.log(response);
+      },
+      onError: response => {
+        console.log(response);
+        Swal.showValidationMessage("Error: Password confirmation failed");
+      }
+    });
+  }
+  onConfirm() {
     Swal.fire({
       title: "Enter your password",
       input: "password",
@@ -290,23 +291,7 @@ export default class ProfileForm extends FormCard {
       showCancelButton: true,
       confirmButtonText: "Submit",
       showLoaderOnConfirm: true,
-      preConfirm: password => {
-        return new Promise((resolve, reject) => {
-          ajaxRequest.post({
-            url: "/api/confirm-password",
-            data: { password },
-            onSuccess: response => {
-              console.log(response);
-              resolve(response);
-            },
-            onError: response => {
-              console.log(response);
-              Swal.showValidationMessage("Error: Password confirmation failed");
-              reject();
-            }
-          });
-        });
-      },
+      preConfirm: password => this._confirmWithPassword(password),
       allowOutsideClick: () => !Swal.isLoading()
     }).then(result => {
       if (result.isConfirmed) {
@@ -343,7 +328,7 @@ export default class ProfileForm extends FormCard {
       confirmButtonText: "Yes, update it!"
     }).then(result => {
       if (result.isConfirmed) {
-        this.confirmWithPassword();
+        this.onConfirm();
       }
     });
   }
