@@ -32,13 +32,9 @@ export default class FormPage {
       qString += key + "=" + query[key] + "&";
     });
     qString = qString.slice(0, -1);
-    return new Promise((resolve, reject) => {
-      ajaxRequest.get({
-        showLoader: false,
-        url: "/api/" + path + qString,
-        onSuccess: response => resolve(response.data),
-        onError: error => reject(error)
-      });
+    return ajaxRequest.get({
+      showLoader: false,
+      url: "/api/" + path + qString
     });
   }
 
@@ -71,7 +67,7 @@ export default class FormPage {
     const HTML = /* HTML */ `
       <div class="page container mx-auto px-6 h-full">
         <div class="relative flex flex-col space-y-4">
-          <div class="sticky top-0 flex items-center justify-between top p-1 bg-base-100 z-[10]">
+          <div class="sticky top-12 flex items-center justify-between top p-1 z-[10]">
             <h1 class="text-3xl font-extrabold capitalize">${this.type} ${this.name}</h1>
             <div class="flex justify-end space-x-2 actions">
               <button id="save-item" class="hidden btn btn-success">Save</button>

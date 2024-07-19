@@ -153,7 +153,7 @@ export default class ProductsCreate {
       token: token,
       onSuccess: response => {
         Swal.fire("Item Added!", "Your item has been added to inventory.", "success").then(() => {
-          window.location.href = "/admin/products";
+          window.location.href = "/dashboard?page=products";
         });
       },
       onError: xhr => {

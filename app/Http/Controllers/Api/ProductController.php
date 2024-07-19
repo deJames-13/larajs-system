@@ -66,7 +66,7 @@ class ProductController extends Controller
             'categories' => 'sometimes|array',
             'categories.*' => 'sometimes|numeric',
         ]);
-        // Debugbar::info($data);
+        Debugbar::info($data);
 
         $stock = $data['stock'] ?? null;
         $image_id = $data['image_id'] ?? null;

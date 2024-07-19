@@ -10,20 +10,16 @@ const hideLoader = () => {
 
 const fetchAutoComplete = term => {
   showLoader();
-  return new Promise((resolve, reject) => {
-    ajaxRequest.get({
-      url: `/api/autocomplete?term=${term}`,
-      onSuccess: response => {
-        resolve(response);
-        hideLoader();
-      },
-      onError: error => {
-        console.log(error);
-        reject(error);
-        hideLoader();
-      },
-      showLoader: false
-    });
+  return ajaxRequest.get({
+    url: `/api/autocomplete?term=${term}`,
+    onSuccess: response => {
+      hideLoader();
+    },
+    onError: error => {
+      console.log(error);
+      hideLoader();
+    },
+    showLoader: false
   });
 };
 

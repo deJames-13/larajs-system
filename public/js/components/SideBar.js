@@ -1,3 +1,4 @@
+import { debounce } from "../assets/debounce.js";
 export default class SideBar {
   constructor({ target, links = [], onClick = () => {} }) {
     /*
@@ -31,7 +32,10 @@ export default class SideBar {
         if (!(this.currentUrl === "")) window.history.pushState({}, "", `?page=${this.currentUrl}`);
 
         this.setActiveLink(this.currentUrl);
-        this.onClick(this.currentUrl);
+        const goToPage = debounce(() => {
+          this.onClick(this.currentUrl);
+        }, 100);
+        goToPage();
       });
   }
 
