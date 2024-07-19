@@ -1,3 +1,4 @@
+import { debounce } from "../assets/debounce.js";
 /* 
 option = {
   label: "Option 1",
@@ -23,14 +24,19 @@ const defaultProps = {
     }
   ],
   placeholder: "Select options: ",
-  count: 5
+  count: 5,
+  source: () => {
+    return new Promise((resolve, reject) => {
+      resolve([], []);
+    });
+  }
 };
 
 export default class MultipleSelect {
   dropdown = null;
   component = null;
   tagsWrapper = null;
-
+  searchInput = null;
   constructor(props = {}) {
     Object.assign(this, defaultProps, props);
     this.selectedOptions = this.selectedOptions || [];
@@ -149,36 +155,62 @@ export default class MultipleSelect {
   }
 
   setOptions(options) {
-    this.options = options;
+    this.options = options || [];
     return this;
   }
 
   setSelection(selectedOptions) {
-    this.selectedOptions = selectedOptions;
+    this.selectedOptions = selectedOptions || [];
     return this;
   }
 
   update() {
     this.filterOptions();
-    this.tagsWrapper.html(this.makeTags(this.selectedOptions));
-    this.dropdown.html(this.makeOptions(this.options));
+    this.selectedOptions && this.tagsWrapper.html(this.makeTags(this.selectedOptions));
+    this.options && this.dropdown.html(this.makeOptions(this.options));
     return this;
+  }
+
+  onSearch(value) {
+    this._source({ search: value });
+  }
+
+  bindEvents() {
+    const doSearch = debounce(() => {
+      this.onSearch(this.searchInput.val());
+    }, 500);
+
+    this.searchInput.on("keyup", doSearch);
+  }
+
+  _source(query = {}) {
+    if (typeof this.source !== "function") return;
+    const res = this.source(query);
+    res instanceof Promise &&
+      res.then((options, selectedOptions) => {
+        selectedOptions && this.setSelection(selectedOptions);
+        options && this.setOptions(options);
+        this.update();
+      });
   }
 
   render() {
     const HTML = /* HTML */ `
-      <div class="dropdown dropdown-hover
-       w-full">
+      <div
+        class="dropdown dropdown-hover
+       w-full"
+      >
         <div tabindex="0" role="button" class="w-full flex gap-2 p-2 px-4 border rounded-lg border-primary bg-transparent">
-          <div className="flex items-center">
+          <div className="flex items-center gap-1">
             <i class="fas fa-caret-down"></i>
             <span class="placeholder">${this.placeholder}</span>
+            <span id="mini-loader" class="loading loading-spinner text-primary"></span>
           </div>
           <ul id="options-list" class="relative options flex flex-wrap gap-2"></ul>
         </div>
         <div class="dropdown-content my-2 pb-12 menu bg-base-100 rounded-lg z-[1] container max-w-sm p-2 shadow border gap-2">
           <div id="filter-options">
-            <input type="text" class="input input-bordered rounded-md w-full" placeholder="Filter" />
+            <input id="filter-input" type="text" class="input input-bordered rounded-md w-full" placeholder="Filter" />
           </div>
           <ul id="select-dropdown" tabindex="0"></ul>
         </div>
@@ -188,12 +220,9 @@ export default class MultipleSelect {
     this.component = $(HTML);
     this.dropdown = $(this.component).find("#select-dropdown");
     this.tagsWrapper = $(this.component).find("#options-list");
+    this.searchInput = $(this.component).find("#filter-input");
     this.target && $(this.target).append(this.component);
 
-    // filter options and selectedOptions so that they don't have the same values
-    this.filterOptions();
-
-    this.options.length && this.dropdown.html(this.makeOptions(this.options));
-    this.selectedOptions.length && this.tagsWrapper.html(this.makeTags(this.selectedOptions));
+    this._source({});
   }
 }

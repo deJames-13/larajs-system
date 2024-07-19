@@ -4,7 +4,7 @@ import SideBar from "../../components/SideBar.js";
 export default class DashboardSideBar extends SideBar {
   constructor({ target, onClick = () => {} }) {
     const user = getUser();
-    console.log(user);
+    // console.log(user);
     const sidebar = [
       {
         text: "Main Page",

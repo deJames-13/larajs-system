@@ -38,65 +38,54 @@ export default class UserFormPage {
   }
 
   fetchUser(id) {
-    return new Promise((resolve, reject) => {
-      ajaxRequest.get({
-        url: this.fetchUrl + id,
-        onSuccess: response => {
-          this.user = response.data;
-          resolve(response.data);
-        },
-        onError: error => {
-          console.log(error);
-          reject(error);
-        }
-      });
+    return ajaxRequest.get({
+      url: this.fetchUrl + id,
+      onSuccess: response => {
+        this.user = response.data;
+      }
     });
   }
 
   submitForm() {
     $(".text-error").text("");
-    return new Promise((resolve, reject) => {
-      this.validate();
-      if (!this.form.valid()) {
-        Swal.fire({
-          title: "Input Error",
-          text: "Form Invalid! Please fill in all required fields",
-          icon: "error",
-          confirmButtonText: "Ok"
-        });
-        reject();
-        return;
-      }
-      const formData = new FormData(this.form[0]);
-      console.log(formData);
-      let address = [formData.get("address_1"), formData.get("address_2"), formData.get("city"), formData.get("province"), formData.get("country")].join(",");
-      formData.set("address", address);
-
-      ajaxRequest.post({
-        url: `${this.fetchUrl}${this.userId ? this.userId : ""}`,
-        data: formData,
-        onSuccess: response => {
-          $("#form-actions").hide();
-          this.user = response;
-          try {
-            this.populateForm();
-          } catch (e) {}
-          resolve(response);
-        },
-        onError: response => {
-          // if 422
-          if (response.status == 422) {
-            Swal.fire({
-              title: "Input Error",
-              text: response.responseJSON.message,
-              icon: "error",
-              confirmButtonText: "Ok"
-            });
-          }
-          this.handleInvalidInput(response.responseJSON.errors);
-          reject(response);
-        }
+    this.validate();
+    if (!this.form.valid()) {
+      Swal.fire({
+        title: "Input Error",
+        text: "Form Invalid! Please fill in all required fields",
+        icon: "error",
+        confirmButtonText: "Ok"
       });
+      reject();
+      return;
+    }
+    const formData = new FormData(this.form[0]);
+    let address = [formData.get("address_1"), formData.get("address_2"), formData.get("city"), formData.get("province"), formData.get("country")].join(",");
+    formData.set("address", address);
+
+    return ajaxRequest.post({
+      url: `${this.fetchUrl}${this.userId ? this.userId : ""}`,
+      data: formData,
+      onSuccess: response => {
+        $("#form-actions").hide();
+        this.user = response;
+        try {
+          this.populateForm();
+        } catch (e) {}
+      },
+      onError: response => {
+        // if 422
+        if (response.status == 422) {
+          Swal.fire({
+            title: "Input Error",
+            text: response.responseJSON.message,
+            icon: "error",
+            confirmButtonText: "Ok"
+          });
+          submitForm;
+        }
+        this.handleInvalidInput(response.responseJSON.errors);
+      }
     });
   }
 

@@ -1,16 +1,16 @@
-import Banner from "../components/Banner.js";
-import NavSideBar from "./partials/_navigation.js";
-import ProfileForm from "./partials/_profileform.js";
-import UserCard from "./partials/_usercard.js";
-
+import { debounce } from "../assets/debounce.js";
+import logout from "../Auth/logout.js";
 import MyCart from "./cart.js";
 import ProfileEdit from "./edit.js";
 import MainPage from "./main.js";
 import MyOrders from "./orders.js";
+import NavSideBar from "./partials/_navigation.js";
+import ProfileForm from "./partials/_profileform.js";
+import UserCard from "./partials/_usercard.js";
 
 export default class ProfilePage {
   banner = null;
-  UserCard = null;
+  userCard = null;
   user_profile = null;
   sidebar = "#profile-sidebar";
   content = "#profile-content";
@@ -24,7 +24,7 @@ export default class ProfilePage {
   async init() {
     try {
       this.user_profile = await this.profile.getProfile();
-      this.UserCard = UserCard.init({ target: this.sidebar, user: this.user_profile });
+      this.userCard = UserCard.init({ target: this.sidebar, user: this.user_profile });
       NavSideBar.init({ callback: this.gotoPage.bind(this) });
       this.gotoPage(this.url);
     } catch (error) {
@@ -34,29 +34,30 @@ export default class ProfilePage {
 
   loadMainPage() {
     const main = MainPage.init();
-    this.UserCard.moveTo(main.id);
-    this.UserCard.setViewMore(true);
+    this.userCard.moveTo(main.id);
+    this.userCard.setViewMore(true);
   }
 
   updateProfile(user) {
     this.user_profile = user;
-    this.UserCard.setUser(user);
+    this.userCard.setUser(user);
   }
 
-  gotoPage(url) {
+  _gotoPage(url) {
+    // prevent duplicate loading
     $(this.content).empty();
-    this.UserCard.show().setViewMore(false);
-
+    this.userCard.show().setViewMore(false);
     this.url = url;
 
     const pages = {
-      main: () => this.loadMainPage(),
+      main: this.loadMainPage.bind(this),
       "edit-profile": () => {
         ProfileEdit.init({ profile: this.profile });
-        this.UserCard.hide();
+        this.userCard.hide();
       },
-      cart: () => MyCart.init(),
-      orders: () => MyOrders.init()
+      cart: MyCart.init,
+      orders: MyOrders.init,
+      logout: logout
     };
 
     if (pages[url]) {
@@ -64,6 +65,13 @@ export default class ProfilePage {
     } else {
       console.error(`No page found for URL: ${url}`);
     }
+  }
+
+  gotoPage(url) {
+    const go = debounce(() => {
+      this._gotoPage(url);
+    }, 100);
+    go();
   }
 }
 
