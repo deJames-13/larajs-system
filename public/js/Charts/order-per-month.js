@@ -30,7 +30,7 @@ export default class OrderPerMonth {
     // ctx = ctx.getContext("2d");
 
     this.chart = new Chart(ctx, {
-      type: "bar",
+      type: "line",
       data: {
         labels: data.map(row => monthNames[row.month - 1]),
         datasets: [

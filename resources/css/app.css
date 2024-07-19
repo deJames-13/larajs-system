@@ -221,57 +221,171 @@ button {
   z-index: 0;
 }
 
-.center-container {
-  display: flex;
-  justify-content: center; /* Centers items horizontally */
-  align-items: center; /* Centers items vertically */
-  height: 100%; /* Ensures container takes full height of parent */
-}
-
-.stats {
-  width: 100%; /* Adjust the width as needed */
-  max-width: 600px; /* Set a maximum width if necessary */
-}
-
+/* Chart Container */
 .chart-container {
-  width: 100%;
-  height: 100%; /* Ensure the canvas takes full height of the parent container */
-  padding: 20px;
-  border: 2px solid #6b3fa3; /* Add a light grey border */
-  border-radius: 10px; /* Round the corners */
-  box-shadow: 0 8px 16px rgba(185, 137, 212, 0.7); /* More pronounced shadow with #B989D4 */
-  background-color: #fff; /* White background */
-  display: flex;
-  align-items: center; /* Center the canvas vertically */
-  justify-content: center; /* Center the canvas horizontally */
+    width: 100%;
+    height: 100%; /* Ensure the canvas takes full height of the parent container */
+    padding: 20px;
+    border: 2px solid #6B3FA3; /* Updated border color */
+    border-radius: 10px; /* Round the corners */
+    box-shadow: 0 8px 16px rgba(185, 137, 212, 0.7); /* Updated shadow color */
+    background-color: #fff; /* White background */
+    display: flex;
+    align-items: center; /* Center the canvas vertically */
+    justify-content: center; /* Center the canvas horizontally */
 }
 
 canvas {
-  width: 100% !important;
-  height: 100% !important; /* Ensure the canvas fits the container */
+    width: 100% !important;
+    height: 100% !important; /* Ensure the canvas fits the container */
 }
 
 .charts-container {
-  display: flex;
-  flex-wrap: wrap; /* Allow charts to wrap to the next line if necessary */
-  gap: 20px; /* Space between the chart cards */
-  justify-content: center; /* Center the chart cards horizontally */
-  padding: 20px;
+    display: flex;
+    flex-wrap: wrap; /* Allow charts to wrap to the next line if necessary */
+    gap: 20px; /* Space between the chart cards */
+    justify-content: center; /* Center the chart cards horizontally */
+    padding: 20px;
 }
 
 .chart-card {
-  width: 100% !important;
-  height: 100% !important;
-  box-sizing: border-box; /* Include padding and border in the element's total width and height */
-  display: flex;
-  flex-direction: column; /* Stack heading and chart vertically */
-  align-items: center; /* Center content horizontally */
+    width: 100% !important;
+    height: 100% !important;
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    display: flex;
+    flex-direction: column; /* Stack heading and chart vertically */
+    align-items: center; /* Center content horizontally */
+    background-color: #B989D4; /* Background color of chart card */
+    color: #fff; /* Text color for contrast */
+    font-family: 'Poppins', sans-serif; /* Apply Poppins font */
 }
+
 .chart-heading {
-  margin: 10px 0; /* Spacing above and below the heading */
-  font-size: 20px; /* Font size for the heading */
-  text-align: center; /* Center the heading text */
-  color: #6b3fa3; /* Font color */
-  font-family: "Bungee", sans-serif; /* Apply Bungee font */
-  font-style: normal; /* Normal font style */
+    margin: 10px 0; /* Spacing above and below the heading */
+    font-size: 20px; /* Font size for the heading */
+    text-align: center; /* Center the heading text */
+    color: #fff; /* Font color */
+    font-family: 'Bungee', sans-serif; /* Apply Bungee font */
+    font-style: normal; /* Normal font style */
 }
+
+/* Container for the charts */
+.mainpage-charts-container {
+    display: flex;              /* Enable Flexbox layout */
+    gap: 1rem;                  /* Space between cards */
+    margin-top: -40px;          /* Space above the container */
+}
+
+/* Each chart card */
+.mainpage-chart-card {
+    flex: 0 1 auto;
+    width: 500px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+}
+
+/* Heading inside each card */
+.chart-heading {
+    font-size: 1.25rem;         /* Adjust font size for the heading */
+    margin-bottom: 0.5rem;      /* Space below the heading */
+    color: #6B3FA3; /* Font color */
+    font-family: 'Bungee', sans-serif; /* Apply Bungee font */
+}
+
+/* Container for the chart */
+.chart-container {
+    flex: 1;                    /* Make the canvas container flexible */
+    width: 100%;                /* Full width of the card */
+    height: 100%;               /* Full height of the card */
+    background-color: #B989D4;
+}
+
+/* Homepage */
+/* Greeting message */
+.welcome-message {
+    text-align: center;         /* Center-align the greeting message */
+    color: #fff;                /* Font color */
+    font-family: 'Poppins', sans-serif; /* Apply Poppins font */
+}
+
+/* Statistics container */
+.stats-container {
+    display: flex;                /* Align cards in a row */
+    gap: 1rem;                    /* Space between cards */
+    justify-content: space-around; /* Distribute cards evenly */
+}
+
+/* Each statistics card */
+.stats-card {
+    flex: 1;                      /* Allow cards to grow equally */
+    min-width: 200px;             /* Minimum width for responsiveness */
+    padding: 1rem;                /* Padding inside the card */
+    border: 2px solid #6B3FA3;   /* Updated border color */
+    border-radius: 0.5rem;        /* Rounded corners */
+    box-shadow: 0 4px 6px rgba(185, 137, 212, 0.3); /* Updated shadow color */
+    text-align: center;           /* Center-align text inside cards */
+    background-color: #B989D4;    /* Background color of statistics card */
+    color: #fff;                  /* Text color for contrast */
+    font-family: 'Poppins', sans-serif; /* Apply Poppins font */
+}
+
+/* Title for statistics card */
+.stats-title {
+    font-size: 1.25rem;           /* Font size for title */
+    margin-bottom: 0.5rem;        /* Space below the title */
+    color: #fff;                  /* Font color */
+    font-family: 'Bungee', sans-serif; /* Apply Bungee font */
+}
+
+/* Value inside statistics card */
+.stats-value {
+    font-size: 2rem;              /* Font size for value */
+    font-weight: bold;            /* Make the value bold */
+}
+
+/* Inventory card */
+.inventory-card {
+    background-color: #B989D4;    /* Background color of the card */
+    border: 2px solid #6B3FA3;    /* Border color and style */
+    border-radius: 0.5rem;        /* Rounded corners */
+    padding: 1.5rem;              /* Padding inside the card */
+    box-shadow: 0 4px 6px rgba(185, 137, 212, 0.3); /* Shadow color */
+    margin-bottom: 2rem;          /* Space below the card */
+    width: 100%;                  /* Full width of the parent container */
+    text-align: center;           /* Center-align text inside the card */
+    font-family: 'Poppins', sans-serif; /* Apply Poppins font */
+}
+
+/* Title for inventory card */
+.inventory-title {
+    font-size: 1.5rem;            /* Font size for title */
+    font-weight: bold;            /* Make the title bold */
+    margin-bottom: 1rem;          /* Space below the title */
+    color: #fff;                  /* Title color */
+    font-family: 'Bungee', sans-serif; /* Apply Bungee font */
+}
+
+/* Content inside inventory card */
+.inventory-content {
+    font-size: 1rem;              /* Font size for content */
+    color: #fff;                  /* Content color */
+    font-family: 'Poppins', sans-serif; /* Apply Poppins font */
+}
+
+/* Welcome card */
+.welcome-card {
+    background-color: #B989D4;    /* Background color of the card */
+    border: 2px solid #6B3FA3;     /* Border color and style */
+    border-radius: 0.5rem;        /* Rounded corners */
+    padding: 1.5rem;              /* Padding inside the card */
+    box-shadow: 0 4px 6px rgba(185, 137, 212, 0.3); /* Shadow color */
+    margin-bottom: 2rem;          /* Space below the card */
+    width: 100%;                  /* Full width of the parent container */
+    font-family: 'Poppins', sans-serif; /* Apply Poppins font */
+    text-align: center;           /* Center-align text inside the card */
+}
+

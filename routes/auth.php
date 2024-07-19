@@ -6,7 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\Api\ChartController;
-// INFO: REMOVE COMMENTS AFTER 
+// INFO: REMOVE COMMENTS AFTER
 
 
 
@@ -48,6 +48,8 @@ Route::group(["middleware" => "auth"], function () {
         'customerPerAddress' => 'customer-per-address',
         'productsSold' => 'products-sold',
         'ordersRevenue' => 'orders-revenue',
+        'noStock' => 'no-stock',
+        'lowStock' => 'low-stock',
     ];
     // ADMIN DASHBOARD
     $adminPages = [

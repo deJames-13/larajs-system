@@ -138,6 +138,8 @@ Route::group(['middleware' => 'auth:sanctum', 'only.ajax'], function () {
         'customerPerAddress' => 'customer-per-address',
         'productsSold' => 'products-sold',
         'ordersRevenue' => 'orders-revenue',
+        'noStock' => 'no-stock',
+        'lowStock' => 'low-stock',
     ];
     // no need to touch
     foreach ($charts as $chart => $url) {
