@@ -1,16 +1,17 @@
 <?php
 
-namespace App\Exports;
+
+namespace App\Exports\Products;
 
 use App\Models\Product;
 use Maatwebsite\Excel\Concerns\FromArray;
-use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
+use Maatwebsite\Excel\Concerns\WithTitle;
 
-class ProductsExport implements FromArray, WithHeadings, WithCustomCsvSettings
+class ProductsSheet implements FromArray, WithHeadings, WithCustomCsvSettings, WithTitle
 {
-    use Exportable;
+    private $products = [];
 
     public function array(): array
     {
@@ -23,7 +24,7 @@ class ProductsExport implements FromArray, WithHeadings, WithCustomCsvSettings
          * It can easily imported back, by using logic with headings
          * 
          */
-        $products = Product::all()->map(function ($product) {
+        $this->products = Product::all()->map(function ($product) {
             return [
                 $product->id,
                 $product->name,
@@ -32,10 +33,11 @@ class ProductsExport implements FromArray, WithHeadings, WithCustomCsvSettings
                 $product->specifications,
                 $product->price,
                 $product->stock->quantity,
+
             ];
         });
 
-        return $products->toArray();
+        return $this->products->toArray();
     }
 
     public function headings(): array
@@ -59,5 +61,10 @@ class ProductsExport implements FromArray, WithHeadings, WithCustomCsvSettings
             'cache_size' => 1000,
             'pre_calculate_formulas' => false,
         ];
+    }
+
+    public function title(): string
+    {
+        return 'Products';
     }
 }
