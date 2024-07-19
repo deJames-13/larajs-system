@@ -1,45 +1,58 @@
 import ajaxRequest from "../assets/ajaxRequest.js";
 
-const fetchCustomerData = () => {
-  ajaxRequest.get({
-    url: "/api/charts/customer-per-address",
-    onSuccess: response => {
-      console.log(response);
-      createCustomerChart(response);
-    },
-    onError: error => {
-      console.error(error);
+export default class CustomerPerAddress {
+  constructor({ target }) {
+    this.target = target;
+    this.chart = null;
+  }
+
+  fetchCustomerData() {
+    ajaxRequest.get({
+      url: "/api/charts/customer-per-address",
+      onSuccess: response => {
+        console.log(response);
+        this.createCustomerChart(response);
+      },
+      onError: error => {
+        console.error(error);
+      }
+    });
+  }
+
+  async createCustomerChart(customerData) {
+    var ctx = $(this.target).find("#customer-per-address")[0];
+    if (!ctx) {
+      console.error("Canvas element for products sold chart not found.");
+      return;
     }
-  });
-};
+    const data = customerData || [];
+    const backgroundColors = data.map((_, i) => `hsla(${(i * 360) / data.length}, 100%, 70%, 0.2)`);
+    const borderColors = data.map((_, i) => `hsla(${(i * 360) / data.length}, 100%, 50%, 1)`);
 
-const createCustomerChart = customerData => {
-  (async function () {
-    const data = customerData || [
-      // Sample data structure, adjust based on your API response
-      { address: "Address 1", total: 10 },
-      { address: "Address 2", total: 20 },
-      { address: "Address 3", total: 15 }
-      // Add more data as needed
-    ];
-
-    const ctx = $("#customer-per-address");
-
-    new Chart(ctx, {
+    this.chart = new Chart(ctx, {
       type: "pie",
       data: {
         labels: data.map(row => row.address),
         datasets: [
           {
             label: "Customers Per Address",
-            data: data.map(row => row.total)
+            data: data.map(row => row.total),
+            backgroundColor: backgroundColors,
+            borderColor: borderColors,
+            borderWidth: 1
           }
         ]
       }
     });
-  })();
-};
+  }
 
-$(document).ready(function () {
-  fetchCustomerData();
-});
+  render() {
+    // Render the chart when called
+    this.fetchCustomerData();
+  }
+}
+
+// Initialize the chart when the document is ready
+// $(document).ready(function () {
+//   const customerPerAddress = new CustomerPerAddress({ target: "#dashboard-content" });
+// });

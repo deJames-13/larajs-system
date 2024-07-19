@@ -1,13 +1,13 @@
 import logout from "../Auth/logout.js";
+import Charts from "../Charts/charts.js";
 import Tables from "../Tables/tables.js";
 import DashboardSideBar from "./components/sidebar.js";
 import MainPage from "./partials/_main.js";
 
-// TODO: adsjfklajdsfkljadsfkljal;dsfj ladsfjiamgoinginsane
-
 class Dashboard {
   constructor() {
     this.tables = new Tables({ target: "#dashboard-content" });
+    this.charts = new Charts({ target: "#dashboard-content" });
     this.init();
   }
 
@@ -31,9 +31,15 @@ class Dashboard {
       categories: () => this.tables.getCategories(),
       orders: () => this.tables.getOrders(),
       users: () => this.tables.getUsers(),
+      charts: () => this.charts.init(),
       logout: logout
     };
-    pages[url] && pages[url]();
+
+    if (pages[url]) {
+      pages[url]();
+    } else {
+      console.error(`Page handler not found for ${url}`);
+    }
   }
 }
 
