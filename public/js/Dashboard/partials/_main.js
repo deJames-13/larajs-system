@@ -1,7 +1,11 @@
+import Charts from "../../Charts/chart.js";
+
 export default class MainPage {
   constructor() {
     this.target = "#dashboard-content";
     this.render();
+    this.charts = new Charts({ target: `${this.target} #charts-container` }); // Update target for charts
+    this.charts.init();
     return this;
   }
 
@@ -14,72 +18,45 @@ export default class MainPage {
     const HTML = /* HTML */ `
       <div class="rounded-t-lg overflow-clip">
         <div class="custom-circle-border bottom-pattern p-10 relative">
-            <div class="center-container">
-                <div class="stats shadow">
-                <div class="stat">
-                    <div class="stat-figure text-secondary">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        class="inline-block h-8 w-8 stroke-current">
-                        <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    </div>
-                    <div class="stat-title">Transactions</div>
-                    <div class="stat-value">31K</div>
-                    <div class="stat-desc">Jan 1st - Feb 1st</div>
-                </div>
-
-                <div class="stat">
-                    <div class="stat-figure text-secondary">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        class="inline-block h-8 w-8 stroke-current">
-                        <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
-                    </svg>
-                    </div>
-                    <div class="stat-title">New Users</div>
-                    <div class="stat-value">4,200</div>
-                    <div class="stat-desc">↗︎ 400 (22%)</div>
-                </div>
-
-                <div class="stat">
-                    <div class="stat-figure text-secondary">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        class="inline-block h-8 w-8 stroke-current">
-                        <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
-                    </svg>
-                    </div>
-                    <div class="stat-title">Total Sales</div>
-                    <div class="stat-value">1,200</div>
-                    <div class="stat-desc">↘︎ 90 (14%)</div>
-                </div>
-                </div>
+          <!-- Greeting Card -->
+          <div class="welcome-card">
+            <div class="welcome-message">
+              <h1 class="text-2xl font-bold">Hello! Welcome Back <span id="username">Username</span></h1>
             </div>
+          </div>
 
-      </div>
+          <!-- Statistics Cards -->
+          <div class="stats-container mb-6">
+            <div class="stats-card">
+              <h3 class="stats-title">No. of Users</h3>
+              <div class="stats-value">4,200</div>
+            </div>
+            <div class="stats-card">
+              <h3 class="stats-title">No. Of Transactions</h3>
+              <div class="stats-value">31K</div>
+            </div>
+            <div class="stats-card">
+              <h3 class="stats-title">Total Earnings</h3>
+              <div class="stats-value">$15,000</div>
+            </div>
+          </div>
+
+          <!-- Inventory Card -->
+          <div class="inventory-card mb-6">
+            <h2 class="inventory-title">Inventory</h2>
+            <p class="inventory-content">Here you can find details about current stock levels</p>
+          </div>
+
+          <!-- Charts Container -->
+          <div id="charts-container"></div>
+        </div>
       </div>
     `;
     $(this.target).html(HTML);
   }
-
-
 }
+
+// Initialize the main page
+$(document).ready(function () {
+  MainPage.init();
+});

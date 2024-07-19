@@ -79,4 +79,38 @@ class ChartController extends Controller
         return view('admin.charts.orders-revenue');
     }
 
+    public function lowStock()
+    {
+        if (request()->ajax()) {
+            $lowStockItems = DB::table('stocks')
+                ->join('products', 'stocks.product_sku_code', '=', 'products.sku_code')
+                ->select('products.name', 'stocks.quantity')
+                ->where('stocks.quantity', '<', 10)
+                ->get();
+
+            return response()->json($lowStockItems);
+        }
+
+        return view('admin.charts.low-stock');
+    }
+
+    public function noStock()
+    {
+        if (request()->ajax()) {
+            $noStockItems = DB::table('stocks')
+                ->join('products', 'stocks.product_sku_code', '=', 'products.sku_code')
+                ->select('products.name', 'stocks.quantity')
+                ->where('stocks.quantity', '=', 0)
+                ->get();
+
+            if ($noStockItems->isEmpty()) {
+                return response()->json(['message' => 'No products with 0 stock.']);
+            }
+
+            return response()->json($noStockItems);
+        }
+
+        return view('admin.charts.no-stock');
+    }
+
 }
