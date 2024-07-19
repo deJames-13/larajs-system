@@ -2,35 +2,24 @@
 
 namespace App\Imports\Products;
 
-use App\Models\Product;
-use App\Models\Stock;
-use Illuminate\Support\Collection;
-use Maatwebsite\Excel\Concerns\ToCollection;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Barryvdh\Debugbar\Facades\Debugbar;
+use Maatwebsite\Excel\Concerns\SkipsUnknownSheets;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
-class ProductsImport implements ToCollection, WithHeadingRow
+class ProductsImport implements WithMultipleSheets, SkipsUnknownSheets
 {
-    public function collection(Collection $rows)
+
+    public function sheets(): array
     {
-        foreach ($rows as $row) {
-            if (isset($row['name'], $row['sku_code'], $row['description'], $row['specifications'], $row['price'], $row['quantity'])) {
-                $skuCode = $row['sku_code'];
+        return [
+            'Products' => new ProductsSheet(),
 
-                Product::updateOrCreate(
-                    ['sku_code' => $skuCode],
-                    [
-                        'name' => $row['name'],
-                        'description' => $row['description'],
-                        'specifications' => $row['specifications'],
-                        'price' => $row['price'],
-                    ]
-                );
 
-                Stock::updateOrCreate(
-                    ['product_sku_code' => $skuCode],
-                    ['quantity' => $row['quantity']]
-                );
-            }
-        }
+        ];
+    }
+    public function onUnknownSheet($sheetName)
+    {
+        // E.g. you can log that a sheet was not found.
+        Debugbar::info("Sheet {$sheetName} was skipped");
     }
 }

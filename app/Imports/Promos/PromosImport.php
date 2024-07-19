@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Imports;
+namespace App\Imports\Promos;
 
-use App\Models\Category;
+use App\Models\Promos;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class CategoriesImport implements ToCollection, WithHeadingRow
+class PromosImport implements ToCollection, WithHeadingRow
 {
     /**
      * @param Collection $rows
@@ -15,12 +15,15 @@ class CategoriesImport implements ToCollection, WithHeadingRow
     public function collection(Collection $rows)
     {
         foreach ($rows as $row) {
-            Category::updateOrCreate(
+            Promos::updateOrCreate(
                 ['name' => $row['name']],
                 [
                     'slug' => $row['slug'],
                     'description' => $row['description'],
                     'status' => $row['status'],
+                    'discount' => $row['discount'],
+                    'start_date' => \Carbon\Carbon::parse($row['start_date']),
+                    'end_date' => \Carbon\Carbon::parse($row['end_date']),
                 ]
             );
         }

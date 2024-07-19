@@ -1,5 +1,6 @@
-import ajaxRequest from "/js/assets/ajaxRequest.js";
-import Pagination from "/js/components/Paginate.js";
+import ajaxRequest from "../assets/ajaxRequest.js";
+import { hideLoading, showLoading } from "../assets/loading.js";
+import Pagination from "../components/Paginate.js";
 
 const defaultProps = {
   baseApi: "/api/",
@@ -92,7 +93,7 @@ export default class DataTable {
       fileType = "csv";
       mimeType = "text/csv";
     }
-
+    showLoading();
     $.ajax({
       url: "/api/exports/" + this.tableName + "/" + fileType,
       type: "GET",
@@ -110,6 +111,7 @@ export default class DataTable {
         const fileName = `${this.tableName}-${new Date().toISOString().replace(".", "-")}`;
         a.download = `${fileName}.${fileType}`;
         a.click();
+        hideLoading();
       },
       error: function (xhr, status, error) {
         console.error("Request failed: " + status + ", " + error);

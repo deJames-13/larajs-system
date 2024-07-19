@@ -2,34 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
-use App\Models\User;
-use App\Models\Brand;
-use App\Models\Order;
-use App\Models\Promos;
-use App\Models\Product;
-use App\Models\Category;
-use App\Exports\UsersExport;
-use App\Imports\UsersImport;
 use Illuminate\Http\Request;
-use App\Exports\BrandsExport;
-use App\Exports\OrdersExport;
-use App\Exports\PromosExport;
-use App\Imports\BrandsImport;
-use App\Imports\OrdersImport;
-use App\Imports\PromosImport;
-use App\Exports\CategoriesExport;
-use App\Imports\CategoriesImport;
-use App\Http\Resources\UserResource;
+use App\Exports\Users\UsersExport;
+use App\Imports\Users\UsersImport;
+use App\Exports\Brands\BrandsExport;
+use App\Exports\Orders\OrdersExport;
+use App\Exports\Promos\PromosExport;
+use App\Imports\Brands\BrandsImport;
+use App\Imports\Orders\OrdersImport;
+use App\Imports\Promos\PromosImport;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Http\Resources\BrandResource;
-use App\Http\Resources\OrderResource;
-use App\Http\Resources\PromoResource;
-use App\Http\Resources\ProductResource;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use App\Exports\Products\ProductsExport;
-use App\Http\Resources\CategoryResource;
 use App\Imports\Products\ProductsImport;
+use App\Exports\Categories\CategoriesExport;
+use App\Imports\Categories\CategoriesImport;
 
 class TableController extends Controller
 {

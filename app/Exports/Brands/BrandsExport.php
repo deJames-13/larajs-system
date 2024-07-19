@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Exports;
+namespace App\Exports\Brands;
 
-use Maatwebsite\Excel\Concerns\FromCollection;
 use App\Models\Brand;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;
