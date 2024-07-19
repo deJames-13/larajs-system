@@ -1,38 +1,44 @@
 import ajaxRequest from "../assets/ajaxRequest.js";
 
-const fetchProductsSoldData = () => {
-  ajaxRequest.get({
-    url: "/api/charts/products-sold",
-    onSuccess: response => {
-      console.log(response);
-      createProductsSoldChart(response);
-    },
-    onError: error => {
-      console.error(error);
+export default class ProductsSold {
+  constructor({ target }) {
+    this.target = target;
+    this.chart = null;
+    this.fetchProductsSoldData();
+  }
+
+  fetchProductsSoldData() {
+    ajaxRequest.get({
+      url: "/api/charts/products-sold",
+      onSuccess: response => {
+        console.log("Fetched Products Sold Data:", response);
+        this.createProductsSoldChart(response);
+      },
+      onError: error => {
+        console.error("Error fetching products sold data:", error);
+      }
+    });
+  }
+
+  createProductsSoldChart(productsSoldData) {
+    const data = productsSoldData || [];
+
+    const ctx = $(this.target).find("#products-sold")[0];
+    if (!ctx) {
+      console.error("Canvas element for products sold chart not found.");
+      return;
     }
-  });
-};
 
-const createProductsSoldChart = productsSoldData => {
-  (async function () {
-    const data = productsSoldData || [
-      // Sample data structure, adjust based on your API response
-      { name: "Product 1", total_sold: 50 },
-      { name: "Product 2", total_sold: 30 },
-      { name: "Product 3", total_sold: 25 }
-      // Add more data as needed
-    ];
+    console.log("Creating chart with data:", data);
 
-    const ctx = $("#products-sold");
-
-    new Chart(ctx, {
-      type: "doughnut", // Adjust chart type as per your preference
+    this.chart = new Chart(ctx.getContext("2d"), {
+      type: "doughnut",
       data: {
         labels: data.map(row => row.name),
         datasets: [
           {
             label: "Products Sold",
-            data: data.map(row => row.total_sold),
+            data: data.map(row => row.count),
             backgroundColor: [
               "rgba(255, 99, 132, 0.2)",
               "rgba(54, 162, 235, 0.2)",
@@ -48,18 +54,17 @@ const createProductsSoldChart = productsSoldData => {
             borderWidth: 1
           }
         ]
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        }
       }
     });
-  })();
-};
+  }
 
+  render() {
+    // Render the chart when called
+    this.fetchProductsSoldData();
+  }
+}
+
+// Initialize the chart when the document is ready
 $(document).ready(function () {
-  fetchProductsSoldData();
+  const productsSold = new ProductsSold({ target: "#dashboard-content" });
 });

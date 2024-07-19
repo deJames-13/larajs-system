@@ -1,34 +1,51 @@
 import ajaxRequest from "../assets/ajaxRequest.js";
 
-const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+export default class OrdersRevenue {
+  constructor({ target }) {
+    this.target = target;
+    this.chart = null;
+    this.fetchRevenueData();
+  }
 
-const fetchRevenueData = () => {
-  ajaxRequest.get({
-    url: "/api/charts/orders-revenue",
-    onSuccess: response => {
-      console.log(response);
-      createRevenueChart(response);
-    },
-    onError: error => {
-      console.error(error);
-    }
-  });
-};
+  fetchRevenueData() {
+    ajaxRequest.get({
+      url: "/api/charts/orders-revenue",
+      onSuccess: response => {
+        console.log(response);
+        this.createRevenueChart(response);
+      },
+      onError: error => {
+        console.error("Error fetching orders revenue data:", error);
+      }
+    });
+  }
 
-const createRevenueChart = revenueData => {
-  (async function () {
+  createRevenueChart(revenueData) {
     const data = revenueData || [];
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-    const ctx = document.getElementById("orders-revenue").getContext("2d");
+    // Create a revenue map with default values
+    const revenueMap = monthNames.reduce((map, month, index) => {
+      map[month] = 0; // Default revenue is 0 for each month
+      return map;
+    }, {});
 
-    new Chart(ctx, {
+    // Populate the revenue map with actual data
+    data.forEach(row => {
+      const monthName = monthNames[row.month - 1]; // Assuming 'row.month' is 1-12
+      revenueMap[monthName] = row.revenue;
+    });
+
+    const ctx = $(this.target).find("#orders-revenue")[0].getContext("2d");
+
+    this.chart = new Chart(ctx, {
       type: "bar",
       data: {
-        labels: data.map(row => monthNames[row.month - 1]), // Convert month number to month name
+        labels: monthNames,
         datasets: [
           {
             label: "Revenue",
-            data: data.map(row => row.revenue),
+            data: monthNames.map(month => revenueMap[month]),
             backgroundColor: "rgba(75, 192, 192, 0.2)",
             borderColor: "rgba(75, 192, 192, 1)",
             borderWidth: 1
@@ -78,9 +95,15 @@ const createRevenueChart = revenueData => {
         }
       }
     });
-  })();
-};
+  }
 
-document.addEventListener("DOMContentLoaded", function () {
-  fetchRevenueData();
+  render() {
+    // Render the chart when called
+    this.fetchRevenueData();
+  }
+}
+
+// Initialize the chart when the document is ready
+$(document).ready(function () {
+  const ordersRevenue = new OrdersRevenue({ target: "#dashboard-content" });
 });
