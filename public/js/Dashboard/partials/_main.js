@@ -55,8 +55,3 @@ export default class MainPage {
     $(this.target).html(HTML);
   }
 }
-
-// Initialize the main page
-$(document).ready(function () {
-  MainPage.init();
-});

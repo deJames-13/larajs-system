@@ -53,6 +53,7 @@ export default class ProductsSold {
       }
     };
 
+    this.chart && this.chart.destroy();
     this.chart = new Chart(ctx, config);
   }
 

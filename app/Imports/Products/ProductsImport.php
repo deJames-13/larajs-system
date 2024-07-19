@@ -13,8 +13,9 @@ class ProductsImport implements WithMultipleSheets, SkipsUnknownSheets
     {
         return [
             'Products' => new ProductsSheet(),
-
-
+            'ProductImages' => new ProductImagesSheet(),
+            'ProductCategories' => new ProductCategoriesSheet(),
+            'ProductBrand' => new ProductBrandSheet(),
         ];
     }
     public function onUnknownSheet($sheetName)

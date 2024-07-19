@@ -5,7 +5,7 @@ namespace App\Imports\Products;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 
-class ProductBrand implements ToCollection
+class ProductImagesSheet implements ToCollection
 {
     /**
      * @param Collection $collection

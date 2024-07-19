@@ -35,6 +35,7 @@ export default class OrdersRevenue {
       console.error("Canvas element for products sold chart not found.");
       return;
     }
+    this.chart && this.chart.destroy();
     this.chart = new Chart(ctx, {
       type: "line",
       data: {

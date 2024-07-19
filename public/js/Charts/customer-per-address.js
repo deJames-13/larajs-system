@@ -29,6 +29,7 @@ export default class CustomerPerAddress {
     const backgroundColors = data.map((_, i) => `hsla(${(i * 360) / data.length}, 100%, 70%, 0.2)`);
     const borderColors = data.map((_, i) => `hsla(${(i * 360) / data.length}, 100%, 50%, 1)`);
 
+    this.chart && this.chart.destroy();
     this.chart = new Chart(ctx, {
       type: "pie",
       data: {

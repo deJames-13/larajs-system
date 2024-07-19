@@ -1,3 +1,4 @@
+import { debounce } from "../assets/debounce.js";
 import logout from "../Auth/logout.js";
 import Charts from "../Charts/charts.js";
 import Tables from "../Tables/tables.js";
@@ -12,15 +13,16 @@ class Dashboard {
   }
 
   init() {
-    MainPage.init();
+    // MainPage.init(); // just why?
 
     DashboardSideBar.init({
       target: "#dashboard-sidebar",
-      callback: this.getTable.bind(this)
+      callback: this.goToPage.bind(this)
     });
   }
 
-  getTable(url) {
+  _goToPage(url) {
+    // prevent duplicate loading
     $("#dashboard-content").html("");
 
     const pages = {
@@ -40,6 +42,13 @@ class Dashboard {
     } else {
       console.error(`Page handler not found for ${url}`);
     }
+  }
+
+  goToPage(url) {
+    const go = debounce(() => {
+      this._goToPage(url);
+    }, 500);
+    go();
   }
 }
 

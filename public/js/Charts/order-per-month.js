@@ -29,6 +29,7 @@ export default class OrderPerMonth {
     }
     // ctx = ctx.getContext("2d");
 
+    this.chart && this.chart.destroy();
     this.chart = new Chart(ctx, {
       type: "line",
       data: {

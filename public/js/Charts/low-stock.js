@@ -4,12 +4,11 @@ export default class LowStock {
   constructor({ target }) {
     this.target = target;
     this.chart = null;
-    this.fetchLowStockData();
   }
 
   fetchLowStockData() {
     ajaxRequest.get({
-      url: "/api/charts/low-stock",  // Update with the correct route if necessary
+      url: "/api/charts/low-stock", // Update with the correct route if necessary
       onSuccess: response => {
         console.log(response);
         this.createLowStockChart(response);
@@ -20,11 +19,12 @@ export default class LowStock {
     });
   }
 
-  createLowStockChart(lowStockData) {
+  async createLowStockChart(lowStockData) {
     const data = lowStockData || [];
 
-    const ctx = $(this.target).find("#low-stock")[0].getContext("2d");
+    const ctx = $(this.target).find("#low-stock");
 
+    this.chart && this.chart.destroy();
     this.chart = new Chart(ctx, {
       type: "bar",
       data: {
@@ -61,12 +61,6 @@ export default class LowStock {
   }
 
   render() {
-    // Render the chart when called
     this.fetchLowStockData();
   }
 }
-
-// Initialize the chart when the document is ready
-$(document).ready(function () {
-  const lowStock = new LowStock({ target: "#chart-container" });  // Fixed class name
-});

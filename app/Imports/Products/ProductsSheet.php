@@ -13,7 +13,9 @@ class ProductsSheet implements ToCollection, WithHeadingRow
     public function collection(Collection $rows)
     {
         foreach ($rows as $row) {
-            if (isset($row['name'], $row['sku_code'], $row['description'], $row['specifications'], $row['price'], $row['quantity'])) {
+
+            $required = ['name', 'sku_code', 'description', 'specifications', 'price', 'quantity'];
+            if (array_key_exists($row, $required)) {
                 $skuCode = $row['sku_code'];
 
                 Product::updateOrCreate(
