@@ -4,7 +4,6 @@ export default class CustomerPerAddress {
   constructor({ target }) {
     this.target = target;
     this.chart = null;
-    this.fetchCustomerData();
   }
 
   fetchCustomerData() {
@@ -20,10 +19,15 @@ export default class CustomerPerAddress {
     });
   }
 
-  createCustomerChart(customerData) {
+  async createCustomerChart(customerData) {
+    var ctx = $(this.target).find("#customer-per-address")[0];
+    if (!ctx) {
+      console.error("Canvas element for products sold chart not found.");
+      return;
+    }
     const data = customerData || [];
-
-    const ctx = $(this.target).find("#customer-per-address")[0].getContext("2d");
+    const backgroundColors = data.map((_, i) => `hsla(${(i * 360) / data.length}, 100%, 70%, 0.2)`);
+    const borderColors = data.map((_, i) => `hsla(${(i * 360) / data.length}, 100%, 50%, 1)`);
 
     this.chart = new Chart(ctx, {
       type: "pie",
@@ -33,18 +37,8 @@ export default class CustomerPerAddress {
           {
             label: "Customers Per Address",
             data: data.map(row => row.total),
-            backgroundColor: [
-              "rgba(255, 99, 132, 0.2)",
-              "rgba(54, 162, 235, 0.2)",
-              "rgba(255, 206, 86, 0.2)"
-              // Add more colors if needed
-            ],
-            borderColor: [
-              "rgba(255, 99, 132, 1)",
-              "rgba(54, 162, 235, 1)",
-              "rgba(255, 206, 86, 1)"
-              // Add more colors if needed
-            ],
+            backgroundColor: backgroundColors,
+            borderColor: borderColors,
             borderWidth: 1
           }
         ]
@@ -59,6 +53,6 @@ export default class CustomerPerAddress {
 }
 
 // Initialize the chart when the document is ready
-$(document).ready(function () {
-  const customerPerAddress = new CustomerPerAddress({ target: "#dashboard-content" });
-});
+// $(document).ready(function () {
+//   const customerPerAddress = new CustomerPerAddress({ target: "#dashboard-content" });
+// });

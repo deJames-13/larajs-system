@@ -4,14 +4,12 @@ export default class OrdersRevenue {
   constructor({ target }) {
     this.target = target;
     this.chart = null;
-    this.fetchRevenueData();
   }
 
   fetchRevenueData() {
     ajaxRequest.get({
       url: "/api/charts/orders-revenue",
       onSuccess: response => {
-        console.log(response);
         this.createRevenueChart(response);
       },
       onError: error => {
@@ -20,24 +18,23 @@ export default class OrdersRevenue {
     });
   }
 
-  createRevenueChart(revenueData) {
+  async createRevenueChart(revenueData) {
     const data = revenueData || [];
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
-    // Create a revenue map with default values
     const revenueMap = monthNames.reduce((map, month, index) => {
-      map[month] = 0; // Default revenue is 0 for each month
+      map[month] = 0;
       return map;
     }, {});
-
-    // Populate the revenue map with actual data
     data.forEach(row => {
-      const monthName = monthNames[row.month - 1]; // Assuming 'row.month' is 1-12
+      const monthName = monthNames[row.month - 1];
       revenueMap[monthName] = row.revenue;
     });
 
-    const ctx = $(this.target).find("#orders-revenue")[0].getContext("2d");
-
+    var ctx = $(this.target).find("#orders-revenue")[0];
+    if (!ctx) {
+      console.error("Canvas element for products sold chart not found.");
+      return;
+    }
     this.chart = new Chart(ctx, {
       type: "bar",
       data: {
@@ -98,12 +95,11 @@ export default class OrdersRevenue {
   }
 
   render() {
-    // Render the chart when called
     this.fetchRevenueData();
   }
 }
 
 // Initialize the chart when the document is ready
-$(document).ready(function () {
-  const ordersRevenue = new OrdersRevenue({ target: "#dashboard-content" });
-});
+// $(document).ready(function () {
+//   const ordersRevenue = new OrdersRevenue({ target: "#dashboard-content" });
+// });

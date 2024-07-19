@@ -15,8 +15,8 @@ class Product extends Model
         'stock',
         'images',
         // JUST LOAD THEM
-        // 'categories',
-        // 'brands',
+        'categories',
+        'brands',
         // 'promos',
     ];
 
@@ -34,10 +34,10 @@ class Product extends Model
     {
         $search = $filters['search'] ?? null;
         $search && $query->when($search, function ($query, $search) {
-            $query->where('name', 'like', '%'.$search.'%')
-                ->orWhere('sku_code', 'like', '%'.$search.'%')
-                ->orWhere('description', 'like', '%'.$search.'%')
-                ->orWhere('specifications', 'like', '%'.$search.'%');
+            $query->where('name', 'like', '%' . $search . '%')
+                ->orWhere('sku_code', 'like', '%' . $search . '%')
+                ->orWhere('description', 'like', '%' . $search . '%')
+                ->orWhere('specifications', 'like', '%' . $search . '%');
         });
     }
 
