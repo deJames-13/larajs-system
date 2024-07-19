@@ -18,8 +18,8 @@ export default class ProductsEdit {
 
   bindEvents() {
     $("#image-input").change(() => {
-      const images = Array.from($("#image-input")[0].files).map(file => URL.createObjectURL(file));
-      this.carousel = new Carousel(".item-carousel", images, ".prev", ".next");
+      this.images = Array.from($("#image-input")[0].files).map(file => URL.createObjectURL(file));
+      this.loadCarousel();
     });
 
     $(".prev").click(() => {
@@ -141,7 +141,10 @@ export default class ProductsEdit {
   }
 
   loadCarousel() {
-    this.carousel = new Carousel(".item-carousel", this.images, ".prev", ".next");
+    this.carousel = new Carousel({
+      id: "products-edit",
+      images: this.images
+    });
   }
   populateForm(item = {}) {
     this.item = item;

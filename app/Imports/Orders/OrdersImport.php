@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Imports;
+namespace App\Imports\Orders;
 
 use App\Models\Order;
 use App\Models\Product;

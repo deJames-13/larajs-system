@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Exports;
+namespace App\Exports\Users;
 
-use Maatwebsite\Excel\Concerns\FromCollection;
-use App\Models\Promos;
+use App\Models\User;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;
 
-class PromosExport implements FromQuery
+class UsersExport implements FromQuery
 {
     use Exportable;
     /**
@@ -15,6 +14,6 @@ class PromosExport implements FromQuery
      */
     public function query()
     {
-        return Promos::query();
+        User::query();
     }
 }
