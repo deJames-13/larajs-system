@@ -2,27 +2,24 @@
 
 namespace App\Imports\Categories;
 
-use App\Models\Category;
-use Illuminate\Support\Collection;
-use Maatwebsite\Excel\Concerns\ToCollection;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Barryvdh\Debugbar\Facades\Debugbar;
+use Maatwebsite\Excel\Concerns\SkipsUnknownSheets;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
-class CategoriesImport implements ToCollection, WithHeadingRow
+class CategoriesImport implements WithMultipleSheets, SkipsUnknownSheets
 {
-    /**
-     * @param Collection $rows
-     */
-    public function collection(Collection $rows)
+
+    public function sheets(): array
     {
-        foreach ($rows as $row) {
-            Category::updateOrCreate(
-                ['name' => $row['name']],
-                [
-                    'slug' => $row['slug'],
-                    'description' => $row['description'],
-                    'status' => $row['status'],
-                ]
-            );
-        }
+        return [
+            'Categories' => new CategoriesSheet(),
+
+
+        ];
+    }
+    public function onUnknownSheet($sheetName)
+    {
+        // E.g. you can log that a sheet was not found.
+        Debugbar::info("Sheet {$sheetName} was skipped");
     }
 }

@@ -2,18 +2,22 @@
 
 namespace App\Exports\Promos;
 
-use App\Models\Promos;
-use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
-class PromosExport implements FromQuery
+class PromosExport implements WithMultipleSheets
 {
     use Exportable;
     /**
-     * @return \Illuminate\Support\Collection
+     * @return array
      */
-    public function query()
+    public function sheets(): array
     {
-        return Promos::query();
+        return [
+            new PromosSheet(),
+            new PromoImagesSheet(),
+            new PromoProductSheet(),
+
+        ];
     }
 }

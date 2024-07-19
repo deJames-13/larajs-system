@@ -2,50 +2,24 @@
 
 namespace App\Imports\Users;
 
-use App\Models\User;
-use App\Models\Customer;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Hash;
-use Maatwebsite\Excel\Concerns\ToCollection;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Barryvdh\Debugbar\Facades\Debugbar;
+use Maatwebsite\Excel\Concerns\SkipsUnknownSheets;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
-class UsersImport implements ToCollection, WithHeadingRow
+class UsersImport implements WithMultipleSheets, SkipsUnknownSheets
 {
-    /**
-     * @param Collection $rows
-     */
-    public function collection(Collection $rows)
+
+    public function sheets(): array
     {
-        foreach ($rows as $row) {
-            if (empty($row['email']) || empty($row['username']) || empty($row['password']) || empty($row['role'])) {
-                continue;
-            }
+        return [
+            'Users' => new UsersSheet(),
 
-            $user = User::updateOrCreate(
-                ['email' => $row['email']],
-                [
-                    'username' => $row['username'],
-                    'password' => Hash::make($row['password']),
-                    'role' => $row['role'],
-                    'status' => $row['status'] ?? 'active',
-                ]
-            );
 
-            // Extract first name and last name from the username
-            $nameParts = explode(' ', $row['username']);
-            $firstName = $nameParts[0];
-            $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
-
-            Customer::updateOrCreate(
-                ['user_id' => $user->id],
-                [
-                    'first_name' => $firstName,
-                    'last_name' => $lastName,
-                    'phone_number' => $row['phone_number'] ?? null,
-                    'address' => $row['address'] ?? null,
-                    'zip_code' => $row['zip_code'] ?? null,
-                ]
-            );
-        }
+        ];
+    }
+    public function onUnknownSheet($sheetName)
+    {
+        // E.g. you can log that a sheet was not found.
+        Debugbar::info("Sheet {$sheetName} was skipped");
     }
 }

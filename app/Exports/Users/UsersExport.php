@@ -2,18 +2,20 @@
 
 namespace App\Exports\Users;
 
-use App\Models\User;
-use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
-class UsersExport implements FromQuery
+class UsersExport implements WithMultipleSheets
 {
     use Exportable;
     /**
-     * @return \Illuminate\Support\Collection
+     * @return array
      */
-    public function query()
+    public function sheets(): array
     {
-        User::query();
+        return [
+            new UsersSheet(),
+            new UserImagesSheet(),
+        ];
     }
 }

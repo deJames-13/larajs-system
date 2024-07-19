@@ -2,18 +2,20 @@
 
 namespace App\Exports\Brands;
 
-use App\Models\Brand;
-use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
-class BrandsExport implements FromQuery
+class BrandsExport implements WithMultipleSheets
 {
     use Exportable;
     /**
-     * @return \Illuminate\Support\Collection
+     * @return array
      */
-    public function query()
+    public function sheets(): array
     {
-        return Brand::query();
+        return [
+            new BrandsSheet(),
+            new BrandImagesSheet(),
+        ];
     }
 }

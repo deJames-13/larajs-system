@@ -2,30 +2,24 @@
 
 namespace App\Imports\Promos;
 
-use App\Models\Promos;
-use Illuminate\Support\Collection;
-use Maatwebsite\Excel\Concerns\ToCollection;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Barryvdh\Debugbar\Facades\Debugbar;
+use Maatwebsite\Excel\Concerns\SkipsUnknownSheets;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
-class PromosImport implements ToCollection, WithHeadingRow
+class PromosImport implements WithMultipleSheets, SkipsUnknownSheets
 {
-    /**
-     * @param Collection $rows
-     */
-    public function collection(Collection $rows)
+
+    public function sheets(): array
     {
-        foreach ($rows as $row) {
-            Promos::updateOrCreate(
-                ['name' => $row['name']],
-                [
-                    'slug' => $row['slug'],
-                    'description' => $row['description'],
-                    'status' => $row['status'],
-                    'discount' => $row['discount'],
-                    'start_date' => \Carbon\Carbon::parse($row['start_date']),
-                    'end_date' => \Carbon\Carbon::parse($row['end_date']),
-                ]
-            );
-        }
+        return [
+            'Promos' => new PromosSheet(),
+
+
+        ];
+    }
+    public function onUnknownSheet($sheetName)
+    {
+        // E.g. you can log that a sheet was not found.
+        Debugbar::info("Sheet {$sheetName} was skipped");
     }
 }
