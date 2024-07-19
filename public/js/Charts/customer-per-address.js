@@ -20,17 +20,14 @@ export default class CustomerPerAddress {
   }
 
   async createCustomerChart(customerData) {
-    const data = customerData || [];
-
     var ctx = $(this.target).find("#customer-per-address")[0];
     if (!ctx) {
       console.error("Canvas element for products sold chart not found.");
       return;
     }
-    ctx = ctx.getContext("2d");
-
-    const backgroundColors = data.map((_, i) => `rgba(${255 - i * 50}, ${99 + i * 50}, 132, 0.2)`);
-    const borderColors = data.map((_, i) => `rgba(${255 - i * 50}, ${99 + i * 50}, 132, 1)`);
+    const data = productsSoldData || [];
+    const backgroundColors = data.map((_, i) => `hsla(${(i * 360) / data.length}, 100%, 70%, 0.2)`);
+    const borderColors = data.map((_, i) => `hsla(${(i * 360) / data.length}, 100%, 50%, 1)`);
 
     this.chart = new Chart(ctx, {
       type: "pie",

@@ -19,35 +19,41 @@ export default class ProductsSold {
   }
 
   async createProductsSoldChart(productsSoldData) {
-    const data = productsSoldData || [];
-
-    var ctx = $(this.target).find("#products-sold")[0];
+    var ctx = $("#products-sold");
     if (!ctx) {
       console.error("Canvas element for products sold chart not found.");
       return;
     }
-    // ctx = ctx.getContext("2d");
-    console.log("Creating chart with data:", data);
-    console.log("ctx", ctx);
+    const data = productsSoldData || [];
+    const backgroundColors = data.map((_, i) => `hsla(${(i * 360) / data.length}, 100%, 70%, 0.2)`);
+    const borderColors = data.map((_, i) => `hsla(${(i * 360) / data.length}, 100%, 50%, 1)`);
+    const chartData = {
+      labels: data.map(row => row.name),
+      datasets: [
+        {
+          label: "Products Sold",
+          data: data.map(row => row.total_sold),
+          backgroundColor: backgroundColors,
+          borderColor: borderColors,
+          borderWidth: 1
+        }
+      ]
+    };
 
-    const backgroundColors = data.map((_, i) => `rgba(${255 - i * 50}, ${99 + i * 50}, 132, 0.2)`);
-    const borderColors = data.map((_, i) => `rgba(${255 - i * 50}, ${99 + i * 50}, 132, 1)`);
-    this.chart = new Chart(ctx, {
+    const config = {
       type: "doughnut",
-      data: {
-        labels: data.map(row => row.name),
-        datasets: [
-          {
-            label: "Products Sold",
-            data: data.map(row => row.count),
-            backgroundColor: backgroundColors,
-            borderColor: borderColors,
-            borderWidth: 1
+      data: chartData,
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: "top"
           }
-        ]
+        }
       }
-    });
-    console.log("ctx", this.chart);
+    };
+
+    this.chart = new Chart(ctx, config);
   }
 
   render() {

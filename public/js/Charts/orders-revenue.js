@@ -21,16 +21,12 @@ export default class OrdersRevenue {
   async createRevenueChart(revenueData) {
     const data = revenueData || [];
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
-    // Create a revenue map with default values
     const revenueMap = monthNames.reduce((map, month, index) => {
-      map[month] = 0; // Default revenue is 0 for each month
+      map[month] = 0;
       return map;
     }, {});
-
-    // Populate the revenue map with actual data
     data.forEach(row => {
-      const monthName = monthNames[row.month - 1]; // Assuming 'row.month' is 1-12
+      const monthName = monthNames[row.month - 1];
       revenueMap[monthName] = row.revenue;
     });
 
@@ -39,8 +35,6 @@ export default class OrdersRevenue {
       console.error("Canvas element for products sold chart not found.");
       return;
     }
-    // ctx = ctx.getContext("2d");
-
     this.chart = new Chart(ctx, {
       type: "bar",
       data: {
