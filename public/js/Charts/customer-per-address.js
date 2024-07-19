@@ -25,7 +25,7 @@ export default class CustomerPerAddress {
       console.error("Canvas element for products sold chart not found.");
       return;
     }
-    const data = productsSoldData || [];
+    const data = customerData || [];
     const backgroundColors = data.map((_, i) => `hsla(${(i * 360) / data.length}, 100%, 70%, 0.2)`);
     const borderColors = data.map((_, i) => `hsla(${(i * 360) / data.length}, 100%, 50%, 1)`);
 
