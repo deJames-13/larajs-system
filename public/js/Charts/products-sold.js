@@ -4,14 +4,12 @@ export default class ProductsSold {
   constructor({ target }) {
     this.target = target;
     this.chart = null;
-    this.fetchProductsSoldData();
   }
 
   fetchProductsSoldData() {
     ajaxRequest.get({
       url: "/api/charts/products-sold",
       onSuccess: response => {
-        console.log("Fetched Products Sold Data:", response);
         this.createProductsSoldChart(response);
       },
       onError: error => {
@@ -28,7 +26,7 @@ export default class ProductsSold {
       console.error("Canvas element for products sold chart not found.");
       return;
     }
-    ctx = ctx.getContext("2d");
+    // ctx = ctx.getContext("2d");
     console.log("Creating chart with data:", data);
 
     this.chart = new Chart(ctx, {

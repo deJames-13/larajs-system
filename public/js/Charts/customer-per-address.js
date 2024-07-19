@@ -4,7 +4,6 @@ export default class CustomerPerAddress {
   constructor({ target }) {
     this.target = target;
     this.chart = null;
-    this.fetchCustomerData();
   }
 
   fetchCustomerData() {

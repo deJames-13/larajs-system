@@ -4,14 +4,12 @@ export default class OrderPerMonth {
   constructor({ target }) {
     this.target = target;
     this.chart = null;
-    this.fetchData();
   }
 
   fetchData() {
     ajaxRequest.get({
       url: "/api/charts/order-per-month",
       onSuccess: response => {
-        console.log(response);
         this.createChart(response);
       },
       onError: error => {
@@ -29,7 +27,7 @@ export default class OrderPerMonth {
       console.error("Canvas element for products sold chart not found.");
       return;
     }
-    ctx = ctx.getContext("2d");
+    // ctx = ctx.getContext("2d");
 
     this.chart = new Chart(ctx, {
       type: "bar",
@@ -49,7 +47,6 @@ export default class OrderPerMonth {
   }
 
   render() {
-    // Render the chart when called
     this.fetchData();
   }
 }

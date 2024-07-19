@@ -4,14 +4,12 @@ export default class OrdersRevenue {
   constructor({ target }) {
     this.target = target;
     this.chart = null;
-    this.fetchRevenueData();
   }
 
   fetchRevenueData() {
     ajaxRequest.get({
       url: "/api/charts/orders-revenue",
       onSuccess: response => {
-        console.log(response);
         this.createRevenueChart(response);
       },
       onError: error => {
@@ -41,7 +39,7 @@ export default class OrdersRevenue {
       console.error("Canvas element for products sold chart not found.");
       return;
     }
-    ctx = ctx.getContext("2d");
+    // ctx = ctx.getContext("2d");
 
     this.chart = new Chart(ctx, {
       type: "bar",
@@ -103,7 +101,6 @@ export default class OrdersRevenue {
   }
 
   render() {
-    // Render the chart when called
     this.fetchRevenueData();
   }
 }

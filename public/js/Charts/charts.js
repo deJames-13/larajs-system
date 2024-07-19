@@ -57,7 +57,7 @@ export default class Charts {
         </div>
     `);
 
-    this.getCustomerPerAddress();
+    // this.getCustomerPerAddress();
     this.getOrderPerMonth();
     this.getOrdersRevenue();
     this.getProductsSold();
