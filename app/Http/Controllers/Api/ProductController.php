@@ -27,10 +27,11 @@ class ProductController extends Controller
         $search = request(['search']) ?? null;
 
         $products = Product::filter($search)
-            ->with([
-                'brands',
-                'categories',
-            ])
+            // lazy eager loaded
+            // ->with([
+            //     'brands',
+            //     'categories',
+            // ])
             ->orderBy('updated_at', $order)
             ->paginate($limit, ['*'], 'page', $page);
 

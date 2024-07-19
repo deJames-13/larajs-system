@@ -23,7 +23,12 @@ export default class CustomerPerAddress {
   createCustomerChart(customerData) {
     const data = customerData || [];
 
-    const ctx = $(this.target).find("#customer-per-address")[0].getContext("2d");
+    var ctx = $(this.target).find("#customer-per-address")[0];
+    if (!ctx) {
+      console.error("Canvas element for products sold chart not found.");
+      return;
+    }
+    ctx = ctx.getContext("2d");
 
     this.chart = new Chart(ctx, {
       type: "pie",
@@ -59,6 +64,6 @@ export default class CustomerPerAddress {
 }
 
 // Initialize the chart when the document is ready
-$(document).ready(function () {
-  const customerPerAddress = new CustomerPerAddress({ target: "#dashboard-content" });
-});
+// $(document).ready(function () {
+//   const customerPerAddress = new CustomerPerAddress({ target: "#dashboard-content" });
+// });

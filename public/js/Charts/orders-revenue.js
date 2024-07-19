@@ -36,7 +36,12 @@ export default class OrdersRevenue {
       revenueMap[monthName] = row.revenue;
     });
 
-    const ctx = $(this.target).find("#orders-revenue")[0].getContext("2d");
+    var ctx = $(this.target).find("#orders-revenue")[0];
+    if (!ctx) {
+      console.error("Canvas element for products sold chart not found.");
+      return;
+    }
+    ctx = ctx.getContext("2d");
 
     this.chart = new Chart(ctx, {
       type: "bar",
@@ -104,6 +109,6 @@ export default class OrdersRevenue {
 }
 
 // Initialize the chart when the document is ready
-$(document).ready(function () {
-  const ordersRevenue = new OrdersRevenue({ target: "#dashboard-content" });
-});
+// $(document).ready(function () {
+//   const ordersRevenue = new OrdersRevenue({ target: "#dashboard-content" });
+// });

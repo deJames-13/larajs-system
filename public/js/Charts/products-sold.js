@@ -23,15 +23,15 @@ export default class ProductsSold {
   createProductsSoldChart(productsSoldData) {
     const data = productsSoldData || [];
 
-    const ctx = $(this.target).find("#products-sold")[0];
+    var ctx = $(this.target).find("#products-sold")[0];
     if (!ctx) {
       console.error("Canvas element for products sold chart not found.");
       return;
     }
-
+    ctx = ctx.getContext("2d");
     console.log("Creating chart with data:", data);
 
-    this.chart = new Chart(ctx.getContext("2d"), {
+    this.chart = new Chart(ctx, {
       type: "doughnut",
       data: {
         labels: data.map(row => row.name),
@@ -65,6 +65,6 @@ export default class ProductsSold {
 }
 
 // Initialize the chart when the document is ready
-$(document).ready(function () {
-  const productsSold = new ProductsSold({ target: "#dashboard-content" });
-});
+// $(document).ready(function () {
+//   const productsSold = new ProductsSold({ target: "#dashboard-content" });
+// });

@@ -1,8 +1,8 @@
-import Tables from "../Tables/tables.js";
+import logout from "../Auth/logout.js";
 import Charts from "../Charts/charts.js";
+import Tables from "../Tables/tables.js";
 import DashboardSideBar from "./components/sidebar.js";
 import MainPage from "./partials/_main.js";
-import logout from "../Auth/logout.js";
 
 class Dashboard {
   constructor() {
@@ -21,7 +21,7 @@ class Dashboard {
   }
 
   getTable(url) {
-    $("#dashboard-content").html(""); 
+    $("#dashboard-content").html("");
 
     const pages = {
       main: () => MainPage.init(),
@@ -31,7 +31,7 @@ class Dashboard {
       categories: () => this.tables.getCategories(),
       orders: () => this.tables.getOrders(),
       users: () => this.tables.getUsers(),
-      charts: () => this.charts.showAllCharts(),
+      charts: () => this.charts.init(),
       logout: logout
     };
 
