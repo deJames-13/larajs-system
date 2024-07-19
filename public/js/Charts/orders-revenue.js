@@ -36,7 +36,7 @@ export default class OrdersRevenue {
       return;
     }
     this.chart = new Chart(ctx, {
-      type: "bar",
+      type: "line",
       data: {
         labels: monthNames,
         datasets: [

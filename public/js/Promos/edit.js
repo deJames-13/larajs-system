@@ -19,7 +19,7 @@ export default class PromosEdit {
 
     $("#image-input").change(() => {
       this.images = Array.from($("#image-input")[0].files).map(file => URL.createObjectURL(file));
-      this.carousel = new Carousel(".item-carousel", this.images, ".prev", ".next");
+      this.loadCarousel();
     });
 
     $(".prev").click(() => {
@@ -77,7 +77,10 @@ export default class PromosEdit {
   }
 
   loadCarousel() {
-    this.carousel = new Carousel(".item-carousel", this.images, ".prev", ".next");
+    this.carousel = new Carousel({
+      id: "promos-edit",
+      images: this.images
+    });
   }
 
   populateForm(promo) {

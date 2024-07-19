@@ -1,4 +1,5 @@
 import ajaxRequest from "../assets/ajaxRequest.js";
+import Carousel from "../components/Carousel.js";
 const defaultProps = {
   id: null,
   target: null,
@@ -43,17 +44,9 @@ export default class FormPage {
     return /* HTML */ `
       <div id="image-container" class="flex flex-col space-y-2 border-opacity-25 left image-container border-secondary ">
         <div>
-          <div class="relative ">
-            <button type="button" class="z-[100] top-1/2  absolute prev m-4 hover:scale-110 transition-all hover:text-primary">
-              <i className="fas fa-arrow-angle-left"></i>
-            </button>
-            <button type="button" class="z-[100] top-1/2 right-0  absolute next m-4 hover:scale-110 transition-all hover:text-primary">
-              <i className="fas fa-arrow-angle-right"></i>
-            </button>
-            <div class="flex-grow item-carousel hover h-[300px] max-h-[300px] flex items-center justify-center overflow-hidden">
-              <img src="https://placehold.co/300x200?text=img" alt="Placeholder" class="cursor-zoom-in max-h-[300px] object-contain" />
-            </div>
-          </div>
+          ${new Carousel({
+            id: `${this.name.split(" ")[0]}-${this.type}`
+          }).render()}
         </div>
         <div class="flex justify-center p-4 space-x-2">
           <input id="image-input" type="file" multiple accept="image/*" class="max-w-[300px] flex-grow file-input file-input-bordered file-input-primary" name="images[]" />

@@ -7,6 +7,7 @@ export default class BrandsCreate {
     this.init();
     this.setupForm();
     this.setupValidation();
+    this.images = ["https://placehold.co/400x600?text=item"];
   }
 
   init() {
@@ -14,7 +15,10 @@ export default class BrandsCreate {
       // CAROUSEL
       $("#image-input").change(() => {
         const images = Array.from($("#image-input")[0].files).map(file => URL.createObjectURL(file));
-        this.carousel = new Carousel(".item-carousel", images, ".prev", ".next");
+        this.carousel = new Carousel({
+          id: "brands-create",
+          images: this.images
+        });
       });
 
       $(".prev").click(() => {

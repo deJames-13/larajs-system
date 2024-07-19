@@ -19,8 +19,8 @@ export default class CategoriesEdit {
 
       // CAROUSEL
       $("#image-input").change(() => {
-        const images = Array.from($("#image-input")[0].files).map(file => URL.createObjectURL(file));
-        this.carousel = new Carousel(".item-carousel", images, ".prev", ".next");
+        this.images = Array.from($("#image-input")[0].files).map(file => URL.createObjectURL(file));
+        this.loadCarousel();
       });
 
       $(".prev").click(() => {
@@ -108,7 +108,10 @@ export default class CategoriesEdit {
   }
 
   loadCarousel() {
-    this.carousel = new Carousel(".item-carousel", this.images, ".prev", ".next");
+    this.carousel = new Carousel({
+      id: "categories-edit",
+      images: this.images
+    });
   }
   fetchCategory(id) {
     $("#image-input").val("");
