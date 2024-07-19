@@ -18,7 +18,7 @@ export default class OrdersRevenue {
     });
   }
 
-  createRevenueChart(revenueData) {
+  async createRevenueChart(revenueData) {
     const data = revenueData || [];
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 

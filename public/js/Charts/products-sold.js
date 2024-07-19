@@ -18,7 +18,7 @@ export default class ProductsSold {
     });
   }
 
-  createProductsSoldChart(productsSoldData) {
+  async createProductsSoldChart(productsSoldData) {
     const data = productsSoldData || [];
 
     var ctx = $(this.target).find("#products-sold")[0];
@@ -28,7 +28,10 @@ export default class ProductsSold {
     }
     // ctx = ctx.getContext("2d");
     console.log("Creating chart with data:", data);
+    console.log("ctx", ctx);
 
+    const backgroundColors = data.map((_, i) => `rgba(${255 - i * 50}, ${99 + i * 50}, 132, 0.2)`);
+    const borderColors = data.map((_, i) => `rgba(${255 - i * 50}, ${99 + i * 50}, 132, 1)`);
     this.chart = new Chart(ctx, {
       type: "doughnut",
       data: {
@@ -37,23 +40,14 @@ export default class ProductsSold {
           {
             label: "Products Sold",
             data: data.map(row => row.count),
-            backgroundColor: [
-              "rgba(255, 99, 132, 0.2)",
-              "rgba(54, 162, 235, 0.2)",
-              "rgba(255, 206, 86, 0.2)"
-              // Add more colors if needed
-            ],
-            borderColor: [
-              "rgba(255, 99, 132, 1)",
-              "rgba(54, 162, 235, 1)",
-              "rgba(255, 206, 86, 1)"
-              // Add more colors if needed
-            ],
+            backgroundColor: backgroundColors,
+            borderColor: borderColors,
             borderWidth: 1
           }
         ]
       }
     });
+    console.log("ctx", this.chart);
   }
 
   render() {

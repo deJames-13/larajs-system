@@ -18,7 +18,7 @@ export default class OrderPerMonth {
     });
   }
 
-  createChart(chartData) {
+  async createChart(chartData) {
     const data = chartData || [];
 
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
