@@ -16,7 +16,7 @@ class OnlyAjax
     public function handle(Request $request, Closure $next): Response
     {
         if (!$request->ajax()) {
-            return abort(404);
+            return response()->json(['error' => 'Request method is not allowed'], 400);
         }
         return $next($request);
     }

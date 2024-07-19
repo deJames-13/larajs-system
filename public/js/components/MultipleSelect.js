@@ -188,8 +188,6 @@ export default class MultipleSelect {
     const res = this.source(query);
     res instanceof Promise &&
       res.then((options, selectedOptions) => {
-        console.log(options);
-
         selectedOptions && this.setSelection(selectedOptions);
         options && this.setOptions(options);
         this.update();

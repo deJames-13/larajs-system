@@ -4,12 +4,13 @@ var isShowLoading = false;
 // ##########################################################################
 // HANDLERS
 const defaultError = (response, status, xhr) => {
+  if (status === 200) return;
   Swal.fire({
     icon: "error",
     title: response.statusText ? response.statusText : "An error occurred!",
-    text: response.responseJSON.message ? `${response.responseJSON.message}.` : "Oops... Something went wrong!"
+    text: response.responseJSON && response.responseJSON.message ? `${response.responseJSON.message}.` : "Oops... Something went wrong!"
   }).then(() => {
-    window.history.back();
+    // window.history.back();
   });
 };
 const handleError = callback => (response, status, xhr) => {
