@@ -11,7 +11,6 @@ export default class UserView extends UserFormPage {
   init() {
     this.fetchUser(this.userId).then(response => {
       super.init();
-      console.log(this.user);
     });
   }
 

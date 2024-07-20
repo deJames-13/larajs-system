@@ -18,7 +18,7 @@ class OrderController extends Controller
         $status = $request->query('status') ?? 'all';
         $page = $request->query('page') ?? 1;
         $limit = $request->query('limit') ?? 10;
-        $isAdmin = $request->user()->role === 'admin';
+        $isAdmin = $request->user()->role !== 'customer';
 
         $orders = Order::filter(request(['search']));
         if ($status !== 'all') {
@@ -132,7 +132,7 @@ class OrderController extends Controller
             ]
         );
 
-        $isAdmin = $request->user()->role === 'admin';
+        $isAdmin = $request->user()->role !== 'customer';
         $isRequestCancel = $data['status'] === 'cancelled';
 
         if (!$isAdmin && !$isRequestCancel) {
@@ -190,7 +190,7 @@ class OrderController extends Controller
     // WARNING: Order Deletion is not recommended
     public function delete(Request $request, Order $order)
     {
-        if ($request->user()->role !== 'admin') {
+        if ($request->user()->role === 'customer') {
             abort(403, 'You are not allowed to perform this action');
         }
         $order->delete();
@@ -198,7 +198,7 @@ class OrderController extends Controller
 
     public function restore(Request $request, Order $order)
     {
-        if ($request->user()->role !== 'admin') {
+        if ($request->user()->role !== 'customer') {
             abort(403, 'You are not allowed to perform this action');
         }
         $order->restore();

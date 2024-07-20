@@ -149,10 +149,7 @@ export default class UserFormPage {
 
       return acc;
     }, {});
-    console.log({
-      rules: rules,
-      messages: messages
-    });
+
     this.form.validate({
       rules: rules,
       messages: messages,

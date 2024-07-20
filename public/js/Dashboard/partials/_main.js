@@ -34,7 +34,7 @@ export default class MainPage {
     const { earnings, annual, monthly } = this.metadata;
     Object.keys({ earnings, annual, monthly }).forEach(key => {
       const { total, count } = this.metadata[key];
-      $(`[data-${key}] h1`).text(`$${total}`);
+      $(`[data-${key}] h1`).text(`₱ ${total}`);
       $(`[data-${key}] [name=count]`).text(count);
     });
     const { customers_count, products_count } = this.metadata;
@@ -106,7 +106,7 @@ export default class MainPage {
 
           <!-- Charts Container  -->
           <div class="flex items-center justify-between">
-            <h1 class="font-extrabold uppercase text-xl">Inventory Stock</h1>
+            <h1 class="font-extrabold uppercase text-xl">Inventory</h1>
             <button class="btn btn-sm btn-outline btn-primary">View Products</button>
           </div>
           <div class="divider m-0"></div>
@@ -127,7 +127,7 @@ export default class MainPage {
               <div class="flex items-center justify-between">
                 <h2 class="font-bold text-md text-gray-400 text-wrap">Total</h2>
               </div>
-              <h1 name="total" class="capitalize font-extrabold text-2xl">$69123</h1>
+              <h1 name="total" class="capitalize font-extrabold text-2xl">₱69123</h1>
               <p class="capitalize font-bold text-gray-400"><span name="count">200-500</span> sales</p>
 
               <div class="hidden lg:block absolute bottom-0 right-0 w-1/3 aspect-square overflow-clip">
@@ -140,11 +140,11 @@ export default class MainPage {
               <div class="flex items-center justify-between">
                 <h2 class="font-bold text-md text-gray-400 text-wrap">Annual</h2>
               </div>
-              <h1 name="total" class="capitalize font-extrabold text-2xl">$42069</h1>
+              <h1 name="total" class="capitalize font-extrabold text-2xl">₱42069</h1>
               <p class="capitalize font-bold text-gray-400"><span name="count">200-500</span> sales</p>
 
               <div class="hidden lg:block absolute bottom-0 right-0 w-1/3 aspect-square overflow-clip">
-                <img src="/images/monthly-no-bg.png" alt="hello" />
+                <img src="/images/annual-no-bg.png" alt="hello" />
               </div>
             </div>
 
@@ -153,7 +153,7 @@ export default class MainPage {
               <div class="flex items-center justify-between">
                 <h2 class="font-bold text-md text-gray-400 text-wrap">Monthly</h2>
               </div>
-              <h1 name="total" class="capitalize font-extrabold text-2xl">$42069</h1>
+              <h1 name="total" class="capitalize font-extrabold text-2xl">₱42069</h1>
               <p class="capitalize font-bold text-gray-400"><span name="count">200-500</span> sales</p>
 
               <div class="hidden lg:block absolute bottom-0 right-0 w-1/3 aspect-square overflow-clip">

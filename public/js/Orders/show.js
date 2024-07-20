@@ -6,7 +6,7 @@ export default class OrderShow {
   constructor() {
     this.id = $("#order-id").data("id");
     this.role = $("#user-role").data("role");
-    this.isAdmin = this.role === "admin";
+    this.isAdmin = this.role !== "customer";
     this.data = {};
     this.products = [];
     this.status = status;
@@ -55,7 +55,7 @@ export default class OrderShow {
   }
 
   populateForm(response) {
-    console.log(response);
+    // console.log(response);
     this.data = response.data;
 
     $("_skeleton").removeClass("skeleton");

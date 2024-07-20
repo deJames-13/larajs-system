@@ -13,7 +13,6 @@ export default class CategoriesCreate {
 
   init() {
     $(document).ready(() => {
-      console.log($(this.target));
       $(this.target)
         .find("#image-input")
         .change(() => {
