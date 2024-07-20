@@ -20,11 +20,13 @@ abstract class Controller
         $sort = request('sort') ?? 'updated_at';
 
         $data = $model::filter(request(['search']))
-            ->orderBy('updated_at', $order)
+            ->orderBy($sort, $order)
             ->paginate($limit, ['*'], 'page', $page);
+
 
         $data->load($with);
         $response = $resource::collection($data);
+
 
         return $response;
     }

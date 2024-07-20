@@ -23,7 +23,7 @@ const defaultProps = {
       // { label: "Popular", value: "popular" },
       // { label: "Most Bought", value: "most-bought" }
     ],
-    selected: { label: "Latest", value: "latest" },
+    selected: { label: "ID", value: "id" },
     order: "desc"
   },
   withImport: true,
@@ -36,6 +36,7 @@ export default class DataTable {
     this.tableId = this.tableId || this.tableName + "Table";
 
     // TODO: Other queries like sorting
+    this.sortBy = { ...defaultProps.sortBy, ...props.sortBy };
     this.sortBy.display = this.sortBy.filters.length > 0 && this.sortBy.display;
     let sort = this.sortBy.display
       ? {
@@ -175,12 +176,13 @@ export default class DataTable {
     const { links, meta } = response;
     if (links && (links.next || links.prev || meta.current_page > 1)) {
       const pagination = new Pagination(links, meta.current_page).render("#paginations");
-      pagination.onClick(page => this.handleQuery({ ...this.query, page: page }, this.queryCallback));
+      pagination.onClick(page => this.handleQuery({ ...this.query, page: page }, this.queryCallback.bind(this)));
     }
   }
 
   fetchData({ onFetch = () => {}, baseApi = null, query = {} }) {
     query = { ...this.query, ...query };
+    console.log(query);
     const qstr = Object.keys(query).reduce((result, key) => `${result}${key}=${query[key]}&`, "");
     const url = baseApi ?? this.baseApi + this.tableName + "?" + qstr; //console.log(url);
     const token = document.querySelector('meta[name="api-token"]').getAttribute("content");
@@ -346,25 +348,29 @@ export default class DataTable {
   }
 
   bindQueries() {
-    this.onQuery(this.queryCallback);
+    this.onQuery(this.queryCallback.bind(this));
 
     // toggle order btn
     this.sortBy.display &&
-      $("#order-btn").on("click", e => {
-        const order = this.query.order === "desc" ? "asc" : "desc";
-        const btn = $(`[data-order=${this.query.order}]`);
-        btn.attr("data-order", order);
-        btn.find(`[name=${this.query.order}]`).hide();
-        btn.find(`[name=${order}]`).show();
-        this.query.order = order;
-        this.handleQuery(this.query, this.queryCallback);
-      });
+      $("#order-btn")
+        .off()
+        .on("click", e => {
+          const order = this.query.order === "desc" ? "asc" : "desc";
+          const btn = $(`[data-order=${this.query.order}]`);
+          btn.attr("data-order", order);
+          btn.find(`[name=${this.query.order}]`).hide();
+          btn.find(`[name=${order}]`).show();
+          this.query.order = order;
+          this.handleQuery(this.query, this.queryCallback.bind(this));
+        });
 
     // sort select
-    $("#sort-select select").on("change", e => {
-      this.query.sort = e.target.value;
-      this.handleQuery(this.query, this.queryCallback);
-    });
+    $("#sort-select select")
+      .off()
+      .on("change", e => {
+        this.query.sort = e.target.value;
+        this.handleQuery(this.query, this.queryCallback.bind(this));
+      });
   }
 
   renderQueries() {

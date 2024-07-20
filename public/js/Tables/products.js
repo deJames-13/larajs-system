@@ -1,10 +1,30 @@
 import TablePage from "./table.js";
-
+var filters = [
+  { value: "id", label: "ID" },
+  { value: "name", label: "Name" },
+  { value: "price", label: "Price" },
+  { value: "status", label: "Status" }
+];
+var sortBy = {
+  display: true,
+  filters: filters,
+  selected: filters[0],
+  order: "desc"
+};
 export default class ProductsPage extends TablePage {
   constructor({ target }) {
     super({
       target: target,
-      tableName: "products"
+      tableName: "products",
+      sortBy: sortBy
+    });
+  }
+  mapFilters(data) {
+    return data.map(item => {
+      return {
+        value: item.id,
+        label: item.name
+      };
     });
   }
   makeTable(data) {
