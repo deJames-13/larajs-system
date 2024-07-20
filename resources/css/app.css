@@ -154,7 +154,7 @@ button {
   border-left: 0;
   border-right: 0;
   border-top: 0;
-  background-color: #ffaedf;
+  background-color: #ffaedf7e;
 }
 
 .textcontainer {
@@ -360,7 +360,7 @@ canvas {
   border: 2px solid #6b3fa3;
   border-radius: 0.5rem;
   padding: 1.5rem;
-  box-shadow: 0 4px 6px rgba(185, 137, 212, 0.3);
+  box-shadow: 0 4px 6px #b989d44d;
   margin-bottom: 2rem;
   font-family: "Poppins", sans-serif;
   text-align: center;

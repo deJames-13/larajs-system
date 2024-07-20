@@ -3,16 +3,16 @@
 namespace App\Imports\Products;
 
 use Illuminate\Support\Collection;
+use Barryvdh\Debugbar\Facades\Debugbar;
+use Maatwebsite\Excel\Events\AfterSheet;
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\ToCollection;
 
-class ProductImagesSheet implements ToCollection
+class ProductImagesSheet implements WithEvents
 {
-    /**
-     * @param Collection $collection
-     */
-    public function collection(Collection $rows)
+    public function registerEvents(): array
     {
-        foreach ($rows as $row) {
-        }
+        return [];
     }
 }

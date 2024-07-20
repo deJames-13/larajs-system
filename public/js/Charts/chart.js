@@ -21,22 +21,20 @@ export default class Charts {
   }
 
   showAllCharts() {
-    $(this.target).html(`
-      <div class="rounded-t-lg overflow-clip">
-        <div class="custom-circle-border bottom-pattern p-10 relative">
-          <div class="mainpage-charts-container">
+    $(this.target).html(/*HTML*/ `
+        <div class="relative flex items-center justify-center">
+          <div class="mainpage-charts-container p-4 py-8">
             <div class="mainpage-chart-card">
               <h3 class="chart-heading">Low Stock</h3>
-              <div class="chart-container"><canvas id="low-stock"></canvas></div>
+              <div class="chart-container bg-transparent"><canvas id="low-stock"></canvas></div>
             </div>
             <div class="mainpage-chart-card">
               <h3 class="chart-heading">No Stock</h3>
-              <div class="chart-container"><canvas id="no-stock"></canvas></div>
+              <div class="chart-container bg-transparent"><canvas id="no-stock"></canvas></div>
               <div id="no-stock-message"></div>
             </div>
           </div>
         </div>
-      </div>
     `);
 
     this.getLowStock();

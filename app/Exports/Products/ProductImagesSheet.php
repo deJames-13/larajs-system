@@ -3,15 +3,16 @@
 namespace App\Exports\Products;
 
 use App\Models\Product;
+use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\WithTitle;
+use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithDrawings;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
 
-
-class ProductImagesSheet implements FromArray, WithHeadings, WithCustomCsvSettings, WithTitle, WithDrawings
+class ProductImagesSheet implements FromArray, WithHeadings, WithCustomCsvSettings, WithTitle, WithDrawings, WithEvents
 {
     private $data;
 
@@ -61,6 +62,16 @@ class ProductImagesSheet implements FromArray, WithHeadings, WithCustomCsvSettin
         }
 
         return $drawings;
+    }
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class => function (AfterSheet $event) {
+                foreach ($this->data as $key => $product) {
+                    $event->sheet->getRowDimension($key + 2)->setRowHeight(200);
+                }
+            }
+        ];
     }
 
     public function headings(): array

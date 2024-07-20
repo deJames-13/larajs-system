@@ -2,6 +2,7 @@ import Charts from "../../Charts/chart.js";
 
 export default class MainPage {
   constructor() {
+    this.user = JSON.parse(localStorage.getItem("user"));
     this.target = "#dashboard-content";
     this.render();
     this.charts = new Charts({ target: `${this.target} #charts-container` }); // Update target for charts
@@ -19,9 +20,10 @@ export default class MainPage {
       <div class="rounded-t-lg overflow-clip">
         <div class="custom-circle-border bottom-pattern p-10 relative">
           <!-- Greeting Card -->
-          <div class="welcome-card">
-            <div class="welcome-message">
-              <h1 class="text-2xl font-bold">Hello! Welcome Back <span id="username">Username</span></h1>
+          <div class="welcome-card bg-primary">
+            <div class=" flex flex-col items-start gap-4 text-white text-3xl">
+              <h1 class="text-xl">Hello, Welcome back!</h1>
+              <span id="username" class="uppercase font-bold">${this.user.fullname || this.user.username}</span>
             </div>
           </div>
 
