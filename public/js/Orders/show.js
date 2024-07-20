@@ -67,7 +67,7 @@ export default class OrderShow {
     });
 
     if (this.products.length === 0) {
-      window.location.href = "/";
+      // window.location.href = "/";
     }
 
     // RENDER ORDER ITEMS
@@ -75,7 +75,7 @@ export default class OrderShow {
     this.products.forEach(product => {
       // if no product in cart redirect to shop
       if (this.products.length === 0) {
-        window.location.href = "/";
+        // window.location.href = "/";
       }
 
       const cartItem = new OrderItem(product);

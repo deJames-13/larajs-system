@@ -10,7 +10,6 @@ export default class NoStock {
     ajaxRequest.get({
       url: "/api/charts/no-stock", // Update with the correct route if necessary
       onSuccess: response => {
-        console.log(response);
         this.createNoStockChart(response);
       },
       onError: error => {
@@ -24,12 +23,13 @@ export default class NoStock {
       noStockData = [];
     }
     const data = noStockData || [];
+    var isNoData = data.length === 0;
 
-    const ctx = $(this.target).find("#no-stock");
+    const ctx = $(this.target);
 
     this.chart && this.chart.destroy();
     this.chart = new Chart(ctx, {
-      type: "bar",
+      type: "doughnut",
       data: {
         labels: data.map(item => item.name),
         datasets: [
@@ -54,6 +54,16 @@ export default class NoStock {
       },
       options: {
         responsive: true,
+        plugins: {
+          title: {
+            display: isNoData,
+            text: "Nothing to show",
+            align: "center"
+          },
+          legend: {
+            display: false
+          }
+        },
         scales: {
           y: {
             beginAtZero: true

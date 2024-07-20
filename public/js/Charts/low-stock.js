@@ -10,7 +10,6 @@ export default class LowStock {
     ajaxRequest.get({
       url: "/api/charts/low-stock", // Update with the correct route if necessary
       onSuccess: response => {
-        console.log(response);
         this.createLowStockChart(response);
       },
       onError: error => {
@@ -21,12 +20,13 @@ export default class LowStock {
 
   async createLowStockChart(lowStockData) {
     const data = lowStockData || [];
+    var isNoData = data.length === 0;
 
-    const ctx = $(this.target).find("#low-stock");
+    const ctx = $(this.target);
 
     this.chart && this.chart.destroy();
     this.chart = new Chart(ctx, {
-      type: "bar",
+      type: "doughnut",
       data: {
         labels: data.map(item => item.name),
         datasets: [
@@ -51,9 +51,14 @@ export default class LowStock {
       },
       options: {
         responsive: true,
-        scales: {
-          y: {
-            beginAtZero: true
+        plugins: {
+          title: {
+            display: isNoData,
+            text: "Nothing to show.",
+            align: "center"
+          },
+          legend: {
+            display: false
           }
         }
       }

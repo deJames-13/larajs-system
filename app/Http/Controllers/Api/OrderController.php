@@ -18,13 +18,17 @@ class OrderController extends Controller
         $status = $request->query('status') ?? 'all';
         $page = $request->query('page') ?? 1;
         $limit = $request->query('limit') ?? 10;
+        $isAdmin = $request->user()->role === 'admin';
 
         $orders = Order::query();
         if ($status !== 'all') {
             $orders->where('status', $status);
         }
 
-        $orders->where('user_id', $request->user()->id);
+        if ($isAdmin)
+            $orders->with('customer.info');
+        else
+            $orders->where('user_id', $request->user()->id);
         $orders->with([
             'products' => function ($query) {
                 $query->withPivot('quantity');
@@ -32,12 +36,12 @@ class OrderController extends Controller
             'customer',
         ]);
 
-        if ($request->user()->role === 'admin') {
-            $orders->with('customer.info');
-        }
+
         $orders->orderBy('updated_at', 'desc');
 
         $page = $orders->paginate($limit);
+
+        // Debugbar::info($page);
 
         return OrderResource::collection($page);
     }
@@ -51,7 +55,7 @@ class OrderController extends Controller
             },
             'customer', 'customer.info',
         ])->findOrFail($id);
-        if (! $order) {
+        if (!$order) {
             return response(
                 [],
                 404,
@@ -131,7 +135,7 @@ class OrderController extends Controller
         $isAdmin = $request->user()->role === 'admin';
         $isRequestCancel = $data['status'] === 'cancelled';
 
-        if (! $isAdmin && ! $isRequestCancel) {
+        if (!$isAdmin && !$isRequestCancel) {
             abort(403, 'You are not allowed to perform this action');
         }
 
@@ -177,7 +181,7 @@ class OrderController extends Controller
         $order->load(['products', 'customer']);
         $res = new OrderResource($order);
 
-        Debugbar::info('Sending: '.$order->customer->email);
+        Debugbar::info('Sending: ' . $order->customer->email);
         Mail::to($order->customer->email)->send(new OrderStatusNotifier($order));
 
         return $res;
@@ -198,5 +202,12 @@ class OrderController extends Controller
             abort(403, 'You are not allowed to perform this action');
         }
         $order->restore();
+    }
+
+    public function metadata()
+    {
+        $response  = Order::metadata();
+        Debugbar::info($response);
+        return response()->json($response);
     }
 }

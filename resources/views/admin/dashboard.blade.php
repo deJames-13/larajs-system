@@ -1,6 +1,6 @@
 <x-layouts.default :page="'dashboard'" :title="'Dashboard'">
 
-	<div class="mx-auto container w-screen flex gap-8 flex-col sm:flex-row">
+	<div class="mx-auto container w-screen flex sm:gap-8 flex-col sm:flex-row">
 
 		{{-- side-bar --}}
 		<div class="hidden md:block left py-8 container sm:w-24 lg:w-64">
@@ -14,6 +14,7 @@
 		</div>
 
 	</div>
+
 
 	@push('scripts')
 		<script type="module" src="{{ asset('js/Dashboard/index.js') }}"></script>

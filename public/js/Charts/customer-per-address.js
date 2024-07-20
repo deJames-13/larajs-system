@@ -10,7 +10,7 @@ export default class CustomerPerAddress {
     ajaxRequest.get({
       url: "/api/charts/customer-per-address",
       onSuccess: response => {
-        console.log(response);
+        // console.log(response);
         this.createCustomerChart(response);
       },
       onError: error => {
@@ -20,7 +20,7 @@ export default class CustomerPerAddress {
   }
 
   async createCustomerChart(customerData) {
-    var ctx = $(this.target).find("#customer-per-address")[0];
+    const ctx = $(this.target);
     if (!ctx) {
       console.error("Canvas element for products sold chart not found.");
       return;

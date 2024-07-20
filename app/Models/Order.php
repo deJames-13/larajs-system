@@ -22,6 +22,7 @@ class Order extends Model
     {
         return $this->belongsToMany(Product::class, 'order_products')->withPivot('quantity');
     }
+
     public function scopeFilter($query, array $filters)
     {
         Debugbar::info($filters);
@@ -43,5 +44,59 @@ class Order extends Model
                     $query->where('name', 'like', '%' . $search . '%');
                 });
         });
+    }
+
+    public static function getMonthlyRevenue($year, $month)
+    {
+        $order = Order::where('status', 'completed')
+            ->whereYear('created_at', $year)
+            ->whereMonth('created_at', $month);
+
+        // products from completed orders with total as product price * quantity
+        $total = $order->get()->map(function ($order) {
+            return $order->products->map(function ($product) {
+                return $product->price * $product->pivot->quantity;
+            })->sum();
+        })->sum();
+
+        return (object)[
+            "total" => $total,
+            "count" => $order->count()
+        ];
+    }
+
+
+
+    // MetaDatas
+    public static function metadata($year = null, $month = null)
+    {
+        $order = Order::where('status', 'completed');
+        // products from completed orders with total as product price * quantity
+        $total = $order->get()->map(function ($order) {
+            return $order->products->map(function ($product) {
+                return $product->price * $product->pivot->quantity;
+            })->sum();
+        })->sum();
+
+        $year = $year ?? now()->year;
+        $month = $month ?? now()->month;
+
+        $monthly = Order::getMonthlyRevenue($year, $month);
+        $monthlyEarned = $monthly->total;
+        $monthlyOrdersCount = $monthly->count;
+
+
+        return [
+            "totalEarned" => $total,
+            "customerCount" => User::where('role', 'customer')->count(),
+            "ordersCount" => Order::count(),
+            "pendingOrders" => Order::where('status', 'pending')->count(),
+            "completedOrders" => Order::where('status', 'completed')->count(),
+            "shippingOrders" => Order::where('status', 'shipping')->count(),
+            "productsCount" => Product::count(),
+            "monthlyEarned" => $monthlyEarned,
+            "monthlyOrdersCount" => $monthlyOrdersCount,
+
+        ];
     }
 }
