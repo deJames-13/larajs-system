@@ -20,7 +20,7 @@ class OrderController extends Controller
         $limit = $request->query('limit') ?? 10;
         $isAdmin = $request->user()->role === 'admin';
 
-        $orders = Order::query();
+        $orders = Order::filter(request(['search']));
         if ($status !== 'all') {
             $orders->where('status', $status);
         }

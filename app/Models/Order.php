@@ -29,6 +29,7 @@ class Order extends Model
         $query->when($filters['search'] ?? null, function ($query, $search) {
             $query->where('id', 'like', '%' . $search . '%')
                 ->orWhere('shipping_address', 'like', '%' . $search . '%')
+                ->orWhere('status', 'like', '%' . $search . '%')
                 // customer relationship filter
                 ->orWhereHas('customer', function ($query) use ($search) {
                     $query->where('username', 'like', '%' . $search . '%');
