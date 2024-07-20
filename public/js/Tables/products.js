@@ -3,7 +3,8 @@ var filters = [
   { value: "id", label: "ID" },
   { value: "name", label: "Name" },
   { value: "price", label: "Price" },
-  { value: "status", label: "Status" }
+  { value: "status", label: "Status" },
+  { value: "stock", label: "Stock" }
 ];
 var sortBy = {
   display: true,
