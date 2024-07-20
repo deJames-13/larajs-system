@@ -16,7 +16,8 @@ abstract class Controller
         Debugbar::info(request());
         $page = request('page') ?? 1;
         $limit = request('limit') ?? 10;
-        $order =    request('order') ?? 'desc';
+        $order = request('order') ?? 'desc';
+        $sort = request('sort') ?? 'updated_at';
 
         $data = $model::filter(request(['search']))
             ->orderBy('updated_at', $order)

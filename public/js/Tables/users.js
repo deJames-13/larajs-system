@@ -7,7 +7,7 @@ export default class UsersPage extends TablePage {
   constructor({ target }) {
     super({
       target: target,
-      table: "users"
+      tableName: "users"
     });
   }
   makeTable(data) {

@@ -4,7 +4,7 @@ export default class PromosPage extends TablePage {
   constructor({ target }) {
     super({
       target: target,
-      table: "promos"
+      tableName: "promos"
     });
   }
   makeTable(data) {

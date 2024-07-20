@@ -4,7 +4,7 @@ export default class CategoriesPage extends TablePage {
   constructor({ target }) {
     super({
       target: target,
-      table: "categories"
+      tableName: "categories"
     });
   }
   makeTable(data) {

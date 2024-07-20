@@ -6,9 +6,11 @@ import DashboardSideBar from "./components/sidebar.js";
 import MainPage from "./partials/_main.js";
 
 class Dashboard {
+  content = "#dashboard-content";
+  sidebar = "#dashboard-sidebar";
   constructor() {
-    this.tables = new Tables({ target: "#dashboard-content" });
-    this.charts = new Charts({ target: "#dashboard-content" });
+    this.tables = new Tables({ target: this.content });
+    this.charts = new Charts({ target: this.content });
     this.init();
   }
 
@@ -16,14 +18,14 @@ class Dashboard {
     // MainPage.init(); // just why?
 
     DashboardSideBar.init({
-      target: "#dashboard-sidebar",
+      target: this.sidebar,
       callback: this.goToPage.bind(this)
     });
   }
 
   _goToPage(url) {
     // prevent duplicate loading
-    $("#dashboard-content").html("");
+    $(this.content).html("");
 
     const pages = {
       main: () => MainPage.init(),

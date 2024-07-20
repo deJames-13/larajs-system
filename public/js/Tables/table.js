@@ -12,45 +12,34 @@ const formPages = {
   promos: PromosForm
 };
 
-export default class TablePage {
-  constructor({ target, table = null, title = null, withActions = true }) {
-    this.parent = "#table-wrapper";
-    this.target = target;
-    this.table = table;
-    this.dataTable = null;
-    this.statusColors = statusColors;
-    this.withActions = withActions;
-    if (title) this.title = title;
-    else if (this.table && this.table.length > 0) this.title = this.table.charAt(0).toUpperCase() + this.table.slice(1) + " DataTable";
+const datatableProps = {
+  parent: "#table-wrapper",
+  tableId: "",
+  tableName: "",
+  tableTitle: "",
+  limit: 10,
+  minLimit: 1,
+  maxLimit: 100,
+  fileButtons: ["pdf", "excel", "print", "csv"],
+  withActions: false,
+  statusColors: statusColors
+};
+
+export default class TablePage extends DataTable {
+  constructor(props = {}) {
+    super(props);
+    Object.assign(this, datatableProps, props);
+    if (this.tableTitle !== "") this.tableTitle = tableTitle;
+    else if (this.tableName && this.tableName.length > 0) this.tableTitle = this.tableName.charAt(0).toUpperCase() + this.tableName.slice(1) + " DataTable";
     else "";
     this.init();
   }
-
-  makeTable() {
-    return [];
-  }
-
-  setDataTable() {
-    this.dataTable = new DataTable({
-      parent: this.parent,
-      tableId: this.table + "Table",
-      tableName: this.table,
-      tableTitle: this.title,
-      limit: 10,
-      minLimit: 1,
-      maxLimit: 100,
-      fileButtons: ["pdf", "excel", "print", "csv"],
-      makeTable: this.makeTable.bind(this),
-      withActions: this.withActions
-    });
-  }
-
   init() {
     this.render(this.target);
-    this.setDataTable();
     this.bindEvents();
     this.handlePage();
   }
+
   bindEvents() {
     const urlParams = new URLSearchParams(window.location.search);
 
@@ -73,6 +62,7 @@ export default class TablePage {
         window.history.pushState({}, null, newUrl);
         this.formPage();
       });
+    super.bindEvents();
   }
   handlePage() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -84,12 +74,12 @@ export default class TablePage {
     }
   }
   formPage(id) {
-    const FormPage = formPages[this.table];
+    const FormPage = formPages[this.tableName];
     if (!FormPage) return;
     new FormPage({
       id: id,
       target: this.target,
-      name: this.table + `${id ? " #" + id : ""}`,
+      name: this.tableName + `${id ? " #" + id : ""}`,
       type: id ? "edit" : "create",
       exitPage: () => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -112,5 +102,6 @@ export default class TablePage {
         </div>
         `;
     $(target).html(page);
+    super.render();
   }
 }

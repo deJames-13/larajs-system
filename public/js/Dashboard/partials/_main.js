@@ -51,7 +51,8 @@ export default class MainPage {
           <div class="relative h-64 p-8 px-4 bg-primary bg-opacity-20 border border-primary border-opacity-50 rounded-lg">
             <div class="flex flex-col items-start text-3xl">
               <h1 class="text-2xl  font-light">Welcome back!</h1>
-              <span id="username" class=" capitalize font-extrabold text-4xl z-[5]">${this.user.fullname || this.user.username}</span>
+              <span id="username" class="font-extrabold text-4xl z-[5]">${this.user.fullname || this.user.username}</span>
+              <span id="username" class=" capitalize font-extrabold text-sm text-gray-500">@${this.user.fullname && this.user.username}</span>
             </div>
             <button class="mt-16 btn bg-primary bg-opacity-60 text-white uppercase border-none hover:bg-secondary">View Profile</button>
 
