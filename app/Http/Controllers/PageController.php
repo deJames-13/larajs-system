@@ -87,7 +87,10 @@ class PageController extends Controller
     // ADMIN DASHBOARD
     public function dashboard()
     {
-        return view('admin.dashboard', ['page' => 'Dashboard']);
+
+        $metaDatas = Order::metadata();
+
+        return view('admin.dashboard', ['page' => 'Dashboard', 'metaDatas' => $metaDatas]);
     }
 
     // PROFILE

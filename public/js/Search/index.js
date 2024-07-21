@@ -49,7 +49,7 @@ export default class SearchPage {
   }
 
   getResults(response) {
-    console.log(response);
+    // console.log(response);
     this.content.empty();
 
     this.paginate(response);

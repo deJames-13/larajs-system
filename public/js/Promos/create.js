@@ -4,6 +4,7 @@ import Carousel from "../components/Carousel.js";
 export default class PromosCreate {
   constructor() {
     this.carousel = null;
+    this.images = ["https://placehold.co/400x600?text=item"];
     this.init();
     this.setupForm();
     this.setupValidation();
@@ -12,8 +13,11 @@ export default class PromosCreate {
   init() {
     $(document).ready(() => {
       $("#image-input").change(() => {
-        const images = Array.from($("#image-input")[0].files).map(file => URL.createObjectURL(file));
-        this.carousel = new Carousel(".item-carousel", images, ".prev", ".next");
+        this.images = Array.from($("#image-input")[0].files).map(file => URL.createObjectURL(file));
+        this.carousel = new Carousel({
+          id: "promos-create",
+          images: this.images
+        });
       });
 
       $(".prev").click(() => {

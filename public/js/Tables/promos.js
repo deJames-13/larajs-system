@@ -4,7 +4,7 @@ export default class PromosPage extends TablePage {
   constructor({ target }) {
     super({
       target: target,
-      table: "promos"
+      tableName: "promos"
     });
   }
   makeTable(data) {
@@ -25,7 +25,7 @@ export default class PromosPage extends TablePage {
         "End Date": `${promo.end_date}`,
         "": `
             <div name="actions" class=" ${isThrashed ? "hidden" : "flex"} actions print:hidden w-full items-center justify-end gap-3">
-                <a href="/promos/${promo.id}" class="btn btn-xs btn-primary">View</a>
+                <button id="row-view__${promo.id}" data-id="${promo.id}" class="row-view btn btn-xs btn-primary">View</button>
                 <button id="row-edit__${promo.id}" data-id="${promo.id}" class="row-edit btn btn-xs bg-secondary text-white">Edit</button>
                 <button id="row-delete__${promo.id}" data-id="${promo.id}" class="row-delete btn btn-xs bg-red-400">Delete</button>
             </div>

@@ -51,8 +51,6 @@ export default class MultipleSelect {
     return this.component;
   }
 
-  bindEvents() {}
-
   addSelected(option) {
     if (!this.tagsWrapper) return;
     if (this.selectedOptions.includes(option)) return;
@@ -185,26 +183,28 @@ export default class MultipleSelect {
 
   _source(query = {}) {
     if (typeof this.source !== "function") return;
+    $("#mini-loader-" + this.name).show();
     const res = this.source(query);
     res instanceof Promise &&
-      res.then((options, selectedOptions) => {
-        selectedOptions && this.setSelection(selectedOptions);
-        options && this.setOptions(options);
-        this.update();
-      });
+      res
+        .then((options, selectedOptions) => {
+          selectedOptions && this.setSelection(selectedOptions);
+          options && this.setOptions(options);
+          this.update();
+        })
+        .finally(() => {
+          $("#mini-loader-" + this.name).hide();
+        });
   }
 
   render() {
     const HTML = /* HTML */ `
-      <div
-        class="dropdown dropdown-hover
-       w-full"
-      >
+      <div class="dropdown dropdown-hover w-full">
         <div tabindex="0" role="button" class="w-full flex gap-2 p-2 px-4 border rounded-lg border-primary bg-transparent">
-          <div className="flex items-center gap-1">
+          <div class="flex items-center gap-2">
             <i class="fas fa-caret-down"></i>
             <span class="placeholder">${this.placeholder}</span>
-            <span id="mini-loader" class="loading loading-spinner text-primary"></span>
+            <span id="mini-loader-${this.name}" class="loading loading-spinner text-primary"></span>
           </div>
           <ul id="options-list" class="relative options flex flex-wrap gap-2"></ul>
         </div>

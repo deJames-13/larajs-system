@@ -1,21 +1,31 @@
-import ajaxRequest from "/js/assets/ajaxRequest.js";
-import Pagination from "/js/components/Paginate.js";
+import ajaxRequest from "../assets/ajaxRequest.js";
+import { hideLoading, showLoading } from "../assets/loading.js";
+import Pagination from "../components/Paginate.js";
 
 const defaultProps = {
+  element: null,
   baseApi: "/api/",
-  data: [],
-  fileButtons: [],
   limit: 10,
-  makeTable: () => {},
   maxLimit: 50,
   minLimit: 10,
   parent: "",
-  table: [],
   tableId: "",
   tableName: "",
   tableTitle: "",
   html: "",
-  element: null,
+  data: [],
+  fileButtons: [],
+  table: [],
+  sortBy: {
+    display: true,
+    filters: [
+      // { label: "Latest", value: "latest" },
+      // { label: "Popular", value: "popular" },
+      // { label: "Most Bought", value: "most-bought" }
+    ],
+    selected: { label: "ID", value: "id" },
+    order: "desc"
+  },
   withImport: true,
   withActions: true
 };
@@ -26,35 +36,33 @@ export default class DataTable {
     this.tableId = this.tableId || this.tableName + "Table";
 
     // TODO: Other queries like sorting
+    this.sortBy = { ...defaultProps.sortBy, ...props.sortBy };
+    this.sortBy.display = this.sortBy.filters.length > 0 && this.sortBy.display;
+    let sort = this.sortBy.display
+      ? {
+          sort: this.sortBy.selected.value,
+          order: this.sortBy.order
+        }
+      : {};
     this.query = {
       search: "",
       limit: this.limit,
       minLimit: this.minLimit,
       maxLimit: this.maxLimit,
-      page: 1
+      page: 1,
+      ...sort
     };
     this.showPrint = this.showPrint.bind(this);
     this.makePdf = this.makePdf.bind(this);
     this.makeExcel = this.makeExcel.bind(this);
     this.makeCsv = this.makeCsv.bind(this);
-    this.queryCallback = ({ data }) => this.updateTable(data);
 
-    this.init();
     return this;
   }
 
-  init() {
-    this.render();
-    this.makeFileButtons();
+  bindEvents() {
     this.bindActions();
-    this.onQuery(this.queryCallback);
-
-    Object.keys(this.query).map(key => {
-      $(`#${key}`).val(this.query[key]);
-    });
-
-    this.fetchData({ onFetch: this.queryCallback });
-    this.checkParams();
+    this.bindQueries();
   }
 
   checkParams() {
@@ -92,7 +100,7 @@ export default class DataTable {
       fileType = "csv";
       mimeType = "text/csv";
     }
-
+    showLoading();
     $.ajax({
       url: "/api/exports/" + this.tableName + "/" + fileType,
       type: "GET",
@@ -110,6 +118,7 @@ export default class DataTable {
         const fileName = `${this.tableName}-${new Date().toISOString().replace(".", "-")}`;
         a.download = `${fileName}.${fileType}`;
         a.click();
+        hideLoading();
       },
       error: function (xhr, status, error) {
         console.error("Request failed: " + status + ", " + error);
@@ -167,12 +176,13 @@ export default class DataTable {
     const { links, meta } = response;
     if (links && (links.next || links.prev || meta.current_page > 1)) {
       const pagination = new Pagination(links, meta.current_page).render("#paginations");
-      pagination.onClick(page => this.handleQuery({ ...this.query, page: page }, this.queryCallback));
+      pagination.onClick(page => this.handleQuery({ ...this.query, page: page }, this.queryCallback.bind(this)));
     }
   }
 
   fetchData({ onFetch = () => {}, baseApi = null, query = {} }) {
     query = { ...this.query, ...query };
+    // console.log(query);
     const qstr = Object.keys(query).reduce((result, key) => `${result}${key}=${query[key]}&`, "");
     const url = baseApi ?? this.baseApi + this.tableName + "?" + qstr; //console.log(url);
     const token = document.querySelector('meta[name="api-token"]').getAttribute("content");
@@ -223,35 +233,37 @@ export default class DataTable {
   }
 
   bindActions() {
-    $(document).ready(() => {
-      $(document).on("click", ".row-delete", e => {
+    $(document)
+      .on("click", ".row-delete", e => {
         const id = $(e.target).data("id");
         this.confirmAction(() => this.handleDelete(id));
-      });
-      $(document).on("click", ".row-restore", e => {
+      })
+      .on("click", ".row-restore", e => {
         const id = $(e.target).data("id");
         this.confirmAction(() => this.handleRestore(id));
       });
-    });
-    $("#alt-action").hide();
-    $("#btn-trash-" + this.tableName).on("click", () => {
-      this.showThrashed();
-      $("#btn-trash-" + this.tableName).hide();
-      $("#btn-table-" + this.tableName).show();
-      $(".actions").hide();
-      $(".alt-action").show();
-    });
-    $("#btn-table-" + this.tableName).on("click", () => {
-      this.showNotThrashed();
-      $("#btn-table-" + this.tableName).hide();
-      $("#btn-trash-" + this.tableName).show();
-      $(".actions").show();
-      $(".alt-action").hide();
-    });
-    $("#import-form").on("submit", e => {
-      e.preventDefault();
-      this.importExcel();
-    });
+
+    $("#btn-trash-" + this.tableName)
+      .off()
+      .on("click", () => {
+        this.showThrashed();
+        $(".actions, " + "#btn-trash-" + this.tableName).hide();
+        $(".alt-action, " + "#btn-table-" + this.tableName).show();
+      });
+    $("#btn-table-" + this.tableName)
+      .off()
+      .on("click", () => {
+        this.showNotThrashed();
+        $(".alt-action, " + "#btn-table-" + this.tableName).hide();
+        $(".actions, " + this.tableName).show();
+      });
+
+    $("#import-form")
+      .off()
+      .on("submit", e => {
+        e.preventDefault();
+        this.importExcel();
+      });
   }
 
   confirmAction(callback = () => {}) {
@@ -321,7 +333,9 @@ export default class DataTable {
   }
 
   showThrashed() {
-    this.baseApi = this.baseApi + "thrashed/";
+    if (!this.baseApi.endsWith("thrashed/")) {
+      this.baseApi += "thrashed/";
+    }
     this.updateTable();
 
     $("#table-title").after(`<h2 class="text-xl font-bold text-gray-600 text-left"> Retrieve thrashed records. </h2>`);
@@ -333,10 +347,80 @@ export default class DataTable {
 
   showNotThrashed() {
     this.baseApi = this.baseApi.replace("thrashed/", "");
-    $("#table-title").next().remove();
     this.updateTable();
+
+    $("#table-title").next().remove();
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.delete("table");
+    const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+    window.history.pushState({}, null, newUrl);
   }
 
+  bindQueries() {
+    this.onQuery(this.queryCallback.bind(this));
+
+    // toggle order btn
+    this.sortBy.display &&
+      $("#order-btn")
+        .off()
+        .on("click", e => {
+          const order = this.query.order === "desc" ? "asc" : "desc";
+          const btn = $(`[data-order=${this.query.order}]`);
+          btn.attr("data-order", order);
+          btn.find(`[name=${this.query.order}]`).hide();
+          btn.find(`[name=${order}]`).show();
+          this.query.order = order;
+          this.handleQuery(this.query, this.queryCallback.bind(this));
+        });
+
+    // sort select
+    $("#sort-select select")
+      .off()
+      .on("change", e => {
+        this.query.sort = e.target.value;
+        this.handleQuery(this.query, this.queryCallback.bind(this));
+      });
+  }
+
+  renderQueries() {
+    const sort = /* HTML */ `
+      <div id="sort-by" class="my-2 flex justify-end items-center gap-2">
+        <label for="sort-by" class="text-sm">Sort by: </label>
+
+        <div id="sort-select" class="flex items-center gap-1 border border-gray-300 rounded-full focus-within:outline-double focus-within:outline-gray-300">
+          <!-- Order Button Toggler -->
+          <button data-order="desc" type="button" id="order-btn" class="btn btn-sm btn-ghost aspect-square">
+            <i name="desc" class="fas fa-arrow-down-wide-short"></i>
+            <i style="display: none;" name="asc" class="fas fa-arrow-down-short-wide"></i>
+          </button>
+
+          <select class="w-fit input input-sm rounded-full focus:outline-none border-none">
+            ${this.sortBy.filters.map(filter => `<option value="${filter.value}">${filter.label}</option>`).join("")}
+          </select>
+        </div>
+      </div>
+    `;
+
+    const HTML = /* HTML */ `
+      <div class="w-full flex flex-grow flex-wrap gap-2">
+        <div class="w-full flex flex-wrap gap-2 items-center">
+          <!-- View Limit -->
+          <div id="limit-wrapper" class="text-sm">
+            <span>Items: </span>
+            <input id="limit" type="number" min="10" value="10" max="50" class="input input-bordered input-sm max-w-[69px] max-h-[35px]" />
+          </div>
+          <!-- Sort By -->
+          ${this.sortBy.display ? sort : ""}
+        </div>
+      </div>
+    `;
+
+    return HTML;
+  }
+
+  makeTable() {
+    return [];
+  }
   createTable() {
     if (this.table.length === 0) {
       return /* HTML */ `<div id="datatable" class="w-full overflow-auto text-center">No data found</div>`;
@@ -365,9 +449,12 @@ export default class DataTable {
       </div>
     `;
   }
+  queryCallback({ data }) {
+    this.updateTable(data);
+  }
 
   updateTable(data = null, raw = false) {
-    if (!data) return this.fetchData({ onFetch: this.queryCallback });
+    if (!data) return this.fetchData({ onFetch: this.queryCallback.bind(this) });
     this.table = raw ? data : this.makeTable(data);
     this.element.find("#datatable").html(this.createTable());
   }
@@ -385,16 +472,14 @@ export default class DataTable {
           <input id="search" type="text" placeholder="" class="input input-bordered input-sm max-h-[35px]" />
         </div>
       </div>
-      <div class="print:w-0 print:hidden flex justify-between items-end space-x-2 py-4">
-        <div class="w-full flex flex-wrap gap-2">
-          <div id="file-buttons" class="flex flex-wrap gap-2 items-center"></div>
-          <div id="limit-wrapper" class="container">
-            <span>Items: </span>
-            <input id="limit" type="number" min="10" value="10" max="50" class="input input-bordered input-sm max-w-[69px] max-h-[35px]" />
-          </div>
-        </div>
 
-        <div id="paginations" class="container flex justify-end items-end"></div>
+      <div id="file-buttons" class="flex flex-wrap gap-2 items-center"></div>
+
+      <div class="print:w-0 print:hidden flex justify-between items-end space-x-2 py-4">
+        <!-- Queries -->
+        ${this.renderQueries()}
+        <!-- Paginations -->
+        <div id="paginations" class="flex justify-end items-end"></div>
       </div>
     `;
 
@@ -402,6 +487,14 @@ export default class DataTable {
     this.html += this.withActions ? this.actions() : "";
     this.html += this.createTable();
     this.element = $(`${this.parent} `).html(this.html);
+
+    this.makeFileButtons();
+    Object.keys(this.query).map(key => {
+      $(`#${key}`).val(this.query[key]);
+    });
+    this.fetchData({ onFetch: this.queryCallback.bind(this) });
+    this.checkParams();
+    this.bindEvents();
 
     return this;
   }

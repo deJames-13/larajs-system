@@ -3,13 +3,16 @@
 namespace App\Exports\Products;
 
 use App\Models\Product;
+use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Concerns\FromArray;
-use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
 use Maatwebsite\Excel\Concerns\WithTitle;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Concerns\WithDrawings;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
+use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
 
-
-class ProductImagesSheet implements FromArray, WithHeadings, WithCustomCsvSettings, WithTitle
+class ProductImagesSheet implements FromArray, WithHeadings, WithCustomCsvSettings, WithTitle, WithDrawings, WithEvents
 {
     private $data;
 
@@ -44,6 +47,33 @@ class ProductImagesSheet implements FromArray, WithHeadings, WithCustomCsvSettin
         return $this->data->toArray();
     }
 
+    public function drawings()
+    {
+        $drawings = [];
+
+        foreach ($this->data as $key => $product) {
+            $drawing = new Drawing();
+            $drawing->setName($product['image_name']);
+            $drawing->setPath(public_path($product['image_path']));
+            $drawing->setHeight(200);
+            $drawing->setCoordinates('E' . ($key + 2));
+
+            $drawings[] = $drawing;
+        }
+
+        return $drawings;
+    }
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class => function (AfterSheet $event) {
+                foreach ($this->data as $key => $product) {
+                    $event->sheet->getRowDimension($key + 2)->setRowHeight(200);
+                }
+            }
+        ];
+    }
+
     public function headings(): array
     {
         return [
@@ -51,7 +81,7 @@ class ProductImagesSheet implements FromArray, WithHeadings, WithCustomCsvSettin
             'image_id',
             'image_name',
             'image_path',
-
+            'image' // the actual image for drawing
         ];
     }
 

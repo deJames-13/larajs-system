@@ -134,7 +134,7 @@ export default class SignUp {
       url: "/register",
       data: formData,
       onSuccess: response => {
-        console.log(response);
+        // console.log(response);
         this.modal.remove();
         window.location.href = "/";
       },

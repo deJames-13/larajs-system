@@ -37,7 +37,7 @@ export default class Cart {
     ajaxRequest.delete({
       url: `/api/cart/${id}`,
       onSuccess: response => {
-        console.log(response);
+        // console.log(response);
         Swal.fire("Deleted!", "Your item has been deleted.", "success");
         $("#cart_item_" + id).remove();
         const subtotal = this.products.reduce((acc, product) => acc + product.total, 0);

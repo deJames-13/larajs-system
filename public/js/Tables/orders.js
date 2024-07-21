@@ -4,7 +4,7 @@ export default class OrdersPage extends TablePage {
   constructor({ target }) {
     super({
       target: target,
-      table: "orders",
+      tableName: "orders",
       withActions: true
     });
     $("#action-buttons").remove();
