@@ -8,13 +8,8 @@
 		<div class="divider"></div>
 		<div
 			class="container grid grid-cols-1 lg:grid-cols-2 gap-4 border border-secondary border-opacity-25 rounded-md shadow-md">
-			<div
-				class="left image-container flex flex-col justify-center space-y-2 border-r-2 border-secondary border-opacity-25 ">
-
-				<div>
-					<x-card.carousel />
-				</div>
-
+			<div class="left image-container flex flex-col justify-center space-y-2 ">
+				<x-card.carousel />
 			</div>
 			<div data-id={{ $item->id }} class="right info-container py-4 px-2">
 
@@ -26,18 +21,29 @@
 				</div>
 				{{-- Item SKU Code Input --}}
 				<div class="flex items-center space-x-2">
+					<label for="sku_code" class="text-xs text-gray-500">Brand:</label>
+					<p id="sku_code" class="text-xs text-gray-500">
+						{{ $item->brand }}
+					</p>
+				</div>
+				{{-- Item SKU Code Input --}}
+				<div class="flex items-center space-x-2">
 					<label for="sku_code" class="text-xs text-gray-500">SKU Code:</label>
 					<p id="sku_code" class="text-xs text-gray-500">
 						{{ $item->sku_code }}
 					</p>
 				</div>
-				{{-- Item SKU Code Input --}}
+				{{-- Item Quantity --}}
 				<div class="flex items-center space-x-2">
 					<label for="sku_code" class="text-xs text-gray-500">Available:</label>
 					<p id="item_quantity" data-item-quantity="{{ $item->stock->quantity }}" class="text-xs text-gray-500">
 						{{ $item->stock->quantity }}
 					</p>
 				</div>
+
+				{{-- Item Categories --}}
+				<div id="ratings-wrapper" class="flex flex-wrap items-center space-x-2"></div>
+				<div id="categories-wrapper" class="flex flex-wrap items-center space-x-2"></div>
 				<div class="divider"></div>
 				{{-- Item Description Input --}}
 				<div class="flex flex-col space-y-2">
@@ -58,16 +64,16 @@
 					<div class="flex flex-col">
 						<label for="quantity" class="text-xs text-gray-500">Quantity</label>
 						<div name="quantity" id="quantity" class="flex flex-row items-center space-x-2">
-							<button id="sub_qty" class="aspect-square w-10 flex items-center justify-center">
-								<fas class="fa-minus"></fas>
+							<button id="sub_qty" class="btn btn-sm rounded-full aspect-square w-10 flex items-center justify-center">
+								<fas class="fas fa-minus"></fas>
 							</button>
 							<div>
-								<p class=" aspect-square w-10 content-center text-center font-bold text-md" id="quantity_count">
+								<p class="aspect-square w-10 content-center text-center font-bold text-md" id="quantity_count">
 									1
 								</p>
 							</div>
-							<button id="add_qty" class="aspect-square w-10 flex items-center justify-center">
-								<fas class="fa-plus"></fas>
+							<button id="add_qty" class="btn btn-sm rounded-full aspect-square w-10 flex items-center justify-center">
+								<fas class="fas fa-plus"></fas>
 							</button>
 						</div>
 					</div>
@@ -78,6 +84,7 @@
 
 			</div>
 		</div>
+
 		<div role="tablist" class="tabs tabs-lifted">
 			<input type="radio" id="description_tab" name="my_tabs" role="tab" class="tab" aria-label="Description"
 				checked />
@@ -97,6 +104,9 @@
 
 
 	@push('scripts')
+		<script>
+			let product = @json($item);
+		</script>
 		<script type="module" src="{{ asset('js/Products/show.js') }}"></script>
 	@endpush
 
