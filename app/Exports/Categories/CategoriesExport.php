@@ -2,18 +2,20 @@
 
 namespace App\Exports\Categories;
 
-use App\Models\Category;
-use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
-class CategoriesExport implements FromQuery
+class CategoriesExport implements WithMultipleSheets
 {
     use Exportable;
     /**
-     * @return \Illuminate\Support\Collection
+     * @return array
      */
-    public function query()
+    public function sheets(): array
     {
-        return Category::query();
+        return [
+            new CategoriesSheet(),
+            new CategoryImagesSheet(),
+        ];
     }
 }
