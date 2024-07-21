@@ -11,14 +11,13 @@ const defaultProps = {
 };
 export default class ViewBrand extends FormModal {
   constructor(props = {}) {
-    super(defaultProps);
-    Object.assign(this, props);
+    super({ ...defaultProps, ...props });
   }
   makeContent() {
     console.log(this.data); // make view based on this.data
     return /*HTML*/ `
     <div>
-        Content
+      Content
     </div>
     `;
   }
