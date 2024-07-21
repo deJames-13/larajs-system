@@ -235,7 +235,7 @@ export default class ProfileForm extends FormCard {
     ajaxRequest.post({
       url: "/api/profile/delete/" + this.user_profile.id,
       onSuccess: response => {
-        console.log(response);
+        // console.log(response);
         Swal.fire({
           title: "Account deleted!",
           text: "Returning to homepage...",
@@ -254,7 +254,7 @@ export default class ProfileForm extends FormCard {
       url: "/api/profile/status/" + this.user_profile.id,
       data: { status: "inactive" },
       onSuccess: response => {
-        console.log(response);
+        // console.log(response);
         Swal.fire({
           title: "Account deactivated!",
           text: "Returning to homepage...",
@@ -273,7 +273,7 @@ export default class ProfileForm extends FormCard {
       url: "/api/confirm-password",
       data: { password },
       onSuccess: response => {
-        console.log(response);
+        // console.log(response);
       },
       onError: response => {
         console.log(response);

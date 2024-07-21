@@ -31,12 +31,11 @@ const init = () => {
 
 // POST CART
 $(document).on("click", "#cart-add", function () {
-  console.log("clicked");
   const token = document.querySelector('meta[name="api-token"]').getAttribute("content");
   var data = new FormData();
   data.append("product_id", item.id);
   data.append("quantity", item.quantity);
-  console.log(data);
+  // console.log(data);
 
   ajaxRequest.post({
     url: "/api/cart",

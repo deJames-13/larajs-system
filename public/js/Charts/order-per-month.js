@@ -22,13 +22,13 @@ export default class OrderPerMonth {
     const data = chartData || [];
 
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    var ctx = $(this.target).find("#order-per-month")[0];
+    const ctx = $(this.target);
     if (!ctx) {
       console.error("Canvas element for products sold chart not found.");
       return;
     }
-    // ctx = ctx.getContext("2d");
 
+    this.chart && this.chart.destroy();
     this.chart = new Chart(ctx, {
       type: "line",
       data: {

@@ -180,7 +180,7 @@ export default class ProductsEdit {
 
     const formData = new FormData(form);
     formData.append("_method", "PUT");
-    console.log(formData);
+    // console.log(formData);
     const token = document.querySelector('meta[name="api-token"]').getAttribute("content");
 
     ajaxRequest.post({

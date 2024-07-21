@@ -6,10 +6,10 @@ import ProductsSold from "./products-sold.js";
 export default class Charts {
   constructor({ target }) {
     this.target = target;
-    this.customerPerAddress = new CustomerPerAddress({ target: this.target });
-    this.orderPerMonth = new OrderPerMonth({ target: this.target });
-    this.ordersRevenue = new OrdersRevenue({ target: this.target });
-    this.productsSold = new ProductsSold({ target: this.target });
+    this.customerPerAddress = new CustomerPerAddress({ target: "#customer-per-address" });
+    this.orderPerMonth = new OrderPerMonth({ target: "#order-per-month" });
+    this.ordersRevenue = new OrdersRevenue({ target: "#orders-revenue" });
+    this.productsSold = new ProductsSold({ target: "#products-sold" });
   }
   init() {
     this.showAllCharts();

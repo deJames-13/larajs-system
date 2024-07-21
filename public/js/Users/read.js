@@ -5,13 +5,8 @@ export default class UserView extends UserFormPage {
     this.userId = userId;
     this.id = "user_view_modal";
     this.width = "3xl";
-    this.init();
-  }
-
-  init() {
     this.fetchUser(this.userId).then(response => {
-      super.init();
-      console.log(this.user);
+      this.init();
     });
   }
 

@@ -4,14 +4,12 @@ export default class NoStock {
   constructor({ target }) {
     this.target = target;
     this.chart = null;
-    this.fetchNoStockData();
   }
 
   fetchNoStockData() {
     ajaxRequest.get({
-      url: "/api/charts/no-stock",  // Update with the correct route if necessary
+      url: "/api/charts/no-stock", // Update with the correct route if necessary
       onSuccess: response => {
-        console.log(response);
         this.createNoStockChart(response);
       },
       onError: error => {
@@ -20,13 +18,18 @@ export default class NoStock {
     });
   }
 
-  createNoStockChart(NoStockData) {
-    const data = NoStockData || [];
+  async createNoStockChart(noStockData) {
+    if (!Array.isArray(noStockData)) {
+      noStockData = [];
+    }
+    const data = noStockData || [];
+    var isNoData = data.length === 0;
 
-    const ctx = $(this.target).find("#no-stock")[0].getContext("2d");
+    const ctx = $(this.target);
 
+    this.chart && this.chart.destroy();
     this.chart = new Chart(ctx, {
-      type: "bar",
+      type: "doughnut",
       data: {
         labels: data.map(item => item.name),
         datasets: [
@@ -51,6 +54,16 @@ export default class NoStock {
       },
       options: {
         responsive: true,
+        plugins: {
+          title: {
+            display: isNoData,
+            text: "Nothing to show",
+            align: "center"
+          },
+          legend: {
+            display: false
+          }
+        },
         scales: {
           y: {
             beginAtZero: true
@@ -61,12 +74,6 @@ export default class NoStock {
   }
 
   render() {
-    // Render the chart when called
     this.fetchNoStockData();
   }
 }
-
-// Initialize the chart when the document is ready
-$(document).ready(function () {
-  const NoStock = new NoStock({ target: "#chart-container" });  // Fixed class name
-});

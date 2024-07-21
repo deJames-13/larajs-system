@@ -1,13 +1,19 @@
+import AddBrand from "../Brands/add-modal.js";
 import AddCategory from "../Categories/add-modal.js";
 import MultipleSelect from "../components/MultipleSelect.js";
+import Select from "../components/Select.js";
 import FormPage from "../layouts/FormPage.js";
 import ProductsCreate from "./create.js";
 import ProductsEdit from "./edit.js";
 export default class ProductsForm extends FormPage {
   formInstance = null;
   msCategories = null;
+  selectBrand = null;
+  brands = {
+    selected: {},
+    options: []
+  };
   categories = {
-    data: [],
     selected: [],
     options: []
   };
@@ -16,9 +22,26 @@ export default class ProductsForm extends FormPage {
     super(props);
     this.init();
   }
-
-  init() {
-    super.init();
+  mapOptions(options) {
+    return options.map(option => {
+      return { value: option.id, label: option.name };
+    });
+  }
+  async fetchBrands({ query = {} }) {
+    const q = {
+      limit: 100,
+      ...query
+    };
+    return this.fetch("brands", q).then(({ data }) => {
+      this.brands.options = this.mapOptions(data);
+    });
+  }
+  brandSource(query = {}) {
+    return new Promise((resolve, reject) => {
+      this.fetchBrands({ query }).then(() => {
+        resolve(this.brands.options, this.brands.selected);
+      });
+    });
   }
 
   async fetchCategories({ query = {} }) {
@@ -26,21 +49,13 @@ export default class ProductsForm extends FormPage {
       limit: 100,
       ...query
     };
-    $("#mini-loader").show();
     return this.fetch("categories", q).then(({ data }) => {
-      $("#mini-loader").hide();
       this.categories.data = data;
       this.categories.options = this.mapOptions(data);
     });
   }
 
-  mapOptions(options) {
-    return options.map(option => {
-      return { value: option.id, label: option.name };
-    });
-  }
-
-  multiSelectSource(query = {}) {
+  categoriesSource(query = {}) {
     return new Promise((resolve, reject) => {
       this.fetchCategories({ query }).then(() => {
         resolve(this.categories.options, this.categories.selected);
@@ -48,21 +63,34 @@ export default class ProductsForm extends FormPage {
     });
   }
 
-  setMultiSelect() {
+  categoriesSelect() {
     this.msCategories = new MultipleSelect({
       name: "categories",
       target: $("#categories-select"),
-      source: this.multiSelectSource.bind(this)
+      source: this.categoriesSource.bind(this)
+    });
+  }
+
+  brandSelect() {
+    this.selectBrand = new Select({
+      name: "brands",
+      target: $("#brands-select"),
+      placeholder: "Select brand: ",
+      placeholderLabel: "No brand selected",
+      source: this.brandSource.bind(this)
     });
   }
 
   handleForm() {
-    this.setMultiSelect();
+    this.categoriesSelect();
+    this.brandSelect();
     if (this.type === "edit") {
       $(document).ready(() => {
         this.formInstance = new ProductsEdit().then(({ data }) => {
           this.categories.selected = this.mapOptions(data.categories);
+          this.brands.selected = this.mapOptions(data.brands);
           this.msCategories && this.msCategories.setSelection(this.categories.selected).update();
+          this.selectBrand && this.selectBrand.makeSelected(this.brands.selected[0]);
         });
       });
     } else if (this.type === "create") {
@@ -76,6 +104,9 @@ export default class ProductsForm extends FormPage {
     super.bindEvents();
     $("#add-category").on("click", () => {
       new AddCategory();
+    });
+    $("#add-brand").on("click", () => {
+      new AddBrand();
     });
 
     $(document).on("click", "[data-select-event]", e => {
@@ -134,13 +165,9 @@ export default class ProductsForm extends FormPage {
 
           <!-- Item Brand Select -->
           <div class="flex gap-4 items-end">
-            <div class="flex flex-grow flex-col space-y-2">
-              <label for="brand_id" class="text-lg font-semibold">Brand</label>
-              <select name="brand_id" id="brand_id" class="select select-bordered">
-                <option value="">Select a brand</option>
-              </select>
-            </div>
-            <button type="button" class="btn btn-outline btn-primary">
+            <div id="brands-select" class="w-full"></div>
+
+            <button id="add-brand" type="button" class="btn btn-outline btn-primary">
               <i class="fas fa-plus"></i>
               <span> Add Brand </span>
             </button>

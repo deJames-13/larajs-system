@@ -4,7 +4,7 @@ export default class CategoriesPage extends TablePage {
   constructor({ target }) {
     super({
       target: target,
-      table: "categories"
+      tableName: "categories"
     });
   }
   makeTable(data) {
@@ -21,7 +21,7 @@ export default class CategoriesPage extends TablePage {
           </div>`,
         "": `
           <div name="actions" class=" ${isThrashed ? "hidden" : "flex"} actions print:hidden w-full items-center justify-end gap-3">
-              <a href="/categories/${category.id}" class="btn btn-xs btn-primary">View</a>
+              <button id="row-view__${category.id}" data-id="${category.id}" class="row-view btn btn-xs btn-primary">View</button>
               <button id="row-edit__${category.id}" data-id="${category.id}" class="row-edit btn btn-xs bg-secondary text-white">Edit</button>
               <button id="row-delete__${category.id}" data-id="${category.id}" class="row-delete btn btn-xs bg-red-400">Delete</button>
           </div>

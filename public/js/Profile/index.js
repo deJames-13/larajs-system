@@ -26,7 +26,6 @@ export default class ProfilePage {
       this.user_profile = await this.profile.getProfile();
       this.userCard = UserCard.init({ target: this.sidebar, user: this.user_profile });
       NavSideBar.init({ callback: this.gotoPage.bind(this) });
-      this.gotoPage(this.url);
     } catch (error) {
       console.error("Failed to initialize profile page:", error);
     }
