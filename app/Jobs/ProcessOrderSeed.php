@@ -69,6 +69,16 @@ class ProcessOrderSeed implements ShouldQueue
                     ['quantity' => rand(1, 5),]
                 );
 
+                // if status is complete add rating and review
+                if ($status === 'completed') {
+                    $order->rating()->create([
+                        'rating' => rand(1, 5),
+                        'title' => fake()->sentence(),
+                        'review' => fake()->sentence(),
+                        'isShowUser' => rand(0, 1),
+                    ]);
+                }
+
                 // Log Message: (color blue)[Order Created] Order ID: 1, Customer ID: 1, Product ID: 1, Quantity: 1, Status: completed, Paid Date: 2021-09-01 00:00:00, Created At: 2021-08-01 00:00:00, Updated At: 2021-08-08 00:00:00
 
                 // status ansi color. pending: yellow, cancelled: red, completed green, default: blue
