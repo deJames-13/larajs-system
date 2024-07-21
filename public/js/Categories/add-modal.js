@@ -1,4 +1,4 @@
-import Modal from "../components/Modal.js";
+import FormModal from "../layouts/FormModal.js";
 import CategoriesCreate from "./create.js";
 const defaultProps = {
   name: "add-category",
@@ -8,16 +8,9 @@ const defaultProps = {
   isShown: true,
   width: "lg"
 };
-export default class AddCategory extends Modal {
-  constructor(props = {}) {
-    super();
-    Object.assign(this, defaultProps, props);
-    this.modal && this.modal.remove();
-    this.top = this.makeTop();
-    this.content = this.makeContent();
-    this.action = this.makeAction();
-    this.init();
-    this.handleForm();
+export default class AddCategory extends FormModal {
+  constructor() {
+    super(defaultProps);
     return this;
   }
 
@@ -31,15 +24,10 @@ export default class AddCategory extends Modal {
         this.close();
       });
   }
-
-  makeTop() {
-    return /*HTML*/ `<h3 class="font-bold text-lg">${this.title}</h3>`;
-  }
   makeContent() {
     return /*HTML*/ `
     <div id="add-category">
       <form id="item-form">
-        <div class="right info-container">
           <div class="flex flex-col space-y-4">
             <!-- Category Name Input -->
             <div class="flex flex-col space-y-2">
@@ -68,18 +56,8 @@ export default class AddCategory extends Modal {
               <textarea name="description" id="description" class="textarea textarea-bordered" placeholder="Enter category description" rows="4"></textarea>
             </div>
           </div>
-        </div>
       </form>
     </div>
-    `;
-  }
-  makeAction() {
-    return /*HTML*/ `
-      <div class="flex justify-end space-x-2 actions">
-        <button id="save-item" class="hidden btn btn-success">Save</button>
-        <button id="cancel" class="hidden btn btn-error">Cancel</button>
-        <button id="back-button" class="back btn btn-secondary">Back</button>
-      </div>
     `;
   }
 }

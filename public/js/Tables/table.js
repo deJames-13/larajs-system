@@ -1,8 +1,12 @@
 import BrandsForm from "../Brands/form.js";
+import ViewBrand from "../Brands/view-modal.js";
 import CategoriesForm from "../Categories/form.js";
+import ViewCategory from "../Categories/view-modal.js";
 import DataTable from "../components/DataTable.js";
 import ProductsForm from "../Products/form.js";
+import ViewProduct from "../Products/view-modal.js";
 import PromosForm from "../Promos/form.js";
+import ViewPromo from "../Promos/view-modal.js";
 import { statusColors } from "./config.js";
 
 const formPages = {
@@ -10,6 +14,12 @@ const formPages = {
   categories: CategoriesForm,
   brands: BrandsForm,
   promos: PromosForm
+};
+const viewModals = {
+  brands: ViewBrand,
+  categories: ViewCategory,
+  products: ViewProduct,
+  promos: ViewPromo
 };
 
 const datatableProps = {
@@ -21,7 +31,7 @@ const datatableProps = {
   minLimit: 1,
   maxLimit: 100,
   fileButtons: ["pdf", "excel", "print", "csv"],
-  withActions: false,
+  withActions: true,
   statusColors: statusColors
 };
 
@@ -45,6 +55,10 @@ export default class TablePage extends DataTable {
 
     $(document)
       .off()
+      .on("click", ".row-view", e => {
+        const id = e.target.dataset.id;
+        id && this.viewModal(id);
+      })
       .on("click", ".row-edit", e => {
         const id = e.target.dataset.id;
         urlParams.set("action", "edit");
@@ -54,7 +68,8 @@ export default class TablePage extends DataTable {
         this.formPage(id);
       });
 
-    $("#btn-add-" + this.table)
+    // Create
+    $("#btn-add-" + this.tableName)
       .off()
       .on("click", () => {
         urlParams.set("action", "create");
@@ -72,6 +87,16 @@ export default class TablePage extends DataTable {
     } else if (urlParams.get("action") === "create") {
       this.formPage();
     }
+  }
+  viewModal(id) {
+    const ViewModal = viewModals[this.tableName];
+    if (!ViewModal) return;
+    new ViewModal({
+      id: id,
+      target: this.target,
+      name: this.tableName + `${id ? " #" + id : ""}`,
+      data: this.data.find(item => item.id == id)
+    });
   }
   formPage(id) {
     const FormPage = formPages[this.tableName];

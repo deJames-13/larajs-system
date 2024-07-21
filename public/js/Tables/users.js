@@ -59,20 +59,22 @@ export default class UsersPage extends TablePage {
   }
 
   bindEvents() {
-    $(document).on("click", "#action-btn", e => {
-      const action = $(e.target).data("action");
-      const userId = $(e.target).data("id");
-      if (action === "view") {
-        new UserView({ userId });
-      } else if (action === "edit") {
-        new UserEdit({
-          userId: userId,
-          onUpdate: () => {
-            this.dataTable.updateTable();
-          }
-        }).init();
-      }
-    });
+    $(document)
+      .off()
+      .on("click", "#action-btn", e => {
+        const action = $(e.target).data("action");
+        const userId = $(e.target).data("id");
+        if (action === "view") {
+          new UserView({ userId });
+        } else if (action === "edit") {
+          new UserEdit({
+            userId: userId,
+            onUpdate: () => {
+              this.dataTable.updateTable();
+            }
+          }).init();
+        }
+      });
 
     $("#btn-add-" + this.table)
       .off("click")

@@ -182,7 +182,7 @@ export default class DataTable {
 
   fetchData({ onFetch = () => {}, baseApi = null, query = {} }) {
     query = { ...this.query, ...query };
-    console.log(query);
+    // console.log(query);
     const qstr = Object.keys(query).reduce((result, key) => `${result}${key}=${query[key]}&`, "");
     const url = baseApi ?? this.baseApi + this.tableName + "?" + qstr; //console.log(url);
     const token = document.querySelector('meta[name="api-token"]').getAttribute("content");
@@ -233,35 +233,37 @@ export default class DataTable {
   }
 
   bindActions() {
-    $(document).ready(() => {
-      $(document).on("click", ".row-delete", e => {
+    $(document)
+      .on("click", ".row-delete", e => {
         const id = $(e.target).data("id");
         this.confirmAction(() => this.handleDelete(id));
-      });
-      $(document).on("click", ".row-restore", e => {
+      })
+      .on("click", ".row-restore", e => {
         const id = $(e.target).data("id");
         this.confirmAction(() => this.handleRestore(id));
       });
-    });
-    $("#alt-action").hide();
-    $("#btn-trash-" + this.tableName).on("click", () => {
-      this.showThrashed();
-      $("#btn-trash-" + this.tableName).hide();
-      $("#btn-table-" + this.tableName).show();
-      $(".actions").hide();
-      $(".alt-action").show();
-    });
-    $("#btn-table-" + this.tableName).on("click", () => {
-      this.showNotThrashed();
-      $("#btn-table-" + this.tableName).hide();
-      $("#btn-trash-" + this.tableName).show();
-      $(".actions").show();
-      $(".alt-action").hide();
-    });
-    $("#import-form").on("submit", e => {
-      e.preventDefault();
-      this.importExcel();
-    });
+
+    $("#btn-trash-" + this.tableName)
+      .off()
+      .on("click", () => {
+        this.showThrashed();
+        $(".actions, " + "#btn-trash-" + this.tableName).hide();
+        $(".alt-action, " + "#btn-table-" + this.tableName).show();
+      });
+    $("#btn-table-" + this.tableName)
+      .off()
+      .on("click", () => {
+        this.showNotThrashed();
+        $(".alt-action, " + "#btn-table-" + this.tableName).hide();
+        $(".actions, " + this.tableName).show();
+      });
+
+    $("#import-form")
+      .off()
+      .on("submit", e => {
+        e.preventDefault();
+        this.importExcel();
+      });
   }
 
   confirmAction(callback = () => {}) {
@@ -331,7 +333,9 @@ export default class DataTable {
   }
 
   showThrashed() {
-    this.baseApi = this.baseApi + "thrashed/";
+    if (!this.baseApi.endsWith("thrashed/")) {
+      this.baseApi += "thrashed/";
+    }
     this.updateTable();
 
     $("#table-title").after(`<h2 class="text-xl font-bold text-gray-600 text-left"> Retrieve thrashed records. </h2>`);
@@ -343,8 +347,13 @@ export default class DataTable {
 
   showNotThrashed() {
     this.baseApi = this.baseApi.replace("thrashed/", "");
-    $("#table-title").next().remove();
     this.updateTable();
+
+    $("#table-title").next().remove();
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.delete("table");
+    const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+    window.history.pushState({}, null, newUrl);
   }
 
   bindQueries() {

@@ -1,3 +1,4 @@
+import AddBrand from "../Brands/add-modal.js";
 import AddCategory from "../Categories/add-modal.js";
 import MultipleSelect from "../components/MultipleSelect.js";
 import Select from "../components/Select.js";
@@ -26,7 +27,6 @@ export default class ProductsForm extends FormPage {
       return { value: option.id, label: option.name };
     });
   }
-
   async fetchBrands({ query = {} }) {
     const q = {
       limit: 100,
@@ -36,7 +36,6 @@ export default class ProductsForm extends FormPage {
       this.brands.options = this.mapOptions(data);
     });
   }
-
   brandSource(query = {}) {
     return new Promise((resolve, reject) => {
       this.fetchBrands({ query }).then(() => {
@@ -106,6 +105,9 @@ export default class ProductsForm extends FormPage {
     $("#add-category").on("click", () => {
       new AddCategory();
     });
+    $("#add-brand").on("click", () => {
+      new AddBrand();
+    });
 
     $(document).on("click", "[data-select-event]", e => {
       $("#save-item, #cancel").show();
@@ -165,7 +167,7 @@ export default class ProductsForm extends FormPage {
           <div class="flex gap-4 items-end">
             <div id="brands-select" class="w-full"></div>
 
-            <button type="button" class="btn btn-outline btn-primary">
+            <button id="add-brand" type="button" class="btn btn-outline btn-primary">
               <i class="fas fa-plus"></i>
               <span> Add Brand </span>
             </button>

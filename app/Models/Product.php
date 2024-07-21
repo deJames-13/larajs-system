@@ -53,7 +53,7 @@ class Product extends Model
         } else if (!in_array($sort, $columns)) $sort = 'updated_at';
         else $query->orderBy($sort, $order);
 
-        Debugbar::info($query->toSql());
+        // Debugbar::info($query->toSql());
     }
 
     public function customers()
