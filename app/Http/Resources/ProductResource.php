@@ -39,6 +39,7 @@ class ProductResource extends JsonResource // JSON
             'promos' => $this->whenLoaded('promos', function () {
                 return $this->promos->makeHidden([''])->toArray();
             }),
+            'ratings' => $this->getRatings(),
 
         ];
     }

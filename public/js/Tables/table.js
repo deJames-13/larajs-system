@@ -90,12 +90,13 @@ export default class TablePage extends DataTable {
   }
   viewModal(id) {
     const ViewModal = viewModals[this.tableName];
+    const data = this.data.find(item => item.id == id);
     if (!ViewModal) return;
     new ViewModal({
       id: id,
       target: this.target,
       name: this.tableName + `${id ? " #" + id : ""}`,
-      data: this.data.find(item => item.id == id)
+      data: data
     });
   }
   formPage(id) {

@@ -30,6 +30,17 @@ return new class extends Migration
             $table->integer('quantity');
             $table->timestamps();
         });
+        Schema::create('ratings', function (Blueprint $table) {
+            $table->foreignId('order_id')->primary()->constrained()->onDelete('cascade');
+            $table->tinyInteger('rating');
+            $table->string('title')->nullable();
+            $table->string('review')->nullable();
+            $table->string('status')->nullable();
+            $table->boolean('isShowUser')->nullable();
+            $table->string('image_path')->nullable();
+
+            $table->timestamps();
+        });
     }
 
     /**
@@ -37,6 +48,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('ratings');
         Schema::dropIfExists('order_products');
         Schema::dropIfExists('orders');
     }
