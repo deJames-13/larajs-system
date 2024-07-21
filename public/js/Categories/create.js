@@ -12,36 +12,33 @@ export default class CategoriesCreate {
   }
 
   init() {
-    $(document).ready(() => {
-      console.log($(this.target));
-      $(this.target)
-        .find("#image-input")
-        .change(() => {
-          this.images = Array.from($(this.target).find("#image-input")[0].files).map(file => URL.createObjectURL(file));
-          this.carousel = new Carousel({
-            id: "categories-create",
-            images: this.images
-          });
+    $(this.target)
+      .find("#image-input")
+      .change(() => {
+        this.images = Array.from($(this.target).find("#image-input")[0].files).map(file => URL.createObjectURL(file));
+        this.carousel = new Carousel({
+          id: "categories-create",
+          images: this.images
         });
+      });
 
-      $(this.target)
-        .find(".prev")
-        .click(() => {
-          if (this.carousel) this.carousel.prev();
-        });
+    $(this.target)
+      .find(".prev")
+      .click(() => {
+        if (this.carousel) this.carousel.prev();
+      });
 
-      $(this.target)
-        .find(".next")
-        .click(() => {
-          if (this.carousel) this.carousel.next();
-        });
-      $(this.target).find("#save-item, #cancel").hide();
-      $(this.target)
-        .find("#item-form")
-        .change(() => {
-          $(this.target).find("#save-item, #cancel").show();
-        });
-    });
+    $(this.target)
+      .find(".next")
+      .click(() => {
+        if (this.carousel) this.carousel.next();
+      });
+    $(this.target).find("#save-item, #cancel").hide();
+    $(this.target)
+      .find("#item-form")
+      .change(() => {
+        $(this.target).find("#save-item, #cancel").show();
+      });
   }
 
   setupForm() {

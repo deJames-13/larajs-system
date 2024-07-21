@@ -4,8 +4,8 @@ import NoStock from "./no-stock.js";
 export default class Charts {
   constructor({ target }) {
     this.target = target;
-    this.lowStock = new LowStock({ target: this.target });
-    this.noStock = new NoStock({ target: this.target });
+    this.lowStock = new LowStock({ target: "#low-stock" });
+    this.noStock = new NoStock({ target: "#no-stock" });
   }
 
   init() {
@@ -21,22 +21,17 @@ export default class Charts {
   }
 
   showAllCharts() {
-    $(this.target).html(`
-      <div class="rounded-t-lg overflow-clip">
-        <div class="custom-circle-border bottom-pattern p-10 relative">
-          <div class="mainpage-charts-container">
-            <div class="mainpage-chart-card">
-              <h3 class="chart-heading">Low Stock</h3>
-              <div class="chart-container"><canvas id="low-stock"></canvas></div>
-            </div>
-            <div class="mainpage-chart-card">
-              <h3 class="chart-heading">No Stock</h3>
-              <div class="chart-container"><canvas id="no-stock"></canvas></div>
-              <div id="no-stock-message"></div>
-            </div>
+    $(this.target).html(/*HTML*/ `
+        <div class="flex justify-center flex-row items-center gap-4">
+          <div class="border container bg-base-100 rounded-lg shadow-xl p-4">
+              <h2 class="font-bold text-xl">Low Stock</h2>
+              <div class="p-4 w-full h-full"><canvas id="low-stock"></canvas></div>
+          </div>
+          <div class="border container bg-base-100 rounded-lg shadow-xl p-4">
+              <h2 class="font-bold text-xl">No Stock</h2>
+              <div class="p-4 w-full h-full"><canvas id="no-stock" class="w-full h-full"></canvas></div>
           </div>
         </div>
-      </div>
     `);
 
     this.getLowStock();

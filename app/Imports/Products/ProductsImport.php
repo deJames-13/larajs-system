@@ -12,9 +12,10 @@ class ProductsImport implements WithMultipleSheets, SkipsUnknownSheets
     public function sheets(): array
     {
         return [
-            'Products' => new ProductsSheet(),
-
-
+            // 'Products' => new ProductsSheet(),
+            'ProductImages' => new ProductImagesSheet(),
+            // 'ProductCategories' => new ProductCategoriesSheet(),
+            // 'ProductBrand' => new ProductBrandSheet(),
         ];
     }
     public function onUnknownSheet($sheetName)

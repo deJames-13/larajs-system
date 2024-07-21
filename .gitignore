@@ -13,7 +13,7 @@
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
-a uth.json
+auth.json
 npm-debug.log
 yarn-error.log
 /.fleet
@@ -22,6 +22,6 @@ yarn-error.log
 lock.mdb
 /data.ms
 /data.ms/**/*.mdb
-data.ms/indexes/**/*.mdb
 .null_ls*
-.conform
+.conform*
+*.exe

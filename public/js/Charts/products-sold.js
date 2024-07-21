@@ -19,7 +19,7 @@ export default class ProductsSold {
   }
 
   async createProductsSoldChart(productsSoldData) {
-    var ctx = $("#products-sold");
+    const ctx = $(this.target);
     if (!ctx) {
       console.error("Canvas element for products sold chart not found.");
       return;
@@ -53,6 +53,7 @@ export default class ProductsSold {
       }
     };
 
+    this.chart && this.chart.destroy();
     this.chart = new Chart(ctx, config);
   }
 

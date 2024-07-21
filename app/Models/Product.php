@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Schema;
 use Laravel\Scout\Searchable;
 
 class Product extends Model
@@ -32,13 +34,26 @@ class Product extends Model
     // Scope Filter
     public function scopeFilter($query, array $filters)
     {
-        $search = $filters['search'] ?? null;
+        $columns = Schema::getColumnListing('products');
+        $search = $filters['search'] ?? "";
+        $sort = $filters['sort'] ?? 'updated_at';
+        $order = $filters['order'] ?? 'desc';
+
         $search && $query->when($search, function ($query, $search) {
             $query->where('name', 'like', '%' . $search . '%')
                 ->orWhere('sku_code', 'like', '%' . $search . '%')
                 ->orWhere('description', 'like', '%' . $search . '%')
                 ->orWhere('specifications', 'like', '%' . $search . '%');
         });
+
+        if ($sort === 'stock') {
+            $query->join('stocks', 'products.sku_code', '=', 'stocks.product_sku_code')
+                ->select('products.*', 'stocks.quantity')
+                ->orderBy('quantity', $order);
+        } else if (!in_array($sort, $columns)) $sort = 'updated_at';
+        else $query->orderBy($sort, $order);
+
+        // Debugbar::info($query->toSql());
     }
 
     public function customers()

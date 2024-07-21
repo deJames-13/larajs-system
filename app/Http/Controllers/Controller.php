@@ -13,17 +13,17 @@ abstract class Controller
 
     public function getResources($model, $resource, $with = [])
     {
-        Debugbar::info(request());
+        Debugbar::info(request(['search', 'sort']));
         $page = request('page') ?? 1;
         $limit = request('limit') ?? 10;
-        $order =    request('order') ?? 'desc';
 
-        $data = $model::filter(request(['search']))
-            ->orderBy('updated_at', $order)
+        $data = $model::filter(request(['search', 'sort', 'order']))
             ->paginate($limit, ['*'], 'page', $page);
+
 
         $data->load($with);
         $response = $resource::collection($data);
+
 
         return $response;
     }

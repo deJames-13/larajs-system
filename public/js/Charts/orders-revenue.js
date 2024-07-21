@@ -30,11 +30,12 @@ export default class OrdersRevenue {
       revenueMap[monthName] = row.revenue;
     });
 
-    var ctx = $(this.target).find("#orders-revenue")[0];
+    const ctx = $(this.target);
     if (!ctx) {
       console.error("Canvas element for products sold chart not found.");
       return;
     }
+    this.chart && this.chart.destroy();
     this.chart = new Chart(ctx, {
       type: "line",
       data: {

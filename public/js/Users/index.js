@@ -97,7 +97,6 @@ export default class User {
   checkInfo() {
     if (!this.user) return;
     if (!this.user.info) {
-      console.log(this.user.id);
       const onboarding = new Onboarding({
         userId: this.user.id,
         onUpdate: () => this.init()
