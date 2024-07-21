@@ -13,7 +13,7 @@ abstract class Controller
 
     public function getResources($model, $resource, $with = [])
     {
-        Debugbar::info(request(['search', 'sort']));
+        // Debugbar::info(request(['search', 'sort']));
         $page = request('page') ?? 1;
         $limit = request('limit') ?? 10;
 
