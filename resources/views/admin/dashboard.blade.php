@@ -9,7 +9,7 @@
 
 
 		{{-- main content/pages --}}
-		<div class="right flex-1 py-8 pb-48 min-h-screen max-h-[1200px] overflow-auto">
+		<div class="right flex-1 py-8 pb-48 min-h-screen ">
 			<div id="dashboard-content" class="p-4 w-full h-full rounded-xl overflow-auto shadow-xl border pb-24"></div>
 		</div>
 

@@ -36,6 +36,10 @@ class PageController extends Controller
             abort(404);
         }
 
+        $item['ratings'] = $item->getRatings();
+
+
+
         return view('pages.products.show', ['item' => $item]);
     }
 
