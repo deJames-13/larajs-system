@@ -4,7 +4,21 @@ var isShowLoading = false;
 // ##########################################################################
 // HANDLERS
 const defaultError = (response, status, xhr) => {
-  if (status === 200) return;
+  let message = "";
+  switch (response.status) {
+    case 500:
+      message = "Something went wrong! Please contact the administrator.";
+      break;
+    case 403:
+      message = "Forbidden! You don't have permission to access the requested resource.";
+      break;
+    case 200:
+      return;
+
+    default:
+      message = response.responseJSON && response.responseJSON.message ? `${response.responseJSON.message}.` : "Oops... Something went wrong!";
+      break;
+  }
   Swal.fire({
     icon: "error",
     title: response.statusText ? response.statusText : "An error occurred!",
@@ -15,6 +29,7 @@ const defaultError = (response, status, xhr) => {
 };
 const handleError = callback => (response, status, xhr) => {
   isShowLoading && hideLoading();
+  if (response.status == 500) return defaultError(response, status, xhr);
   callback(response, status, xhr);
 };
 
