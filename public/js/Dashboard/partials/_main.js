@@ -34,7 +34,7 @@ export default class MainPage {
     const { earnings, annual, monthly } = this.metadata;
     Object.keys({ earnings, annual, monthly }).forEach(key => {
       const { total, count } = this.metadata[key];
-      $(`[data-${key}] h1`).text(`₱ ${total}`);
+      $(`[data-${key}] h1`).text(`₱ ${total.toFixed(2)}`);
       $(`[data-${key}] [name=count]`).text(count);
     });
     const { customers_count, products_count } = this.metadata;
