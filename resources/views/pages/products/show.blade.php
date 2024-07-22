@@ -42,7 +42,6 @@
 				</div>
 
 				{{-- Item Categories --}}
-				<div id="ratings-wrapper" class="flex flex-wrap items-center space-x-2"></div>
 				<div id="categories-wrapper" class="flex flex-wrap items-center space-x-2"></div>
 				<div class="divider"></div>
 				{{-- Item Description Input --}}
@@ -100,6 +99,8 @@
 
 			</div>
 		</div>
+		<div id="product-ratings-wrapper"></div>
+		<div class="pb-24 divider"></div>
 	</x-card.page>
 
 

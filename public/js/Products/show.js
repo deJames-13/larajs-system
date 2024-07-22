@@ -1,5 +1,6 @@
 import ajaxRequest from "../assets/ajaxRequest.js";
 import Carousel from "../components/Carousel.js";
+import Ratings from "../components/Ratings.js";
 let item = {
   ...product,
   id: parseInt($(".info-container").data("id")),
@@ -18,23 +19,6 @@ const loadCarousel = () => {
     id: "item-carousel",
     images: images
   });
-};
-
-const makeRatings = ratings => {
-  const stars = [];
-  for (let i = 0; i < 5; i++) {
-    const star = /* HTML */ ` <i class="fas fa-star ${i < ratings.average ? "text-primary" : ""}"></i> `;
-    stars.push(star);
-  }
-  const HTML = /*HTML*/ `
-    <!-- Ratings -->
-    <div class="flex items-center space-x-1 my-2">
-      <!-- Starts -->
-      <div class="flex items-center text-secondary">${stars.join("")}</div>
-      <p class="text-xs"><span class="text-primary font-bold">${ratings.average}</span> (${ratings.count})</p>
-    </div>
-  `;
-  $("#ratings-wrapper").html(HTML);
 };
 
 const makeCategoryPills = categories => {
@@ -68,8 +52,11 @@ const init = () => {
   });
 
   loadCarousel();
-  makeRatings(item.ratings);
   makeCategoryPills(item.categories);
+  new Ratings({
+    productId: item.id,
+    target: "#product-ratings-wrapper"
+  });
 };
 
 // POST CART

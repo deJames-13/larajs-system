@@ -12,6 +12,7 @@ export default class Carousel {
     this.index = 0;
     this.direction = "Right";
     this.autoSlideID = null;
+    if (!this.images.length) this.images.push(dProps.images[0]);
     this.init();
   }
 

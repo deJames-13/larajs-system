@@ -142,11 +142,12 @@ export default class CategoriesCreate {
         });
       },
       onError: xhr => {
-        Object.keys(xhr.responseJSON.errors).forEach(field => {
-          let input = $(this.target).find(`#${field}`);
-          input.addClass("input-error");
-          input.after(`<p class="text-error text-sm">${xhr.responseJSON.errors[field]}</p>`);
-        });
+        xhr.responseJSON &&
+          Object.keys(xhr.responseJSON.errors).forEach(field => {
+            let input = $(this.target).find(`#${field}`);
+            input.addClass("input-error");
+            input.after(`<p class="text-error text-sm">${xhr.responseJSON.errors[field]}</p>`);
+          });
       }
     });
   }

@@ -28,4 +28,8 @@ class Image extends Model
     {
         return $this->belongsToMany(Brand::class, 'brand_images', 'image_id', 'brand_id');
     }
+    public function ratings()
+    {
+        return $this->belongsToMany(Rating::class, 'rating_images', 'image_id', 'rating_id');
+    }
 }
