@@ -22,9 +22,9 @@ const defaultError = (response, status, xhr) => {
   Swal.fire({
     icon: "error",
     title: response.statusText ? response.statusText : "An error occurred!",
-    text: response.responseJSON && response.responseJSON.message ? `${response.responseJSON.message}.` : "Oops... Something went wrong!"
+    text: message
   }).then(() => {
-    // window.history.back();
+    Error(response);
   });
 };
 const handleError = callback => (response, status, xhr) => {

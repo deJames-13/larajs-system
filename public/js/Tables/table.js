@@ -77,7 +77,7 @@ export default class TablePage extends DataTable {
         window.history.pushState({}, null, newUrl);
         this.formPage();
       });
-    super.bindEvents();
+    super.bindActions();
   }
   handlePage() {
     const urlParams = new URLSearchParams(window.location.search);
