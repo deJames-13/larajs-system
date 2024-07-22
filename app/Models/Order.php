@@ -11,7 +11,8 @@ class Order extends Model
 {
 
     use HasFactory, SoftDeletes;
-    // protected $with = ['customer', 'products'];
+    // 'customer', 'products',
+    protected $with = ['rating'];
     protected $guarded = [];
 
     public function customer()
@@ -22,6 +23,11 @@ class Order extends Model
     {
         return $this->belongsToMany(Product::class, 'order_products')->withPivot('quantity');
     }
+    public function rating()
+    {
+        return $this->hasOne(Rating::class, 'order_id', 'id');
+    }
+
 
     public function scopeFilter($query, array $filters)
     {
@@ -46,6 +52,8 @@ class Order extends Model
                 });
         });
     }
+
+
 
     public static function totalRevenue()
     {

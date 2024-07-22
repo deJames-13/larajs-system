@@ -19,7 +19,7 @@ class Product extends Model
         // JUST LOAD THEM
         'categories',
         'brands',
-        // 'promos',
+        'promos',
     ];
 
     protected $fillable = [
@@ -31,36 +31,10 @@ class Product extends Model
         'status',
     ];
 
-    // Scope Filter
-    public function scopeFilter($query, array $filters)
-    {
-        $columns = Schema::getColumnListing('products');
-        $search = $filters['search'] ?? "";
-        $sort = $filters['sort'] ?? 'updated_at';
-        $order = $filters['order'] ?? 'desc';
-
-        $search && $query->when($search, function ($query, $search) {
-            $query->where('name', 'like', '%' . $search . '%')
-                ->orWhere('sku_code', 'like', '%' . $search . '%')
-                ->orWhere('description', 'like', '%' . $search . '%')
-                ->orWhere('specifications', 'like', '%' . $search . '%');
-        });
-
-        if ($sort === 'stock') {
-            $query->join('stocks', 'products.sku_code', '=', 'stocks.product_sku_code')
-                ->select('products.*', 'stocks.quantity')
-                ->orderBy('quantity', $order);
-        } else if (!in_array($sort, $columns)) $sort = 'updated_at';
-        else $query->orderBy($sort, $order);
-
-        // Debugbar::info($query->toSql());
-    }
-
     public function customers()
     {
         return $this->belongsToMany(User::class, 'customer_products')->withPivot('quantity');
     }
-
     public function orders()
     {
         return $this->belongsToMany(Order::class, 'order_products')->withPivot('quantity');
@@ -85,9 +59,71 @@ class Product extends Model
     {
         return $this->belongsToMany(Promos::class, 'promo_products', 'product_id', 'promo_id');
     }
-
     public function images()
     {
         return $this->belongsToMany(Image::class, 'product_images', 'product_id', 'image_id');
+    }
+
+
+    // Scope Filter
+    public function scopeFilter($query, array $filters)
+    {
+        $columns = Schema::getColumnListing('products');
+        $search = $filters['search'] ?? "";
+        $sort = $filters['sort'] ?? 'updated_at';
+        $order = $filters['order'] ?? 'desc';
+
+        $search && $query->when($search, function ($query, $search) {
+            $query->where('name', 'like', '%' . $search . '%')
+                ->orWhere('sku_code', 'like', '%' . $search . '%')
+                ->orWhere('description', 'like', '%' . $search . '%')
+                ->orWhere('specifications', 'like', '%' . $search . '%');
+        });
+
+        if ($sort === 'oldest') {
+            $query->orderBy('created_at', "asc");
+        } else if ($sort === 'latest') {
+            $query->orderBy('created_at', "desc");
+        } else if ($sort === 'stock') {
+            $query->join('stocks', 'products.sku_code', '=', 'stocks.product_sku_code')
+                ->select('products.*', 'stocks.quantity')
+                ->orderBy('quantity', $order);
+        } else if (!in_array($sort, $columns)) $sort = 'updated_at';
+        else $query->orderBy($sort, $order);
+
+        // Debugbar::info($query->toSql());
+    }
+
+    // META DATA 
+    // get ratings metadata from orders they belong to
+    public function getRatings()
+    {
+        $ratings = $this->orders->map(function ($order) {
+            // get username from order
+            $username = $order->customer->username;
+            $rating = $order->rating;
+            if ($rating === null) return null;
+            if (!$rating->isShowUser) $username = 'Anonymous';
+            return (object)[
+                ...$rating->toArray(),
+                'username' => $username,
+                'rating' => $rating->rating,
+            ];
+        })->filter(function ($rating) {
+            return $rating !== null;
+        });
+
+        $count = $ratings->count();
+        $average = $ratings->average('rating');
+        $highest = $ratings->max('rating');
+        $lowest = $ratings->min('rating');
+
+        return (object)[
+            'data' => $ratings,
+            'count' => $count,
+            'average' => $average,
+            'highest' => $highest,
+            'lowest' => $lowest,
+        ];
     }
 }

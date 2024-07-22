@@ -25,9 +25,7 @@ class OrderController extends Controller
             $orders->where('status', $status);
         }
 
-        if ($isAdmin)
-            $orders->with('customer.info');
-        else
+        if (!$isAdmin)
             $orders->where('user_id', $request->user()->id);
         $orders->with([
             'products' => function ($query) {
@@ -53,7 +51,7 @@ class OrderController extends Controller
             'products' => function ($query) {
                 $query->withPivot('quantity');
             },
-            'customer', 'customer.info',
+            'customer',
         ])->findOrFail($id);
         if (!$order) {
             return response(

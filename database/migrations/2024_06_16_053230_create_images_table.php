@@ -47,9 +47,9 @@ return new class extends Migration
         });
 
         // Comments
-        Schema::create('comment_images', function (Blueprint $table) {
+        Schema::create('rating_images', function (Blueprint $table) {
+            $table->foreignId('rating_id')->references('order_id')->on('ratings')->onDelete('cascade');
             $table->foreignId('image_id')->constrained()->onDelete('cascade');
-            $table->foreignId('comment_id')->constrained()->onDelete('cascade');
         });
     }
 
@@ -63,7 +63,7 @@ return new class extends Migration
         Schema::dropIfExists('promo_images');
         Schema::dropIfExists('category_images');
         Schema::dropIfExists('brand_images');
-        Schema::dropIfExists('comment_images');
+        Schema::dropIfExists('rating_images');
         Schema::dropIfExists('images');
     }
 };
