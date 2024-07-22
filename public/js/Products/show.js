@@ -54,8 +54,8 @@ const init = () => {
   loadCarousel();
   makeCategoryPills(item.categories);
   new Ratings({
-    target: "#product-ratings-wrapper",
-    ratings: item.ratings
+    productId: item.id,
+    target: "#product-ratings-wrapper"
   });
 };
 

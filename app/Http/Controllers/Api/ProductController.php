@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use Exception;
+use App\Models\Rating;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -172,7 +173,49 @@ class ProductController extends Controller
         $this->handleStatus($request, Product::class, $id);
     }
 
-    public function attachBrand()
+    public function ratings(string $id)
     {
+        $page = request('page') ?? 1;
+        $query = Rating::query();
+        $query->when($id, function ($query, $id) {
+            $query->whereHas('order', function ($query) use ($id) {
+                $query->whereHas('products', function ($query) use ($id) {
+                    $query->where('products.id', $id);
+                });
+            });
+        });
+        $c = clone $query;
+        $meta = [
+            'tabs' => [
+
+                // ['label' => 'With Images', 'value' => $c->whereHas('images')->count()],
+                ['label' => 'With Reviews', 'value' => $c->whereNotNull('review')->count()],
+            ],
+            'count' => $c->count(),
+            'average' => $c->avg('rating'),
+            'lowest' => $c->min('rating'),
+            'highest' => $c->max('rating'),
+        ];
+        for ($i = 1; $i <= 5; $i++)
+            $meta['tabs'][] = ['label' => $i . ' Star', 'value' => $c->where('rating', $i)->count()];
+        $meta['tabs'][] = ['label' => 'All', 'value' => $meta['count']];
+
+        $ratings = $query->paginate(10, ['*'], 'page', $page);
+        $ratings->getCollection()->transform(function ($rating) {
+            $rating->username = $rating->order->customer->username;
+            $user_images = $rating->order->customer->images;
+            $rating->user_image = $user_images->count() ? $user_images[0]->path : "https://placehold.co/400?text=" . $rating->username[0];
+            $rating->user_id = $rating->order->customer->id;
+            if (!$rating->isShowUser) {
+                $rating->username = 'Anonymous';
+                $rating->user_image = "https://placehold.co/400?text=anon";
+            };
+
+            $rating->makeHidden(['order']);
+            return $rating;
+        });
+
+        $res = collect($meta)->merge(['ratings' => $ratings]);
+        return response($res, 200);
     }
 }

@@ -35,11 +35,6 @@ class PageController extends Controller
         if (!$item || !isset($item->stock->quantity)) {
             abort(404);
         }
-
-        $item['ratings'] = $item->getRatings();
-
-
-
         return view('pages.products.show', ['item' => $item]);
     }
 
