@@ -14,6 +14,7 @@ export default class UsersPage extends TablePage {
     return data.map(user => {
       const image = (user.images && user.images.length > 0 && user.images[0].path) || "https://placehold.it/100x100";
       const info = user.info || {};
+      const isThrashed = user.deleted_at !== null;
       return {
         ID: `${user.id}`,
         User: `
@@ -48,10 +49,13 @@ export default class UsersPage extends TablePage {
                 </div>
                 `,
         "": `
-                <div class="print:hidden w-full flex items-center justify-end gap-3">
-                    <button data-action="view" data-id="${user.id}"  id="action-btn" class="btn btn-xs btn-primary">View</button>
-                    <button data-action="edit" data-id="${user.id}"  id="action-btn" class="btn btn-xs btn-secondary">Edit</>
+                <div name="actions" class=" ${isThrashed ? "hidden" : "flex"} actions print:hidden w-full items-center justify-end gap-3">
+                      <button id="row-view__${user.id}" data-id="${user.id}" class="row-view btn btn-xs btn-primary">View</button>
+                    <button id="row-edit__${user.id}" data-id="${user.id}" class="row-edit btn btn-xs bg-secondary text-white">Edit</button>
                     <button id="row-delete__${user.id}" data-id="${user.id}" class="row-delete btn btn-xs bg-red-400">Delete</button>
+                </div>
+                <div name="alt-action" class=" ${!isThrashed ? "hidden" : "flex"} alt-action print:hidden w-full items-center justify-end gap-3">
+                    <button id="row-restore__${user.id}" data-id="${user.id}" class="row-restore btn btn-xs text-white bg-green-400">Restore</button>
                 </div>
                 `
       };
@@ -59,6 +63,7 @@ export default class UsersPage extends TablePage {
   }
 
   bindEvents() {
+    super.bindEvents();
     $(document)
       .off()
       .on("click", "#action-btn", e => {
@@ -70,7 +75,7 @@ export default class UsersPage extends TablePage {
           new UserEdit({
             userId: userId,
             onUpdate: () => {
-              this.dataTable.updateTable();
+              this.init();
             }
           }).init();
         }
@@ -81,13 +86,9 @@ export default class UsersPage extends TablePage {
       .on("click", () => {
         new UserAdd({
           onUpdate: () => {
-            this.dataTable.updateTable();
+            this.init();
           }
         });
       });
-
-    $("#btn-restore-" + this.table)
-      .off("click")
-      .on("click", () => {});
   }
 }
