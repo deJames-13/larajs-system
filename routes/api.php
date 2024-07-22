@@ -132,6 +132,11 @@ Route::group(['middleware' => 'auth:sanctum', 'only.ajax'], function () {
         Route::put('/{id}', [OrderController::class, 'update']);
     });
 
+    // export
+    Route::get('exports/orders/{type}', [TableController::class, 'ordersExport'])
+        ->name('orders.export')
+        ->middleware(['auth:sanctum', 'role:staff,admin']);
+
     // CHARTS
     // insert chart function name here with url equivalent
     $charts = [

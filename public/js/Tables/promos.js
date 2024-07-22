@@ -7,7 +7,9 @@ var filters = [
   { value: "status", label: "Status" },
   { value: "discount", label: "Discount" },
   { value: "start_date", label: "Start Date" },
-  { value: "end_date", label: "End Date" }
+  { value: "end_date", label: "End Date" },
+  { value: "created_at", label: "Latest" },
+  { value: "created_at_oldest", label: "Oldest" }
 ];
 var sortBy = {
   display: true,
