@@ -167,6 +167,17 @@ class UserController extends Controller
 
     public function thrashed()
     {
+        $page = request('page') ?? 1;
+        $limit = request('limit') ?? 20;
+        $order = request('order') ?? 'desc';
+        $search = request(['search']) ?? null;
+
+        $products = User::onlyTrashed()
+            ->filter($search)
+            ->orderBy('updated_at', $order)
+            ->paginate($limit, ['*'], 'page', $page);
+
+        return UserResource::collection($products);
     }
 
     public function status(Request $request, string $id)

@@ -14,7 +14,7 @@ class OrderSeeder extends Seeder implements ShouldQueue
      */
     public function run(): void
     {
-        $count = 50; // Customize this value as needed
+        $count = 500; // Customize this value as needed
         $random = true; // Assuming you want to keep the random behavior: random status, and dates
 
         ProcessOrderSeed::dispatch($count, $random);

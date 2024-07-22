@@ -11,6 +11,10 @@ use App\Http\Controllers\Api\ChartController;
 
 
 Route::post("/admin/orders", [TableController::class, "ordersImport"])->name("imports.orders");
+Route::group(["middleware" => "auth"], function () {
+    Route::post("/import/brands", [TableController::class, "brandsImport"])->name("imports.brands")->middleware("role:staff,admin");
+});
+
 // Guess ONLY
 Route::group(["middleware" => "guest"], function () {
     Route::get("/admin/login", [AuthController::class, "login"])->name("admin.login");
@@ -48,8 +52,6 @@ Route::group(["middleware" => "auth"], function () {
         'customerPerAddress' => 'customer-per-address',
         'productsSold' => 'products-sold',
         'ordersRevenue' => 'orders-revenue',
-        'noStock' => 'no-stock',
-        'lowStock' => 'low-stock',
     ];
     // ADMIN DASHBOARD
     $adminPages = [

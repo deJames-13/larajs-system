@@ -45,7 +45,7 @@ export default class Select {
 
   makeSelected(selected) {
     if (selected.value === undefined) {
-      console.log("Selected value is undefined");
+      // console.log("Selected value is undefined");
       this.selected = {};
       const selectedValue = this.component.find("#selected-value");
       selectedValue.attr("data-value", "");

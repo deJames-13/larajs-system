@@ -254,8 +254,8 @@ export default class DataTable {
       .off()
       .on("click", () => {
         this.showNotThrashed();
+        $(".actions, " + "#btn-trash-" + this.tableName).show();
         $(".alt-action, " + "#btn-table-" + this.tableName).hide();
-        $(".actions, " + this.tableName).show();
       });
 
     $("#import-form")

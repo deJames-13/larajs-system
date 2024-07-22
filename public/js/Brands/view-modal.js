@@ -12,6 +12,7 @@ const defaultProps = {
 };
 
 export default class ViewBrand extends FormModal {
+
     constructor(props = {}) {
         super({ ...defaultProps, ...props });
     }
@@ -86,3 +87,4 @@ export default class ViewBrand extends FormModal {
         `;
       }
     }
+

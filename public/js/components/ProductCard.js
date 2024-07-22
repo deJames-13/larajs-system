@@ -10,7 +10,28 @@ export default class ProductCard {
     this.render();
   }
 
+  makeRatingStars(ratings) {
+    const stars = [];
+    for (let i = 0; i < 5; i++) {
+      const star = /* HTML */ ` <i class="fas fa-star ${i < ratings ? "text-primary" : ""}"></i> `;
+      stars.push(star);
+    }
+    return stars.join("");
+  }
+
+  makeCategoryPills(categories) {
+    const pills = [];
+    categories.forEach(category => {
+      const pill = /* HTML */ ` <span class="bg-primary text-white font-bold px-2 py-1 text-xs rounded-full">${category.name}</span> `;
+      pills.push(pill);
+    });
+    return pills.join("");
+  }
+
   render() {
+    const ratings = this.product.ratings;
+    const average = ratings.average || 0;
+
     const brand = (this.product.brands.length > 0 && this.product.brands[0].name) || "";
     const card = /* HTML */ `
       <!-- CARD -->
@@ -32,21 +53,17 @@ export default class ProductCard {
 
         <!-- Content -->
         <div class="my-2">
+          <!-- Categories -->
+          <div id="categries-wrapper" class="flex flex-wrap items-center space-x-2">${this.makeCategoryPills(this.product.categories)}</div>
           <span class="text-sm font-semibold uppercase"> ${brand} </span>
-          <p class="font-light text-xs sm:text-md">${this.product.name}</p>
+          <p class="font-light sm:text-md">${this.product.name}</p>
           <span class="font-bold">P${this.product.price}</span>
         </div>
         <!-- Ratings -->
         <div class="flex items-center space-x-1 my-2">
           <!-- Starts -->
-          <div class="flex items-center text-secondary">
-            <i class="fas fa-star text-primary"></i>
-            <i class="fas fa-star text-primary"></i>
-            <i class="fas fa-star text-primary"></i>
-            <i class="fas fa-star text-primary"></i>
-            <i class="fas fa-star"></i>
-          </div>
-          <p class="text-xs">69</p>
+          <div class="flex items-center text-secondary">${this.makeRatingStars(average)}</div>
+          <p class="text-xs"><span class="text-primary font-bold">${average}</span> (${ratings.count})</p>
         </div>
       </div>
     `;
