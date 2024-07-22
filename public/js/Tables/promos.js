@@ -1,10 +1,27 @@
 import TablePage from "./table.js";
+var filters = [
+  { value: "id", label: "ID" },
+  { value: "name", label: "Name" },
+  { value: "slug", label: "Slug" },
+  { value: "description", label: "Description" },
+  { value: "status", label: "Status" },
+  { value: "discount", label: "Discount" },
+  { value: "start_date", label: "Start Date" },
+  { value: "end_date", label: "End Date" }
+];
+var sortBy = {
+  display: true,
+  filters: filters,
+  selected: filters[0],
+  order: "desc"
+};
 
 export default class PromosPage extends TablePage {
   constructor({ target }) {
     super({
       target: target,
-      tableName: "promos"
+      tableName: "promos",
+      sortBy: sortBy
     });
   }
   makeTable(data) {
