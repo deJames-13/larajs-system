@@ -1,10 +1,25 @@
 import TablePage from "./table.js";
+var filters = [
+  { value: "id", label: "ID" },
+  { value: "name", label: "Name" },
+  { value: "company", label: "Company" },
+  { value: "website", label: "Website" },
+  { value: "description", label: "Description" },
+  { value: "status", label: "Status" }
+];
+var sortBy = {
+  display: true,
+  filters: filters,
+  selected: filters[0],
+  order: "desc"
+};
 
 export default class BrandsPage extends TablePage {
   constructor({ target }) {
     super({
       target: target,
-      tableName: "brands"
+      tableName: "brands",
+      sortBy: sortBy
     });
   }
   makeTable(data) {
