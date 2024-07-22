@@ -39,9 +39,13 @@ class Brand extends Model
                 ->orWhere('status', 'like', '%'.$search.'%');
         });
 
-        if (!in_array($sort, $columns)) {
+        if ($sort === 'created_at_oldest') {
+            $sort = 'created_at';
+            $order = 'asc';
+        } elseif (!in_array($sort, $columns)) {
             $sort = 'updated_at';
         }
+
         $query->orderBy($sort, $order);
     }
 
