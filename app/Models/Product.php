@@ -80,6 +80,13 @@ class Product extends Model
                 ->orWhere('specifications', 'like', '%' . $search . '%');
         });
 
+        if ($sort === 'created_at_oldest') {
+            $sort = 'created_at';
+            $order = 'asc';
+        } elseif (!in_array($sort, $columns)) {
+            $sort = 'updated_at';
+        }
+
         if ($sort === 'oldest') {
             $query->orderBy('created_at', "asc");
         } else if ($sort === 'latest') {
@@ -94,7 +101,7 @@ class Product extends Model
         // Debugbar::info($query->toSql());
     }
 
-    // META DATA 
+    // META DATA
     // get ratings metadata from orders they belong to
     public function getRatings()
     {
