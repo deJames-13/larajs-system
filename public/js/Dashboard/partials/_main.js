@@ -27,6 +27,7 @@ export default class MainPage {
   }
 
   populate() {
+    console.log(this.metadata);
     const status = this.metadata.status;
     Object.keys(status).forEach(key => {
       $(`#${key}`).text(status[key]);
@@ -78,7 +79,7 @@ export default class MainPage {
                 <i class="fas fa-hourglass"></i>
                 <h2 class="font-semibold text-lg uppercase">Pending</h2>
               </div>
-              <h1 id="pending" name="status[]" class="capitalize font-extrabold text-2xl">69</h1>
+              <h1 id="pending" name="status[]" class="capitalize font-extrabold text-2xl">0</h1>
               <!-- <p class="capitalize font-bold text-gray-400"><span id="">$200</span> Net Value</p>-->
             </div>
 
@@ -89,7 +90,7 @@ export default class MainPage {
                 <i class="fas fa-truck"></i>
                 <h2 class="font-semibold text-lg uppercase">Shipping</h2>
               </div>
-              <h1 id="shipping" name="status[]" class="capitalize font-extrabold text-2xl">69</h1>
+              <h1 id="shipping" name="status[]" class="capitalize font-extrabold text-2xl">0</h1>
               <!-- <p class="capitalize font-bold text-gray-400"><span id="">$200</span> Net Value</p>-->
             </div>
 
@@ -100,7 +101,7 @@ export default class MainPage {
                 <i class="fas fa-check-to-slot"></i>
                 <h2 class="font-semibold text-lg uppercase">Completed</h2>
               </div>
-              <h1 id="completed" name="status[]" class="capitalize font-extrabold text-2xl">69</h1>
+              <h1 id="completed" name="status[]" class="capitalize font-extrabold text-2xl">0</h1>
               <!-- <p class="capitalize font-bold text-gray-400"><span id="">$200</span> Net Value</p>-->
             </div>
           </div>
@@ -128,7 +129,7 @@ export default class MainPage {
               <div class="flex items-center justify-between">
                 <h2 class="font-bold text-md text-gray-400 text-wrap">Total</h2>
               </div>
-              <h1 name="total" class="capitalize font-extrabold text-2xl">₱69123</h1>
+              <h1 name="total" class="capitalize font-extrabold text-2xl">₱0123</h1>
               <p class="capitalize font-bold text-gray-400"><span name="count">200-500</span> sales</p>
 
               <div class="hidden lg:block absolute bottom-0 right-0 w-1/3 aspect-square overflow-clip">
@@ -141,7 +142,7 @@ export default class MainPage {
               <div class="flex items-center justify-between">
                 <h2 class="font-bold text-md text-gray-400 text-wrap">Annual</h2>
               </div>
-              <h1 name="total" class="capitalize font-extrabold text-2xl">₱42069</h1>
+              <h1 name="total" class="capitalize font-extrabold text-2xl">₱4200</h1>
               <p class="capitalize font-bold text-gray-400"><span name="count">200-500</span> sales</p>
 
               <div class="hidden lg:block absolute bottom-0 right-0 w-1/3 aspect-square overflow-clip">
@@ -154,7 +155,7 @@ export default class MainPage {
               <div class="flex items-center justify-between">
                 <h2 class="font-bold text-md text-gray-400 text-wrap">Monthly</h2>
               </div>
-              <h1 name="total" class="capitalize font-extrabold text-2xl">₱42069</h1>
+              <h1 name="total" class="capitalize font-extrabold text-2xl">₱4200</h1>
               <p class="capitalize font-bold text-gray-400"><span name="count">200-500</span> sales</p>
 
               <div class="hidden lg:block absolute bottom-0 right-0 w-1/3 aspect-square overflow-clip">

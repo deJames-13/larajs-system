@@ -10,7 +10,7 @@ const defaultProps = {
 };
 export default class FormModal extends Modal {
   constructor(props = {}) {
-    super();
+    super({ ...defaultProps, ...props });
     Object.assign(this, defaultProps, props);
     this.modal && this.modal.remove();
     this.top = this.makeTop();
@@ -33,7 +33,7 @@ export default class FormModal extends Modal {
       <div class="flex justify-end space-x-2 actions">
         <button id="save-item" class="hidden btn btn-success">Save</button>
         <button id="cancel" class="hidden btn btn-error">Cancel</button>
-        <button id="back-button" class="back btn btn-secondary">Back</button>
+        <button id="back-button" class="btn btn-secondary">Back</button>
       </div>
     `
       : "";

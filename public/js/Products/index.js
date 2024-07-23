@@ -94,8 +94,19 @@ export default class Products {
     $("#paginations").empty();
     $(".scroll-loader").hide();
 
-    let queries = ["page=" + this.page];
-    let q = queries.join("&");
+    let q = "";
+    let queries = {
+      page: this.page,
+      limit: 20,
+      sort: "updated_at",
+      order: "desc"
+    };
+
+    Object.keys(queries).forEach(key => {
+      q += key + "=" + queries[key] + "&";
+    });
+    q.slice(0, -1);
+
     ajaxRequest.get({
       url: this.url + "?" + q,
       onSuccess: response => {

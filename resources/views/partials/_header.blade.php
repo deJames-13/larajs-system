@@ -41,9 +41,7 @@
 	</div>
 
 	@push('scripts')
-		@guest
-			<script type="module" src="{{ asset('js/Auth/index.js') }}"></script>
-		@endguest
+		<script type="module" src="{{ asset('js/Auth/index.js') }}"></script>
 
 		<script type="module" src="{{ asset('js/scripts/header.js') }}"></script>
 	@endpush

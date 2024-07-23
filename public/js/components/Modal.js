@@ -8,7 +8,8 @@ const defaultProps = {
   isShown: false,
   onEscClose: true,
   disableClosing: false,
-  width: "sm"
+  width: "sm",
+  onClose: () => {}
 };
 
 export default class Modal {
@@ -54,34 +55,30 @@ export default class Modal {
   }
 
   close() {
-    this.modal.fadeOut();
-    this.destroyOnClose && this.modal.remove();
+    this.modal.fadeOut(300, () => {
+      this.onClose();
+      this.destroyOnClose && this.modal.remove();
+    });
   }
 
   render() {
-    const modal = `
-        <div id="${this.id}"  style="display: none;" class="z-[100] fixed w-screen h-screen top-0 left-0 flex items-center">
+    const modal = /* HTML */ `
+      <div id="${this.id}" style="display: none;" class="z-[100] fixed w-screen h-screen top-0 left-0 flex items-center">
+        <div id="modal-backdrop" data-modal-backdrop class="fixed w-screen h-screen bg-black bg-opacity-35"></div>
 
-            <div id="modal-backdrop" data-modal-backdrop class="fixed w-screen h-screen bg-black bg-opacity-35"></div>
-
-            <div class="relative h-full container border-t-4 border-primary overflow-clip max-w-${this.width}  mx-auto modal-box  animate__animated animate__bounceInDown ">
-                <div class="flex justify-between align-center">
-                    ${this.top}
-                    <button class="ml-auto align-end modal-header btn btn-xs rounded-full hover:bg-red-400 hover:text-white btn-ghost" id="close-modal" data-close-modal>&times;</button>
-                </div>
-                <div class="divider m-0"></div>
-                <div class="h-full overflow-auto pb-12">
-                    <div class="modal-body">
-                        ${this.content}
-                    </div>
-                    <div class="modal-action">
-                        ${this.action}
-                    </div>
-
-                </div>
-            </div>
+        <div class="relative h-full  container border-t-4 border-primary overflow-clip max-w-${this.width}  mx-auto modal-box  animate__animated animate__bounceInDown ">
+          <div class="flex justify-between align-center">
+            ${this.top}
+            <button class="ml-auto align-end modal-header btn btn-xs rounded-full hover:bg-red-400 hover:text-white btn-ghost" id="close-modal" data-close-modal>&times;</button>
+          </div>
+          <div class="divider m-0"></div>
+          <div class="h-full overflow-auto pb-12 flex flex-col justify-between">
+            <div class="flex-grow modal-body">${this.content}</div>
+            <div class="modal-action">${this.action}</div>
+          </div>
         </div>
-        `;
+      </div>
+    `;
 
     $("#app").prepend(modal);
   }

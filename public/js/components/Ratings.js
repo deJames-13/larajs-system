@@ -17,7 +17,7 @@ export default class Ratings {
     Object.assign(this, defaultProps, props);
     this.fetchRatings().then(response => {
       Object.assign(this, response);
-      console.log(this);
+      // console.log(this);
       this.init();
     });
   }

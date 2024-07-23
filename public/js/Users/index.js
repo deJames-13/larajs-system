@@ -10,12 +10,13 @@ export default class User {
   }
 
   async init() {
-    return this.fetchUser().then(() => {
-      // console.log(this.user);
-      if (!this.user) return;
-      this.checkStatus();
-      this.checkInfo();
-    });
+    return this.fetchUser()
+      .then(() => {
+        if (!this.user) return;
+        this.checkStatus();
+        this.checkInfo();
+      })
+      .catch(error => {});
   }
 
   getUser() {
@@ -30,10 +31,8 @@ export default class User {
     return this;
   }
 
-  hanndleError(error) {
-    // 401
-    if (error.status === 401) return;
-    console.error("Failed to fetch user data:", error);
+  handleError(error) {
+    Error("Failed to fetch user data:", error);
   }
 
   fetchUser() {
@@ -43,7 +42,7 @@ export default class User {
         this.handleResponse(response);
       },
       onError: error => {
-        this.hanndleError(error);
+        this.handleError(error);
       }
     });
   }

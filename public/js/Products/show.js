@@ -1,6 +1,8 @@
 import ajaxRequest from "../assets/ajaxRequest.js";
+import Login from "../Auth/Login.js";
 import Carousel from "../components/Carousel.js";
 import Ratings from "../components/Ratings.js";
+
 let item = {
   ...product,
   id: parseInt($(".info-container").data("id")),
@@ -12,7 +14,7 @@ let item = {
 let carousel = null;
 let images = item.images.map(image => "/" + image.path) || ["https://placehold.co/400x600?text=item"];
 
-console.log(item);
+// console.log(item);
 
 const loadCarousel = () => {
   carousel = new Carousel({
@@ -85,11 +87,21 @@ $(document).on("click", "#cart-add", function () {
         }
       });
     },
-    onError: response => {
-      Swal.fire("Oops!", "Something went wrong. Please contact us", "error").then(() => {
-        window.location.href = "/products";
-      });
-      return;
+    onError: error => {
+      console.error(error);
+      if (error.status === 401)
+        Swal.fire({
+          title: "We don't know you",
+          text: "Please login to continue.",
+          icon: "error",
+          showCancelButton: true,
+          confirmButtonText: "Login",
+          cancelButtonText: "Cancel"
+        }).then(result => {
+          if (result.isConfirmed) {
+            modal = new Login();
+          }
+        });
     }
   });
 });
