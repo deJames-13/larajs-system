@@ -12,7 +12,8 @@ class CategoriesImport implements WithMultipleSheets, SkipsUnknownSheets
     public function sheets(): array
     {
         return [
-            'Categories' => new CategoriesSheet(),
+            new CategoriesSheet(),
+            new CategoryImages(),
 
 
         ];

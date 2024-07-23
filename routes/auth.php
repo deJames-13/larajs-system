@@ -10,9 +10,9 @@ use App\Http\Controllers\Api\ChartController;
 
 
 
-Route::post("/admin/orders", [TableController::class, "ordersImport"])->name("imports.orders");
 Route::group(["middleware" => "auth"], function () {
     Route::post("/import/brands", [TableController::class, "brandsImport"])->name("imports.brands")->middleware("role:staff,admin");
+    Route::post("/import/orders", [TableController::class, "ordersImport"])->name("imports.orders")->middleware("role:staff,admin");
 });
 
 // Guess ONLY
