@@ -25,8 +25,11 @@ Route::get('/test', function () {
 // });
 
 // Search Functions
-Route::get('/autocomplete', [SearchController::class, 'autocomplete']);
-Route::post('/search', [SearchController::class, 'search']);
+Route::group(['middleware' => 'only.ajax'], function () {
+    Route::get('/autocomplete', [SearchController::class, 'autocomplete']);
+    Route::post('/search', [SearchController::class, 'search']);
+    Route::get('/ratings/{id}', [ProductController::class, 'ratings']);
+});
 
 // CRUD
 $crud = [
