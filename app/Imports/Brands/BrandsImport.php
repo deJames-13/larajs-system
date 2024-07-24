@@ -13,8 +13,6 @@ class BrandsImport implements WithMultipleSheets, SkipsUnknownSheets
     {
         return [
             new BrandsSheet(),
-            new BrandImages(),
-
         ];
     }
     public function onUnknownSheet($sheetName)
