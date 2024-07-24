@@ -14,7 +14,7 @@ export class CartItem {
     let qty = $(`#item_qty_${this.product.id}`).val();
     let price = $("#price").text();
     let total = qty * price;
-    $("#unit_total").text(total);
+    $("#unit_total").text(total.toFixed(2));
   }
 
   render() {
@@ -61,7 +61,7 @@ export class CartItem {
                 <!-- TOTAL -->
                 <td class="align-center">
                     <div class=" font-bold">
-                        PHP <span id="unit_total">${parseFloat(this.product.price) * parseFloat(this.product.quantity) ?? "0"}</span>
+                        PHP <span id="unit_total">${(parseFloat(this.product.price ?? 0) * parseFloat(this.product.quantity ?? 0)).toFixed(2)}</span>
                     </div>
                 </td>
 
