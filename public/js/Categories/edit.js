@@ -75,6 +75,9 @@ export default class CategoriesEdit {
         image: {
           required: true
         },
+        slug: {
+            required: true
+        },
         status: {
           required: true
         }
@@ -90,6 +93,11 @@ export default class CategoriesEdit {
         },
         image: {
           required: "Image is required"
+        },
+        slug: {
+            required: "Please enter a slug",
+            minlength: "Slug must be at least 2 characters",
+            maxlength: "Slug must not exceed 100 characters"
         },
         status: {
           required: "Status is required"
