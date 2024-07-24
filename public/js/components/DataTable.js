@@ -24,7 +24,8 @@ const defaultProps = {
       // { label: "Most Bought", value: "most-bought" }
     ],
     selected: { label: "ID", value: "id" },
-    order: "desc"
+    order: "desc",
+    isThrashed: false
   },
   withImport: true,
   withActions: true
@@ -50,6 +51,7 @@ export default class DataTable {
       minLimit: this.minLimit,
       maxLimit: this.maxLimit,
       page: 1,
+      isThrashed: false,
       ...sort
     };
     this.showPrint = this.showPrint.bind(this);
@@ -68,9 +70,7 @@ export default class DataTable {
   checkParams() {
     const urlParams = new URLSearchParams(window.location.search);
     const table = urlParams.get("table");
-    if (table === "thrashed") {
-      this.showThrashed();
-    }
+    this.query.isThrashed = table === "thrashed";
   }
 
   showPrint() {
@@ -333,6 +333,7 @@ export default class DataTable {
   }
 
   showThrashed() {
+    this.query.isThrashed = true;
     if (!this.baseApi.endsWith("thrashed/")) {
       this.baseApi += "thrashed/";
     }
@@ -346,6 +347,7 @@ export default class DataTable {
   }
 
   showNotThrashed() {
+    this.query.isThrashed = false;
     this.baseApi = this.baseApi.replace("thrashed/", "");
     this.updateTable();
 
@@ -492,10 +494,11 @@ export default class DataTable {
     Object.keys(this.query).map(key => {
       $(`#${key}`).val(this.query[key]);
     });
-    this.fetchData({ onFetch: this.queryCallback.bind(this) });
-    this.checkParams();
-    this.bindEvents();
 
+    this.checkParams();
+    if (this.query.isThrashed) this.showThrashed();
+    else this.fetchData({ onFetch: this.queryCallback.bind(this) });
+    this.bindEvents();
     return this;
   }
 }

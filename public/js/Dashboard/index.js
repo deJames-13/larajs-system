@@ -36,6 +36,7 @@ class Dashboard {
       orders: () => this.tables.getOrders(),
       users: () => this.tables.getUsers(),
       charts: () => this.charts.init(),
+      profile: () => window.location.replace("/profile"),
       logout: logout
     };
 

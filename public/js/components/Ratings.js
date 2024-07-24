@@ -8,7 +8,8 @@ const defaultProps = {
   lowest: "",
   target: "",
   count: 0,
-  tabs: 0
+  tabs: 0,
+  images: []
 };
 
 export default class Ratings {
@@ -17,7 +18,7 @@ export default class Ratings {
     Object.assign(this, defaultProps, props);
     this.fetchRatings().then(response => {
       Object.assign(this, response);
-      console.log(this);
+      // console.log(this);
       this.init();
     });
   }
@@ -46,6 +47,7 @@ export default class Ratings {
       el.append(button);
     });
   }
+
   makeStars(average) {
     const stars = [];
     for (let i = 0; i < 5; i++) {
@@ -56,29 +58,66 @@ export default class Ratings {
   }
 
   makeCard(rating) {
-    return /* HTML */ `
+    this.images = rating.images.map(image => "/" + image.path);
+    let carousel = /* HTML */ ` <div class="carousel container max-w-xs max-h-[200px] p-4">${this.makeCarousel(this.images, "rating-slide-" + rating.order_id + "__")}</div> `;
+    if (this.images.length === 0) carousel = "";
+
+    const card = /* HTML */ `
       <div class="flex gap-4">
         <div class="w-10 ">
           <img src="${rating.user_image}" class="aspect-square rounded-full" />
         </div>
-        <div class="flex flex-col gap-2">
+        <div class="flex flex-grow flex-col gap-2">
           <span class="text-primary" name="username">
             <strong>${rating.username}</strong>
           </span>
           <span class="font-light" name="username"> ${rating.rating} out of 5 </span>
-          <div class="ratings-wrapper flex items-center text-2xl text-secondary">${this.makeStars(rating.rating)}</div>
+          <div class="ratings-wrapper flex items-center text-sm text-secondary">${this.makeStars(rating.rating)}</div>
+          <span class="text-primary font-bold">${rating.title || ""}</span>
           <span class="text-base">${rating.review}</span>
         </div>
+        ${carousel}
       </div>
       <div class="divider m-0"></div>
     `;
+
+    const el = $(card);
+    return el;
   }
+
   makeCards(ratings) {
     const el = $("#user-ratings");
     ratings.forEach(rating => {
-      const card = $(this.makeCard(rating));
-      el.append(card);
+      el.append(this.makeCard(rating));
     });
+  }
+
+  makeSlide(image, count, index, identifier) {
+    let next = index + 1;
+    let prev = index - 1;
+
+    if (next === count) next = 0;
+    if (prev === -1) prev = count - 1;
+
+    return image
+      ? /* HTML */ `
+          <div id="${identifier + index}" class="carousel-item relative w-full flex items-center justify-center  ">
+            <img src="${image}" class="h-full aspect-square object-contain" />
+            <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
+              <a href="#${identifier + prev}" class="btn btn-circle">❮</a>
+              <a href="#${identifier + next}" class="btn btn-circle">❯</a>
+            </div>
+          </div>
+        `
+      : "";
+  }
+  makeCarousel(images, identifier) {
+    let slides = "";
+    let count = images.length;
+    images.forEach((image, index) => {
+      slides += this.makeSlide(image, count, index, identifier);
+    });
+    return /* HTML */ ` <div class="carousel">${slides}</div> `;
   }
 
   render() {
@@ -102,6 +141,7 @@ export default class Ratings {
     this.component = $(HTML);
     this.target && $(this.target).append(this.component);
     this.renderTabs(this.tabs);
+    console.log(this.ratings.data);
     this.makeCards(this.ratings.data);
   }
 }

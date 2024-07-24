@@ -17,9 +17,9 @@ class Product extends Model
         'stock',
         'images',
         // JUST LOAD THEM
-        'categories',
-        'brands',
-        'promos',
+        // 'categories',
+        // 'brands',
+        // 'promos',
     ];
 
     protected $fillable = [
@@ -100,5 +100,34 @@ class Product extends Model
 
         // Debugbar::info($query->toSql());
     }
+    public function getRatings()
+    {
+        $ratings = $this->orders->map(function ($order) {
+            // get username from order
+            $username = $order->customer->username;
+            $rating = $order->rating;
+            if ($rating === null) return null;
+            if (!$rating->isShowUser) $username = 'Anonymous';
+            return (object)[
+                ...$rating->toArray(),
+                'username' => $username,
+                'rating' => $rating->rating,
+            ];
+        })->filter(function ($rating) {
+            return $rating !== null;
+        });
 
+        $count = $ratings->count();
+        $average = $ratings->average('rating');
+        $highest = $ratings->max('rating');
+        $lowest = $ratings->min('rating');
+
+        return (object)[
+            'data' => $ratings,
+            'count' => $count,
+            'average' => $average,
+            'highest' => $highest,
+            'lowest' => $lowest,
+        ];
+    }
 }

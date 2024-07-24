@@ -35,6 +35,11 @@ class PageController extends Controller
         if (!$item || !isset($item->stock->quantity)) {
             abort(404);
         }
+        $item->load([
+            'brands',
+            'categories',
+            'promos'
+        ]);
         return view('pages.products.show', ['item' => $item]);
     }
 

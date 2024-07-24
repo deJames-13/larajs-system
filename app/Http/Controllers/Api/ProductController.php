@@ -25,6 +25,7 @@ class ProductController extends Controller
         return $this->getResources(Product::class, ProductResource::class, [
             'brands',
             'categories',
+            'promos'
         ]);
     }
 
@@ -34,6 +35,7 @@ class ProductController extends Controller
             return $this->getResource($id, Product::class, ProductResource::class, [
                 'brands',
                 'categories',
+                'promos'
             ]);
         } catch (Exception $ex) {
             Log::error($ex->getMessage());
@@ -66,7 +68,11 @@ class ProductController extends Controller
         $product->stock()->create(['quantity' => $stock ? $stock : 0]);
         $product->categories()->attach($data['categories'] ?? []);
         $product->brands()->attach($data['brands'] ?? []);
-
+        $product->load([
+            'brands',
+            'categories',
+            'promos'
+        ]);
 
         $this->handleImageUpload($request, $product, $image_id);
 
@@ -112,6 +118,11 @@ class ProductController extends Controller
         $product->categories()->sync($data['categories'] ?? []);
         $product->brands()->sync($data['brands'] ?? []);
 
+        $product->load([
+            'brands',
+            'categories',
+            'promos'
+        ]);
 
         $this->handleImageUpload($request, $product, $image_id);
 
@@ -161,6 +172,7 @@ class ProductController extends Controller
             ->with([
                 'brands',
                 'categories',
+                'promos'
             ])
             ->orderBy('updated_at', $order)
             ->paginate($limit, ['*'], 'page', $page);
@@ -200,6 +212,7 @@ class ProductController extends Controller
             $meta['tabs'][] = ['label' => $i . ' Star', 'value' => $c->where('rating', $i)->count()];
         $meta['tabs'][] = ['label' => 'All', 'value' => $meta['count']];
 
+        $query->orderBy('updated_at', 'desc');
         $ratings = $query->paginate(10, ['*'], 'page', $page);
         $ratings->getCollection()->transform(function ($rating) {
             $rating->username = $rating->order->customer->username;
