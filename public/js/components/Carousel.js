@@ -1,7 +1,7 @@
 const dProps = {
   id: "carousel",
   selector: ".item-carousel",
-  images: ["https://placehold.co/400x600?text=item"],
+  images: ["https://placehold.co/400?text=noimage"],
   prevButton: ".prev",
   nextButton: ".next",
   autoSlideInterval: 5000
@@ -85,7 +85,9 @@ export default class Carousel {
         <button type="button" class="btn btn-ghost aspect-square z-[100] top-1/2 right-0  absolute next m-4 hover:scale-110 transition-all hover:text-primary">
           <i class="fas fa-angle-right"></i>
         </button>
-        <div class="flex-grow item-carousel hover h-[300px] max-h-[300px] flex items-center justify-center overflow-hidden"></div>
+        <div class="flex-grow item-carousel hover h-[300px] max-h-[300px] flex items-center justify-center overflow-hidden">
+          <img src="https://placehold.co/400?text=noimage" alt="" />
+        </div>
       </div>
     `;
     return HTML;

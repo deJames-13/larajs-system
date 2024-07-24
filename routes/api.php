@@ -132,7 +132,8 @@ Route::group(['middleware' => 'auth:sanctum', 'only.ajax'], function () {
         Route::post('/checkout', [OrderController::class, 'store']);
         Route::get('/', [OrderController::class, 'index']);
         Route::get('/{id}', [OrderController::class, 'show']);
-        Route::put('/{id}', [OrderController::class, 'update']);
+        Route::match(['put', 'post'], '/rate/{id}', [OrderController::class, 'rate']);
+        Route::put('/{id}', [OrderController::class, 'update'])->where('id', '[0-9]+');
     });
 
     // export

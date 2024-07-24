@@ -1,14 +1,18 @@
 import Login from "./Login.js";
 import SignUp from "./SignUp.js";
+import logout from "./logout.js";
 
-var modal = null;
 $(document).on("click", ".auth-btn", function () {
+  if (window.location.pathname === "/login" || window.location.pathname === "/register") return;
+
   const type = $(this).data("open-modal");
-  if (modal) modal.remove();
   if (type === "login_modal") {
-    if (window.location.pathname === "/login" || window.location.pathname === "/register") return;
-    modal = new Login();
+    $("#signup_modal").remove();
+    new Login();
   } else if (type === "signup_modal") {
-    modal = new SignUp();
+    $("#login_modal").remove();
+    new SignUp();
+  } else if (type === "logout") {
+    logout();
   }
 });

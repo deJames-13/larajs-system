@@ -10,13 +10,21 @@ export default class ProductCard {
     this.render();
   }
 
-  makeRatingStars(ratings) {
+  makeRatingStars(ratings = []) {
     const stars = [];
     for (let i = 0; i < 5; i++) {
-      const star = /* HTML */ ` <i class="fas fa-star ${i < ratings ? "text-primary" : ""}"></i> `;
+      const star = /* HTML */ ` <i class="fas fa-star ${i < ratings.average ? "text-primary" : ""}"></i> `;
       stars.push(star);
     }
-    return stars.join("");
+    const HTML = /* HTML */ `
+      <!-- Ratings -->
+      <div class="flex items-center space-x-1 my-2">
+        <!-- Starts -->
+        <div class="flex items-center text-secondary">${stars.join("")}</div>
+        <p class="text-xs"><span class="text-primary font-bold">${ratings.average || 0}</span> (${ratings.count || 0})</p>
+      </div>
+    `;
+    return HTML;
   }
 
   makeCategoryPills(categories) {
@@ -30,7 +38,6 @@ export default class ProductCard {
 
   render() {
     const ratings = this.product.ratings;
-    const average = ratings.average || 0;
 
     const brand = (this.product.brands.length > 0 && this.product.brands[0].name) || "";
     const card = /* HTML */ `
@@ -39,8 +46,8 @@ export default class ProductCard {
         <!-- Parent div with group class for hover effect -->
         <div class="group relative transition-all ease-in overflow-clip rounded-t-lg" onclick="window.location.replace('${this.redirectUrl}')">
           <!-- Image -->
-          <div class="987 65 image-wrapper flex justify-center">
-            <img src="${this.product.image_path ?? "https://placehold.co/600x400?text=" + this.product.name}" alt="${this.product.name}" class="object-cover " />
+          <div class="container h-[200px] image-wrapper flex justify-center">
+            <img src="${this.product.image_path ?? "https://placehold.co/600x400?text=" + this.product.name}" alt="${this.product.name}" class="h-full aspect-square" />
           </div>
           <!-- Buy Button that will only show if image is hovered -->
           <a
@@ -58,12 +65,8 @@ export default class ProductCard {
           <span class="text-sm font-semibold uppercase"> ${brand} </span>
           <p class="font-light sm:text-md">${this.product.name}</p>
           <span class="font-bold">P${this.product.price}</span>
-        </div>
-        <!-- Ratings -->
-        <div class="flex items-center space-x-1 my-2">
-          <!-- Starts -->
-          <div class="flex items-center text-secondary">${this.makeRatingStars(average)}</div>
-          <p class="text-xs"><span class="text-primary font-bold">${average}</span> (${ratings.count})</p>
+
+          ${this.makeRatingStars(ratings)}
         </div>
       </div>
     `;

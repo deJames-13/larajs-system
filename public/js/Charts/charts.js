@@ -32,29 +32,25 @@ export default class Charts {
   }
 
   showAllCharts() {
-    $(this.target).html(`
-        <div class="rounded-t-lg overflow-clip">
-        <div class="custom-circle-border bottom-pattern p-10 relative">
-            <div class="charts-container">
-            <div class="chart-card">
-                <h3 class="chart-heading">Order Per Month</h3>
-                <div class="chart-container"><canvas id="order-per-month"></canvas></div>
-            </div>
-            <div class="chart-card">
-                <h3 class="chart-heading">Orders Revenue</h3>
-                <div class="chart-container"><canvas id="orders-revenue"></canvas></div>
-            </div>
-            <div class="chart-card">
-                <h3 class="chart-heading">Products Sold</h3>
-                <div class="chart-container"><canvas id="products-sold"></canvas></div>
-            </div>
-            <div class="chart-card">
-                <h3 class="chart-heading">Customer Per Address</h3>
-                <div class="chart-container"><canvas id="customer-per-address"></canvas></div>
-            </div>
-            </div>
+    $(this.target).html(/* HTML */ `
+      <div class="flex justify-center flex-wrap items-center gap-4">
+        <div class="border container bg-base-100 rounded-lg shadow-xl p-4">
+          <h2 class="font-bold text-xl">Order Per Month</h2>
+          <div class="p-4 w-full h-full"><canvas id="order-per-month"></canvas></div>
         </div>
+        <div class="border container bg-base-100 rounded-lg shadow-xl p-4">
+          <h2 class="font-bold text-xl">Orders Revenue</h2>
+          <div class="p-4 w-full h-full"><canvas id="orders-revenue" class="w-full h-full"></canvas></div>
         </div>
+        <div class="border container bg-base-100 rounded-lg shadow-xl p-4">
+          <h2 class="font-bold text-xl">Products Sold</h2>
+          <div class="p-4 w-full h-full"><canvas id="products-sold"></canvas></div>
+        </div>
+        <div class="border container bg-base-100 rounded-lg shadow-xl p-4">
+          <h2 class="font-bold text-xl">Customer Per Address</h2>
+          <div class="p-4 w-full h-full"><canvas id="customer-per-address" class="w-full h-full"></canvas></div>
+        </div>
+      </div>
     `);
 
     this.getCustomerPerAddress();
