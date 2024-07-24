@@ -45,6 +45,8 @@ class CategoryController extends Controller
             'description' => 'required|string',
             // enum of active and inactive
             'status' => 'required|string|in:active,inactive',
+            'image_id' => 'sometimes|numeric',
+
         ]);
 
         $image_id = $data['image_id'] ?? null;
@@ -55,7 +57,6 @@ class CategoryController extends Controller
         $this->handleImageUpload($request, $category, $image_id);
 
         $res = new CategoryResource($category);
-
         return response($res, 201, ['message' => 'Category added successfully!']);
     }
 

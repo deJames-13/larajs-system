@@ -25,8 +25,11 @@ Route::get('/test', function () {
 // });
 
 // Search Functions
-Route::get('/autocomplete', [SearchController::class, 'autocomplete']);
-Route::post('/search', [SearchController::class, 'search']);
+Route::group(['middleware' => 'only.ajax'], function () {
+    Route::get('/autocomplete', [SearchController::class, 'autocomplete']);
+    Route::post('/search', [SearchController::class, 'search']);
+    Route::get('/ratings/{id}', [ProductController::class, 'ratings']);
+});
 
 // CRUD
 $crud = [
@@ -129,8 +132,14 @@ Route::group(['middleware' => 'auth:sanctum', 'only.ajax'], function () {
         Route::post('/checkout', [OrderController::class, 'store']);
         Route::get('/', [OrderController::class, 'index']);
         Route::get('/{id}', [OrderController::class, 'show']);
-        Route::put('/{id}', [OrderController::class, 'update']);
+        Route::match(['put', 'post'], '/rate/{id}', [OrderController::class, 'rate']);
+        Route::put('/{id}', [OrderController::class, 'update'])->where('id', '[0-9]+');
     });
+
+    // export
+    Route::get('exports/orders/{type}', [TableController::class, 'ordersExport'])
+        ->name('orders.export')
+        ->middleware(['auth:sanctum', 'role:staff,admin']);
 
     // CHARTS
     // insert chart function name here with url equivalent

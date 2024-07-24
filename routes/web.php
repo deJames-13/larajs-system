@@ -2,12 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController;
-use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\ProductController;
 
 
-Route::get('/mailorder', function () {
-    return view('mail.order-status');
-});
+
+Route::get('/test', [ProductController::class, 'ratings']);
 
 Route::get('/home', [PageController::class, 'home'])->name('home');
 Route::get('/', [PageController::class, 'home'])->name('shop');

@@ -1,5 +1,8 @@
 import ajaxRequest from "../assets/ajaxRequest.js";
+import Login from "../Auth/Login.js";
 import Carousel from "../components/Carousel.js";
+import Ratings from "../components/Ratings.js";
+
 let item = {
   ...product,
   id: parseInt($(".info-container").data("id")),
@@ -11,30 +14,13 @@ let item = {
 let carousel = null;
 let images = item.images.map(image => "/" + image.path) || ["https://placehold.co/400x600?text=item"];
 
-console.log(item);
+// console.log(item);
 
 const loadCarousel = () => {
   carousel = new Carousel({
     id: "item-carousel",
     images: images
   });
-};
-
-const makeRatings = ratings => {
-  const stars = [];
-  for (let i = 0; i < 5; i++) {
-    const star = /* HTML */ ` <i class="fas fa-star ${i < ratings.average ? "text-primary" : ""}"></i> `;
-    stars.push(star);
-  }
-  const HTML = /*HTML*/ `
-    <!-- Ratings -->
-    <div class="flex items-center space-x-1 my-2">
-      <!-- Starts -->
-      <div class="flex items-center text-secondary">${stars.join("")}</div>
-      <p class="text-xs"><span class="text-primary font-bold">${ratings.average}</span> (${ratings.count})</p>
-    </div>
-  `;
-  $("#ratings-wrapper").html(HTML);
 };
 
 const makeCategoryPills = categories => {
@@ -57,6 +43,13 @@ const init = () => {
       $("#price").text(item.itemPrice.toFixed(2));
     }
   });
+  $(".prev").click(() => {
+    if (carousel) carousel.prev();
+  });
+
+  $(".next").click(() => {
+    if (carousel) carousel.next();
+  });
 
   $("#sub_qty").click(function () {
     item.quantity = parseInt($("#quantity_count").text());
@@ -68,8 +61,11 @@ const init = () => {
   });
 
   loadCarousel();
-  makeRatings(item.ratings);
   makeCategoryPills(item.categories);
+  new Ratings({
+    productId: item.id,
+    target: "#product-ratings-wrapper"
+  });
 };
 
 // POST CART
@@ -98,11 +94,21 @@ $(document).on("click", "#cart-add", function () {
         }
       });
     },
-    onError: response => {
-      Swal.fire("Oops!", "Something went wrong. Please contact us", "error").then(() => {
-        window.location.href = "/products";
-      });
-      return;
+    onError: error => {
+      console.error(error);
+      if (error.status === 401)
+        Swal.fire({
+          title: "We don't know you",
+          text: "Please login to continue.",
+          icon: "error",
+          showCancelButton: true,
+          confirmButtonText: "Login",
+          cancelButtonText: "Cancel"
+        }).then(result => {
+          if (result.isConfirmed) {
+            modal = new Login();
+          }
+        });
     }
   });
 });

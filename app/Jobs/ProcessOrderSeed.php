@@ -75,7 +75,7 @@ class ProcessOrderSeed implements ShouldQueue
                         'rating' => rand(1, 5),
                         'title' => fake()->sentence(),
                         'review' => fake()->sentence(),
-                        'isShowUser' => rand(0, 1),
+                        'is_show_user' => rand(0, 1),
                     ]);
                 }
 

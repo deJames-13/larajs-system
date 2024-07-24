@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Rating;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -12,7 +13,11 @@ class Order extends Model
 
     use HasFactory, SoftDeletes;
     // 'customer', 'products',
-    protected $with = ['rating'];
+    protected $with = [
+        'customer',
+        'products',
+        'rating',
+    ];
     protected $guarded = [];
 
     public function customer()
@@ -31,7 +36,7 @@ class Order extends Model
 
     public function scopeFilter($query, array $filters)
     {
-        Debugbar::info($filters);
+        // Debugbar::info($filters);
         $query->when($filters['search'] ?? null, function ($query, $search) {
             $query->where('id', 'like', '%' . $search . '%')
                 ->orWhere('shipping_address', 'like', '%' . $search . '%')
@@ -140,6 +145,7 @@ class Order extends Model
             ],
             "status" => [
                 "completed" => Order::where('status', 'completed')->count(),
+                "shipping" => Order::where('status', 'shipping')->count(),
                 "pending" => Order::where('status', 'pending')->count(),
                 "cancelled" => Order::where('status', 'cancelled')->count(),
             ],

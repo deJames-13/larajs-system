@@ -37,7 +37,7 @@ export default class OrdersRevenue {
     }
     this.chart && this.chart.destroy();
     this.chart = new Chart(ctx, {
-      type: "line",
+      type: "bar",
       data: {
         labels: monthNames,
         datasets: [

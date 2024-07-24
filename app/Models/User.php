@@ -13,7 +13,10 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable, HasRoles, HasApiTokens, SoftDeletes;
 
-    protected $with = ['info', 'images'];
+    protected $with = [
+        // 'info',
+        // 'images'
+    ];
 
     protected $fillable = [
         'username',

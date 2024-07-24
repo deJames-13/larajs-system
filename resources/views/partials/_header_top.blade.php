@@ -49,19 +49,15 @@
 
 					<div id="header-avatar" tabindex="0" role="button" class="avatar">
 						@auth
-							@php
-								$image = isset(auth()->user()->images[0])
-								    ? auth()->user()->images[0]->path
-								    : 'https://img.icons8.com/ios-glyphs/30/user--v1.png';
-							@endphp
-
-							<div class="w-8 rounded-full">
-								<img id="profile-image" alt="{{ auth()->user()->username }}" src="{{ $image }}" />
-							</div>
+							@if (isset(auth()->user()->images[0]))
+								<div class="w-8 rounded-full">
+									<img id="profile-image" alt="{{ auth()->user()->username }}" src="{{ auth()->user()->images[0]->path }}" />
+								</div>
+							@else
+								<i class="fas fa-user"></i>
+							@endif
 						@else
-							<div class="w-5 rounded-full">
-								<img id="profile-image" src="https://img.icons8.com/ios-glyphs/30/user--v1.png" alt="user--v1" />
-							</div>
+							<i class="fas fa-user"></i>
 						@endauth
 					</div>
 				</div>
@@ -78,14 +74,22 @@
 								</a>
 							</li>
 							<li>
-								<form id="logout-btn" method="POST" action="{{ route('logout') }}" class="flex">
-									@csrf
-									<button type="submit" class="w-full text-left hover:bg-transparent hover:scale-100">Logout</button>
-								</form>
+								<a href="/profile?page=cart" class="justify-between">
+									Cart
+									{{-- <span class="badge">New</span> --}}
+								</a>
 							</li>
+							<li>
+								<a href="/profile?page=orders" class="justify-between">
+									Orders
+									{{-- <span class="badge">New</span> --}}
+								</a>
+							</li>
+							<li></li>
+							<li><button class="auth-btn" type="button" data-open-modal="logout">Logout</button></li>
 						@else
-							<li><button class="auth-btn" data-open-modal="signup_modal">Register</button></li>
-							<li><button class="auth-btn" data-open-modal="login_modal">Login</button></li>
+							<li><button class="auth-btn" type="button" data-open-modal="signup_modal">Register</button></li>
+							<li><button class="auth-btn" type="button" data-open-modal="login_modal">Login</button></li>
 						@endauth
 
 					</ul>
@@ -111,7 +115,7 @@
 									<p class="text-info">Subtotal: PHP <span id="cart-sbt">0</span> </p>
 								</div>
 								<div class="card-actions">
-									<a href="/cart" id="cart-view" class="btn btn-primary btn-block">View cart</a>
+									<a href="/profile?page=cart" id="cart-view" class="btn btn-primary btn-block">View cart</a>
 								</div>
 							</div>
 						</div>

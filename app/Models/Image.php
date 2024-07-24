@@ -9,6 +9,10 @@ class Image extends Model
 {
     use HasFactory;
     protected $guarded = [];
+    protected $fillable = [
+        'name',
+        'path',
+    ];
 
 
     public function users()
@@ -27,5 +31,9 @@ class Image extends Model
     public function brands()
     {
         return $this->belongsToMany(Brand::class, 'brand_images', 'image_id', 'brand_id');
+    }
+    public function ratings()
+    {
+        return $this->belongsToMany(Rating::class, 'rating_images', 'image_id', 'rating_id');
     }
 }

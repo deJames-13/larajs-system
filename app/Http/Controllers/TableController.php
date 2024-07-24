@@ -20,7 +20,7 @@ use App\Imports\Categories\CategoriesImport;
 
 class TableController extends Controller
 {
-    #1 User 
+    #1 User
     public function usersExport(string $type)
     {
         Debugbar::info($type);

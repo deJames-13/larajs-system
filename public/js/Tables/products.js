@@ -4,7 +4,9 @@ var filters = [
   { value: "name", label: "Name" },
   { value: "price", label: "Price" },
   { value: "status", label: "Status" },
-  { value: "stock", label: "Stock" }
+  { value: "stock", label: "Stock" },
+  { value: "created_at", label: "Latest" },
+  { value: "created_at_oldest", label: "Oldest" }
 ];
 var sortBy = {
   display: true,

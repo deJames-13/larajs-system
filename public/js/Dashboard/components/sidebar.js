@@ -51,9 +51,9 @@ export default class DashboardSideBar extends SideBar {
       },
       { type: "separator" },
       {
-        text: "Settings",
-        icon: "fas fa-cogs",
-        url: "settings"
+        text: "Profile",
+        icon: "fas fa-user",
+        url: "profile"
       },
       {
         text: "Logout",

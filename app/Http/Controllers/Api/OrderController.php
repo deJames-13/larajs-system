@@ -20,28 +20,32 @@ class OrderController extends Controller
         $limit = $request->query('limit') ?? 10;
         $isAdmin = $request->user()->role !== 'customer';
 
-        $orders = Order::filter(request(['search']));
+
+        $query = Order::query();
+        if (!$isAdmin)
+            $query->where('user_id', $request->user()->id);
+
+        $query->filter(request(['search']));
         if ($status !== 'all') {
-            $orders->where('status', $status);
+            $query->where('status', $status);
         }
 
-        if (!$isAdmin)
-            $orders->where('user_id', $request->user()->id);
-        $orders->with([
+
+        $query->with([
             'products' => function ($query) {
                 $query->withPivot('quantity');
             },
             'customer',
+            'customer.info',
+            'customer.images',
         ]);
 
 
-        $orders->orderBy('updated_at', 'desc');
+        $query->orderBy('updated_at', 'desc');
 
-        $page = $orders->paginate($limit);
+        $orders = $query->paginate($limit);
 
-        // Debugbar::info($page);
-
-        return OrderResource::collection($page);
+        return OrderResource::collection($orders);
     }
 
     // INFO: For admin api fetch
@@ -51,7 +55,10 @@ class OrderController extends Controller
             'products' => function ($query) {
                 $query->withPivot('quantity');
             },
+            'products.stock',
             'customer',
+            'customer.info',
+            'customer.images',
         ])->findOrFail($id);
         if (!$order) {
             return response(
@@ -183,6 +190,26 @@ class OrderController extends Controller
         Mail::to($order->customer->email)->send(new OrderStatusNotifier($order));
 
         return $res;
+    }
+    public function rate(Request $request, string $id)
+    {
+        $data = $request->validate([
+            'rating' => 'required|numeric',
+            'title' => 'sometimes|string',
+            'review' => 'sometimes|string',
+            'is_show_user' => 'sometimes',
+        ]);
+        $image_id = $data['image_id'] ?? null;
+        unset($data['image_id']);
+        $data['is_show_user'] = isset($data['is_show_user']);
+
+        $order = Order::findOrFail($id);
+        $rating = $order->rating()->updateOrCreate(['order_id' => $id], $data);
+
+
+        $this->handleImageUpload($request, $rating, $image_id);
+        $order->refresh();
+        return response()->json($order, 201, ['message' => 'Rating sent successfully!']);
     }
 
     // WARNING: Order Deletion is not recommended

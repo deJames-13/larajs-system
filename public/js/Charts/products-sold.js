@@ -41,7 +41,7 @@ export default class ProductsSold {
     };
 
     const config = {
-      type: "doughnut",
+      type: "bar",
       data: chartData,
       options: {
         responsive: true,

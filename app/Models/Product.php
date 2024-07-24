@@ -14,12 +14,11 @@ class Product extends Model
     use HasFactory, Searchable, SoftDeletes;
 
     protected $with = [
-        'stock',
-        'images',
-        // JUST LOAD THEM
-        'categories',
-        'brands',
-        'promos',
+        // 'stock',
+        // 'images',
+        // 'categories',
+        // 'brands',
+        // 'promos',
     ];
 
     protected $fillable = [
@@ -80,30 +79,65 @@ class Product extends Model
                 ->orWhere('specifications', 'like', '%' . $search . '%');
         });
 
-        if ($sort === 'oldest') {
-            $query->orderBy('created_at', "asc");
-        } else if ($sort === 'latest') {
-            $query->orderBy('created_at', "desc");
-        } else if ($sort === 'stock') {
-            $query->join('stocks', 'products.sku_code', '=', 'stocks.product_sku_code')
-                ->select('products.*', 'stocks.quantity')
-                ->orderBy('quantity', $order);
-        } else if (!in_array($sort, $columns)) $sort = 'updated_at';
-        else $query->orderBy($sort, $order);
+        switch ($sort) {
+            case 'oldest':
+                $query->oldest();
+                break;
 
-        // Debugbar::info($query->toSql());
+            case 'newest':
+                $query->latest();
+                break;
+
+            case 'lowest-price':
+                $query->orderBy('price', 'asc');
+                break;
+
+            case 'highest-price':
+                $query->orderBy('price', 'desc');
+                break;
+
+            case 'stock':
+                $query->join('stocks', 'products.sku_code', '=', 'stocks.product_sku_code')
+                    ->orderBy('stocks.quantity', $order);
+                break;
+
+            case 'brand-name':
+                $query->join('product_brands', 'products.id', '=', 'product_brands.product_id')
+                    ->join('brands', 'product_brands.brand_id', '=', 'brands.id')
+                    ->selectRaw('products.id, products.name, products.price, brands.name as brand_name')
+                    ->groupBy('products.id', 'products.name', 'products.price', 'brand_name')
+                    ->orderBy('brand_name', $order);
+                break;
+
+            case 'top-rated':
+                $query->join('order_products', 'products.id', '=', 'order_products.product_id')
+                    ->join('orders', 'order_products.order_id', '=', 'orders.id')
+                    ->join('ratings', 'orders.id', '=', 'ratings.order_id')
+                    ->selectRaw('products.id, products.name, products.price, avg(ratings.rating) as avg_rating')
+                    ->groupBy('products.id', 'products.name', 'products.price')
+                    ->orderBy('avg_rating', $order);
+                break;
+
+
+            default:
+                if (!in_array($sort, $columns)) $sort = 'updated_at';
+                $query->orderBy($sort, $order);
+                break;
+        }
+
+        Debugbar::info($query->toSql());
     }
 
-    // META DATA 
-    // get ratings metadata from orders they belong to
+
+
     public function getRatings()
     {
-        $ratings = $this->orders->map(function ($order) {
-            // get username from order
+        $orders = $this->orders()->with(['customer', 'products', 'rating'])->get();
+        $ratings = $orders->map(function ($order) {
             $username = $order->customer->username;
             $rating = $order->rating;
             if ($rating === null) return null;
-            if (!$rating->isShowUser) $username = 'Anonymous';
+            if (!$rating->is_show_user) $username = 'Anonymous';
             return (object)[
                 ...$rating->toArray(),
                 'username' => $username,

@@ -5,7 +5,9 @@ var filters = [
   { value: "company", label: "Company" },
   { value: "website", label: "Website" },
   { value: "description", label: "Description" },
-  { value: "status", label: "Status" }
+  { value: "status", label: "Status" },
+  { value: "created_at", label: "Latest" },
+  { value: "created_at_oldest", label: "Oldest" }
 ];
 var sortBy = {
   display: true,
