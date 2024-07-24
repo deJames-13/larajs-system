@@ -90,7 +90,7 @@ $(document).on("click", "#cart-add", function () {
         confirmButtonText: "View Cart"
       }).then(result => {
         if (result.isConfirmed) {
-          window.location.href = "/cart";
+          window.location.href = "/profile?page=cart";
         }
       });
     },

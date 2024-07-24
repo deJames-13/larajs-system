@@ -30,7 +30,11 @@ class UserController extends Controller
         if (!auth()->check()) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
-        $user = auth()->user();
+        $user = User::find(auth()->id());
+        $user->load([
+            'info',
+            'images'
+        ]);
         $res = new UserResource($user);
 
         return response($res);
@@ -40,6 +44,10 @@ class UserController extends Controller
     {
         $search = request()->get('search');
         $user = User::filter($search)->get();
+        $user->load([
+            'info',
+            'images'
+        ]);
 
         return response(UserResource::collection($user));
     }
@@ -47,7 +55,10 @@ class UserController extends Controller
     public function index()
     {
         try {
-            return $this->getResources(User::class, UserResource::class);
+            return $this->getResources(User::class, UserResource::class, [
+                'info',
+                'images'
+            ]);
         } catch (Exception $ex) {
             Log::error($ex->getMessage());
             return response()->json(['message' => $ex->getMessage()], 404);
@@ -57,7 +68,10 @@ class UserController extends Controller
     public function show(string $id)
     {
         try {
-            return $this->getResource($id, User::class, UserResource::class);
+            return $this->getResource($id, User::class, UserResource::class, [
+                'info',
+                'images'
+            ]);
         } catch (Exception $ex) {
             Log::error($ex->getMessage());
             return response()->json(['message' => $ex->getMessage()], 404);
@@ -88,6 +102,10 @@ class UserController extends Controller
 
         $userData['password'] = bcrypt($userData['password']);
         $user = User::create($userData);
+        $user->load([
+            'info',
+            'images'
+        ]);
 
         if ($userInfo) {
             $user->info()->create($userInfo);
@@ -134,7 +152,10 @@ class UserController extends Controller
         }
 
         $user->update($userData);
-
+        $user->load([
+            'info',
+            'images'
+        ]);
         if (isset($userInfo)) {
             $user->info()->updateOrCreate([], $userInfo);
         }
@@ -172,12 +193,14 @@ class UserController extends Controller
         $order = request('order') ?? 'desc';
         $search = request(['search']) ?? null;
 
-        $products = User::onlyTrashed()
+        $users = User::onlyTrashed()
             ->filter($search)
+            ->with(['info', 'images'])
             ->orderBy('updated_at', $order)
             ->paginate($limit, ['*'], 'page', $page);
 
-        return UserResource::collection($products);
+
+        return UserResource::collection($users);
     }
 
     public function status(Request $request, string $id)

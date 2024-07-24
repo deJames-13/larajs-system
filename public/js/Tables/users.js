@@ -64,6 +64,7 @@ export default class UsersPage extends TablePage {
 
   bindEvents() {
     super.bindEvents();
+    console.log(1);
     $(document)
       .off()
       .on("click", ".row-view", e => {
@@ -78,11 +79,8 @@ export default class UsersPage extends TablePage {
             this.init();
           }
         }).init();
-      });
-
-    $("#btn-add-" + this.table)
-      .off("click")
-      .on("click", () => {
+      })
+      .on("click", "#btn-add-" + this.tableName, () => {
         new UserAdd({
           onUpdate: () => {
             this.init();

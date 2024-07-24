@@ -36,7 +36,7 @@ return new class extends Migration
             $table->string('title')->nullable();
             $table->string('review')->nullable();
             $table->string('status')->nullable();
-            $table->boolean('isShowUser')->nullable();
+            $table->boolean('is_show_user')->nullable();
             $table->string('image_path')->nullable();
 
             $table->timestamps();

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Rating;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -12,7 +13,11 @@ class Order extends Model
 
     use HasFactory, SoftDeletes;
     // 'customer', 'products',
-    protected $with = ['rating'];
+    protected $with = [
+        'customer',
+        'products',
+        'rating',
+    ];
     protected $guarded = [];
 
     public function customer()

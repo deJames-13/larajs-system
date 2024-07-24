@@ -3,18 +3,11 @@
 
 		{{-- PAGINATION @fixed z-[110] --}}
 		<div class="w-full flex gap-4 items-center justify-end">
-			<div id="view-limit" class="my-2 flex justify-end items-center gap-2">
-				<label for="view-limit" class="text-sm font-bold uppercase">Sort: </label>
-				<select class="input input-bordered rounded-sm w-64">
-					<option value="latest">Latest</option>
-					<option value="price-low">Price: Low to High</option>
-					<option value="price-high">Price: High to Low</option>
-				</select>
+			{{-- QUERIES --}}
+			<div class="queries">
+
 			</div>
-			<div id="view-limit" class="my-2 flex justify-end items-center gap-2">
-				<label for="view-limit" class="text-sm font-bold uppercase">View: </label>
-				<input type="number" class="input input-bordered rounded-sm w-20" value="20">
-			</div>
+
 			<div id="paginations" class="my-2 flex justify-end">
 			</div>
 		</div>
@@ -131,9 +124,11 @@
 	@push('scripts')
 		<script type="module">
 			import Products from "{{ asset('js/Products/index.js') }}";
-			new Products({
-				parent: '#items-container',
-				url: "{{ route('products.all') }}"
+			$(document).ready(function() {
+				Products.init({
+					parent: '#items-container',
+					url: "{{ route('products.all') }}",
+				});
 			});
 		</script>
 	@endpush

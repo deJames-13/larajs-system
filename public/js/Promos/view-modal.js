@@ -10,13 +10,13 @@ const defaultProps = {
   data: {}
 };
 export default class ViewPromo extends FormModal {
-    constructor(props = {}) {
-        super({ ...defaultProps, ...props });
-    }
+  constructor(props = {}) {
+    super({ ...defaultProps, ...props });
+  }
   makeContent() {
     console.log(this.data);
     const promo = this.data;
-    const image = promo.image || "https://via.placeholder.com/150"; // Use a placeholder if no image is provided
+    const image = (promo.images.length && promo.images[0].path) || "https://via.placeholder.com/150"; // Use a placeholder if no image is provided
 
     return /*HTML*/ `
     <div class="py-4 flex flex-col gap-8 max-w-6xl mx-auto">
@@ -101,5 +101,5 @@ export default class ViewPromo extends FormModal {
         </div>
     </div>
     `;
-}
+  }
 }

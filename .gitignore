@@ -24,3 +24,4 @@ lock.mdb
 .null_ls*
 .conform*
 *.exe
+public/storage

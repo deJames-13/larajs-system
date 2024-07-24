@@ -19,13 +19,19 @@ class OrderController extends Controller
         $page = $request->query('page') ?? 1;
         $limit = $request->query('limit') ?? 10;
         $isAdmin = $request->user()->role !== 'customer';
+        $search = $request->query('search') ?? '';
 
 
         $query = Order::query();
         if (!$isAdmin)
             $query->where('user_id', $request->user()->id);
 
-        $query->filter(request(['search']));
+        $query->filter(
+            [
+                'search' => $search,
+                'status' => $status,
+            ]
+        );
         if ($status !== 'all') {
             $query->where('status', $status);
         }
@@ -36,14 +42,14 @@ class OrderController extends Controller
                 $query->withPivot('quantity');
             },
             'customer',
+            'customer.info',
+            'customer.images',
         ]);
 
 
         $query->orderBy('updated_at', 'desc');
 
-        $orders = $query->paginate($limit);
-
-        Debugbar::info($query->where('id', 501)->get());
+        $orders = $query->paginate($limit, ['*'], 'page', $page);
 
         return OrderResource::collection($orders);
     }
@@ -55,7 +61,10 @@ class OrderController extends Controller
             'products' => function ($query) {
                 $query->withPivot('quantity');
             },
+            'products.stock',
             'customer',
+            'customer.info',
+            'customer.images',
         ])->findOrFail($id);
         if (!$order) {
             return response(
@@ -194,11 +203,11 @@ class OrderController extends Controller
             'rating' => 'required|numeric',
             'title' => 'sometimes|string',
             'review' => 'sometimes|string',
-            'isShowUser' => 'sometimes',
+            'is_show_user' => 'sometimes',
         ]);
         $image_id = $data['image_id'] ?? null;
         unset($data['image_id']);
-        $data['isShowUser'] = isset($data['isShowUser']);
+        $data['is_show_user'] = isset($data['is_show_user']);
 
         $order = Order::findOrFail($id);
         $rating = $order->rating()->updateOrCreate(['order_id' => $id], $data);
