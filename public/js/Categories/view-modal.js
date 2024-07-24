@@ -10,14 +10,14 @@ const defaultProps = {
   data: {}
 };
 export default class ViewCategory extends FormModal {
-    constructor(props = {}) {
-        super({ ...defaultProps, ...props });
-    }
+  constructor(props = {}) {
+    super({ ...defaultProps, ...props });
+  }
   makeContent() {
     console.log(this.data);
     const category = this.data;
-    const logo = category.logo || "https://via.placeholder.com/150"; // Default placeholder for logo
-        return /*HTML*/ `
+    const logo = (category.images.length && category.images[0].path) || "https://via.placeholder.com/150"; // Default placeholder for logo
+    return /*HTML*/ `
         <div class="py-4 flex flex-col gap-8 max-w-5xl mx-auto">
             <div class="flex p-4 gap-4 border shadow-xl rounded-lg">
                 <!-- Logo -->
@@ -82,5 +82,5 @@ export default class ViewCategory extends FormModal {
             </div>
         </div>
         `;
-    }
+  }
 }

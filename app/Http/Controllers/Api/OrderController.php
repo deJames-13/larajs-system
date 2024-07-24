@@ -19,13 +19,19 @@ class OrderController extends Controller
         $page = $request->query('page') ?? 1;
         $limit = $request->query('limit') ?? 10;
         $isAdmin = $request->user()->role !== 'customer';
+        $search = $request->query('search') ?? '';
 
 
         $query = Order::query();
         if (!$isAdmin)
             $query->where('user_id', $request->user()->id);
 
-        $query->filter(request(['search']));
+        $query->filter(
+            [
+                'search' => $search,
+                'status' => $status,
+            ]
+        );
         if ($status !== 'all') {
             $query->where('status', $status);
         }
@@ -43,7 +49,7 @@ class OrderController extends Controller
 
         $query->orderBy('updated_at', 'desc');
 
-        $orders = $query->paginate($limit);
+        $orders = $query->paginate($limit, ['*'], 'page', $page);
 
         return OrderResource::collection($orders);
     }
