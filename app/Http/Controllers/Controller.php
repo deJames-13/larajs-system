@@ -15,8 +15,16 @@ abstract class Controller
     {
         $page = request('page') ?? 1;
         $limit = request('limit') ?? 10;
+        $sort  = request('sort') ?? 'id';
+        $order = request('order') ?? 'asc';
+        $search = request('search') ?? '';
 
-        $data = $model::filter(request(['search', 'sort', 'order']))
+        if (!is_numeric($page) || $page < 1) $limit = 1;
+        if (!is_numeric($limit) || $limit < 1) $limit = 10;
+        if (!in_array($order, ['asc', 'desc'])) $order = 'asc';
+
+
+        $data = $model::filter(['search' => $search, 'sort' => $sort, 'order' => $order])
             ->paginate($limit, ['*'], 'page', $page);
 
 

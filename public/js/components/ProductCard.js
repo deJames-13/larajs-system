@@ -21,7 +21,7 @@ export default class ProductCard {
       <div class="flex items-center space-x-1 my-2">
         <!-- Starts -->
         <div class="flex items-center text-secondary">${stars.join("")}</div>
-        <p class="text-xs"><span class="text-primary font-bold">${ratings.average || 0}</span> (${ratings.count || 0})</p>
+        <p class="text-xs"><span class="text-primary font-bold">${(ratings.average && ratings.average.toFixed(2)) || 0}</span> (${ratings.count || 0})</p>
       </div>
     `;
     return HTML;

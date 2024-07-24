@@ -12,8 +12,8 @@ export default class RatingsEdit extends RatingsCreate {
     Object.keys(rating).forEach(key => {
       $(`[name="${key}"]`).val(rating[key] || "");
     });
-    $("#isShowUser").prop("checked", this.order.rating.isShowUser);
-    $("#rating-username").text(this.order.rating.isShowUser ? `@${this.order.customer.username}` : "Anonymous");
+    $("#is_show_user").prop("checked", this.order.rating.is_show_user);
+    $("#rating-username").text(this.order.rating.is_show_user ? `@${this.order.customer.username}` : "Anonymous");
     if (rating.images && rating.images.length > 0) {
       this.images = rating.images.map(image => "/" + image.path);
     }

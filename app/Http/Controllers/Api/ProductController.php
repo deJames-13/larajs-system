@@ -23,6 +23,7 @@ class ProductController extends Controller
     public function index()
     {
         return $this->getResources(Product::class, ProductResource::class, [
+            'stock',
             'brands',
             'categories',
             'promos'
@@ -33,6 +34,7 @@ class ProductController extends Controller
     {
         try {
             return $this->getResource($id, Product::class, ProductResource::class, [
+                'stock',
                 'brands',
                 'categories',
                 'promos'
@@ -219,7 +221,7 @@ class ProductController extends Controller
             $user_images = $rating->order->customer->images;
             $rating->user_image = $user_images->count() ? $user_images[0]->path : "https://placehold.co/400?text=" . $rating->username[0];
             $rating->user_id = $rating->order->customer->id;
-            if (!$rating->isShowUser) {
+            if (!$rating->is_show_user) {
                 $rating->username = 'Anonymous';
                 $rating->user_image = "https://placehold.co/400?text=anon";
             };
