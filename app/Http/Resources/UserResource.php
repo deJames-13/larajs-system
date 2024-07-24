@@ -24,7 +24,6 @@ class UserResource extends JsonResource
             'info' => $this->whenLoaded('info', fn () => new CustomerResource($this->info)),
             // calculate age based on birthdate
             'age' => $this->whenLoaded('info', fn () => $this->info->birthdate ? Carbon::parse($this->info->birthdate)->age : null),
-
             'images' => $this->whenLoaded('images', fn () => $this->images),
 
             'created_at' => str_replace('T', ' ', explode('.', $this->created_at)[0]),

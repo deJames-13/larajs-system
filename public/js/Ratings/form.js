@@ -56,7 +56,7 @@ export default class RatingsForm extends FormModal {
         this.setRating($(e.currentTarget).data("value"));
       });
     this.modal
-      .find("#isShowUser")
+      .find("#is_show_user")
       .off()
       .on("change", e => {
         const isChecked = e.currentTarget.checked;
@@ -139,7 +139,7 @@ export default class RatingsForm extends FormModal {
         <div class="form-control">
           <label class="label cursor-pointer">
             <span class="label-text">Show username on your review</span>
-            <input name="isShowUser" id="isShowUser" type="checkbox" class="toggle checkbox-primary hover:checkbox-secondary" checked="checked" />
+            <input name="is_show_user" id="is_show_user" type="checkbox" class="toggle checkbox-primary hover:checkbox-secondary" checked="checked" />
           </label>
           <span class="text-xs text-gray-400">
             Your username will be shown as
