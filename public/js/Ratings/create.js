@@ -99,7 +99,6 @@ export default class RatingsCreate {
       onSuccess: response => {
         Swal.fire("Review sent!", "Thank you for your feedback.", "success").then(() => {
           this.exit();
-          window.location.reload();
         });
       },
       onError: xhr => {

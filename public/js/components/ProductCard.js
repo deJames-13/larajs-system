@@ -46,8 +46,8 @@ export default class ProductCard {
         <!-- Parent div with group class for hover effect -->
         <div class="group relative transition-all ease-in overflow-clip rounded-t-lg" onclick="window.location.replace('${this.redirectUrl}')">
           <!-- Image -->
-          <div class="987 65 image-wrapper flex justify-center">
-            <img src="${this.product.image_path ?? "https://placehold.co/600x400?text=" + this.product.name}" alt="${this.product.name}" class="object-cover " />
+          <div class="container h-[200px] image-wrapper flex justify-center">
+            <img src="${this.product.image_path ?? "https://placehold.co/600x400?text=" + this.product.name}" alt="${this.product.name}" class="h-full aspect-square" />
           </div>
           <!-- Buy Button that will only show if image is hovered -->
           <a

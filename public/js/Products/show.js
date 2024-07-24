@@ -43,6 +43,13 @@ const init = () => {
       $("#price").text(item.itemPrice.toFixed(2));
     }
   });
+  $(".prev").click(() => {
+    if (carousel) carousel.prev();
+  });
+
+  $(".next").click(() => {
+    if (carousel) carousel.next();
+  });
 
   $("#sub_qty").click(function () {
     item.quantity = parseInt($("#quantity_count").text());

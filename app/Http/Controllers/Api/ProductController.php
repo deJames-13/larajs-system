@@ -212,6 +212,7 @@ class ProductController extends Controller
             $meta['tabs'][] = ['label' => $i . ' Star', 'value' => $c->where('rating', $i)->count()];
         $meta['tabs'][] = ['label' => 'All', 'value' => $meta['count']];
 
+        $query->orderBy('updated_at', 'desc');
         $ratings = $query->paginate(10, ['*'], 'page', $page);
         $ratings->getCollection()->transform(function ($rating) {
             $rating->username = $rating->order->customer->username;

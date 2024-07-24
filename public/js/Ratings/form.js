@@ -52,8 +52,18 @@ export default class RatingsForm extends FormModal {
       .find("[data-rating-btn]")
       .off()
       .on("click", e => {
-        $(this.id).find("#save-item, #cancel").show();
+        $(this.modal).find("#save-item, #cancel").show();
         this.setRating($(e.currentTarget).data("value"));
+      });
+    this.modal
+      .find("#isShowUser")
+      .off()
+      .on("change", e => {
+        const isChecked = e.currentTarget.checked;
+        e.target.value = isChecked;
+        $(this.modal)
+          .find("#rating-username")
+          .text(isChecked ? `@${this.order.customer.username}` : "Anonymous");
       });
 
     this.setRating(this.currentRating);
@@ -68,23 +78,22 @@ export default class RatingsForm extends FormModal {
   }
 
   handleForm() {
+    const config = {
+      order: this.order,
+      target: "#" + this.id,
+      setRating: this.setRating.bind(this),
+      exit: () => {
+        this.close();
+      }
+    };
+
     if (this.type === "edit") {
       $(document).ready(() => {
-        new RatingsEdit({
-          order: this.order,
-          target: "#" + this.id,
-          setRating: this.setRating.bind(this),
-          exit: this.close.bind(this)
-        });
+        new RatingsEdit(config);
       });
     } else if (this.type === "create") {
       $(document).ready(() => {
-        new RatingsCreate({
-          order: this.order,
-          target: "#" + this.id,
-          setRating: this.setRating.bind(this),
-          exit: this.close.bind(this)
-        });
+        new RatingsCreate(config);
       });
     }
   }
@@ -132,7 +141,10 @@ export default class RatingsForm extends FormModal {
             <span class="label-text">Show username on your review</span>
             <input name="isShowUser" id="isShowUser" type="checkbox" class="toggle checkbox-primary hover:checkbox-secondary" checked="checked" />
           </label>
-          <span class="text-xs text-gray-400"> Your username will be shown as <strong>@${username}</strong></span>
+          <span class="text-xs text-gray-400">
+            Your username will be shown as
+            <span class="font-bold text-primary" id="rating-username">@${username}</span>
+          </span>
         </div>
         <div class="divider m-0"></div>
         <div className="flex items-center gap-2 font-bold">

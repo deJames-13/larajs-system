@@ -42,6 +42,8 @@ export default class OrderManager {
         if (orders.length > 0) {
           $("#no-orders").addClass("hidden");
         }
+
+        this.orders = [];
         $("#tab-content").empty();
         orders.forEach(order => {
           order.statusMessage = statuses[`${order.status}`].message;

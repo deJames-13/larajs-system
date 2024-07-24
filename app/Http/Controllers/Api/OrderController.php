@@ -43,7 +43,7 @@ class OrderController extends Controller
 
         $orders = $query->paginate($limit);
 
-        Debugbar::info($orders);
+        Debugbar::info($query->where('id', 501)->get());
 
         return OrderResource::collection($orders);
     }
@@ -192,12 +192,13 @@ class OrderController extends Controller
     {
         $data = $request->validate([
             'rating' => 'required|numeric',
+            'title' => 'sometimes|string',
             'review' => 'sometimes|string',
-            'isShowUser' => 'sometimes|in:on,off',
+            'isShowUser' => 'sometimes',
         ]);
         $image_id = $data['image_id'] ?? null;
         unset($data['image_id']);
-        $data['isShowUser'] = $data['isShowUser'] === 'on';
+        $data['isShowUser'] = isset($data['isShowUser']);
 
         $order = Order::findOrFail($id);
         $rating = $order->rating()->updateOrCreate(['order_id' => $id], $data);
