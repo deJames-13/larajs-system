@@ -12,9 +12,7 @@ class BrandsImport implements WithMultipleSheets, SkipsUnknownSheets
     public function sheets(): array
     {
         return [
-            'Brands' => new BrandsSheet(),
-
-
+            new BrandsSheet(),
         ];
     }
     public function onUnknownSheet($sheetName)

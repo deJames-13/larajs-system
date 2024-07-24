@@ -9,6 +9,10 @@ class Image extends Model
 {
     use HasFactory;
     protected $guarded = [];
+    protected $fillable = [
+        'name',
+        'path',
+    ];
 
 
     public function users()
