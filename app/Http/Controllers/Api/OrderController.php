@@ -36,14 +36,14 @@ class OrderController extends Controller
                 $query->withPivot('quantity');
             },
             'customer',
+            'customer.info',
+            'customer.images',
         ]);
 
 
         $query->orderBy('updated_at', 'desc');
 
         $orders = $query->paginate($limit);
-
-        Debugbar::info($query->where('id', 501)->get());
 
         return OrderResource::collection($orders);
     }
@@ -56,6 +56,8 @@ class OrderController extends Controller
                 $query->withPivot('quantity');
             },
             'customer',
+            'customer.info',
+            'customer.images',
         ])->findOrFail($id);
         if (!$order) {
             return response(

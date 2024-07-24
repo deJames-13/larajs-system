@@ -14,9 +14,8 @@ class Product extends Model
     use HasFactory, Searchable, SoftDeletes;
 
     protected $with = [
-        'stock',
-        'images',
-        // JUST LOAD THEM
+        // 'stock',
+        // 'images',
         // 'categories',
         // 'brands',
         // 'promos',
@@ -102,8 +101,8 @@ class Product extends Model
     }
     public function getRatings()
     {
-        $ratings = $this->orders->map(function ($order) {
-            // get username from order
+        $orders = $this->orders()->with(['customer', 'rating'])->get();
+        $ratings = $orders->map(function ($order) {
             $username = $order->customer->username;
             $rating = $order->rating;
             if ($rating === null) return null;

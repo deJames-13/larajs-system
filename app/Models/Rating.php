@@ -10,7 +10,10 @@ class Rating extends Model
     use HasFactory;
     protected $guarded = [];
     protected $primaryKey = 'order_id';
-    protected $with = ['images'];
+    protected $with = [
+        // 'order', // the ultimate broker
+        'images'
+    ];
     public $incrementing = false;
 
     public function order()

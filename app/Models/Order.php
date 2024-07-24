@@ -12,7 +12,10 @@ class Order extends Model
 
     use HasFactory, SoftDeletes;
     // 'customer', 'products',
-    protected $with = ['rating'];
+    protected $with = [
+        'products',
+        'rating',
+    ];
     protected $guarded = [];
 
     public function customer()
