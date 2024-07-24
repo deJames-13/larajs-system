@@ -9,10 +9,14 @@ use App\Http\Controllers\Api\ChartController;
 // INFO: REMOVE COMMENTS AFTER
 
 
-
-Route::post("/admin/orders", [TableController::class, "ordersImport"])->name("imports.orders");
+// Imports
 Route::group(["middleware" => "auth"], function () {
     Route::post("/import/brands", [TableController::class, "brandsImport"])->name("imports.brands")->middleware("role:staff,admin");
+    Route::post("/import/orders", [TableController::class, "ordersImport"])->name("imports.orders")->middleware("role:staff,admin");
+    Route::post("/import/categories", [TableController::class, "categoriesImport"])->name("imports.categories")->middleware("role:staff,admin");
+    Route::post("/import/promos", [TableController::class, "promosImport"])->name("imports.promos")->middleware("role:staff,admin");
+    Route::post("/import/users", [TableController::class, "usersImport"])->name("imports.users")->middleware("role:staff,admin");
+    Route::post("/import/products", [TableController::class, "productsImport"])->name("imports.products")->middleware("role:staff,admin");
 });
 
 // Guess ONLY

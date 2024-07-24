@@ -12,9 +12,7 @@ class UsersImport implements WithMultipleSheets, SkipsUnknownSheets
     public function sheets(): array
     {
         return [
-            'Users' => new UsersSheet(),
-
-
+            new UsersSheet(),
         ];
     }
     public function onUnknownSheet($sheetName)

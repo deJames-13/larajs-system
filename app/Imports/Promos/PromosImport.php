@@ -12,9 +12,7 @@ class PromosImport implements WithMultipleSheets, SkipsUnknownSheets
     public function sheets(): array
     {
         return [
-            'Promos' => new PromosSheet(),
-
-
+            new PromosSheet(),
         ];
     }
     public function onUnknownSheet($sheetName)

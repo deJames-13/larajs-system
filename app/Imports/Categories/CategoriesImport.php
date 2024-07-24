@@ -12,9 +12,7 @@ class CategoriesImport implements WithMultipleSheets, SkipsUnknownSheets
     public function sheets(): array
     {
         return [
-            'Categories' => new CategoriesSheet(),
-
-
+            new CategoriesSheet(),
         ];
     }
     public function onUnknownSheet($sheetName)
