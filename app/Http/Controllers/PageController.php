@@ -36,9 +36,10 @@ class PageController extends Controller
             abort(404);
         }
         $item->load([
+            'images',
             'brands',
             'categories',
-            'promos'
+            'promos',
         ]);
         return view('pages.products.show', ['item' => $item]);
     }

@@ -10,6 +10,13 @@ export default class PromosCreate {
     this.setupValidation();
   }
 
+  resetForm() {
+    $(this.target).find("#item-form").trigger("reset");
+    $(this.target).find("#save-item, #cancel").hide();
+    $(this.target).find("input").removeClass("border-red-400");
+    $(this.target).find("#item-form").validate().resetForm();
+  }
+
   init() {
     $(document).ready(() => {
       $("#image-input").change(() => {
@@ -47,10 +54,7 @@ export default class PromosCreate {
         confirmButtonText: "Yes, cancel it!"
       }).then(result => {
         if (result.isConfirmed) {
-          $("#item-form").trigger("reset");
-          $("#save-item, #cancel").hide();
-          $("input").removeClass("border-red-400");
-          $("#item-form").validate().resetForm();
+          this.resetForm();
         }
       });
     });
@@ -155,7 +159,7 @@ export default class PromosCreate {
       token: token,
       onSuccess: response => {
         Swal.fire("Promo Added!", "Your promo has been added.", "success").then(() => {
-          window.location.href = "/admin/promos";
+          this.resetForm();
         });
       },
       onError: xhr => {

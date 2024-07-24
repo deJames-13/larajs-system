@@ -71,7 +71,7 @@ export default class Ratings {
           <span class="text-primary" name="username">
             <strong>${rating.username}</strong>
           </span>
-          <span class="font-light" name="username"> ${rating.rating} out of 5 </span>
+          <span class="font-light" name="rating"> ${rating.rating || 0} out of 5 </span>
           <div class="ratings-wrapper flex items-center text-sm text-secondary">${this.makeStars(rating.rating)}</div>
           <span class="text-primary font-bold">${rating.title || ""}</span>
           <span class="text-base">${rating.review}</span>
@@ -127,7 +127,7 @@ export default class Ratings {
         <div class="h-full my-4 rounded flex gap-8 items-start py-4 px-8 border border-primary border-opacity-40 bg-secondary bg-opacity-20">
           <div class="flex flex-col gap-4">
             <div class="text-primary text-xl">
-              <span id="product-rating" class="text-3xl font-bold"> ${parseFloat(this.average).toFixed(2) ?? 0} </span>
+              <span id="product-rating" class="text-3xl font-bold"> ${parseFloat(this.average || 0).toFixed(2) ?? 0} </span>
               <span> out of 5 </span>
             </div>
             <div class="ratings-wrapper flex items-center text-2xl text-secondary">${this.makeStars(this.average)}</div>
