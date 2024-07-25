@@ -76,8 +76,9 @@ export default class SideBar {
 
     const nav = this.getUrlParams()?.nav;
     if (nav && this.links.map(link => link.url).includes(nav)) {
-      this.setActiveLink(nav);
-      this.onClick(nav); // click the page
+      this.currentUrl = nav;
     }
+    this.setActiveLink(this.currentUrl);
+    this.onClick(this.currentUrl); // click the page
   }
 }
