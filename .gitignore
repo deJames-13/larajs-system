@@ -24,4 +24,6 @@ lock.mdb
 .null_ls*
 .conform*
 *.exe
-public/storage
+/public/storage/*
+!/public/storage/DefaultImages
+/public/storage/DefaultImages/*
