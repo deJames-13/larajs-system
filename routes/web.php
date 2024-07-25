@@ -10,7 +10,6 @@ Route::get('/test', [ProductController::class, 'ratings']);
 
 Route::get('/home', [PageController::class, 'home'])->name('home');
 Route::get('/', [PageController::class, 'home'])->name('shop');
-Route::get('/cart', [PageController::class, 'cart'])->name('cart');
 
 
 $crud = [

@@ -52,7 +52,6 @@ export default class TablePage extends DataTable {
 
   bindEvents() {
     const urlParams = new URLSearchParams(window.location.search);
-    console.log(2);
 
     $(document)
       .off()

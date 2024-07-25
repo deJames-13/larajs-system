@@ -34,7 +34,7 @@ export default class OrderPage {
             </div>
 
             <!-- SEARCH BAR -->
-            <div id="search-bar" class="my-4 px-4 py-2 bg-gray-200 border-b-2 bg-opacity-35 flex items-center space-x-4">
+            <div id="order-search-bar" class="my-4 px-4 py-2 bg-gray-200 border-b-2 bg-opacity-35 flex items-center space-x-4">
               <button class="btn btn-ghost">
                 <i class="fas fa-magnifying-glass"></i>
               </button>

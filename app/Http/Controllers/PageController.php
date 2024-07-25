@@ -45,11 +45,6 @@ class PageController extends Controller
     }
 
 
-    // TRANSACTIONS PAGES
-    public function cart()
-    {
-        return view('pages.transaction.cart', ['page' => 'Cart']);
-    }
 
     public function checkout()
     {

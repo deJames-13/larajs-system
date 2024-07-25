@@ -71,6 +71,7 @@ export default class Ratings {
           <span class="text-primary" name="username">
             <strong>${rating.username}</strong>
           </span>
+          <span class="font-italic text-xs">${rating?.created_at?.replace("T", " ").split(".")[0] ?? ""}</span>
           <span class="font-light" name="rating"> ${rating.rating || 0} out of 5 </span>
           <div class="ratings-wrapper flex items-center text-sm text-secondary">${this.makeStars(rating.rating)}</div>
           <span class="text-primary font-bold">${rating.title || ""}</span>
