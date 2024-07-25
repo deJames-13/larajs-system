@@ -64,7 +64,6 @@ export default class UsersPage extends TablePage {
 
   bindEvents() {
     super.bindEvents();
-    console.log(1);
     $(document)
       .off()
       .on("click", ".row-view", e => {

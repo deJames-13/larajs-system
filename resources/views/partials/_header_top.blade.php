@@ -68,28 +68,46 @@
 						{{-- Authenticated User --}}
 						@auth
 							<li>
-								<a href="/profile" class="justify-between">
+								<a href="/profile" class="gap-2">
+									<i class="fas fa-user"></i>
 									Profile
 									{{-- <span class="badge">New</span> --}}
 								</a>
 							</li>
 							<li>
-								<a href="/profile?page=cart" class="justify-between">
+								<a href="/profile?page=cart" class="gap-2">
+									<i class="fas fa-cart-shopping"></i>
 									Cart
 									{{-- <span class="badge">New</span> --}}
 								</a>
 							</li>
 							<li>
-								<a href="/profile?page=orders" class="justify-between">
+								<a href="/profile?page=orders" class="gap-2">
+									<i class="fas fa-truck-fast"></i>
 									Orders
 									{{-- <span class="badge">New</span> --}}
 								</a>
 							</li>
 							<li></li>
-							<li><button class="auth-btn" type="button" data-open-modal="logout">Logout</button></li>
+							<li>
+								<button class="auth-btn" type="button" data-open-modal="logout">
+									<i class="fas fa-arrow-right-from-bracket"></i>
+									Logout
+								</button>
+							</li>
 						@else
-							<li><button class="auth-btn" type="button" data-open-modal="signup_modal">Register</button></li>
-							<li><button class="auth-btn" type="button" data-open-modal="login_modal">Login</button></li>
+							<li>
+								<button class="auth-btn" type="button" data-open-modal="signup_modal">
+									<i class="fas fa-user"></i>
+									Register
+								</button>
+							</li>
+							<li>
+								<button class="auth-btn" type="button" data-open-modal="login_modal">
+									<i class="fas fa-arrow-right-to-bracket"></i>
+									Login
+								</button>
+							</li>
 						@endauth
 
 					</ul>

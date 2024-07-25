@@ -23,6 +23,9 @@
 
 			</table>
 		</div>
+		{{-- Shipping --}}
+
+
 	</div>
 
 	<x-card.billing-info />

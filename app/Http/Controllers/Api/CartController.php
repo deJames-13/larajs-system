@@ -13,6 +13,7 @@ class CartController extends Controller
     {
         if (auth()->user()) {
             $products = auth()->user()->products;
+            $products->load(['images']);
             return ProductResource::collection($products);
         }
 

@@ -29,8 +29,15 @@ export default class OrderManager {
     $("#tab-content").empty();
     $("#paginations").empty();
 
-    let queries = ["page=" + page, "status=" + statusStr];
-    let q = queries.join("&");
+    let q = "";
+    let queries = {
+      page: page,
+      status: statusStr,
+      dashboard: false
+    };
+    Object.keys(queries).forEach(key => {
+      q += `${key}=${queries[key]}&`;
+    });
 
     ajaxRequest.get({
       url: "/api/orders?" + q,
@@ -82,7 +89,6 @@ export default class OrderManager {
     this.getItems(page, statusStr);
   }
 
-  // INFO: CRUD: UPDATE
   updateStatus(statusString, id) {
     ajaxRequest.put({
       url: "/api/orders/" + id,
@@ -144,31 +150,29 @@ export default class OrderManager {
     });
   }
 
+  buyAgain(id) {}
+
+  onTabClick(id) {
+    this.switchTabs(id);
+    this.statusStr = id.split("-")[1];
+    this.goToPage(1, this.statusStr);
+  }
+
   bindEvents() {
-    $(".tab").click(e => {
-      const id = e.currentTarget.id;
-      // console.log(id);
-      this.switchTabs(id);
-      this.statusStr = id.split("-")[1];
-      this.getItems(1, this.statusStr);
-    });
-    $(document)
-      .on("click", "#btn-view", e => {
-        const id = $(e.currentTarget).parent().data("id");
-        this.viewOrder(id);
-      })
-      .on("click", ".order-card", e => {
-        const id = $(e.currentTarget).data("id");
-        // this.viewOrder(id);
-      })
-      .on("click", "#btn-cancel", e => {
-        const id = $(e.currentTarget).parent().data("id");
-        this.onCancel(id);
-      })
-      .on("click", "#btn-rate", e => {
-        const id = $(e.currentTarget).parent().data("id");
-        this.rateForm(id);
+    const events = [
+      { selector: ".tab", callback: this.onTabClick.bind(this) },
+      { selector: "#btn-view", callback: this.viewOrder.bind(this) },
+      // { selector: ".order-card", callback: this.viewOrder.bind(this) },
+      { selector: "#btn-cancel", callback: this.onCancel.bind(this) },
+      { selector: "#btn-rate", callback: this.rateForm.bind(this) }
+    ];
+
+    events.forEach(event => {
+      $(document).on("click", event.selector, e => {
+        const id = event.selector === ".tab" ? e.currentTarget.id : $(e.currentTarget).parent().data("id");
+        event.callback(id);
       });
+    });
   }
 
   init() {

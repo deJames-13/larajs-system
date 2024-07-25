@@ -19,21 +19,25 @@
 
 ## [!IMPORTANT]
 
+- [ ] transaction : /profile?page=orders walang search
+- [ ] transaction : buy again not working
+- [ ] transaction : no shipping
+- [x] transaction : no image on products
 - [x] MP7 User Management, admin user deactivation/deletion and user profile management
 - [x] Product - Brand relationship, brand quick add/modal ui
 - [x] Product - Category relationship, category quick add/modal ui
 - [ ] Product - Promo relationship, promo quick add/modal ui
 - [ ] FINALIZE - Product CRUD
 - [ ] FINALIZE DASHBOARD ADMIN
-- [ ] START Shop UI -
-  - [ ] Filtering,
-  - [ ] Sorting,
-  - [ ] Searching,
-  - [ ] Pagination -
-    - [ ]     Product,
-    - [ ]     Brand,
-    - [ ]     Category,
-    - [ ]     Promo
+- [x] START Shop UI -
+  - [x] Filtering,
+  - [x] Sorting,
+  - [x] Searching,
+  - [x] Pagination -
+    - [x]     Product,
+    - [x]     Brand,
+    - [x]     Category,
+    - [x]     Promo
 - [x] Staff Privileges
   - [ ] DEBUG and TEST
 

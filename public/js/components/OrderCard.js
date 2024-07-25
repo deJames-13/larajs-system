@@ -7,14 +7,14 @@ export default class Order {
   renderItems(item) {
     var unit_price = parseFloat(item.price) * parseFloat(item.order_quantity);
     this.total = this.total + unit_price;
-
+    const image = item.images && item.images.length ? item.images[0].path : "https://placehold.co/400x600?text=item";
     return `
         
         <div id="item__${this.order.id}__${item.id}" class="w-full container flex space-x-2 items-center">
             <div class="flex-grow flex items-start space-x-1">
                 <!-- Image -->
                 <div class="max-w-[90px] m-0 rounded">
-                    <img src="${item.image_path ?? "https://placehold.co/400x600?text=item"}" class="m-0 object-center w-full cursor-zoom-in"
+                    <img src="${image ?? "https://placehold.co/400x600?text=item"}" class="m-0 object-center w-full cursor-zoom-in"
                         alt="product image">
                 </div>
                 <!-- Product -->

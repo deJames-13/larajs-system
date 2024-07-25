@@ -20,12 +20,14 @@ class OrderController extends Controller
         $limit = $request->query('limit') ?? 10;
         $isAdmin = $request->user()->role !== 'customer';
         $search = $request->query('search') ?? '';
+        $isDashboard = $request->query('dashboard') ?? true;
 
 
         $query = Order::query();
-        if (!$isAdmin)
-            $query->where('user_id', $request->user()->id);
-
+        if (!$isAdmin || $isDashboard === 'false') {
+            $id = $request->user()->id;
+            $query->where('user_id', $id);
+        }
         $query->filter(
             [
                 'search' => $search,
@@ -41,6 +43,8 @@ class OrderController extends Controller
             'products' => function ($query) {
                 $query->withPivot('quantity');
             },
+            'products.stock',
+            'products.images',
             'customer',
             'customer.info',
             'customer.images',
@@ -57,15 +61,18 @@ class OrderController extends Controller
     // INFO: For admin api fetch
     public function show(string $id)
     {
-        $order = Order::with([
+        $order = Order::findOrFail($id);
+        $order->load([
             'products' => function ($query) {
                 $query->withPivot('quantity');
             },
             'products.stock',
+            'products.images',
             'customer',
             'customer.info',
             'customer.images',
-        ])->findOrFail($id);
+        ]);
+
         if (!$order) {
             return response(
                 [],
@@ -189,7 +196,16 @@ class OrderController extends Controller
 
         // Refresh the model to ensure it has the latest data
         $order->refresh();
-        $order->load(['products', 'customer']);
+        $order->load([
+            'products' => function ($query) {
+                $query->withPivot('quantity');
+            },
+            'products.stock',
+            'products.images',
+            'customer',
+            'customer.info',
+            'customer.images',
+        ]);
         $res = new OrderResource($order);
 
         Debugbar::info('Sending: ' . $order->customer->email);
