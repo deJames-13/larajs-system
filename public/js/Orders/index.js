@@ -210,7 +210,7 @@ export default class OrderManager {
           confirmButtonText: "View Cart"
         }).then(result => {
           if (result.isConfirmed) {
-            window.location.href = "/profile?page=cart";
+            window.location.href = "/profile?nav=cart";
           }
         });
       }

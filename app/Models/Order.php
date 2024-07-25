@@ -152,6 +152,7 @@ class Order extends Model
             ],
             "customers_count" => User::where('role', 'customer')->count(),
             "products_count" => Product::count(),
+            "orders_count" => Order::count(),
         ];
     }
 }

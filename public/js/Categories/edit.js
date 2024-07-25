@@ -76,7 +76,7 @@ export default class CategoriesEdit {
           required: true
         },
         slug: {
-            required: true
+          required: true
         },
         status: {
           required: true
@@ -95,9 +95,9 @@ export default class CategoriesEdit {
           required: "Image is required"
         },
         slug: {
-            required: "Please enter a slug",
-            minlength: "Slug must be at least 2 characters",
-            maxlength: "Slug must not exceed 100 characters"
+          required: "Please enter a slug",
+          minlength: "Slug must be at least 2 characters",
+          maxlength: "Slug must not exceed 100 characters"
         },
         status: {
           required: "Status is required"
@@ -105,8 +105,8 @@ export default class CategoriesEdit {
       },
       errorElement: "span",
       errorPlacement: (error, element) => {
-        error.addClass("text-red-400 text-sm italic my-1");
-        element.addClass("border-red-400");
+        error.addClass("input-error text-error text-red-400 text-sm italic my-1");
+        element.addClass("error-border border-red-400");
         error.insertAfter(element);
       },
       submitHandler: form => {
@@ -125,6 +125,7 @@ export default class CategoriesEdit {
     $("#image-input").val("");
     $(".input-error").removeClass("input-error");
     $(".text-error").remove();
+    $(".error-border").removeClass("error-border border-red-400");
 
     ajaxRequest.get({
       url: "/api/categories/" + id,
@@ -149,6 +150,7 @@ export default class CategoriesEdit {
   handleFormSubmission(form) {
     $(".input-error").removeClass("input-error");
     $(".text-error").remove();
+    $(".error-border").removeClass("error-border border-red-400");
 
     const formData = new FormData(form);
     formData.append("_method", "PUT");

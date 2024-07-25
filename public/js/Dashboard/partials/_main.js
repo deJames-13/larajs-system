@@ -38,9 +38,10 @@ export default class MainPage {
       $(`[data-${key}] h1`).text(`₱ ${total.toFixed(2)}`);
       $(`[data-${key}] [name=count]`).text(count);
     });
-    const { customers_count, products_count } = this.metadata;
+    const { customers_count, products_count, orders_count } = this.metadata;
     $("#customers_count").text(customers_count);
     $("#products_count").text(products_count);
+    $("#orders_count").text(orders_count);
   }
 
   render() {
@@ -55,7 +56,7 @@ export default class MainPage {
               <span id="username" class="font-extrabold text-4xl z-[5]">${this.user.fullname || this.user.username}</span>
               <span id="username" class=" capitalize font-extrabold text-sm text-gray-500">@${this.user.fullname && this.user.username}</span>
             </div>
-            <button class="mt-16 btn bg-primary bg-opacity-60 text-white uppercase border-none hover:bg-secondary">View Profile</button>
+            <a href="/profile" class="mt-16 btn bg-primary bg-opacity-60 text-white uppercase border-none hover:bg-secondary">View Profile</a>
 
             <!-- Image -->
             <div class="hidden xl:block absolute bottom-0 right-0 z-[2] h-full max-w-sm overflow-clip">
@@ -164,8 +165,24 @@ export default class MainPage {
             </div>
           </div>
 
+          <!-- Transactions  -->
+          <div
+            onclick="window.location.href='/dashboard?nav=orders'"
+            class="relative lg:h-32 lg:w-64 py-8 px-4 bg-secondary bg-opacity-5 border border-secondary rounded-lg hover:scale-110 hover:z-[12] transition-all ease-in-out cursor-pointer"
+          >
+            <div class=" flex flex-col items-start text-3xl">
+              <h1 class="text-xl font-light">Transactions</h1>
+              <span id="orders_count" class="capitalize font-extrabold text-2xl">123</span>
+
+              <!-- Image -->
+              <div class="hidden lg:block absolute bottom-0 right-0 w-1/3 aspect-square overflow-clip">
+                <img src="/images/customs-no-bg.png" alt="hello" />
+              </div>
+            </div>
+          </div>
           <!-- Customer  -->
           <div
+            onclick="window.location.href='/dashboard?nav=users'"
             class="relative lg:h-32 lg:w-64 py-8 px-4 bg-secondary bg-opacity-5 border border-secondary rounded-lg hover:scale-110 hover:z-[12] transition-all ease-in-out cursor-pointer"
           >
             <div class=" flex flex-col items-start text-3xl">
@@ -180,6 +197,7 @@ export default class MainPage {
           </div>
           <!-- Products  -->
           <div
+            onclick="window.location.href='/dashboard?nav=products'"
             class="relative lg:h-32 lg:w-64 py-8 px-4 bg-secondary bg-opacity-5 border border-secondary rounded-lg hover:scale-110 hover:z-[12] transition-all ease-in-out cursor-pointer"
           >
             <div class="flex flex-col items-start text-3xl">
