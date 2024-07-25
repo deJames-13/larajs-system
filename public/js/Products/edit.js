@@ -130,8 +130,8 @@ export default class ProductsEdit {
       },
       errorElement: "span",
       errorPlacement: (error, element) => {
-        error.addClass("text-red-400 text-sm italic my-1");
-        element.addClass("border-red-400");
+        error.addClass("input-error text-error text-red-400 text-sm italic my-1");
+        element.addClass("error-border border-red-400");
         error.insertAfter(element);
       },
       submitHandler: form => {
@@ -167,6 +167,7 @@ export default class ProductsEdit {
     $("#image-input").val("");
     $(".input-error").removeClass("input-error");
     $(".text-error").remove();
+    $(".error-border").removeClass("error-border border-red-400");
 
     return ajaxRequest.get({
       url: "/api/products/" + id,
@@ -177,6 +178,7 @@ export default class ProductsEdit {
   handleFormSubmission(form) {
     $(".input-error").removeClass("input-error");
     $(".text-error").remove();
+    $(".error-border").removeClass("error-border border-red-400");
 
     const formData = new FormData(form);
     formData.append("_method", "PUT");

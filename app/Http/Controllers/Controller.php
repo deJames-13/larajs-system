@@ -15,8 +15,8 @@ abstract class Controller
     {
         $page = request('page') ?? 1;
         $limit = request('limit') ?? 10;
-        $sort  = request('sort') ?? 'id';
-        $order = request('order') ?? 'asc';
+        $sort  = request('sort') ?? 'updated_at';
+        $order = request('order') ?? 'desc';
         $search = request('search') ?? '';
 
         if (!is_numeric($page) || $page < 1) $limit = 1;

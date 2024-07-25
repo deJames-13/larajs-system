@@ -167,6 +167,7 @@ export default class MainPage {
 
           <!-- Transactions  -->
           <div
+            onclick="window.location.href='/dashboard?nav=orders'"
             class="relative lg:h-32 lg:w-64 py-8 px-4 bg-secondary bg-opacity-5 border border-secondary rounded-lg hover:scale-110 hover:z-[12] transition-all ease-in-out cursor-pointer"
           >
             <div class=" flex flex-col items-start text-3xl">
@@ -181,6 +182,7 @@ export default class MainPage {
           </div>
           <!-- Customer  -->
           <div
+            onclick="window.location.href='/dashboard?nav=users'"
             class="relative lg:h-32 lg:w-64 py-8 px-4 bg-secondary bg-opacity-5 border border-secondary rounded-lg hover:scale-110 hover:z-[12] transition-all ease-in-out cursor-pointer"
           >
             <div class=" flex flex-col items-start text-3xl">
@@ -195,6 +197,7 @@ export default class MainPage {
           </div>
           <!-- Products  -->
           <div
+            onclick="window.location.href='/dashboard?nav=products'"
             class="relative lg:h-32 lg:w-64 py-8 px-4 bg-secondary bg-opacity-5 border border-secondary rounded-lg hover:scale-110 hover:z-[12] transition-all ease-in-out cursor-pointer"
           >
             <div class="flex flex-col items-start text-3xl">

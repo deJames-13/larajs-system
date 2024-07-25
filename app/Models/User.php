@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Schema;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -40,7 +41,12 @@ class User extends Authenticatable
     // Scope Filter
     public function scopeFilter($query, array $filters)
     {
-        $query->when($filters['search'] ?? null, function ($query, $search) {
+        $columns = Schema::getColumnListing('products');
+        $search = $filters['search'] ?? "";
+        $sort = $filters['sort'] ?? 'updated_at';
+        $order = $filters['order'] ?? 'desc';
+
+        $query->when($search ?? null, function ($query, $search) {
             $query->where(
                 fn ($query) =>
                 $query->where('username', 'like', '%' . $search . '%')
@@ -49,12 +55,24 @@ class User extends Authenticatable
                     ->orWhere('role', 'like', '%' . $search . '%')
                     // id
                     ->orWhere('id', 'like', '%' . $search . '%')
-                // customer.fullname
-
-
-
             );
         });
+
+        switch ($sort) {
+            case 'oldest':
+                $sort = 'created_at';
+                $order = 'asc';
+                break;
+            case 'newest':
+                $sort = 'created_at';
+                break;
+            default:
+                if (!in_array($sort, $columns))
+                    $sort = 'updated_at';
+        }
+
+
+        $query->orderBy($sort, $order);
     }
 
     // Relationships
