@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Brand;
+use App\Models\Order;
 use App\Models\Promos;
 use App\Models\Product;
 use App\Models\Category;
@@ -13,6 +14,17 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class PdfController extends Controller
 {
+    public function ordersPdf()
+    {
+        $data = [
+            'title' => 'Orders Table',
+            'data' => Order::take(50)->get()->toArray(),
+        ];
+        $pdf = Pdf::loadView('pdf.print', $data)->setPaper('a4', 'landscape');
+        $fileName = time() . '_pdf.pdf';
+
+        return $pdf->download($fileName);
+    }
     public function usersPdf()
     {
         $data = [
