@@ -134,8 +134,8 @@ export default class ProductsCreate {
       },
       errorElement: "span",
       errorPlacement: (error, element) => {
-        error.addClass("text-red-400 text-sm italic my-1");
-        element.addClass("border-red-400");
+        error.addClass("input-error text-error text-red-400 text-sm italic my-1");
+        element.addClass("error-border border-red-400");
         error.insertAfter(element);
       },
       submitHandler: form => {
@@ -147,6 +147,7 @@ export default class ProductsCreate {
   handleFormSubmission(form) {
     $(".input-error").removeClass("input-error");
     $(".text-error").remove();
+    $(".error-border").removeClass("error-border border-red-400");
 
     const formData = new FormData(form);
     const token = document.querySelector('meta[name="api-token"]').getAttribute("content");
@@ -157,7 +158,7 @@ export default class ProductsCreate {
       token: token,
       onSuccess: response => {
         Swal.fire("Item Added!", "Your item has been added to inventory.", "success").then(() => {
-          window.location.href = "/dashboard?page=products";
+          window.location.href = "/dashboard?nav=products";
         });
       },
       onError: xhr => {

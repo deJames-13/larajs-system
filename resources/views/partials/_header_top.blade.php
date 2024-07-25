@@ -75,7 +75,7 @@
 								</a>
 							</li>
 							<li>
-								<a href="/profile?page=cart" class="gap-2">
+								<a href="/profile?nav=cart" class="gap-2">
 									<i class="fas fa-cart-shopping"></i>
 									Cart
 									{{-- <span class="badge">New</span> --}}
@@ -133,7 +133,7 @@
 									<p class="text-info">Subtotal: PHP <span id="cart-sbt">0</span> </p>
 								</div>
 								<div class="card-actions">
-									<a href="/profile?page=cart" id="cart-view" class="btn btn-primary btn-block">View cart</a>
+									<a href="/profile?nav=cart" id="cart-view" class="btn btn-primary btn-block">View cart</a>
 								</div>
 							</div>
 						</div>
