@@ -82,7 +82,7 @@
 								</a>
 							</li>
 							<li>
-								<a href="/profile?page=orders" class="gap-2">
+								<a href="/profile?nav=orders" class="gap-2">
 									<i class="fas fa-truck-fast"></i>
 									Orders
 									{{-- <span class="badge">New</span> --}}

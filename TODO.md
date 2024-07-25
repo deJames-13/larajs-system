@@ -19,7 +19,7 @@
 
 ## [!IMPORTANT]
 
-- [ ] transaction : /profile?page=orders walang search
+- [x] transaction : /profile?nav=orders walang search
 - [x] transaction : buy again not working
 - [ ] transaction : no shipping
 - [x] transaction : no image on products

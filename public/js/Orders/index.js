@@ -1,4 +1,5 @@
 import ajaxRequest from "../assets/ajaxRequest.js";
+import { debounce } from "../assets/debounce.js";
 import Order from "../components/OrderCard.js";
 import Pagination from "../components/Paginate.js";
 import RatingsForm from "../Ratings/form.js";
@@ -7,37 +8,56 @@ import { actionsBtn, statuses, swalAlerts } from "./config.js";
 export default class OrderManager {
   constructor() {
     this.url = new URL(window.location.href);
-    this.page = 1;
-    this.statusStr = "all";
     this.orders = [];
     this.actionsBtn = actionsBtn;
     this.statuses = statuses;
     this.swalAlerts = swalAlerts;
+    const get = this.getUrlParams();
+    this.queries = {
+      page: 1,
+      maxPage: 1,
+      status: "all",
+      dashboard: false,
+      search: "",
+      ...get
+    };
 
     this.bindEvents();
     this.init();
     return this;
   }
 
-  switchTabs(id) {
-    var current = $(".tab-active");
-    current.removeClass("tab-active text-primary");
-    $("#" + id).addClass("tab-active text-primary");
+  getUrlParams() {
+    const urlParams = new URLSearchParams(window.location.search);
+    let queries = {};
+    for (let [key, value] of urlParams) {
+      queries[key] = value;
+    }
+    return queries;
   }
 
-  getItems(page, statusStr) {
+  pushUrlParams({ key, value }) {
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set(key, value);
+    window.history.pushState({}, "", "?" + urlParams.toString());
+  }
+
+  switchTabs(status) {
+    var current = $(".tab-active");
+    current.removeClass("tab-active text-primary");
+    $("#order-" + status).addClass("tab-active text-primary");
+  }
+
+  getItems() {
     $("#tab-content").empty();
     $("#paginations").empty();
 
     let q = "";
-    let queries = {
-      page: page,
-      status: statusStr,
-      dashboard: false
-    };
-    Object.keys(queries).forEach(key => {
-      q += `${key}=${queries[key]}&`;
+    Object.keys(this.queries).forEach(key => {
+      q += `${key}=${this.queries[key]}&`;
     });
+    this.pushUrlParams({ key: "status", value: this.queries.status });
+    this.pushUrlParams({ key: "page", value: this.queries.page });
 
     ajaxRequest.get({
       url: "/api/orders?" + q,
@@ -64,7 +84,9 @@ export default class OrderManager {
         $("#search-bar").show();
         if (response.links.next || response.prev || response.meta.current_page > 1) {
           const links = new Pagination(response.links, response.meta.current_page).render("#paginations");
-          links.onClick(page => getItems(page, statusStr));
+          links.onClick(page => this.goToPage(page));
+          this.queries.maxPage = response.meta.last_page;
+          if (this.queries.page < 1 || this.queries.page > this.queries.maxPage) return this.goToPage(1);
         } else {
           $("#paginations").empty();
           $("#search-bar").hide();
@@ -81,12 +103,14 @@ export default class OrderManager {
   }
 
   setStatus(statusStr) {
-    this.statusStr = statusStr;
-    this.getItems(1, statusStr);
+    this.switchTabs(statusStr);
+    this.queries.status = statusStr;
+    this.goToPage(this.queries.page);
   }
 
-  goToPage(page, statusStr) {
-    this.getItems(page, statusStr);
+  goToPage(page) {
+    this.queries.page = page;
+    this.getItems();
   }
 
   updateStatus(statusString, id) {
@@ -102,11 +126,18 @@ export default class OrderManager {
     });
   }
 
-  viewOrder(id) {
+  onTabClick(e) {
+    const id = e.currentTarget.id;
+    this.setStatus(id.split("-")[1]);
+  }
+
+  viewOrder(e) {
+    const id = $(e.currentTarget).parent().data("id");
     window.location.href = `/orders/${id}`;
   }
 
-  onCancel(id) {
+  onCancel(e) {
+    const id = $(e.currentTarget).parent().data("id");
     Swal.fire({
       title: "Cancel Order",
       html: `
@@ -125,7 +156,8 @@ export default class OrderManager {
     });
   }
 
-  rateForm(id) {
+  rateForm(e) {
+    const id = $(e.currentTarget).parent().data("id");
     const orders = this.orders.filter(order => order.id == id && order.status === "completed");
     if (!orders.length) return;
 
@@ -150,7 +182,8 @@ export default class OrderManager {
     });
   }
 
-  buyAgain(id) {
+  buyAgain(e) {
+    const id = $(e.currentTarget).parent().data("id");
     const order = this.orders.find(order => order.id == id);
     if (!order?.products?.length) return;
 
@@ -184,31 +217,34 @@ export default class OrderManager {
     });
   }
 
-  onTabClick(id) {
-    this.switchTabs(id);
-    this.statusStr = id.split("-")[1];
-    this.goToPage(1, this.statusStr);
+  onSearch(string) {
+    this.queries.search = string;
+    this.goToPage(1);
   }
 
   bindEvents() {
+    const doSearch = debounce(e => {
+      this.onSearch(e.target.value);
+    }, 500);
+
     const events = [
-      { selector: ".tab", callback: this.onTabClick.bind(this) },
-      { selector: "#btn-view", callback: this.viewOrder.bind(this) },
-      // { selector: ".order-card", callback: this.viewOrder.bind(this) },
-      { selector: "#btn-cancel", callback: this.onCancel.bind(this) },
-      { selector: "#btn-rate", callback: this.rateForm.bind(this) },
-      { selector: "#btn-again", callback: this.buyAgain.bind(this) }
+      { action: "click", selector: ".tab", callback: this.onTabClick.bind(this) },
+      { action: "click", selector: "#btn-view", callback: this.viewOrder.bind(this) },
+      // { action:"click", selector: ".order-card", callback: this.viewOrder.bind(this) },
+      { action: "click", selector: "#btn-cancel", callback: this.onCancel.bind(this) },
+      { action: "click", selector: "#btn-rate", callback: this.rateForm.bind(this) },
+      { action: "click", selector: "#btn-again", callback: this.buyAgain.bind(this) },
+      { action: "input", selector: "#order-search-bar input", callback: doSearch }
     ];
 
     events.forEach(event => {
-      $(document).on("click", event.selector, e => {
-        const id = event.selector === ".tab" ? e.currentTarget.id : $(e.currentTarget).parent().data("id");
-        event.callback(id);
+      $(document).on(event.action, event.selector, e => {
+        event.callback(e);
       });
     });
   }
 
   init() {
-    this.goToPage(1, this.statusStr);
+    this.setStatus(this.queries.status);
   }
 }
