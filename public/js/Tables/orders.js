@@ -23,7 +23,7 @@ export default class OrdersPage extends TablePage {
         phone_number: "",
         images: []
       };
-      const image = customer.images.length ? customer.images[0].path : "https://via.placeholder.com/150?text=" + customer.username[0];
+      const image = customer.images.length ? customer.images[0].path : "https://picsum.photos/200/300?random=" + Math.random();
       return {
         ID: `${order.id}`,
         "Customer Info": `

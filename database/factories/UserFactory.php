@@ -61,7 +61,12 @@ class UserFactory extends Factory
                 'phone_number' => fake()->unique()->phoneNumber(),
                 'address' => $address,
                 'zip_code' => fake()->postcode(),
-                // 'profile_image' => fake()->imageUrl(),
+            ]);
+
+            // add user images
+            $user->images()->create([
+                'name' => 'default_profile',
+
             ]);
         });
     }

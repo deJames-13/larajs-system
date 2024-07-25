@@ -7,6 +7,11 @@
 		<meta name="csrf-token" content="{{ csrf_token() }}">
 		<meta name="api-token" content="{{ session('api-token') }}">
 		<title>{{ $title ?? '' }}</title>
+
+		{{-- favicon --}}
+		<link rel="shortcut icon" href="/images/logo_nobg.png" type="image/x-icon">
+
+
 		{{-- window title --}}
 
 		<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
