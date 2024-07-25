@@ -10,10 +10,10 @@
                     <h2>GlitzVouge</h2>
                     <p>We cater to individuals regardless of gender to suffice <br>
                         your needs and wants in terms of cosmetic products</p>
-                  <a href="/products" class="btn btn-primary mt-4">Shop Now!</a>
-                </div>
+                        <a href="/products" class="btn btn-primary mt-4">Shop Now!</a>
+                  </div>
 
-                <div class="picture" style="height:40%;width:40%;">
+                <div class="picture" style="height:50%;width:50%;">
                     <img style=" width: 100%;height: 100%;object-fit: contain;overflow: hidden;border-radius: 20px;" src="{{ asset('images/newjeans.jpg') }}" alt="homepage">
                 </div>
             </div>
