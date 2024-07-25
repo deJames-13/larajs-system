@@ -20,7 +20,7 @@
 ## [!IMPORTANT]
 
 - [ ] transaction : /profile?page=orders walang search
-- [ ] transaction : buy again not working
+- [x] transaction : buy again not working
 - [ ] transaction : no shipping
 - [x] transaction : no image on products
 - [x] MP7 User Management, admin user deactivation/deletion and user profile management

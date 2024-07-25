@@ -44,6 +44,7 @@ class OrderController extends Controller
                 $query->withPivot('quantity');
             },
             'products.stock',
+            'products.brands',
             'products.images',
             'customer',
             'customer.info',
@@ -68,6 +69,7 @@ class OrderController extends Controller
             },
             'products.stock',
             'products.images',
+            'products.brands',
             'customer',
             'customer.info',
             'customer.images',

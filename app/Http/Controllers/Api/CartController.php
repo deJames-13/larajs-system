@@ -25,25 +25,41 @@ class CartController extends Controller
         return redirect()->route('products.show', $id);
     }
 
+    private function updateOrAttachProduct($customer, $productId, $quantity)
+    {
+        if ($customer->products->contains($productId)) {
+            $newQuantity = $customer->products->find($productId)->pivot->quantity + $quantity;
+            return $customer->products()->updateExistingPivot($productId, ['quantity' => $newQuantity]);
+        } else {
+            return $customer->products()->attach($productId, ['quantity' => $quantity]);
+        }
+    }
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'product_id' => 'required|numeric',
-            'quantity' => 'required|numeric',
-        ]);
-        $customer = $request->user();
+        $isBuyAgain = request('buy_again') ?? false;
 
-        // if the product is already in the cart, add the quantity
-        if ($customer->products->contains($data['product_id'])) {
-            $newQuantity = $customer->products->find($data['product_id'])->pivot->quantity + $data['quantity'];
-            $customer->products()->updateExistingPivot($data['product_id'], ['quantity' => $newQuantity]);
-
-            // NOTE: ALWAYS RETURN cONTENT U FxK
-            return response($data, 201, ['message' => 'Item updated in cart successfully']);
+        if (!$isBuyAgain) {
+            $data = $request->validate([
+                'quantity' => 'required|numeric',
+                'product_id' => 'required|numeric',
+            ]);
+        } else {
+            $data = $request->validate([
+                'products' => 'required|array',
+                'products.*.product_id' => 'required|numeric',
+                'products.*.quantity' => 'required|numeric',
+            ]);
         }
 
+        $customer = $request->user();
+        if (isset($data['products'])) {
+            foreach ($data['products'] as $product) {
+                $this->updateOrAttachProduct($customer, $product['product_id'], $product['quantity']);
+            }
+            return response($data, 201, ['message' => 'Items added to cart successfully']);
+        }
 
-        $customer->products()->attach($data['product_id'], ['quantity' => $data['quantity']]);
+        $this->updateOrAttachProduct($customer, $data['product_id'], $data['quantity']);
         return response($data, 201, ['message' => 'Item added to cart successfully']);
     }
 

@@ -150,7 +150,39 @@ export default class OrderManager {
     });
   }
 
-  buyAgain(id) {}
+  buyAgain(id) {
+    const order = this.orders.find(order => order.id == id);
+    if (!order?.products?.length) return;
+
+    const payload = {
+      products: order.products.map(product => {
+        return {
+          product_id: product.id,
+          quantity: product.pivot.quantity
+        };
+      }),
+      buy_again: 1
+    };
+
+    ajaxRequest.post({
+      url: "/api/cart",
+      data: payload,
+      onSuccess: response => {
+        Swal.fire({
+          title: "Success",
+          text: "The items have been added to cart.",
+          icon: "success",
+          showCancelButton: false,
+          showDenyButton: true,
+          confirmButtonText: "View Cart"
+        }).then(result => {
+          if (result.isConfirmed) {
+            window.location.href = "/profile?page=cart";
+          }
+        });
+      }
+    });
+  }
 
   onTabClick(id) {
     this.switchTabs(id);
@@ -164,7 +196,8 @@ export default class OrderManager {
       { selector: "#btn-view", callback: this.viewOrder.bind(this) },
       // { selector: ".order-card", callback: this.viewOrder.bind(this) },
       { selector: "#btn-cancel", callback: this.onCancel.bind(this) },
-      { selector: "#btn-rate", callback: this.rateForm.bind(this) }
+      { selector: "#btn-rate", callback: this.rateForm.bind(this) },
+      { selector: "#btn-again", callback: this.buyAgain.bind(this) }
     ];
 
     events.forEach(event => {
