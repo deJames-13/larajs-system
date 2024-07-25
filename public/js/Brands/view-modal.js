@@ -12,16 +12,15 @@ const defaultProps = {
 };
 
 export default class ViewBrand extends FormModal {
+  constructor(props = {}) {
+    super({ ...defaultProps, ...props });
+  }
 
-    constructor(props = {}) {
-        super({ ...defaultProps, ...props });
-    }
-
-    makeContent() {
-        console.log(this.data);
-        const brand = this.data;
-        const image = brand.logo || "https://via.placeholder.com/150"; // Use brand.logo instead of images
-        return /*HTML*/ `
+  makeContent() {
+    console.log(this.data);
+    const brand = this.data;
+    const image = (brand.images.length && brand.images[0].path) || "https://via.placeholder.com/150"; // Use brand.logo instead of images
+    return /*HTML*/ `
         <div class="py-4 flex flex-col gap-8 mx-auto">
             <div class="flex p-4 gap-4 border shadow-xl rounded-lg">
                 <!-- Logo -->
@@ -63,6 +62,11 @@ export default class ViewBrand extends FormModal {
             <h3 class="text-xl font-bold m-0">Brand Details</h3>
             <div class="flex gap-4 px-8 border p-4 rounded-lg">
                 <div class="flex flex-col flex-grow gap-4">
+                <!-- Website -->
+                <div class="flex flex-col gap-2">
+                    <label class="font-bold">Description:</label>
+                    <span>${brand.website || "No website available"}</span>
+                </div>
                 <!-- Description -->
                 <div class="flex flex-col gap-2">
                     <label class="font-bold">Description:</label>
@@ -85,6 +89,5 @@ export default class ViewBrand extends FormModal {
         </div>
 
         `;
-      }
-    }
-
+  }
+}

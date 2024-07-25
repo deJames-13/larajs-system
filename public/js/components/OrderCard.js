@@ -5,50 +5,50 @@ export default class Order {
   }
 
   renderItems(item) {
+    // console.log(item);
     var unit_price = parseFloat(item.price) * parseFloat(item.order_quantity);
     this.total = this.total + unit_price;
+    const image = item.images && item.images.length ? item.images[0].path : "https://placehold.co/400x600?text=item";
+    const brand = item.brands && item.brands.length ? item.brands[0].name : "N/A";
+    return /* HTML */ `
+      <div id="item__${this.order.id}__${item.id}" class="w-full container flex space-x-2 items-center">
+        <div class="flex-grow flex items-start space-x-1">
+          <!-- Image -->
+          <div class="max-w-[90px] m-0 rounded">
+            <img src="${image ?? "https://placehold.co/400x600?text=item"}" class="m-0 object-center w-full cursor-zoom-in" alt="product image" />
+          </div>
+          <!-- Product -->
+          <div class="p-3 text-ellipsis flex items-center gap-3">
+            <div>
+              <a href="/products/${item.id}" class="font-bold link link-hover link-primary"> ${item.name} </a>
 
-    return `
-        
-        <div id="item__${this.order.id}__${item.id}" class="w-full container flex space-x-2 items-center">
-            <div class="flex-grow flex items-start space-x-1">
-                <!-- Image -->
-                <div class="max-w-[90px] m-0 rounded">
-                    <img src="${item.image_path ?? "https://placehold.co/400x600?text=item"}" class="m-0 object-center w-full cursor-zoom-in"
-                        alt="product image">
-                </div>
-                <!-- Product -->
-                <div class="p-3 text-ellipsis flex items-center gap-3">
-                    <div>
-                        <a href="/products/${item.id}" class="font-bold link link-hover link-primary">
-                        ${item.name}
-                        </a>
-
-                        <div class="font-bold opacity-50">
-                            ₱<span id="price__${this.order.id}__${item.id}">${item.price}</span>
-                        </div>
-                        <div class="text-sm opacity-50">
-                            Quantity: x<span id="quantity__${this.order.id}__${item.id}">
-                                ${item.order_quantity}
-                            </span>
-                        </div>
-                        <div class="text-xs opacity-50">
-                            SKU Code: <span id="sku_code__${this.order.id}__${item.id}">${item.sku_code}</span>
-                        </div>
-                        <div class="text-xs opacity-50">
-                            Brand: <span id="brand__${this.order.id}__${item.id}">${item.brand}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>    
-            <!-- Unit Total -->
-            <div class="flex items-center space-x-2">
-                <div class="text-right text-sm">
-                    <div class="font-bold">₱<span id="unit_price__${this.order.id}__${item.id}">${unit_price.toFixed(2)}</span></div>
-                </div>
+              <div class="font-bold">₱<span id="price__${this.order.id}__${item.id}">${item.price}</span></div>
+              <div class="text-sm">
+                <span class="opacity-50">Quantity:</span>
+                <span id="quantity__${this.order.id}__${item.id}" class="font-semibold opacity-100">
+                  <i class="fas fa-times text-xs"></i>
+                  ${item.order_quantity}
+                </span>
+              </div>
+              <div class="text-xs">
+                <span class="opacity-50">SKU Code:</span>
+                <span id="sku_code__${this.order.id}__${item.id}">${item.sku_code}</span>
+              </div>
+              <div class="text-xs">
+                <span class="opacity-50">Brand:</span>
+                <span id="brand__${this.order.id}__${item.id}" class="font-bold">${brand}</span>
+              </div>
             </div>
+          </div>
         </div>
-        `;
+        <!-- Unit Total -->
+        <div class="flex items-center space-x-2">
+          <div class="text-right text-sm">
+            <div class="font-bold">₱<span id="unit_price__${this.order.id}__${item.id}">${unit_price.toFixed(2)}</span></div>
+          </div>
+        </div>
+      </div>
+    `;
   }
 
   render() {
@@ -106,7 +106,9 @@ export default class Order {
             <div class="flex items-center justify-end space-x-2">
                 <div class="text-right">
                     <div class=>Order Total: </div>
-                    <div class="font-bold">₱<span id="order_total__${this.order.id}">
+                    <div class="font-bold">
+                    ₱
+                    <span id="order_total__${this.order.id}">
                         ${this.total.toFixed(2)}
                     </span></div>
                 </div>

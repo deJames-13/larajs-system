@@ -17,6 +17,20 @@ export default class SideBar {
   getLink(url) {
     return $(this.target).find(`.sidebar-link[data-url="${url}"]`) || false;
   }
+  getUrlParams() {
+    const urlParams = new URLSearchParams(window.location.search);
+    let queries = {};
+    for (let [key, value] of urlParams) {
+      queries[key] = value;
+    }
+    return queries;
+  }
+
+  pushUrlParams({ key, value }) {
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set(key, value);
+    window.history.pushState({}, "", "?" + urlParams.toString());
+  }
 
   setActiveLink(url) {
     $(this.target).find(".sidebar-link").removeClass("active-sidebar-link");
@@ -29,7 +43,7 @@ export default class SideBar {
       .on("click", e => {
         this.currentUrl = $(e.currentTarget).data("url");
 
-        if (!(this.currentUrl === "")) window.history.pushState({}, "", `?page=${this.currentUrl}`);
+        this.pushUrlParams({ key: "nav", value: this.currentUrl });
 
         this.setActiveLink(this.currentUrl);
         const goToPage = debounce(() => {
@@ -60,10 +74,10 @@ export default class SideBar {
     $(this.target).html(HTML);
     this.handleClick();
 
-    const page = new URLSearchParams(window.location.search).get("page") || this.currentUrl;
-    if (page && this.links.map(link => link.url).includes(page)) {
-      this.setActiveLink(page);
-      this.onClick(page); // click the page
+    const nav = this.getUrlParams()?.nav;
+    if (nav && this.links.map(link => link.url).includes(nav)) {
+      this.setActiveLink(nav);
+      this.onClick(nav); // click the page
     }
   }
 }

@@ -19,13 +19,21 @@ class OrderController extends Controller
         $page = $request->query('page') ?? 1;
         $limit = $request->query('limit') ?? 10;
         $isAdmin = $request->user()->role !== 'customer';
+        $search = $request->query('search') ?? '';
+        $isDashboard = $request->query('dashboard') ?? true;
 
 
         $query = Order::query();
-        if (!$isAdmin)
-            $query->where('user_id', $request->user()->id);
-
-        $query->filter(request(['search']));
+        if (!$isAdmin || $isDashboard === 'false') {
+            $id = $request->user()->id;
+            $query->where('user_id', $id);
+        }
+        $query->filter(
+            [
+                'search' => $search,
+                'status' => $status,
+            ]
+        );
         if ($status !== 'all') {
             $query->where('status', $status);
         }
@@ -35,6 +43,9 @@ class OrderController extends Controller
             'products' => function ($query) {
                 $query->withPivot('quantity');
             },
+            'products.stock',
+            'products.brands',
+            'products.images',
             'customer',
             'customer.info',
             'customer.images',
@@ -43,7 +54,7 @@ class OrderController extends Controller
 
         $query->orderBy('updated_at', 'desc');
 
-        $orders = $query->paginate($limit);
+        $orders = $query->paginate($limit, ['*'], 'page', $page);
 
         return OrderResource::collection($orders);
     }
@@ -51,15 +62,19 @@ class OrderController extends Controller
     // INFO: For admin api fetch
     public function show(string $id)
     {
-        $order = Order::with([
+        $order = Order::findOrFail($id);
+        $order->load([
             'products' => function ($query) {
                 $query->withPivot('quantity');
             },
             'products.stock',
+            'products.images',
+            'products.brands',
             'customer',
             'customer.info',
             'customer.images',
-        ])->findOrFail($id);
+        ]);
+
         if (!$order) {
             return response(
                 [],
@@ -183,7 +198,16 @@ class OrderController extends Controller
 
         // Refresh the model to ensure it has the latest data
         $order->refresh();
-        $order->load(['products', 'customer']);
+        $order->load([
+            'products' => function ($query) {
+                $query->withPivot('quantity');
+            },
+            'products.stock',
+            'products.images',
+            'customer',
+            'customer.info',
+            'customer.images',
+        ]);
         $res = new OrderResource($order);
 
         Debugbar::info('Sending: ' . $order->customer->email);

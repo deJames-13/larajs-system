@@ -78,11 +78,8 @@ export default class UsersPage extends TablePage {
             this.init();
           }
         }).init();
-      });
-
-    $("#btn-add-" + this.table)
-      .off("click")
-      .on("click", () => {
+      })
+      .on("click", "#btn-add-" + this.tableName, () => {
         new UserAdd({
           onUpdate: () => {
             this.init();

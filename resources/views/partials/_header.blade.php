@@ -40,10 +40,4 @@
 		@endif
 	</div>
 
-	@push('scripts')
-		<script type="module" src="{{ asset('js/Auth/index.js') }}"></script>
-
-		<script type="module" src="{{ asset('js/scripts/header.js') }}"></script>
-	@endpush
-
 </header>

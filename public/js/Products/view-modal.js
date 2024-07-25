@@ -10,13 +10,14 @@ const defaultProps = {
   data: {}
 };
 export default class ViewProduct extends FormModal {
-    constructor(props = {}) {
-        super({ ...defaultProps, ...props });
-    }
+  constructor(props = {}) {
+    super({ ...defaultProps, ...props });
+  }
 
   makeContent() {
     console.log(this.data);
     const product = this.data;
+    const image = (product.images.length && product.images[0].path) || "https://via.placeholder.com/150"; // Use a placeholder if no image is provided
 
     return /*HTML*/ `
       <div class="py-4 flex flex-col gap-8">

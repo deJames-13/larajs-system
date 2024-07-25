@@ -36,19 +36,15 @@ class PageController extends Controller
             abort(404);
         }
         $item->load([
+            'images',
             'brands',
             'categories',
-            'promos'
+            'promos',
         ]);
         return view('pages.products.show', ['item' => $item]);
     }
 
 
-    // TRANSACTIONS PAGES
-    public function cart()
-    {
-        return view('pages.transaction.cart', ['page' => 'Cart']);
-    }
 
     public function checkout()
     {

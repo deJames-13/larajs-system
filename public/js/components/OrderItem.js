@@ -4,6 +4,7 @@ export default class OrderItem {
   }
 
   render() {
+    const image = this.product.images && this.product.images.length ? this.product.images[0].path : "https://placehold.co/400x600?text=item";
     return /* HTML */ `
       <!-- row item -->
       <tr id="cart_item_${this.product.id}">

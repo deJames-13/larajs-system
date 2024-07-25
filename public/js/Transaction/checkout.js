@@ -52,7 +52,7 @@ const checkout = payload => {
         confirmButtonText: "OK"
       }).then(result => {
         if (result.isConfirmed) {
-          window.location.href = "/profile?page=orders";
+          window.location.href = "/profile?nav=orders";
         }
       });
     },

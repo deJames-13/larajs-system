@@ -81,7 +81,7 @@
 			</script>
 		@endif
 		<script>
-			$(document).on("click", '.back', function() {
+			$(".back").click(function() {
 				window.history.back();
 			});
 
@@ -91,6 +91,8 @@
 			});
 		</script>
 
+		<script type="module" src="{{ asset('js/Auth/index.js') }}"></script>
+		<script type="module" src="{{ asset('js/scripts/header.js') }}"></script>
 
 
 

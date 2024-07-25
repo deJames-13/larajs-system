@@ -66,12 +66,8 @@ export default class TablePage extends DataTable {
         const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
         window.history.pushState({}, null, newUrl);
         this.formPage(id);
-      });
-
-    // Create
-    $("#btn-add-" + this.tableName)
-      .off()
-      .on("click", () => {
+      })
+      .on("click", "#btn-add-" + this.tableName, () => {
         urlParams.set("action", "create");
         const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
         window.history.pushState({}, null, newUrl);

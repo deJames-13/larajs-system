@@ -14,7 +14,7 @@ export default class BrandsForm extends FormPage {
       });
     } else if (this.type === "create") {
       $(document).ready(() => {
-        new BrandsCreate({ target:this.target });
+        new BrandsCreate({ target: this.target });
       });
     }
   }

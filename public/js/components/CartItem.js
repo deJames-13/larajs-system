@@ -14,10 +14,12 @@ export class CartItem {
     let qty = $(`#item_qty_${this.product.id}`).val();
     let price = $("#price").text();
     let total = qty * price;
-    $("#unit_total").text(total);
+    $("#unit_total").text(total.toFixed(2));
   }
 
   render() {
+    const image = this.product.images && this.product.images.length ? this.product.images[0].path : "https://placehold.co/400x600?text=item";
+
     return `
             <!-- row item -->
             <tr id="cart_item_${this.product.id}" class="text-xs lg:text-md">
@@ -25,7 +27,7 @@ export class CartItem {
                 <td>
                     <div class="max-w-[90px] max-h-[120px]  rounded overflow-hidden">
                         <img 
-                            src="${this.product.image ?? "https://placehold.co/400x600?text=item"}" 
+                            src="${image ?? "https://placehold.co/400x600?text=item"}" 
                             class="object-center w-full cursor-zoom-in"
                             alt="product image">
                     </div>
@@ -61,7 +63,7 @@ export class CartItem {
                 <!-- TOTAL -->
                 <td class="align-center">
                     <div class=" font-bold">
-                        PHP <span id="unit_total">${parseFloat(this.product.price) * parseFloat(this.product.quantity) ?? "0"}</span>
+                        PHP <span id="unit_total">${(parseFloat(this.product.price ?? 0) * parseFloat(this.product.quantity ?? 0)).toFixed(2)}</span>
                     </div>
                 </td>
 
