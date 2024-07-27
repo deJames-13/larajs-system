@@ -95,7 +95,7 @@ export default class Cart {
 
     if (cart.length === 0) {
       // message confirm user no items selected checking out all items
-      Swal.fire({
+      return Swal.fire({
         title: "No items selected!",
         text: "Do you want to checkout all items?",
         icon: "warning",
