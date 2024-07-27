@@ -118,4 +118,23 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Image::class, 'user_images', 'user_id', 'image_id');
     }
+
+
+    public function getCart()
+    {
+        // return user products count and total price (price * quantity)
+        $products = $this->products;
+        $count = $products->map(function ($product) {
+            return $product->pivot->quantity;
+        })->sum();
+        $total = $products->sum(function ($product) {
+            return $product->price * $product->pivot->quantity;
+        });
+
+        return (object)[
+            'count' => $count,
+            'total' => $total,
+            'products' => $products
+        ];
+    }
 }

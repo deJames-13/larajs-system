@@ -37,12 +37,10 @@ export default class OrderShow {
     if (!(status == "pending")) {
       $("#cancelling-form").remove();
     }
-
-    // if status is completed
   }
 
   setActionBtn(status) {
-    if (status != "cancelled") {
+    if (status != "cancelled" && status != "completed") {
       $(".action-button").text(this.buttonActions[status].text);
       $(".action-button").attr("id", this.buttonActions[status].id);
     } else {

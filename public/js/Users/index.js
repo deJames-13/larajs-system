@@ -9,14 +9,8 @@ export default class User {
     // console.log("User class initialized");
   }
 
-  async init() {
-    return this.fetchUser()
-      .then(response => {
-        if (!this.user) return;
-        this.checkStatus();
-        this.checkInfo();
-      })
-      .catch(error => {});
+  init() {
+    return this.fetchUser();
   }
 
   getUser() {
@@ -25,12 +19,10 @@ export default class User {
 
   handleResponse(response) {
     this.user = response;
+    if (!this.user) return;
+    this.checkStatus();
+    this.checkInfo();
     window.localStorage.setItem("user", JSON.stringify(this.user));
-    return this;
-  }
-
-  handleError(error) {
-    Error("Failed to fetch user data:", error);
   }
 
   fetchUser() {
@@ -40,7 +32,7 @@ export default class User {
         this.handleResponse(response);
       },
       onError: error => {
-        this.handleError(error);
+        Error("Failed to fetch user data:", error);
       }
     });
   }

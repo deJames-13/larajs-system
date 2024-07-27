@@ -68,6 +68,19 @@ const init = () => {
   });
 };
 
+const updateCart = () => {
+  let cartQty = parseInt($(".cart-count").text());
+  $(".cart-count").text(parseInt(cartQty + item.quantity));
+
+  let cartTotal = parseFloat($("#cart-total").text());
+  $("#cart-total").text((cartTotal + item.itemPrice).toFixed(2));
+  $(".indicator").addClass("animate__bounceIn");
+
+  setTimeout(() => {
+    $(".indicator").removeClass("animate__bounceIn");
+  }, 500);
+};
+
 // POST CART
 $(document).on("click", "#cart-add", function () {
   const token = document.querySelector('meta[name="api-token"]').getAttribute("content");
@@ -81,6 +94,7 @@ $(document).on("click", "#cart-add", function () {
     data: data,
     token: token,
     onSuccess: response => {
+      updateCart();
       Swal.fire({
         title: "Success",
         text: "This item has been added to cart.",

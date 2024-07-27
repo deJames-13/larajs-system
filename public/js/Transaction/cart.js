@@ -91,11 +91,24 @@ export default class Cart {
     // UPDATE CART
     $(document).on("click", "#cart-upd", () => {
       this.checkCart();
+      const isValid = this.products.every(product => $(`#item_qty_${product.id}`).val() > 0);
+      if (!isValid) {
+        Swal.fire({
+          title: "Invalid Quantity!",
+          text: "Please input a valid quantity.",
+          icon: "warning",
+          confirmButtonColor: "#3085d6"
+        });
+        return;
+      }
+
       this.products.forEach(product => {
         const id = product.id;
-        product.quantity = $(`#item_qty_${id}`).val();
+        let qty = $(`#item_qty_${id}`).val();
+        product.quantity = qty;
         product.total = product.quantity * product.price;
       });
+
       ajaxRequest.put({
         url: "/api/cart",
         data: { products: this.products },
