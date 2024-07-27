@@ -69,15 +69,16 @@ export default class PromosCreate {
       rules: {
         name: {
           required: true,
-          minlength: 3
+          pattern: /^[A-Z][a-zA-Z]*$/
         },
         slug: {
           required: true,
-          minlength: 3
+          pattern: /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/
         },
         description: {
           required: true,
-          minlength: 10
+          minlength: 10,
+          maxlength: 500
         },
         image: {
           required: true
@@ -102,12 +103,10 @@ export default class PromosCreate {
       },
       messages: {
         name: {
-          required: "Name is required",
-          minlength: "Name must be at least 3 characters long"
+          required: "Name is required"
         },
         slug: {
-          required: "Slug is required",
-          minlength: "Slug must be at least 3 characters long"
+          required: "Slug is required"
         },
         description: {
           required: "Description is required",

@@ -114,6 +114,7 @@
 				@endif
 			</div>
 			{{-- Cart --}}
+            @auth
 			<a id="mini-cart" class=" {{ Route::is('profile') ? 'hidden' : '' }} cursor-pointer flex space-x-2 items-center">
 				<div class="dropdown dropdown-end">
 					<div tabindex="0" role="button" class="flex items-center p-1">
@@ -150,6 +151,7 @@
 					</div>
 				</div>
 			</a>
+            @endauth
 		</div>
 	</div>
 </div>
