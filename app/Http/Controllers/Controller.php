@@ -6,6 +6,7 @@ use App\Models\Image;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 abstract class Controller

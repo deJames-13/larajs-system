@@ -13,16 +13,7 @@ class Promos extends Model
 
     use HasFactory, SoftDeletes, Searchable;
 
-    protected $fillable = [
-        'name',
-        'slug',
-        'description',
-        'image',
-        'status',
-        'discount',
-        'start_date',
-        'end_date',
-    ];
+    protected $guarded = [];
 
     // Scope Filter
     public function scopeFilter($query, array $filters)

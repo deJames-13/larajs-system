@@ -61,11 +61,12 @@ export default class ProductsEdit {
       rules: {
         name: {
           required: true,
-          pattern: /^[A-Z][a-zA-Z]*$/
+          // only allow letters, numbers, and spaces
+          pattern: /^[a-zA-Z0-9\s]*$/
         },
         sku_code: {
           required: true,
-          pattern: /^[a-z0-9]{10,20}$/i
+          pattern: /^[A-Z]{3}-\d{3}$/
         },
         description: {
           required: true,
@@ -95,10 +96,12 @@ export default class ProductsEdit {
       },
       messages: {
         name: {
-          required: "Name is required"
+          required: "Name is required",
+          pattern: "Please enter a valid name, only letters, numbers, and spaces are allowed."
         },
         sku_code: {
-          required: "SKU Code is required"
+          required: "SKU Code is required",
+          pattern: "Please enter a valid SKU Code - e.g. ABC-123"
         },
         description: {
           required: "Description is required",
@@ -146,6 +149,8 @@ export default class ProductsEdit {
   }
   populateForm(item = {}) {
     this.item = item;
+    console.log(item);
+
     Object.keys(this.item).forEach(key => {
       $(`#${key}`).val(this.item[key]);
     });

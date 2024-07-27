@@ -108,6 +108,7 @@ export default class Select {
     // clear selected
     this.component.find("#remove-selected").on("click", () => {
       this.selected = {};
+      $("#selected-value-input").val("0");
       this.update();
     });
 
@@ -137,9 +138,9 @@ export default class Select {
             <i class="fas fa-caret-down"></i>
             <span class="placeholder">${this.placeholder}</span>
             <span id="mini-loader-${this.name}" class="loading loading-spinner text-primary"></span>
-            <span class="font-bold" id="selected-value" data-value="${this.selected.value ?? ""}">${this.selected.label ?? this.placeholderLabel}</span>
+            <span class="font-bold" id="selected-value" data-value="${this.selected.value ?? "0"}">${this.selected.label ?? this.placeholderLabel}</span>
             <input id="selected-value-input" type="hidden" name="${this.name}[]" id="${this.name}" />
-            <button type="button" id="remove-selected" class="ml-auto btn btn-sm btn-ghost">
+            <button data-select-event type="button" id="remove-selected" class="ml-auto btn btn-sm btn-ghost">
               <i class="fas fa-multiply"></i>
               Clear
             </button>

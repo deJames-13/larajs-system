@@ -1,5 +1,6 @@
 import AddBrand from "../Brands/add-modal.js";
 import AddCategory from "../Categories/add-modal.js";
+import AddPromo from "../Promos/add-modal.js";
 import MultipleSelect from "../components/MultipleSelect.js";
 import Select from "../components/Select.js";
 import FormPage from "../layouts/FormPage.js";
@@ -9,14 +10,10 @@ export default class ProductsForm extends FormPage {
   formInstance = null;
   msCategories = null;
   selectBrand = null;
-  brands = {
-    selected: {},
-    options: []
-  };
-  categories = {
-    selected: [],
-    options: []
-  };
+  msPromos = null;
+  promos = { selected: [], options: [] };
+  brands = { selected: {}, options: [] };
+  categories = { selected: [], options: [] };
 
   constructor(props = {}) {
     super(props);
@@ -27,6 +24,31 @@ export default class ProductsForm extends FormPage {
       return { value: option.id, label: option.name };
     });
   }
+
+  async fetchPromos({ query = {} }) {
+    const q = {
+      limit: 100,
+      ...query
+    };
+    return this.fetch("promos", q).then(({ data }) => {
+      this.promos.options = this.mapOptions(data);
+    });
+  }
+  promosSource(query = {}) {
+    return new Promise((resolve, reject) => {
+      this.fetchPromos({ query }).then(() => {
+        resolve(this.promos.options, this.promos.selected);
+      });
+    });
+  }
+  promoSelect() {
+    this.msPromos = new MultipleSelect({
+      name: "promos",
+      target: $("#promos-select"),
+      source: this.promosSource.bind(this)
+    });
+  }
+
   async fetchBrands({ query = {} }) {
     const q = {
       limit: 100,
@@ -43,34 +65,6 @@ export default class ProductsForm extends FormPage {
       });
     });
   }
-
-  async fetchCategories({ query = {} }) {
-    const q = {
-      limit: 100,
-      ...query
-    };
-    return this.fetch("categories", q).then(({ data }) => {
-      this.categories.data = data;
-      this.categories.options = this.mapOptions(data);
-    });
-  }
-
-  categoriesSource(query = {}) {
-    return new Promise((resolve, reject) => {
-      this.fetchCategories({ query }).then(() => {
-        resolve(this.categories.options, this.categories.selected);
-      });
-    });
-  }
-
-  categoriesSelect() {
-    this.msCategories = new MultipleSelect({
-      name: "categories",
-      target: $("#categories-select"),
-      source: this.categoriesSource.bind(this)
-    });
-  }
-
   brandSelect() {
     this.selectBrand = new Select({
       name: "brands",
@@ -81,15 +75,44 @@ export default class ProductsForm extends FormPage {
     });
   }
 
+  async fetchCategories({ query = {} }) {
+    const q = {
+      limit: 100,
+      ...query
+    };
+    return this.fetch("categories", q).then(({ data }) => {
+      this.categories.options = this.mapOptions(data);
+    });
+  }
+  categoriesSource(query = {}) {
+    return new Promise((resolve, reject) => {
+      this.fetchCategories({ query }).then(() => {
+        resolve(this.categories.options, this.categories.selected);
+      });
+    });
+  }
+  categoriesSelect() {
+    this.msCategories = new MultipleSelect({
+      name: "categories",
+      target: $("#categories-select"),
+      source: this.categoriesSource.bind(this)
+    });
+  }
+
   handleForm() {
     this.categoriesSelect();
     this.brandSelect();
+    this.promoSelect();
+
     if (this.type === "edit") {
       $(document).ready(() => {
         this.formInstance = new ProductsEdit().then(({ data }) => {
           this.categories.selected = this.mapOptions(data.categories);
           this.brands.selected = this.mapOptions(data.brands);
+          this.promos.selected = this.mapOptions(data.promos);
+
           this.msCategories && this.msCategories.setSelection(this.categories.selected).update();
+          this.msPromos && this.msPromos.setSelection(this.promos.selected).update();
           this.selectBrand && this.selectBrand.makeSelected(this.brands.selected[0]);
         });
       });
@@ -107,6 +130,9 @@ export default class ProductsForm extends FormPage {
     });
     $("#add-brand").on("click", () => {
       new AddBrand();
+    });
+    $("#add-promo").on("click", () => {
+      new AddPromo();
     });
 
     $(document).on("click", "[data-select-event]", e => {
@@ -165,15 +191,34 @@ export default class ProductsForm extends FormPage {
 
           <!-- Item Brand Select -->
           <div class="flex gap-4 items-end">
-            <div id="brands-select" class="w-full"></div>
-
+            <div class="flex flex-grow flex-col space-y-2">
+              <div class="flex items-center">
+                <label for="brands-select" class="text-lg font-semibold">Brand</label>
+              </div>
+              <div id="brands-select" name="brands-select" class="w-full"></div>
+            </div>
             <button id="add-brand" type="button" class="btn btn-outline btn-primary">
               <i class="fas fa-plus"></i>
               <span> Add Brand </span>
             </button>
           </div>
+
+          <!-- Item Promo Select -->
+          <div class="flex gap-4 items-end">
+            <div class="flex flex-grow flex-col space-y-2">
+              <div class="flex items-center">
+                <label for="promos-select" class="text-lg font-semibold">Promos</label>
+              </div>
+              <div id="promos-select" name="promos-select" class="w-full"></div>
+            </div>
+            <button id="add-promo" type="button" class="btn btn-outline btn-primary">
+              <i class="fas fa-plus"></i>
+              <span> Add Promo </span>
+            </button>
+          </div>
+
           <!-- Item Categories // Multi select component -->
-          <div class="flex gap-4 items-end m-1">
+          <div class="flex gap-4 items-end ">
             <div class="flex flex-grow flex-col space-y-2">
               <div class="flex items-center">
                 <label for="categories" class="text-lg font-semibold">Categories</label>
