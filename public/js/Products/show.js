@@ -69,8 +69,11 @@ const init = () => {
 };
 
 const updateCart = () => {
-  let cartQty = parseInt($(".cart-count").text());
-  $(".cart-count").text(parseInt(cartQty + item.quantity));
+  let cartQty = parseInt($("#cart-indicator").data("qty"));
+  let qty = parseInt($("#quantity_count").text());
+  cartQty += qty;
+  $(".cart-count").text(cartQty);
+  $("#cart-indicator").data("qty", cartQty);
 
   let cartTotal = parseFloat($("#cart-total").text());
   $("#cart-total").text((cartTotal + item.itemPrice).toFixed(2));

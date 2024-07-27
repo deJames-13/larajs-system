@@ -4,11 +4,14 @@ import { CartItem } from "../components/CartItem.js";
 export default class Cart {
   constructor() {
     this.products = [];
-
     this.init();
   }
 
   checkCart(data) {
+    if (sessionStorage.getItem("cart")) {
+      sessionStorage.removeItem("cart");
+    }
+
     $("#checkout").show();
     data &&
       data.forEach(product => {
@@ -42,7 +45,7 @@ export default class Cart {
         $("#cart_item_" + id).remove();
         const subtotal = this.products.reduce((acc, product) => acc + product.total, 0);
         $("#subtotal, #total").text(subtotal.toFixed(2));
-        this.checkCart(response.data);
+        this.checkCart(response?.data);
       },
       onError: response => {
         console.log(response);
@@ -82,10 +85,58 @@ export default class Cart {
     });
   }
 
+  onCheckout() {
+    let cart = [];
+    $(".cart-selected").each((index, item) => {
+      const id = item.dataset.id;
+      const product = this.products.filter(product => product.id == id)[0];
+      cart.push(product.id);
+    });
+
+    if (cart.length === 0) {
+      // message confirm user no items selected checking out all items
+      return Swal.fire({
+        title: "No items selected!",
+        text: "Do you want to checkout all items?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes",
+        cancelButtonText: "No"
+      }).then(result => {
+        if (result.isConfirmed) {
+          window.href = "/checkout";
+        }
+      });
+    }
+
+    // confirm check out count of products
+    Swal.fire({
+      title: `${cart.length} item(s) selected`,
+      text: `Please confirm to checkout ${cart.length} item(s)`,
+      icon: "info",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Confirm",
+      cancelButtonText: "No"
+    }).then(result => {
+      if (result.isConfirmed) {
+        sessionStorage.setItem("cart", JSON.stringify(cart));
+        window.location.href = "/checkout";
+      }
+    });
+  }
+
   bindEvents() {
     $(document).ready(() => {
       $("#cart-upd").hide();
       this.fetchItems();
+    });
+
+    $(document).on("click", "#checkout", () => {
+      this.onCheckout();
     });
 
     // UPDATE CART
@@ -138,7 +189,7 @@ export default class Cart {
     $(document).on("change", ".item_qty", () => $("#cart-upd").show());
 
     // REMOVE ITEM
-    $(document).on("click", ".item-rm-btn", () => {
+    $(document).on("click", ".item-rm-btn", e => {
       Swal.fire({
         title: "Are you sure?",
         text: "You won't be able to revert this!",
@@ -148,7 +199,7 @@ export default class Cart {
         cancelButtonColor: "#d13",
         confirmButtonText: "Yes, delete it!"
       }).then(result => {
-        const id = $(this).data("id");
+        const id = e.target.dataset.id;
         const product = this.products.find(product => product.id === id);
         const index = this.products.indexOf(product);
         this.products.splice(index, 1);

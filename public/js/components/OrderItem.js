@@ -5,6 +5,7 @@ export default class OrderItem {
 
   render() {
     const image = this.product.images && this.product.images.length ? this.product.images[0].path : "https://placehold.co/400x600?text=item";
+    const unit_total = parseFloat(this.product?.price || 0) * parseFloat(this.product?.quantity || 0);
     return /* HTML */ `
       <!-- row item -->
       <tr id="cart_item_${this.product.id}">
@@ -36,7 +37,7 @@ export default class OrderItem {
         </td>
         <!-- TOTAL -->
         <td class="align-center">
-          <div class="text-sm font-bold">PHP <span id="unit_total">${parseFloat(this.product.price) * parseFloat(this.product.quantity) ?? "0"}</span></div>
+          <div class="text-sm font-bold">PHP <span id="unit_total">${unit_total?.toFixed(2) ?? "0"}</span></div>
         </td>
       </tr>
     `;

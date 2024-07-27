@@ -14,9 +14,13 @@ export default class ProfileEdit {
   }
 
   handleActionButtons(button) {
-    const btn = button.data("button");
-    btn === "save" && this.profile.onSubmit();
-    btn === "cancel" && this.profile.cancelSubmit();
+    const btn = button.dataset.button;
+    console.log(btn == "save");
+    btn == "save" &&
+      this.profile.onSubmit()?.then(() => {
+        this.init({ profile: this.profile });
+      });
+    btn == "cancel" && this.profile.cancelSubmit();
   }
 
   render() {
@@ -46,7 +50,7 @@ export default class ProfileEdit {
     $(this.target)
       .find("#form-actions button")
       .click(e => {
-        this.handleActionButtons($(e.target));
+        this.handleActionButtons(e.currentTarget);
       });
 
     return this;
