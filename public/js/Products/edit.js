@@ -61,11 +61,11 @@ export default class ProductsEdit {
       rules: {
         name: {
           required: true,
-          minlength: 3
+          pattern: /^[A-Z][a-zA-Z]*$/
         },
         sku_code: {
           required: true,
-          minlength: 3
+          pattern: /^[a-z0-9]{10,20}$/i
         },
         description: {
           required: true,
@@ -95,12 +95,10 @@ export default class ProductsEdit {
       },
       messages: {
         name: {
-          required: "Name is required",
-          minlength: "Name must be at least 3 characters long"
+          required: "Name is required"
         },
         sku_code: {
-          required: "SKU Code is required",
-          minlength: "SKU Code must be at least 3 characters long"
+          required: "SKU Code is required"
         },
         description: {
           required: "Description is required",
