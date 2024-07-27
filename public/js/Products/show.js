@@ -73,6 +73,7 @@ const updateCart = () => {
   let qty = parseInt($("#quantity_count").text());
   cartQty += qty;
   $(".cart-count").text(cartQty);
+  $("#cart-indicator").data("qty", cartQty);
 
   let cartTotal = parseFloat($("#cart-total").text());
   $("#cart-total").text((cartTotal + item.itemPrice).toFixed(2));
