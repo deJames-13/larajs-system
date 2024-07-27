@@ -66,7 +66,7 @@ class UserFactory extends Factory
             // add user images
             $user->images()->create([
                 'name' => 'default_profile',
-
+                'path' => 'https://picsum.photos/200?random=' . $user->id,
             ]);
         });
     }

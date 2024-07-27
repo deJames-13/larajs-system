@@ -55,7 +55,7 @@ export default class OrderShow {
   }
 
   populateForm(response) {
-    // console.log(response);
+    console.log(response);
     this.data = response.data;
 
     $("_skeleton").removeClass("skeleton");
@@ -67,26 +67,23 @@ export default class OrderShow {
     });
 
     if (this.products.length === 0) {
-      // window.location.href = "/";
+      window.location.href = "/";
     }
 
     // RENDER ORDER ITEMS
     $("#cart-body").empty();
     this.products.forEach(product => {
-      // if no product in cart redirect to shop
-      if (this.products.length === 0) {
-        // window.location.href = "/";
-      }
-
       const cartItem = new OrderItem(product);
       $("#cart-body").append(cartItem.render());
 
-      const subtotal = this.products.reduce((acc, product) => acc + product.total, 0);
-      $("#subtotal, #total").text(subtotal.toFixed(2));
+      $("#shipping-cost").text(this.data.shipping_cost.toFixed(2));
+      $("#subtotal").text(this.data.subtotal.toFixed(2));
+      $(".total").text(this.data.total.toFixed(2));
+      $(`[data-shipping="${this.data.shipping_type}"]`).click();
+      $("[data-shipping-select]").off();
     });
 
     // EXTRACT PAYLOAD
-
     const customer_info = this.data.customer.info || {
       first_name: "",
       last_name: "",
@@ -126,13 +123,22 @@ export default class OrderShow {
 
     !this.isAdmin && this.setActionBtn("completed");
 
+    $("#rcpt_order_id").text(this.data.id);
     $("#rcpt_order_paiddate").text(this.data.paid_date);
+    $("#rcpt_date_issued").text(this.data.created_at.split("T")[0]);
+    $("#rcpt_order_paiddate").text(this.data.id);
+    $("#rcpt_full_name").text(this.data.customer.fullname);
+    $("#rcpt_address").text(this.data.shipping_address);
+    if (this.data.payment_method) $("#rcpt_order_method").text(this.data.payment_method);
+    else $("#rcpt_order_method").text("Cash on Delivery");
 
+    if (this.data.status == "completed") $("#rcpt_order_paiddate").text(this.data.updated_at.split("T")[0]);
+    else $("#rcpt_order_paiddate").text("N/A");
     $(".page").show();
   }
 
   fetchOrder(id) {
-    ajaxRequest.get({
+    return ajaxRequest.get({
       url: "/api/orders/" + this.id,
       onSuccess: response => this.populateForm(response),
       onError: (response, status, error) => {
@@ -178,18 +184,6 @@ export default class OrderShow {
 
   bindEvents() {
     $(document).on("click", "#view-receipt", () => {
-      // render receipt infos
-      $("#rcpt_date_issued").text(this.data.created_at.split("T")[0]);
-      $("#rcpt_order_id").text(this.data.id);
-      $("#rcpt_full_name").text(this.data.customer.full_name);
-      $("#rcpt_address").text(this.data.shipping_address);
-      ``;
-      if (this.data.payment_method) $("#rcpt_order_method").text(this.data.payment_method);
-      else $("#rcpt_order_method").text("Cash on Delivery");
-
-      if (this.data.status == "completed") $("#rcpt_order_paiddate").text(this.data.updated_at.split("T")[0]);
-      else $("#rcpt_order_paiddate").text("N/A");
-
       this.viewReceipt();
     });
 

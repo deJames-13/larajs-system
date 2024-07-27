@@ -11,10 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
+        $shipping_types = ['standard', 'express', 'priority'];
+        $shipping_costs = [50, 80, 150];
+        $statuses = ['pending', 'processing', 'shipping', 'completed', 'cancelled'];
+
+
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('shipping_address');
+            $table->enum('shipping_type', ['standard', 'express', 'priority'])->default('standard');
+            $table->integer('shipping_cost')->default(50);
             $table->enum('status', ['pending', 'processing', 'shipping', 'completed', 'cancelled'])->default('pending');
             $table->date('paid_date')->nullable();
 

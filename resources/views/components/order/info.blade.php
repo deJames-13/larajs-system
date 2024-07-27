@@ -1,6 +1,6 @@
 <div class="container grid grid-cols-1 gap-4">
 
-	<div class="_skeleton cart-table  py-4 lg:px-12  flex flex-col space-y-6">
+	<div class="_skeleton cart-table  py-4 flex flex-col space-y-6">
 		<h1 class="_skeleton text-lg font-bold print:m-0">Order Items</h1>
 		<div class="container overflow-x-auto">
 			<table class="table lg:table-auto border-y-2 border-black">
@@ -23,12 +23,7 @@
 
 			</table>
 		</div>
-		{{-- Shipping --}}
+		<x-card.billing-info />
 
 
 	</div>
-
-	<x-card.billing-info />
-
-
-</div>
