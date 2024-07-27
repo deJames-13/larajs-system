@@ -48,6 +48,33 @@ export default class RatingsCreate {
     $(this.target)
       .find("#item-form")
       .validate({
+        rules: {
+          rating: {
+            required: true
+          },
+          title: {
+            pattern: /^[a-zA-Z0-9\s]+$/
+          },
+          comment: {
+            required: true
+          }
+        },
+        messages: {
+          rating: {
+            required: "Please select a rating."
+          },
+          comment: {
+            required: "Please enter your feedback."
+          },
+          title: {
+            pattern: "Only letters, numbers, and spaces are allowed."
+          }
+        },
+        errorElement: "span",
+        errorPlacement: function (error, element) {
+          error.addClass("input-error text-error text-red-400 text-sm italic my-1");
+          error.insertAfter(element);
+        },
         submitHandler: form => {
           this.handleFormSubmission(form);
         }

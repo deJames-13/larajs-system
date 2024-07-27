@@ -114,7 +114,7 @@ export default class Order {
             <div class="divider m-0"></div>
             <div class="flex justify-between w-full">
               <span class="opacity-100">Total:</span>
-              <span id="total__${this.order.id}" class="font-semibold">₱${this.total}</span>
+              <span id="total__${this.order.id}" class="font-semibold">₱${this.total.toFixed(2)}</span>
             </div>
           </div>
         </div>

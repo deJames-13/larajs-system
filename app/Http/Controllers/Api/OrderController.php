@@ -227,7 +227,7 @@ class OrderController extends Controller
     {
         $data = $request->validate([
             'rating' => 'required|numeric',
-            'title' => 'sometimes|string',
+            'title' => 'sometimes',
             'review' => 'sometimes|string',
             'is_show_user' => 'sometimes',
         ]);
