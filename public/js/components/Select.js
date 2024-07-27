@@ -101,6 +101,7 @@ export default class Select {
   }
 
   bindEvents() {
+    $("#selected-value-input").val("0");
     const doSearch = debounce(() => {
       this.onSearch(this.searchInput.val());
     }, 500);

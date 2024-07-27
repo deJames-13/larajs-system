@@ -35,7 +35,9 @@ class ProductController extends Controller
     {
         // TODO: Implement sorting and other filters
         $product = Product::filter(request(['search']))->get();
-        return ProductResource::collection($product);
+        $res = ProductResource::collection($product);
+        Debugbar::info($res);
+        return response($res, 200);
     }
 
     public function index()
@@ -88,8 +90,10 @@ class ProductController extends Controller
         unset($data['categories']);
         unset($data['promos']);
 
+        $data['price'] = $data['price'] > 0 ? $data['price'] : 0;
+
         $product = Product::create($data);
-        $product->stock()->create(['quantity' => $stock ? $stock : 0]);
+        $product->stock()->create(['quantity' => $stock > -1 ? $stock : 0]);
 
         $this->attachRelation($product, $brands, 'brands');
         $this->attachRelation($product, $categories, 'categories');
@@ -143,7 +147,8 @@ class ProductController extends Controller
         $this->attachRelation($product, $promos, 'promos');
 
 
-        if ($stock) $product->stock()->update(['quantity' => $stock]);
+        $data['price'] = $data['price'] > 0 ? $data['price'] : 0;
+        if (is_numeric($stock) && $stock > -1) $product->stock()->update(['quantity' => $stock]);
         $product->update($data);
         $product->load([
             'brands',

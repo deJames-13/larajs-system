@@ -62,6 +62,7 @@ class PromoController extends Controller
         $image_id = $data['image_id'] ?? null;
         unset($data['image_id']);
 
+        $data['discount'] = $data['discount'] > 0 ? $data['discount'] : 0;
         $promo = Promos::create($data);
 
         $this->handleImageUpload($request, $promo, $image_id);
@@ -93,6 +94,7 @@ class PromoController extends Controller
         $image_id = $data['image_id'] ?? null;
         unset($data['image_id']);
 
+        $data['discount'] = $data['discount'] > 0 ? $data['discount'] : 0;
         $promo = Promos::where('id', $id)->first();
         if (!$promo) {
             return response(null, 404, ['message' => 'Promo not found!']);

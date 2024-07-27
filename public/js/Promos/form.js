@@ -59,7 +59,7 @@ export default class PromosForm extends FormPage {
           <!-- Promo Discount Input -->
           <div class="flex flex-col space-y-2">
             <label for="discount" class="text-lg font-semibold">Discount</label>
-            <input type="number" name="discount" id="discount" class="input input-bordered" placeholder="Enter promo discount" />
+            <input type="number" min="0" name="discount" id="discount" class="input input-bordered" placeholder="Enter promo discount" />
           </div>
 
           <!-- Promo Start Date Input -->

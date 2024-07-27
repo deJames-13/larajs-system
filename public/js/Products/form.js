@@ -155,12 +155,12 @@ export default class ProductsForm extends FormPage {
           <!-- Item Price Input -->
           <div class="flex flex-col space-y-2">
             <label for="price" class="text-lg font-semibold">Price</label>
-            <input type="number" name="price" id="price" class="input input-bordered" placeholder="Enter item price" />
+            <input type="number" min="0" name="price" id="price" class="input input-bordered" placeholder="Enter item price" />
           </div>
           <!-- Item Stock Input -->
           <div class="flex flex-col space-y-2">
             <label for="stock" class="text-lg font-semibold">Stock</label>
-            <input type="number" name="stock" id="stock" class="input input-bordered" placeholder="Enter item stock" />
+            <input type="number" min="0" name="stock" id="stock" class="input input-bordered" placeholder="Enter item stock" />
           </div>
 
           <!-- Item SKU Code Input -->

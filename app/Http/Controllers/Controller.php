@@ -46,6 +46,7 @@ abstract class Controller
             return response()->json(['message' => 'Resource not found'], 404);
         }
         $response = new $resource($data);
+        Debugbar::info($response);
 
         return $response;
     }
