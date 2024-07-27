@@ -92,10 +92,13 @@ class OrderController extends Controller
     // INFO: Order Processing
     public function store(Request $request)
     {
+        Debugbar::info($request->all());
         $data = $request->validate(
             [
                 'shipping_address' => 'required|array',
                 'shipping_address.*' => 'required|string',
+                'shipping_type' => 'required|in:standard,express,priority',
+                'shipping_cost' => 'required|numeric',
                 'products' => 'required|array',
                 'products.*.id' => 'required|exists:products,id',
                 'products.*.quantity' => 'required|integer|min:1',
@@ -111,6 +114,8 @@ class OrderController extends Controller
         $order = $user->orders()->create([
             'shipping_address' => $combinedAddress,
             'status' => 'pending',
+            'shipping_type' => $data['shipping_type'],
+            'shipping_cost' => $data['shipping_cost'],
         ]);
 
         $order->products()->attach(
@@ -146,6 +151,9 @@ class OrderController extends Controller
                 'status' => 'required|in:pending,processing,shipping,completed,cancelled',
                 // if user wants to edit the pending
                 'shipping_address' => 'sometimes',
+                'shipping_type' => 'sometimes|in:standard,express,priority',
+                'shipping_cost' => 'sometimes|numeric',
+
                 'products' => 'sometimes|array',
                 'products.*.id' => 'sometimes|exists:products,id',
                 'products.*.quantity' => 'sometimes|integer|min:1',

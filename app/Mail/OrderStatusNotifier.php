@@ -19,6 +19,8 @@ class OrderStatusNotifier extends Mailable implements ShouldQueue // for asynch 
     public $status = '';
     public $fullname = '';
     public $shippingAddress = '';
+    public $shippingType = '';
+    public $shippingCost = '';
     public $createdAt = '';
     public $paidDate = '';
     public $subtotal = 0;
@@ -27,17 +29,20 @@ class OrderStatusNotifier extends Mailable implements ShouldQueue // for asynch 
     {
         // Refresh the model to ensure it has the latest data
         $order->refresh();
-        $order->load(['products', 'customer']);
+        $order->load(['products', 'customer', 'customer.info']);
         Debugbar::info($order);
-        Debugbar::info($order->paid_date);
 
 
         $this->orderId = $order->id;
         $this->status = $order->status;
         $this->fullname = $order->customer->info->fullname();
-        $this->total = $order->products->sum(fn ($product) => $product->pivot->quantity * $product->price);
-        $this->subtotal = $this->total;
         $this->shippingAddress = $order->shipping_address;
+        $this->shippingType = $order->shipping_type;
+        $this->shippingCost = $order->shipping_cost;
+
+        $this->subtotal = $order->products->sum(fn ($product) => $product->pivot->quantity * $product->price);
+        $this->total = $this->subtotal + $this->shippingCost;
+
         $this->createdAt = $order->created_at;
         $this->paidDate = $order->paid_date;
     }
@@ -65,9 +70,11 @@ class OrderStatusNotifier extends Mailable implements ShouldQueue // for asynch 
                 'fullname' => $this->fullname,
                 'shippingAddress' => $this->shippingAddress,
                 'createdAt' => $this->createdAt,
-                'subtotal' => $this->subtotal,
                 'paidDate' => $this->paidDate,
-                'total' => $this->total,
+                'shippingType' => $this->shippingType,
+                'shippingCost' => number_format($this->shippingCost, 2, '.', ','),
+                'subtotal' => number_format($this->subtotal, 2, '.', ','),
+                'total' => number_format($this->total, 2, '.', ','),
             ],
 
         );

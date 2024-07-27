@@ -51,7 +51,7 @@ class PageController extends Controller
 
         $user = auth()->user();
         if (auth()->user()->products->count() == 0) {
-            return redirect()->route('cart');
+            return abort(404);
         }
 
         return view('pages.transaction.checkout', ['page' => 'Checkout', 'user' => $user]);

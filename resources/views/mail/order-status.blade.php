@@ -90,12 +90,11 @@
 
 					@include('partials._receipt', ['print' => false, 'order' => $order])
 
-					<h2 class="print:m-0">Order Total</h2>
-					{{-- Total Sales --}}
 					<div class="flex justify-between items-center">
-						<h4 class="m-0">Total Sales</h4>
-						<div class="text-sm font-bold">PHP <span id="subtotal">{{ $subtotal }}</span></div>
+						<h2 class="m-0">Order Total</h2>
+						<div class="text-xl font-bold">PHP <span class="total">{{ $total }}</span></div>
 					</div>
+
 					<div class="divider"></div>
 					{{-- Subtotal --}}
 					<div class="flex justify-between items-center">
@@ -105,8 +104,15 @@
 
 					{{-- Shipping --}}
 					<div class="flex justify-between items-center">
+						<h4 class="m-0"></h4>
+						<div class="text-sm font-bold capitalize">{{ $shippingType }}</div>
+					</div>
+
+
+					{{-- Shipping --}}
+					<div class="flex justify-between items-center">
 						<h4 class="m-0">Shipping</h4>
-						<div class="text-sm font-bold">TBC</div>
+						<div class="text-sm font-bold"> <span id="total">{{ $shippingCost }}</span></div>
 					</div>
 
 

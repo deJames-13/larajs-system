@@ -38,6 +38,7 @@ const checkout = payload => {
   $("input").removeClass("border-red-400 border-2");
   $(".address-field").addClass("hidden");
   const token = document.querySelector('meta[name="api-token"]').getAttribute("content");
+
   ajaxRequest.post({
     url: "/api/orders/checkout",
     data: payload,
@@ -68,7 +69,9 @@ const checkout = payload => {
           let field = `${key}`.split(".")[1];
           $(`input[name=${field}]`).addClass("border-red-400 border-2");
           $(`#${key}-error`).text(errors[key][0]);
-          $(`.address-field`).removeClass("hidden");
+
+          // if key is address show address fields
+          if (key.includes("address")) $(`.address-field`).removeClass("hidden");
         });
       }
     }
@@ -78,7 +81,7 @@ const checkout = payload => {
 const fetchItems = () => {
   // GET CART
   const token = document.querySelector('meta[name="api-token"]').getAttribute("content");
-  ajaxRequest.get({
+  return ajaxRequest.get({
     url: "/api/cart",
     token: token,
     onSuccess: ({ data }) => {
@@ -114,11 +117,13 @@ const fetchItems = () => {
 };
 
 $(document).ready(function () {
-  validateForm();
-  fetchItems();
+  fetchItems().then(() => {
+    $("[data-shipping-select]:first").click();
+  });
 
   $("#billing-form").on("submit", function (e) {
     e.preventDefault();
+    validateForm();
     if (!isValid()) return;
     const addressInfo = Object.values(address)
       .map(value => (value ? value : "N/A"))
@@ -127,12 +132,15 @@ $(document).ready(function () {
 
     const payload = {
       shipping_address: address,
+      shipping_cost: $("#shipping_cost").val(),
+      shipping_type: $("#shipping_type").val(),
       products: products.map(product => ({
         id: product.id,
         quantity: product.quantity
       })),
       customer_info: formData
     };
+    console.log(payload);
 
     // Confirm
     Swal.fire({
