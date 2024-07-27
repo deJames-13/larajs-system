@@ -3,40 +3,42 @@ import Carousel from "../components/Carousel.js";
 
 export default class BrandsEdit {
   constructor() {
-    this.id = null;
     this.carousel = null;
-    this.brand = {};
     this.images = ["https://placehold.co/400x600?text=item"];
-
     this.init();
-    // this.setupValidation();
+    this.setupForm();
+    this.setupValidation();
   }
 
   init() {
-    this.id = $("#item-form").data("id");
-    this.fetchBrand(this.id);
+    $(document).ready(() => {
+      const id = $("#item-form").data("id");
 
-    $("#image-input").change(() => {
-      this.images = Array.from($("#image-input")[0].files).map(file => URL.createObjectURL(file));
-      this.loadCarousel();
+      // Fetch brand data and populate form
+      this.fetchBrand(id);
+
+      // CAROUSEL
+      $("#image-input").change(() => {
+        this.images = Array.from($("#image-input")[0].files).map(file => URL.createObjectURL(file));
+        this.loadCarousel();
+      });
+
+      $(".prev").click(() => {
+        if (this.carousel) this.carousel.prev();
+      });
+
+      $(".next").click(() => {
+        if (this.carousel) this.carousel.next();
+      });
+
+      $("#save-item, #cancel").hide();
+      $("#item-form").change(() => {
+        $("#save-item, #cancel").show();
+      });
     });
+  }
 
-    $(".prev").click(() => {
-      if (this.carousel) this.carousel.prev();
-    });
-
-    $(".next").click(() => {
-      if (this.carousel) this.carousel.next();
-    });
-
-    // Initially hide save and cancel buttons
-    $("#save-item, #cancel").hide();
-
-    // On form change, show save and cancel buttons
-    $("#item-form").change(() => {
-      $("#save-item, #cancel").show();
-    });
-
+  setupForm() {
     $("#cancel").click(() => {
       Swal.fire({
         title: "Are you sure?",
@@ -49,29 +51,86 @@ export default class BrandsEdit {
       }).then(result => {
         if (result.isConfirmed) {
           $("#save-item, #cancel").hide();
-          this.fetchBrand(this.id);
+          this.fetchBrand($("#item-form").data("id"));
         }
-      });
-    });
-
-    $("#item-form").submit(event => {
-      event.preventDefault();
-
-      const token = document.querySelector('meta[name="api-token"]').getAttribute("content");
-      const formData = new FormData($("#item-form")[0]);
-      formData.append("_method", "PUT");
-
-      ajaxRequest.post({
-        url: "/api/brands/" + this.id,
-        token: token,
-        data: formData,
-        onSuccess: response => this.handleSubmit(response.data || {}),
-        onError: response => this.handleError((response.responseJSON && response.responseJSON.errors) || {})
       });
     });
 
     $("#save-item").click(() => {
       $("#item-form").submit();
+    });
+  }
+
+  setupValidation() {
+    $("#item-form").validate({
+      rules: {
+        name: {
+          required: true,
+          pattern: /^[A-Z][a-zA-Z]*$/
+        },
+        company: {
+          required: true
+        },
+        website: {
+          required: true,
+          pattern: /^(ftp|http|https):\/\/[^ "]+$/
+        },
+        description: {
+          required: true
+        },
+        logo: {
+          required: true
+        },
+        status: {
+          required: true
+        },
+        created_at: {
+          required: true,
+          date: true
+        },
+        updated_at: {
+          required: true,
+          date: true
+        }
+      },
+      messages: {
+        name: {
+          required: "Name is required"
+        },
+        company: {
+          required: "Company name is required"
+        },
+        website: {
+          required: "Website URL is required",
+          url: "Please enter a valid URL for the website"
+        },
+        description: {
+          required: "Description is required"
+        },
+        logo: {
+          required: "Logo image is required"
+        },
+        status: {
+          required: "Status is required"
+        },
+        created_at: {
+          required: "Created date is required",
+          date: "Please enter a valid date"
+        },
+        updated_at: {
+          required: "Updated date is required",
+          date: "Please enter a valid date"
+        }
+      },
+      errorElement: "span",
+      errorPlacement: (error, element) => {
+        error.addClass("input-error text-error text-red-400 text-sm italic my-1");
+        element.addClass("error-border border-red-400");
+        error.insertAfter(element);
+      },
+      submitHandler: form => {
+        this.handleFormSubmission(form);
+      }
     });
   }
 
@@ -82,20 +141,11 @@ export default class BrandsEdit {
     });
   }
 
-  populateForm(brand) {
-    if (!brand) return;
-    Object.keys(brand).forEach(key => {
-      $(`#${key}`).val(brand[key]);
-      if ($(`#${key}`).is("select")) {
-        $(`#${key}`).val(brand[key]);
-      }
-    });
-  }
-
   fetchBrand(id) {
     $("#image-input").val("");
     $(".input-error").removeClass("input-error");
     $(".text-error").remove();
+    $(".error-border").removeClass("error-border border-red-400");
 
     ajaxRequest.get({
       url: "/api/brands/" + id,
@@ -104,11 +154,37 @@ export default class BrandsEdit {
           if (response.data.images && response.data.images.length > 0) {
             this.images = response.data.images.map(image => "/" + image.path);
           }
-          this.brand = response.data;
           this.loadCarousel();
-          this.populateForm(this.brand);
+          this.populateForm(response.data);
         }
-        return {};
+      }
+    });
+  }
+
+  populateForm(brand) {
+    Object.keys(brand).forEach(key => {
+      $(`#${key}`).val(brand[key]);
+    });
+  }
+
+  handleFormSubmission(form) {
+    $(".input-error").removeClass("input-error");
+    $(".text-error").remove();
+    $(".error-border").removeClass("error-border border-red-400");
+
+    const formData = new FormData(form);
+    formData.append("_method", "PUT");
+    const token = document.querySelector('meta[name="api-token"]').getAttribute("content");
+
+    ajaxRequest.post({
+      url: "/api/brands/" + $("#item-form").data("id"),
+      data: formData,
+      token: token,
+      onSuccess: response => {
+        this.updateForm(response.data || {});
+      },
+      onError: response => {
+        this.handleError((response.responseJSON && response.responseJSON.errors) || {});
       }
     });
   }
@@ -116,15 +192,8 @@ export default class BrandsEdit {
   updateForm(data) {
     Swal.fire("Brand Updated!", "Your brand has been updated.", "success").then(() => {
       $("#save-item, #cancel").hide();
-      this.brand = data;
-      this.populateForm(data);
+      this.fetchBrand($("#item-form").data("id"));
     });
-  }
-
-  handleSubmit(data) {
-    $(".input-error").removeClass("input-error");
-    $(".text-error").remove();
-    this.updateForm(data);
   }
 
   handleError(errors) {

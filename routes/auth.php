@@ -47,8 +47,13 @@ Route::group(["middleware" => "auth"], function () {
     //##################################################################################################################
     // ADMIN ONLY
     $prefix = "admin";
-    $crud = [
+    $pdf = [
         "products",
+        "users",
+        "orders",
+        "promos",
+        "brands",
+        "categories"
     ];
     // CHART PAGES: TODO: convert to js/jquery
     $charts = [
@@ -63,7 +68,7 @@ Route::group(["middleware" => "auth"], function () {
         "users" => "/users",
     ];
 
-    foreach ($crud as $prefix) {
+    foreach ($pdf as $prefix) {
         // PDFS
         Route::get("/pdf/$prefix", [PdfController::class, $prefix . "Pdf"])
             ->name("pdf.$prefix")

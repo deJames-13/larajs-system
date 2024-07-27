@@ -1,6 +1,7 @@
 import ajaxRequest from "../assets/ajaxRequest.js";
 import Pagination from "../components/Paginate.js";
 import ProductCard from "../components/ProductCard.js";
+import ProductFilters from "./_filters.js";
 
 import { initInfiniteScroll, sortBy } from "./config.js";
 
@@ -74,11 +75,11 @@ export default class Products {
     $(".scroll-loader").hide();
 
     let q = "";
+
     Object.keys(this.queries).forEach(key => {
       q += key + "=" + this.queries[key] + "&";
     });
     q.slice(0, -1);
-    console.log(q);
 
     return ajaxRequest.get({
       url: this.url + "?" + q,
@@ -197,6 +198,9 @@ export default class Products {
     const queries = $(".queries");
     queries.empty();
     queries.append(this.renderQueries());
+    new ProductFilters({
+      wrapper: "#filters-wrapper"
+    });
     this.bindEvents();
   }
 }

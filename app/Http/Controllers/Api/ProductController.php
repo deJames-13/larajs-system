@@ -172,6 +172,7 @@ class ProductController extends Controller
         $products = Product::onlyTrashed()
             ->filter($search)
             ->with([
+                'images',
                 'brands',
                 'categories',
                 'promos'

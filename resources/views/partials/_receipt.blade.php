@@ -10,8 +10,7 @@
     ],
 ])
 
-<div class="{{ $print ? 'hidden' : '' }} print:block  container mx-auto m-0">
-
+<div id="receipt-info" class="print:block  container mx-auto m-0">
 	<div class="container flex flex-col">
 		<h2 class="text-gray-600 m-0">Order Summary</h2>
 		<div class="divider m-0"></div>
@@ -34,7 +33,7 @@
 				<div class="flex space-x-4 items-center">
 					<h4 class="font-bold m-0">Order ID:</h4>
 					<p class="m-0">
-						<span id='rcpt_order_id'>{{ $order->id ?? '' }}</span>
+						<span id='rcpt_order_id'>{{ $orderId ?? '' }}</span>
 					</p>
 				</div>
 				<div class="flex space-x-4 items-center">
@@ -54,10 +53,10 @@
 		<div>
 			<div class="flex space-x-4 items-center">
 				<h4 class="font-bold m-0">Buyer Name:</h4>
-				<p class="m-0"><span id='rcpt_full_name'>{{ $order->full_name ?? '' }}</span></p>
+				<p class="m-0" id='rcpt_full_name'>{{ $order->full_name ?? '' }}</p>
 			</div>
 			<div class="flex space-x-4 items-center">
-				<h4 class="font-bold m-0">Buyer Address:</h4>
+				<h4 class="font-bold m-0">Shipping Address:</h4>
 				<p class="m-0"><span id='rcpt_address'>{{ $order->shipping_address ?? '' }}</span></p>
 			</div>
 		</div>

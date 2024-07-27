@@ -65,11 +65,11 @@ export default class ProductsCreate {
       rules: {
         name: {
           required: true,
-          minlength: 3
+          pattern: /^[A-Z][a-zA-Z]*$/
         },
         sku_code: {
           required: true,
-          minlength: 3
+          pattern: /^[a-z0-9]{10,20}$/i
         },
         description: {
           required: true,
@@ -99,12 +99,10 @@ export default class ProductsCreate {
       },
       messages: {
         name: {
-          required: "Name is required",
-          minlength: "Name must be at least 3 characters long"
+          required: "Name is required"
         },
         sku_code: {
-          required: "SKU Code is required",
-          minlength: "SKU Code must be at least 3 characters long"
+          required: "SKU Code is required"
         },
         description: {
           required: "Description is required",
@@ -134,8 +132,8 @@ export default class ProductsCreate {
       },
       errorElement: "span",
       errorPlacement: (error, element) => {
-        error.addClass("text-red-400 text-sm italic my-1");
-        element.addClass("border-red-400");
+        error.addClass("input-error text-error text-red-400 text-sm italic my-1");
+        element.addClass("error-border border-red-400");
         error.insertAfter(element);
       },
       submitHandler: form => {
@@ -147,6 +145,7 @@ export default class ProductsCreate {
   handleFormSubmission(form) {
     $(".input-error").removeClass("input-error");
     $(".text-error").remove();
+    $(".error-border").removeClass("error-border border-red-400");
 
     const formData = new FormData(form);
     const token = document.querySelector('meta[name="api-token"]').getAttribute("content");
@@ -157,7 +156,7 @@ export default class ProductsCreate {
       token: token,
       onSuccess: response => {
         Swal.fire("Item Added!", "Your item has been added to inventory.", "success").then(() => {
-          window.location.href = "/dashboard?page=products";
+          window.location.href = "/dashboard?nav=products";
         });
       },
       onError: xhr => {

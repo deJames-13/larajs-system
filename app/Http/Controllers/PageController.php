@@ -45,18 +45,13 @@ class PageController extends Controller
     }
 
 
-    // TRANSACTIONS PAGES
-    public function cart()
-    {
-        return view('pages.transaction.cart', ['page' => 'Cart']);
-    }
 
     public function checkout()
     {
 
         $user = auth()->user();
         if (auth()->user()->products->count() == 0) {
-            return redirect()->route('cart');
+            return abort(404);
         }
 
         return view('pages.transaction.checkout', ['page' => 'Checkout', 'user' => $user]);

@@ -61,6 +61,20 @@ export default class DataTable {
 
     return this;
   }
+  getUrlParams() {
+    const urlParams = new URLSearchParams(window.location.search);
+    let queries = {};
+    for (let [key, value] of urlParams) {
+      queries[key] = value;
+    }
+    return queries;
+  }
+
+  pushUrlParams({ key, value }) {
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set(key, value);
+    window.history.pushState({}, "", "?" + urlParams.toString());
+  }
 
   bindEvents() {
     this.bindActions();
@@ -185,11 +199,9 @@ export default class DataTable {
     // console.log(query);
     const qstr = Object.keys(query).reduce((result, key) => `${result}${key}=${query[key]}&`, "");
     const url = baseApi ?? this.baseApi + this.tableName + "?" + qstr; //console.log(url);
-    const token = document.querySelector('meta[name="api-token"]').getAttribute("content");
     this.tableName &&
       ajaxRequest.get({
         url: url,
-        token: token,
         onSuccess: response => {
           // console.log(response);
           onFetch(response); // maketable
@@ -308,30 +320,6 @@ export default class DataTable {
     });
   }
 
-  actions() {
-    return /* HTML */ `
-      <div class="print:hidden py-4 w-full overflow-auto flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
-        <form id="import-form" method="POST" enctype="multipart/form-data" action="/import/${this.tableName}" class="flex flex-col lg:flex-row gap-2 lg:items-center">
-          <!-- {{ csrf_field() }} -->
-          <input type="file" id="uploadName" name="item_upload" class="file-input file-input-sm  w-full max-w-xs" required />
-          <button id="import-form-submit" type="submit" class="btn btn-info btn-sm btn-primary ">Import Excel File</button>
-        </form>
-        <div id="action-buttons" class="flex space-x-2 justify-end align-items-center">
-          <button id="btn-add-${this.tableName}" class="btn btn-sm text-white btn-success inline-block self-end">
-            <i class="fas fa-plus"></i>
-            <span>Add</span>
-          </button>
-          <button id="btn-trash-${this.tableName}" class="btn btn-sm text-white bg-primary inline-block self-end">
-            <span>Trash</span>
-          </button>
-          <button style="display: none;" id="btn-table-${this.tableName}" class="btn btn-sm text-white bg-primary inline-block self-end">
-            <span>View Table</span>
-          </button>
-        </div>
-      </div>
-    `;
-  }
-
   showThrashed() {
     this.query.isThrashed = true;
     if (!this.baseApi.endsWith("thrashed/")) {
@@ -384,42 +372,6 @@ export default class DataTable {
       });
   }
 
-  renderQueries() {
-    const sort = /* HTML */ `
-      <div id="sort-by" class="my-2 flex justify-end items-center gap-2">
-        <label for="sort-by" class="text-sm">Sort by: </label>
-
-        <div id="sort-select" class="flex items-center gap-1 border border-gray-300 rounded-full focus-within:outline-double focus-within:outline-gray-300">
-          <!-- Order Button Toggler -->
-          <button data-order="desc" type="button" id="order-btn" class="btn btn-sm btn-ghost aspect-square">
-            <i name="desc" class="fas fa-arrow-down-wide-short"></i>
-            <i style="display: none;" name="asc" class="fas fa-arrow-down-short-wide"></i>
-          </button>
-
-          <select class="w-fit input input-sm rounded-full focus:outline-none border-none">
-            ${this.sortBy.filters.map(filter => `<option value="${filter.value}">${filter.label}</option>`).join("")}
-          </select>
-        </div>
-      </div>
-    `;
-
-    const HTML = /* HTML */ `
-      <div class="w-full flex flex-grow flex-wrap gap-2">
-        <div class="w-full flex flex-wrap gap-2 items-center">
-          <!-- View Limit -->
-          <div id="limit-wrapper" class="text-sm">
-            <span>Items: </span>
-            <input id="limit" type="number" min="10" value="10" max="50" class="input input-bordered input-sm max-w-[69px] max-h-[35px]" />
-          </div>
-          <!-- Sort By -->
-          ${this.sortBy.display ? sort : ""}
-        </div>
-      </div>
-    `;
-
-    return HTML;
-  }
-
   makeTable() {
     return [];
   }
@@ -461,6 +413,66 @@ export default class DataTable {
     this.element.find("#datatable").html(this.createTable());
   }
 
+  renderActions() {
+    return /* HTML */ `
+      <div class="print:hidden py-4 w-full overflow-auto flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
+        <form id="import-form" method="POST" enctype="multipart/form-data" action="/import/${this.tableName}" class="flex flex-col lg:flex-row gap-2 lg:items-center">
+          <!-- {{ csrf_field() }} -->
+          <input type="file" id="uploadName" name="item_upload" class="file-input file-input-sm  w-full max-w-xs" required />
+          <button id="import-form-submit" type="submit" class="btn btn-info btn-sm btn-primary ">Import Excel File</button>
+        </form>
+        <div id="action-buttons" class="print:hidden flex space-x-2 justify-end align-items-center">
+          <button id="btn-add-${this.tableName}" class="btn btn-sm text-white btn-success inline-block self-end">
+            <i class="fas fa-plus"></i>
+            <span>Add</span>
+          </button>
+          <button id="btn-trash-${this.tableName}" class="btn btn-sm text-white bg-primary inline-block self-end">
+            <span>Trash</span>
+          </button>
+          <button style="display: none;" id="btn-table-${this.tableName}" class="btn btn-sm text-white bg-primary inline-block self-end">
+            <span>View Table</span>
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  renderQueries() {
+    const sort = /* HTML */ `
+      <div id="sort-by" class="my-2 flex justify-end items-center gap-2">
+        <label for="sort-by" class="text-sm">Sort by: </label>
+
+        <div id="sort-select" class="flex items-center gap-1 border border-gray-300 rounded-full focus-within:outline-double focus-within:outline-gray-300">
+          <!-- Order Button Toggler -->
+          <button data-order="desc" type="button" id="order-btn" class="btn btn-sm btn-ghost aspect-square">
+            <i name="desc" class="fas fa-arrow-down-wide-short"></i>
+            <i style="display: none;" name="asc" class="fas fa-arrow-down-short-wide"></i>
+          </button>
+
+          <select class="w-fit input input-sm rounded-full focus:outline-none border-none">
+            ${this.sortBy.filters.map(filter => `<option value="${filter.value}">${filter.label}</option>`).join("")}
+          </select>
+        </div>
+      </div>
+    `;
+
+    const HTML = /* HTML */ `
+      <div class="w-full flex flex-grow flex-wrap gap-2">
+        <div class="w-full flex flex-wrap gap-2 items-center">
+          <!-- View Limit -->
+          <div id="limit-wrapper" class="text-sm">
+            <span>Items: </span>
+            <input id="limit" type="number" min="10" value="10" max="50" class="input input-bordered input-sm max-w-[69px] max-h-[35px]" />
+          </div>
+          <!-- Sort By -->
+          ${this.sortBy.display ? sort : ""}
+        </div>
+      </div>
+    `;
+
+    return HTML;
+  }
+
   render() {
     const topBar = /* HTML */ `
       <h1 id="table-title" class="text-3xl font-extrabold">${this.tableTitle}</h1>
@@ -475,7 +487,7 @@ export default class DataTable {
         </div>
       </div>
 
-      <div id="file-buttons" class="flex flex-wrap gap-2 items-center"></div>
+      <div id="file-buttons" class="print:hidden flex flex-wrap gap-2 items-center"></div>
 
       <div class="print:w-0 print:hidden flex justify-between items-end space-x-2 py-4">
         <!-- Queries -->
@@ -486,7 +498,7 @@ export default class DataTable {
     `;
 
     this.html = topBar;
-    this.html += this.withActions ? this.actions() : "";
+    this.html += this.withActions ? this.renderActions() : "";
     this.html += this.createTable();
     this.element = $(`${this.parent} `).html(this.html);
 

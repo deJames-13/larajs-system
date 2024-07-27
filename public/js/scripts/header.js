@@ -86,6 +86,7 @@ $(document).ready(function () {
     const search = $("#search-input").val();
     if (search) window.location.href = `/search?q=${search}`;
   });
+
   $(window).scroll(function () {
     var currentScroll = $(this).scrollTop();
 

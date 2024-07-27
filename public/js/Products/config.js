@@ -41,7 +41,7 @@ export const initInfiniteScroll = instance => {
       if (scrollTop + windowHeight === scrollHeight) {
         if (instance.queries.page < instance.queries.maxPage) {
           instance.queries.page++;
-          instance.fetchItems();
+          instance.goToPage(instance.queries.page);
           // move to top
           isAutoScrolling = true;
           $("html, body").animate({ scrollTop: scrollHeight * 0.05 }, 500, () => {
@@ -54,7 +54,7 @@ export const initInfiniteScroll = instance => {
       if (scrollTop === 0) {
         if (instance.queries.page > 1) {
           instance.queries.page--;
-          instance.fetchItems();
+          instance.goToPage(instance.queries.page);
           isAutoScrolling = true;
           $("html, body").animate({ scrollTop: scrollHeight - windowHeight + 200 }, 500, () => {
             isAutoScrolling = false;

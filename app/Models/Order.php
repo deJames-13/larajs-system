@@ -7,11 +7,12 @@ use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Laravel\Scout\Searchable;
 
 class Order extends Model
 {
 
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, Searchable;
     // 'customer', 'products',
     protected $with = [
         'customer',
@@ -151,6 +152,7 @@ class Order extends Model
             ],
             "customers_count" => User::where('role', 'customer')->count(),
             "products_count" => Product::count(),
+            "orders_count" => Order::count(),
         ];
     }
 }

@@ -66,7 +66,7 @@ export default class CategoriesEdit {
       rules: {
         name: {
           required: true,
-          minlength: 3
+          pattern: /^[A-Z][a-zA-Z]*$/
         },
         description: {
           required: true,
@@ -75,14 +75,17 @@ export default class CategoriesEdit {
         image: {
           required: true
         },
+        slug: {
+          required: true,
+          pattern: /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/
+        },
         status: {
           required: true
         }
       },
       messages: {
         name: {
-          required: "Name is required",
-          minlength: "Name must be at least 3 characters long"
+          required: "Name is required"
         },
         description: {
           required: "Description is required",
@@ -91,14 +94,17 @@ export default class CategoriesEdit {
         image: {
           required: "Image is required"
         },
+        slug: {
+          required: "Please enter a slug"
+        },
         status: {
           required: "Status is required"
         }
       },
       errorElement: "span",
       errorPlacement: (error, element) => {
-        error.addClass("text-red-400 text-sm italic my-1");
-        element.addClass("border-red-400");
+        error.addClass("input-error text-error text-red-400 text-sm italic my-1");
+        element.addClass("error-border border-red-400");
         error.insertAfter(element);
       },
       submitHandler: form => {
@@ -117,6 +123,7 @@ export default class CategoriesEdit {
     $("#image-input").val("");
     $(".input-error").removeClass("input-error");
     $(".text-error").remove();
+    $(".error-border").removeClass("error-border border-red-400");
 
     ajaxRequest.get({
       url: "/api/categories/" + id,
@@ -141,6 +148,7 @@ export default class CategoriesEdit {
   handleFormSubmission(form) {
     $(".input-error").removeClass("input-error");
     $(".text-error").remove();
+    $(".error-border").removeClass("error-border border-red-400");
 
     const formData = new FormData(form);
     formData.append("_method", "PUT");

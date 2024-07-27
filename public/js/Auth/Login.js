@@ -76,8 +76,8 @@ export default class Login {
       },
       errorElement: "span",
       errorPlacement: function (error, element) {
-        error.addClass("text-red-400 text-sm italic my-1");
-        element.addClass("border-red-400");
+        error.addClass("input-error text-error text-red-400 text-sm italic my-1");
+        element.addClass("error-border border-red-400");
         error.insertAfter(element);
       }
     });

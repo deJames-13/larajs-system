@@ -20,15 +20,17 @@ export default class OrdersPage extends TablePage {
       const customer = order.customer || {
         fullname: "",
         email: "",
-        phone_number: ""
+        phone_number: "",
+        images: []
       };
+      const image = customer.images.length ? customer.images[0].path : "https://picsum.photos/200/300?random=" + Math.random();
       return {
         ID: `${order.id}`,
         "Customer Info": `
                 <div class="flex items-center gap-3">
                     <div class="print:hidden avatar">
                         <div class="mask mask-squircle w-12 h-12">
-                            <img src="https://img.daisyui.com/tailwind-css-component-profile-2@56w.png" alt="Avatar Tailwind CSS Component" />
+                            <img src="${image}" alt="Avatar Tailwind CSS Component" />
                         </div>
                     </div>
                     <div>

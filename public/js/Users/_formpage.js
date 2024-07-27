@@ -41,7 +41,7 @@ export default class UserFormPage {
     return ajaxRequest.get({
       url: this.fetchUrl + id,
       onSuccess: response => {
-        this.user = response.data;
+        this.user = response.data || response;
       }
     });
   }

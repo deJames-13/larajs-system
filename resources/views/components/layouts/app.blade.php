@@ -7,6 +7,11 @@
 		<meta name="csrf-token" content="{{ csrf_token() }}">
 		<meta name="api-token" content="{{ session('api-token') }}">
 		<title>{{ $title ?? '' }}</title>
+
+		{{-- favicon --}}
+		<link rel="shortcut icon" href="/images/logo_nobg.png" type="image/x-icon">
+
+
 		{{-- window title --}}
 
 		<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
@@ -32,7 +37,7 @@
 		{{-- ChartJS --}}
 
 		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+		<script src="https://unpkg.com/infinite-scroll@4/dist/infinite-scroll.pkgd.min.js"></script>
 		@vite('resources/css/app.css')
 
 	</head>
@@ -81,7 +86,7 @@
 			</script>
 		@endif
 		<script>
-			$(document).on("click", '.back', function() {
+			$(".back").click(function() {
 				window.history.back();
 			});
 
@@ -91,6 +96,8 @@
 			});
 		</script>
 
+		<script type="module" src="{{ asset('js/Auth/index.js') }}"></script>
+		<script type="module" src="{{ asset('js/scripts/header.js') }}"></script>
 
 
 

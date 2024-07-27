@@ -20,12 +20,14 @@ class OrderController extends Controller
         $limit = $request->query('limit') ?? 10;
         $isAdmin = $request->user()->role !== 'customer';
         $search = $request->query('search') ?? '';
+        $isDashboard = $request->query('dashboard') ?? true;
 
 
         $query = Order::query();
-        if (!$isAdmin)
-            $query->where('user_id', $request->user()->id);
-
+        if (!$isAdmin || $isDashboard === 'false') {
+            $id = $request->user()->id;
+            $query->where('user_id', $id);
+        }
         $query->filter(
             [
                 'search' => $search,
@@ -41,6 +43,9 @@ class OrderController extends Controller
             'products' => function ($query) {
                 $query->withPivot('quantity');
             },
+            'products.stock',
+            'products.brands',
+            'products.images',
             'customer',
             'customer.info',
             'customer.images',
@@ -57,15 +62,19 @@ class OrderController extends Controller
     // INFO: For admin api fetch
     public function show(string $id)
     {
-        $order = Order::with([
+        $order = Order::findOrFail($id);
+        $order->load([
             'products' => function ($query) {
                 $query->withPivot('quantity');
             },
             'products.stock',
+            'products.images',
+            'products.brands',
             'customer',
             'customer.info',
             'customer.images',
-        ])->findOrFail($id);
+        ]);
+
         if (!$order) {
             return response(
                 [],
@@ -83,10 +92,13 @@ class OrderController extends Controller
     // INFO: Order Processing
     public function store(Request $request)
     {
+        Debugbar::info($request->all());
         $data = $request->validate(
             [
                 'shipping_address' => 'required|array',
                 'shipping_address.*' => 'required|string',
+                'shipping_type' => 'required|in:standard,express,priority',
+                'shipping_cost' => 'required|numeric',
                 'products' => 'required|array',
                 'products.*.id' => 'required|exists:products,id',
                 'products.*.quantity' => 'required|integer|min:1',
@@ -102,6 +114,8 @@ class OrderController extends Controller
         $order = $user->orders()->create([
             'shipping_address' => $combinedAddress,
             'status' => 'pending',
+            'shipping_type' => $data['shipping_type'],
+            'shipping_cost' => $data['shipping_cost'],
         ]);
 
         $order->products()->attach(
@@ -137,6 +151,9 @@ class OrderController extends Controller
                 'status' => 'required|in:pending,processing,shipping,completed,cancelled',
                 // if user wants to edit the pending
                 'shipping_address' => 'sometimes',
+                'shipping_type' => 'sometimes|in:standard,express,priority',
+                'shipping_cost' => 'sometimes|numeric',
+
                 'products' => 'sometimes|array',
                 'products.*.id' => 'sometimes|exists:products,id',
                 'products.*.quantity' => 'sometimes|integer|min:1',
@@ -189,7 +206,16 @@ class OrderController extends Controller
 
         // Refresh the model to ensure it has the latest data
         $order->refresh();
-        $order->load(['products', 'customer']);
+        $order->load([
+            'products' => function ($query) {
+                $query->withPivot('quantity');
+            },
+            'products.stock',
+            'products.images',
+            'customer',
+            'customer.info',
+            'customer.images',
+        ]);
         $res = new OrderResource($order);
 
         Debugbar::info('Sending: ' . $order->customer->email);
@@ -201,7 +227,7 @@ class OrderController extends Controller
     {
         $data = $request->validate([
             'rating' => 'required|numeric',
-            'title' => 'sometimes|string',
+            'title' => 'sometimes',
             'review' => 'sometimes|string',
             'is_show_user' => 'sometimes',
         ]);

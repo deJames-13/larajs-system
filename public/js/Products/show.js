@@ -68,6 +68,22 @@ const init = () => {
   });
 };
 
+const updateCart = () => {
+  let cartQty = parseInt($("#cart-indicator").data("qty"));
+  let qty = parseInt($("#quantity_count").text());
+  cartQty += qty;
+  $(".cart-count").text(cartQty);
+  $("#cart-indicator").data("qty", cartQty);
+
+  let cartTotal = parseFloat($("#cart-total").text());
+  $("#cart-total").text((cartTotal + item.itemPrice).toFixed(2));
+  $(".indicator").addClass("animate__bounceIn");
+
+  setTimeout(() => {
+    $(".indicator").removeClass("animate__bounceIn");
+  }, 500);
+};
+
 // POST CART
 $(document).on("click", "#cart-add", function () {
   const token = document.querySelector('meta[name="api-token"]').getAttribute("content");
@@ -81,6 +97,7 @@ $(document).on("click", "#cart-add", function () {
     data: data,
     token: token,
     onSuccess: response => {
+      updateCart();
       Swal.fire({
         title: "Success",
         text: "This item has been added to cart.",
@@ -90,7 +107,7 @@ $(document).on("click", "#cart-add", function () {
         confirmButtonText: "View Cart"
       }).then(result => {
         if (result.isConfirmed) {
-          window.location.href = "/profile?page=cart";
+          window.location.href = "/profile?nav=cart";
         }
       });
     },
