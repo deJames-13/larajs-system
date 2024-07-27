@@ -8,10 +8,12 @@ export class CartItem {
     $(document).ready(() => {
       $(`#item_qty_${this.product.id}`).on("change", this.updateTotalFromInput.bind(this));
 
-      $(".cart-item").on("click", e => {
-        $(e.currentTarget).toggleClass("cart-selected bg-secondary bg-opacity-10");
-        $(e.currentTarget).find(".check-icon").toggle();
-      });
+      $(".cart-item")
+        .off()
+        .on("click", e => {
+          $(e.currentTarget).toggleClass("cart-selected bg-secondary bg-opacity-10");
+          $(e.currentTarget).find(".check-icon").toggle();
+        });
     });
   }
 

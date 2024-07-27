@@ -189,6 +189,16 @@ export default class ProfileForm extends FormCard {
   }
 
   bindEvents() {
+    // image input
+    this.form.find("#input-image").change(() => {
+      const file = this.form.find("#input-image")[0].files[0];
+      const reader = new FileReader();
+      reader.onload = e => {
+        this.form.find("#profile-image").attr("src", e.target.result);
+      };
+      reader.readAsDataURL(file);
+    });
+
     // On Save
     this.form.submit(e => {
       e.preventDefault();
@@ -295,7 +305,7 @@ export default class ProfileForm extends FormCard {
       allowOutsideClick: () => !Swal.isLoading()
     }).then(result => {
       if (result.isConfirmed) {
-        this.submitForm();
+        return this.submitForm();
       }
     });
   }
@@ -317,7 +327,9 @@ export default class ProfileForm extends FormCard {
   onSubmit() {
     this.validate();
     // console.log(this.form.valid());
-    if (!this.form.valid()) return;
+    if (!this.form.valid()) {
+      Swal.fire("Error!", "Please fill up all required fields", "error");
+    }
     Swal.fire({
       title: "Are you sure?",
       text: "You are about to update your profile",
@@ -328,7 +340,7 @@ export default class ProfileForm extends FormCard {
       confirmButtonText: "Yes, update it!"
     }).then(result => {
       if (result.isConfirmed) {
-        this.onConfirm();
+        return this.onConfirm();
       }
     });
   }
@@ -394,27 +406,30 @@ export default class ProfileForm extends FormCard {
     $("name[input-error]").text("");
 
     const formData = new FormData(this.form[0]);
-    ajaxRequest.post({
-      url: "/api/profile/" + this.user_profile.id,
-      data: formData,
-      onSuccess: response => {
-        this.user_profile = response;
-        this.populateForm();
-        Swal.fire("Updated!", "Your profile has been updated.", "success");
-        this.onUpdate(this.user_profile);
-      },
-      onError: response => {
-        console.log(response);
-        // if 422
-        if (response.status === 422) {
-          this.handleInvalidInput(response.responseJSON.errors);
-          return;
-        }
+    return ajaxRequest
+      .post({
+        url: "/api/profile/" + this.user_profile.id,
+        data: formData,
+        onSuccess: response => {
+          this.user_profile = response;
+          this.populateForm();
+          Swal.fire("Updated!", "Your profile has been updated.", "success");
+          this.onUpdate(this.user_profile);
+        },
+        onError: response => {
+          console.log(response);
+          // if 422
+          if (response.status === 422) {
+            this.handleInvalidInput(response.responseJSON.errors);
+            return;
+          }
 
-        Swal.fire("Error!", "An error occured while updating your profile.", "error");
-      }
-    });
-    $("#form-actions").hide();
+          Swal.fire("Error!", "An error occured while updating your profile.", "error");
+        }
+      })
+      .done(() => {
+        $("#form-actions").hide();
+      });
   }
 
   cancelSubmit() {
