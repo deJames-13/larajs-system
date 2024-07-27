@@ -129,8 +129,8 @@ class OrderController extends Controller
         $order->load(['products', 'customer']);
         $res = (new OrderResource($order));
 
-        // remove cart base on user id
-        $user->products()->detach();
+        $cart = $order->products()->pluck('product_id')->toArray();
+        $user->products()->detach($cart);
 
         // Debugbar::info($res);
         return response(
