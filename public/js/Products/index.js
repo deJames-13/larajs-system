@@ -74,11 +74,11 @@ export default class Products {
     $(".scroll-loader").hide();
 
     let q = "";
+
     Object.keys(this.queries).forEach(key => {
       q += key + "=" + this.queries[key] + "&";
     });
     q.slice(0, -1);
-    console.log(q);
 
     return ajaxRequest.get({
       url: this.url + "?" + q,

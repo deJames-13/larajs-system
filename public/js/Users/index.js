@@ -11,7 +11,7 @@ export default class User {
 
   async init() {
     return this.fetchUser()
-      .then(() => {
+      .then(response => {
         if (!this.user) return;
         this.checkStatus();
         this.checkInfo();
@@ -26,8 +26,6 @@ export default class User {
   handleResponse(response) {
     this.user = response;
     window.localStorage.setItem("user", JSON.stringify(this.user));
-    const imgSrc = (this.user.images && this.user.images.length > 0 && this.user.images[0].path) || "https://via.placeholder.com/150";
-    $("#profile-image").attr("src", imgSrc);
     return this;
   }
 

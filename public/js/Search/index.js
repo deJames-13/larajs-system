@@ -12,14 +12,61 @@ export default class SearchPage {
   paginations = $("#paginations");
   results = [];
   page = 1;
+  maxPage = 1;
 
   constructor() {
     this.bindEvents();
     this.init();
+    this.infiniteScroll();
   }
+
   handlePage(page) {
     this.page = page;
     this.fetchSearch();
+  }
+
+  infiniteScroll() {
+    let debounceTimer;
+    let isAutoScrolling = false;
+    const container = $("#search-contents");
+    container.animate({ scrollTop: 200 }, 500);
+    container.scroll(() => {
+      if (isAutoScrolling) return;
+      const { scrollTop, scrollHeight, clientHeight } = container[0];
+      // console.log({ scrollTop, scrollHeight, clientHeight });
+
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        if (this.page === 1 && scrollTop === 0) {
+          container.animate({ scrollTop: 200 }, 500);
+        }
+
+        if (scrollTop + clientHeight === scrollHeight) {
+          if (this.page < this.maxPage) {
+            this.page += 1;
+            this.fetchSearch();
+
+            isAutoScrolling = true;
+            container.animate({ scrollTop: 200 }, 500, () => {
+              isAutoScrolling = false;
+            });
+          }
+        }
+
+        // Move up
+        if (scrollTop === 0) {
+          if (this.page > 1) {
+            this.page -= 1;
+            this.fetchSearch();
+
+            isAutoScrolling = true;
+            container.animate({ scrollTop: scrollHeight - clientHeight + 100 }, 500, () => {
+              isAutoScrolling = false;
+            });
+          }
+        }
+      }, 300);
+    });
   }
 
   paginate(response) {
@@ -32,8 +79,9 @@ export default class SearchPage {
     }
   }
 
-  createResultItem(result) {
+  createResultItem(result, idx) {
     const searchItem = new SearchItem({
+      index: idx + 1,
       parent: this.content,
       id: result.item.id,
       title: `${result.label}`,
@@ -59,8 +107,8 @@ export default class SearchPage {
     this.foundCount.text(total_count);
 
     this.results = response.results;
-    this.results.forEach(result => {
-      this.createResultItem(result);
+    this.results.forEach((result, idx) => {
+      this.createResultItem(result, idx);
     });
   }
 

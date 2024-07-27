@@ -32,6 +32,7 @@ class UserController extends Controller
         }
         $user = User::find(auth()->id());
         $user->load([
+            'products',
             'info',
             'images'
         ]);

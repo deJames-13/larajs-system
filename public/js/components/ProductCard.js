@@ -28,10 +28,13 @@ export default class ProductCard {
   }
 
   makeCategoryPills(categories) {
+    let limit = 3;
     const pills = [];
     categories.forEach(category => {
+      if (limit <= 0) return;
       const pill = /* HTML */ ` <span class="bg-primary text-white font-bold px-2 py-1 text-xs rounded-full">${category.name}</span> `;
       pills.push(pill);
+      limit--;
     });
     return pills.join("");
   }
@@ -61,7 +64,7 @@ export default class ProductCard {
         <!-- Content -->
         <div class="my-2">
           <!-- Categories -->
-          <div id="categries-wrapper" class="flex flex-wrap items-center space-x-2">${this.makeCategoryPills(this.product.categories)}</div>
+          <div id="categries-wrapper" class="flex flex-wrap items-center gap-2">${this.makeCategoryPills(this.product.categories)}</div>
           <span class="text-sm font-semibold uppercase"> ${brand} </span>
           <p class="font-light sm:text-md">${this.product.name}</p>
           <span class="font-bold">P${this.product.price}</span>
