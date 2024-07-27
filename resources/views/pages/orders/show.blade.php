@@ -5,7 +5,6 @@
 		<span id="order-id" data-id="{{ $id }}"></span>
 
 		<div class="top flex justify-between items-center">
-
 			<div class="_skeleton">
 				<div class=" status-badge badge gap-2">
 					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -21,15 +20,18 @@
 				<p id="status-message" class="print:hidden italic text-gray-600 text-xs"></p>
 			</div>
 
-
 			<div class="_skeleton actions  flex space-x-2 items-center print:hidden">
-				<button id="btn-verify" class="action-button btn bg-green-400">
-					@role('admin,staff')
-						Verify and Accept
-					@else
-						View Receipt
-					@endrole
+
+				<button id="view-receipt" class="btn btn-outline btn-info">
+					View Receipt
 				</button>
+
+				@role('admin,staff')
+					<button id="btn-verify" class="action-button btn bg-green-400">
+						Verify and Accept
+					</button>
+				@endrole
+
 				<button class="back btn btn-secondary">Back</button>
 			</div>
 		</div>
@@ -43,17 +45,17 @@
 
 		{{-- Cancelling the order --}}
 		@role('admin,staff')
-			<div id="cancelling-form" class="print:hidden">
+			<div id="cancelling-form" class="print:hidden container">
 
 				{{-- Text area --}}
-				<div class="py-4 lg:px-12">
+				<div class="p-4 hidden">
 					<label for="reason" class="block text-md font-bold text-gray-700">Reason for Cancelling</label>
 					<textarea id="reason" name="reason" rows="3" class="textarea textarea-bordered w-full"></textarea>
 				</div>
 
-				<div class="text-right py-4 lg:px-12">
+				<div class="text-right p-4">
 					<button id="btn-cancel" class="btn bg-red-400">Cancel Order</button>
-					<p id="status-message" class="italic text-gray-600 text-xs">
+					<p id="status-message" class=" hidden italic text-gray-600 text-xs">
 						Please provide a reason for cancelling this order.
 					</p>
 				</div>
