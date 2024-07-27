@@ -42,7 +42,7 @@ export default class Cart {
         $("#cart_item_" + id).remove();
         const subtotal = this.products.reduce((acc, product) => acc + product.total, 0);
         $("#subtotal, #total").text(subtotal.toFixed(2));
-        this.checkCart(response.data);
+        this.checkCart(response?.data);
       },
       onError: response => {
         console.log(response);
@@ -138,7 +138,7 @@ export default class Cart {
     $(document).on("change", ".item_qty", () => $("#cart-upd").show());
 
     // REMOVE ITEM
-    $(document).on("click", ".item-rm-btn", () => {
+    $(document).on("click", ".item-rm-btn", e => {
       Swal.fire({
         title: "Are you sure?",
         text: "You won't be able to revert this!",
@@ -148,7 +148,7 @@ export default class Cart {
         cancelButtonColor: "#d13",
         confirmButtonText: "Yes, delete it!"
       }).then(result => {
-        const id = $(this).data("id");
+        const id = e.target.dataset.id;
         const product = this.products.find(product => product.id === id);
         const index = this.products.indexOf(product);
         this.products.splice(index, 1);
