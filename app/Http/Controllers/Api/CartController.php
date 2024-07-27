@@ -68,9 +68,9 @@ class CartController extends Controller
         $data = $request->validate([
             'products' => 'required',
         ]);
-
         $customer = $request->user();
         $customer->products()->detach();
+
         foreach ($data['products'] as $product) {
             $customer->products()->attach($product['id'], ['quantity' => $product['quantity']]);
         }

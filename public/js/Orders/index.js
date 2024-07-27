@@ -22,6 +22,10 @@ export default class OrderManager {
       ...get
     };
 
+    if (get.rating) {
+      this.rateForm();
+    }
+
     this.bindEvents();
     this.init();
     return this;
@@ -157,7 +161,10 @@ export default class OrderManager {
   }
 
   rateForm(e) {
-    const id = $(e.currentTarget).parent().data("id");
+    let id;
+    if (typeof e === "object" && e !== null && "currentTarget" in e) id = $(e.currentTarget).parent().data("id");
+    else id = e;
+
     const orders = this.orders.filter(order => order.id == id && order.status === "completed");
     if (!orders.length) return;
 

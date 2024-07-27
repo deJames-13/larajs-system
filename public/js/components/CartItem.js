@@ -58,7 +58,7 @@ export class CartItem {
                 </td>
                 <!-- QTY -->
                 <td class="align-center">
-                    <input id="item_qty_${this.product.id}" type="number" value="${this.product.quantity ?? "0"}" min=1 class="item_qty input input-xs w-12 font-bold">
+                    <input id="item_qty_${this.product.id}" type="number" min="1" value="${this.product.quantity ?? "0"}" min=1 class="item_qty input input-xs w-12 font-bold">
                 </td>
                 <!-- TOTAL -->
                 <td class="align-center">

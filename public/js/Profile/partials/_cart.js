@@ -1,6 +1,7 @@
 export default class CartPage {
   constructor({ target }) {
     this.target = target;
+
     return this.render();
   }
 

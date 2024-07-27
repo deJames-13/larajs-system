@@ -38,7 +38,7 @@ export default class RatingsForm extends FormModal {
 
   constructor(props = {}) {
     super({ ...defaultProps, ...props });
-    this.currentRating = this.order.rating.rating || 5;
+    this.currentRating = this.order?.rating?.rating || 5;
     this.bindEvents();
   }
   bindEvents() {
