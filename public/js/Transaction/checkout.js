@@ -2,6 +2,7 @@ import ajaxRequest from "../assets/ajaxRequest.js";
 import OrderItem from "../components/OrderItem.js";
 
 const products = [];
+let user = [];
 
 const isValid = () => {
   if ($("#billing-form").valid()) return true;
@@ -89,29 +90,24 @@ const fetchItems = () => {
     token: token,
     onSuccess: ({ data }) => {
       $("#form-submit").show();
+      console.log(data);
 
-      // console.log(data);
+      user = data;
+      data = data.products.data;
+
       data.forEach(product => {
-        // if there is selectedCartId and product id is in selected cart id
         product.quantity = product.item_quantity;
-        product.total = product.price * product.quantity;
+        product.total = product.total;
 
         if (selectedCartId && selectedCartId.includes(product.id)) products.push(product);
         else if (!selectedCartId) products.push(product);
       });
 
-      if (products.length === 0) {
-        window.location.href = "/";
-      }
+      if (!products.length) window.location.href = "/";
 
       // console.log(products);
       // RENDER CART
       products.forEach(product => {
-        // if no product in cart redirect to shop
-        if (products.length === 0) {
-          window.location.href = "/";
-        }
-
         const cartItem = new OrderItem(product);
         $("#cart-body").append(cartItem.render());
 
@@ -122,45 +118,49 @@ const fetchItems = () => {
   });
 };
 
+const handleSubmit = e => {
+  e.preventDefault();
+  validateForm();
+  if (!isValid()) return;
+  const addressInfo = Object.values(address)
+    .map(value => (value ? value : "N/A"))
+    .join(", ");
+  formData.address = addressInfo;
+
+  const payload = {
+    shipping_address: address,
+    shipping_cost: $("#shipping_cost").val(),
+    shipping_type: $("#shipping_type").val(),
+    products: products.map(product => ({
+      id: product.id,
+      quantity: product.quantity
+    })),
+    customer_info: formData
+  };
+  console.log(payload);
+
+  // Confirm
+  Swal.fire({
+    title: "Place Order.",
+    text: "Are you sure you want to place this order?",
+    icon: "info",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Yes, proceed!"
+  }).then(result => {
+    if (result.isConfirmed) {
+      checkout(payload);
+    }
+  });
+};
+
 $(document).ready(function () {
   fetchItems().then(() => {
     $("[data-shipping-select]:first").click();
   });
 
-  $("#billing-form").on("submit", function (e) {
-    e.preventDefault();
-    validateForm();
-    if (!isValid()) return;
-    const addressInfo = Object.values(address)
-      .map(value => (value ? value : "N/A"))
-      .join(", ");
-    formData.address = addressInfo;
-
-    const payload = {
-      shipping_address: address,
-      shipping_cost: $("#shipping_cost").val(),
-      shipping_type: $("#shipping_type").val(),
-      products: products.map(product => ({
-        id: product.id,
-        quantity: product.quantity
-      })),
-      customer_info: formData
-    };
-    console.log(payload);
-
-    // Confirm
-    Swal.fire({
-      title: "Place Order.",
-      text: "Are you sure you want to place this order?",
-      icon: "info",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, proceed!"
-    }).then(result => {
-      if (result.isConfirmed) {
-        checkout(payload);
-      }
-    });
+  $("#billing-form").on("submit", e => {
+    handleSubmit(e);
   });
 });

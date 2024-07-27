@@ -87,12 +87,25 @@
 					<span id="shipping-type" class="capitalize"></span>
 				</div>
 			</div>
+
 			<div class="flex justify-between items-center">
 				<h4 class="m-0">Shipping</h4>
 				<div class="text-sm font-bold">
 					PHP <span id="shipping-cost">0.00</span>
 				</div>
 			</div>
+
+			{{-- DISCOUNTS --}}
+			<div style="display: none" class="flex justify-between items-center">
+				<h4 class="m-0">Discount/s</h4>
+				<div id="discounts" class="text-sm font-bold">
+					<span class="discount-item">
+						- PHP <p id="discount">0.00</p>
+					</span>
+				</div>
+			</div>
+
+			<div class="divider m-0"></div>
 
 			{{-- Grandtotal --}}
 			<div class="flex justify-between items-center">
