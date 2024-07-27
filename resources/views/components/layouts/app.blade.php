@@ -37,7 +37,7 @@
 		{{-- ChartJS --}}
 
 		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+		<script src="https://unpkg.com/infinite-scroll@4/dist/infinite-scroll.pkgd.min.js"></script>
 		@vite('resources/css/app.css')
 
 	</head>

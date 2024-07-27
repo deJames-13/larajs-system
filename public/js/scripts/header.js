@@ -86,6 +86,7 @@ $(document).ready(function () {
     const search = $("#search-input").val();
     if (search) window.location.href = `/search?q=${search}`;
   });
+
   $(window).scroll(function () {
     var currentScroll = $(this).scrollTop();
 
@@ -100,7 +101,21 @@ $(document).ready(function () {
   handleAutoComplete();
   uiRules();
   if (window.location.pathname.includes("/profile")) return;
-  new User().init();
+  new User().init().then(response => {
+    user = response;
+    // console.log(response);
+    if (!user) return;
+    const imgSrc = (user.images && user.images.length > 0 && user.images[0].path) || "https://via.placeholder.com/150";
+    $("#profile-image").attr("src", imgSrc);
+
+    const cart = user.products || [];
+    // console.log(cart);
+    const cartCount = cart.length;
+    const cartTotal = cart.reduce((acc, curr) => acc + parseFloat(curr.price * cart.pivot.quantity), 0);
+
+    $(".cart-count").text(cartCount);
+    $(".cart-total").text(`P${cartTotal.toFixed(2).toLocaleString()}`);
+  });
 });
 
 const uiRules = () => {
