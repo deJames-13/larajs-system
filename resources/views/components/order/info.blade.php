@@ -3,7 +3,7 @@
 	<div class="_skeleton cart-table  py-4 flex flex-col space-y-6">
 		<h1 class="_skeleton text-lg font-bold print:m-0">Order Items</h1>
 		<div class="container overflow-x-auto">
-			<table class="table lg:table-auto border-y-2 border-black">
+			<table class="table lg:table-auto border-y-2 border-black`">
 				<!-- head -->
 				<thead class="_skeleton border-b-2 border-black">
 					<tr>

@@ -20,11 +20,13 @@ export default class CartPage {
             <div class="divider"></div>
             <div class="container">
                     <div class="left col-span-2 cart-table flex flex-col space-y-6">
-                        <div class="container overflow-x-auto">
+                        <div class="container overflow-x-auto px-8">
                             <table class="table table-xs lg:table-auto">
                                 <!-- head -->
                                 <thead>
                                     <tr>
+                                        <td>
+                                        </td>
                                         <td>
                                         </td>
                                         <th>Product</th>
@@ -63,7 +65,7 @@ export default class CartPage {
                             <div class="divider"></div>
 
                             <div class="flex justify-center">
-                                <a id="checkout" href="/checkout" class="btn btn-sm w-full btn-outline  btn-primary">Check Out</a>
+                                <button id="checkout" type="button" class="btn btn-sm w-full btn-outline  btn-primary">Check Out</bu>
                             </div>
 
                         </div>

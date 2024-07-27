@@ -53,6 +53,7 @@ const checkout = payload => {
         confirmButtonText: "OK"
       }).then(result => {
         if (result.isConfirmed) {
+          sessionStorage.removeItem("cart");
           window.location.href = "/profile?nav=orders";
         }
       });
@@ -79,6 +80,8 @@ const checkout = payload => {
 };
 
 const fetchItems = () => {
+  let selectedCartId = sessionStorage.getItem("cart");
+
   // GET CART
   const token = document.querySelector('meta[name="api-token"]').getAttribute("content");
   return ajaxRequest.get({
@@ -89,9 +92,12 @@ const fetchItems = () => {
 
       // console.log(data);
       data.forEach(product => {
+        // if there is selectedCartId and product id is in selected cart id
         product.quantity = product.item_quantity;
         product.total = product.price * product.quantity;
-        products.push(product);
+
+        if (selectedCartId && selectedCartId.includes(product.id)) products.push(product);
+        else if (!selectedCartId) products.push(product);
       });
 
       if (products.length === 0) {
