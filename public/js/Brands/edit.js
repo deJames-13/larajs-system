@@ -66,14 +66,14 @@ export default class BrandsEdit {
       rules: {
         name: {
           required: true,
-          minlength: 3
+          pattern: /^[A-Z][a-zA-Z]*$/
         },
         company: {
           required: true
         },
         website: {
           required: true,
-          url: true
+          pattern: /^(ftp|http|https):\/\/[^ "]+$/
         },
         description: {
           required: true
@@ -95,8 +95,7 @@ export default class BrandsEdit {
       },
       messages: {
         name: {
-          required: "Name is required",
-          minlength: "Name must be at least 3 characters long"
+          required: "Name is required"
         },
         company: {
           required: "Company name is required"

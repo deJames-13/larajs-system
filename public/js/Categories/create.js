@@ -77,11 +77,11 @@ export default class CategoriesCreate {
         rules: {
           name: {
             required: true,
-            minlength: 3
+            pattern: /^[A-Z][a-zA-Z]*$/
           },
           slug: {
             required: true,
-            minlength: 3
+            pattern: /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/
           },
           description: {
             required: true,
@@ -94,16 +94,14 @@ export default class CategoriesCreate {
         },
         messages: {
           name: {
-            required: "Name is required",
-            minlength: "Name must be at least 3 characters long"
+            required: "Name is required"
           },
-          sluc: {
+          slug: {
             required: "Slug is required",
             minlength: "Slug must be at least 3 characters long"
           },
           description: {
-            required: "Description is required",
-            minlength: "Description must be at least 10 characters long"
+            required: "Description is required"
           },
 
           status: {

@@ -66,7 +66,7 @@ export default class CategoriesEdit {
       rules: {
         name: {
           required: true,
-          minlength: 3
+          pattern: /^[A-Z][a-zA-Z]*$/
         },
         description: {
           required: true,
@@ -76,7 +76,8 @@ export default class CategoriesEdit {
           required: true
         },
         slug: {
-          required: true
+          required: true,
+          pattern: /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/
         },
         status: {
           required: true
@@ -84,8 +85,7 @@ export default class CategoriesEdit {
       },
       messages: {
         name: {
-          required: "Name is required",
-          minlength: "Name must be at least 3 characters long"
+          required: "Name is required"
         },
         description: {
           required: "Description is required",
@@ -95,9 +95,7 @@ export default class CategoriesEdit {
           required: "Image is required"
         },
         slug: {
-          required: "Please enter a slug",
-          minlength: "Slug must be at least 2 characters",
-          maxlength: "Slug must not exceed 100 characters"
+          required: "Please enter a slug"
         },
         status: {
           required: "Status is required"

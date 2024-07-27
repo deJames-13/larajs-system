@@ -66,16 +66,15 @@ export default class PromosEdit {
       rules: {
         name: {
           required: true,
-          minlength: 2,
-          maxlength: 255
+          pattern: /^[A-Z][a-zA-Z]*$/
         },
         slug: {
           required: true,
-          minlength: 2,
-          maxlength: 100
+          pattern: /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/
         },
         description: {
           required: true,
+          minlength: 10,
           maxlength: 500
         },
         image: {
@@ -98,18 +97,13 @@ export default class PromosEdit {
           required: true,
           date: true
         }
-        // Add more rules as necessary
       },
       messages: {
         name: {
-          required: "Please enter a name",
-          minlength: "Name must be at least 2 characters",
-          maxlength: "Name must not exceed 255 characters"
+          required: "Please enter a name"
         },
         slug: {
-          required: "Please enter a slug",
-          minlength: "Slug must be at least 2 characters",
-          maxlength: "Slug must not exceed 100 characters"
+          required: "Please enter a slug"
         },
         description: {
           required: "Please enter a description",
