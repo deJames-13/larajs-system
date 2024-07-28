@@ -211,6 +211,7 @@ export default class OrderShow {
   init() {
     // GET ORDER
     $(".page").hide();
+    $('.discount-info').remove();
     $("_skeleton").addClass("skeleton");
     this.fetchOrder(this.id);
   }
