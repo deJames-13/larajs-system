@@ -49,7 +49,13 @@ class OrderResource extends JsonResource
 
     private function getDiscount(promo)
     {
-       // TODO
+       if (!optional(promo)->value) return 0;
+       
+       $discount = promo.discount ?? 0;
+
+       
+
+       return $discount;
     }
 
 
