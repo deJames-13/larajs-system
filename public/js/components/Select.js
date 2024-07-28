@@ -13,7 +13,8 @@ const defaultProps = {
     return new Promise((resolve, reject) => {
       resolve([], []);
     });
-  }
+  },
+  onSelect: () => {}
 };
 export default class Select {
   dropdown = null;
@@ -74,7 +75,9 @@ export default class Select {
     const el = $(HTML);
     el.find(".option")
       .off()
-      .on("click", e => this.setSelected(option).update());
+      .on("click", e => {
+        this.setSelected(option).update().onSelect(option);
+      });
     el.animate({ opacity: 0, left: "-5rem" }, 0);
     el.animate({ opacity: 100, left: 0 }, 300);
     return el;
@@ -101,14 +104,15 @@ export default class Select {
   }
 
   bindEvents() {
+    $("#selected-value-input").val("0");
     const doSearch = debounce(() => {
       this.onSearch(this.searchInput.val());
     }, 500);
 
     // clear selected
     this.component.find("#remove-selected").on("click", () => {
-      this.selected = {};
-      this.update();
+      $("#selected-value-input").val("0");
+      this.setSelected({}).update().onSelect({});
     });
 
     this.searchInput.on("keyup", doSearch);
@@ -129,6 +133,7 @@ export default class Select {
           $("#mini-loader-" + this.name).hide();
         });
   }
+
   render() {
     const HTML = /* HTML */ `
       <div class="dropdown dropdown-hover w-full">
@@ -137,9 +142,9 @@ export default class Select {
             <i class="fas fa-caret-down"></i>
             <span class="placeholder">${this.placeholder}</span>
             <span id="mini-loader-${this.name}" class="loading loading-spinner text-primary"></span>
-            <span class="font-bold" id="selected-value" data-value="${this.selected.value ?? ""}">${this.selected.label ?? this.placeholderLabel}</span>
+            <span class="font-bold" id="selected-value" data-value="${this.selected.value ?? "0"}">${this.selected.label ?? this.placeholderLabel}</span>
             <input id="selected-value-input" type="hidden" name="${this.name}[]" id="${this.name}" />
-            <button type="button" id="remove-selected" class="ml-auto btn btn-sm btn-ghost">
+            <button data-select-event type="button" id="remove-selected" class="ml-auto btn btn-sm btn-ghost">
               <i class="fas fa-multiply"></i>
               Clear
             </button>
@@ -149,7 +154,7 @@ export default class Select {
           <div id="filter-options">
             <input id="filter-input" type="text" class="input input-bordered rounded-md w-full" placeholder="Filter" />
           </div>
-          <ul id="select-dropdown" tabindex="0"></ul>
+          <ul id="select-dropdown" tabindex="0" class="p-0"></ul>
         </div>
       </div>
     `;
@@ -159,6 +164,6 @@ export default class Select {
     this.searchInput = $(this.component).find("#filter-input");
     this.target && $(this.target).append(this.component);
 
-    this._source({});
+    this._source();
   }
 }
