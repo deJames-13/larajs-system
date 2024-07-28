@@ -38,7 +38,7 @@ class UserResource extends JsonResource
 
     private function handleCart()
     {
-        $this->products->load(['promos']);
+        $this->products->load(['promos', 'brands']);
 
 
         $shippingPromos = [];
@@ -64,6 +64,8 @@ class UserResource extends JsonResource
             return [
                 'id' => $product->id,
                 'name' => $product->name,
+                'sku_code' => $product->sku_code,
+                'brand' => optional($product->brands()->first())->name ?? 'No Brand',
                 'price' => $product->price,
                 'item_quantity' => $product->pivot['quantity'],
                 'total' => $product->price * $product->pivot['quantity'],

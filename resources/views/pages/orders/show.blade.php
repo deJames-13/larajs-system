@@ -5,7 +5,7 @@
 		<span id="order-id" data-id="{{ $id }}"></span>
 
 		<div class="top flex justify-between items-center">
-			<div class="_skeleton">
+			<div class="">
 				<div class=" status-badge badge gap-2">
 					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
 						class="inline-block w-4 h-4 stroke-current">
@@ -20,7 +20,7 @@
 				<p id="status-message" class="print:hidden italic text-gray-600 text-xs"></p>
 			</div>
 
-			<div class="_skeleton actions  flex space-x-2 items-center print:hidden">
+			<div class=" actions  flex space-x-2 items-center print:hidden">
 
 				<button id="view-receipt" class="btn btn-outline btn-info">
 					View Receipt
