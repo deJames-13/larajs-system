@@ -28,7 +28,7 @@ class OrderResource extends JsonResource
                 $shipping_cost = $this->shipping_cost;
                 return $subtotal + $shipping_cost;
             }),
-           'promo' => $this->whenLoaded('promo', fn() => PromoResource::make($this->promo)),
+           'promo' => $this->whenLoaded('promo', fn() => new PromoResource($this->promo)),
 
 
 
