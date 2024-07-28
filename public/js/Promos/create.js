@@ -69,7 +69,7 @@ export default class PromosCreate {
       rules: {
         name: {
           required: true,
-          pattern: /^[A-Z][a-zA-Z]*$/
+          pattern: /^(?:[A-Z0-9][a-zA-Z0-9]*|[0-9]+[a-zA-Z0-9]*)(?: [a-zA-Z0-9]+)*$/
         },
         slug: {
           required: true,
@@ -103,10 +103,12 @@ export default class PromosCreate {
       },
       messages: {
         name: {
-          required: "Name is required"
+          required: "Name is required",
+          pattern: "Please enter a valid name: Capitalize the first letter"
         },
         slug: {
-          required: "Slug is required"
+          required: "Slug is required",
+          pattern: "Please enter a valid slug: It should only contain letters, numbers, and hyphens, and cannot start or end with a hyphen"
         },
         description: {
           required: "Description is required",
