@@ -37,13 +37,19 @@ class OrderResource extends JsonResource
         ];
     }
 
-    private function calculateTotal()
+    private function getTotal()
     {
       $total = 0;
       $subtotal = $this->products->sum(fn ($product) => $product->pivot->quantity * $product->price);
                 $shipping_cost = $this->shipping_cost;
                 $total = $subtotal + $shipping_cost;
       return $total;
+    }
+ 
+
+    private function getDiscount(promo)
+    {
+       // TODO
     }
 
 
