@@ -15,7 +15,7 @@ class Product extends Model
 
     protected $with = [
         // 'stock',
-        // 'images',
+        'images',
         // 'categories',
         // 'brands',
         // 'promos',

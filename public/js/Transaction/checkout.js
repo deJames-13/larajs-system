@@ -1,8 +1,12 @@
 import ajaxRequest from "../assets/ajaxRequest.js";
 import OrderItem from "../components/OrderItem.js";
+import DiscountSelection from "./_discount_selection.js";
 
 const products = [];
+let selectDiscounts = null;
 let user = [];
+let discounts = [];
+let currentPromo = null;
 
 const isValid = () => {
   if ($("#billing-form").valid()) return true;
@@ -90,9 +94,10 @@ const fetchItems = () => {
     token: token,
     onSuccess: ({ data }) => {
       $("#form-submit").show();
-      console.log(data);
+      // console.log(data);
 
       user = data;
+      discounts = data.products.promos;
       data = data.products.data;
 
       data.forEach(product => {
@@ -101,6 +106,7 @@ const fetchItems = () => {
 
         if (selectedCartId && selectedCartId.includes(product.id)) products.push(product);
         else if (!selectedCartId) products.push(product);
+        else discounts = discounts.filter(discount => discount.product_id != product.id);
       });
 
       if (!products.length) window.location.href = "/";
@@ -110,10 +116,10 @@ const fetchItems = () => {
       products.forEach(product => {
         const cartItem = new OrderItem(product);
         $("#cart-body").append(cartItem.render());
-
-        const subtotal = products.reduce((acc, product) => acc + product.total, 0);
-        $("#subtotal, #total").text(subtotal.toFixed(2));
       });
+
+      const subtotal = products.reduce((acc, product) => acc + product.total, 0);
+      $("#subtotal").text(subtotal.toFixed(2));
     }
   });
 };
@@ -137,7 +143,6 @@ const handleSubmit = e => {
     })),
     customer_info: formData
   };
-  console.log(payload);
 
   // Confirm
   Swal.fire({
@@ -155,9 +160,63 @@ const handleSubmit = e => {
   });
 };
 
+const handleSelect = promo => {
+  if (!promo?.value) return $(".discount-info-wrapper").hide();
+  $(".discount-info-wrapper").show();
+  currentPromo = promo;
+
+  let discount = parseInt(promo.discount);
+  let shipping = parseFloat($("#shipping_cost").val());
+  let subtotal = products.reduce((acc, product) => acc + product.total, 0);
+  let total = subtotal + shipping;
+
+  let discountSubtotal = subtotal;
+  let discountShipping = shipping;
+
+  switch (promo.promo_for) {
+    case "shipping":
+      discount = promo.promo_type == "percentage" ? (shipping * discount) / 100 : discount;
+      discountShipping = shipping - discount;
+      break;
+    case "order":
+      discount = promo.promo_type == "percentage" ? (subtotal * discount) / 100 : discount;
+      discountSubtotal = subtotal - discount;
+      break;
+    case "product":
+      const product = products.find(product => product.id == promo?.product_id);
+      if (!product) return;
+      discount = promo.promo_type === "percentage" ? (product.total * discount) / 100 : discount;
+      discountSubtotal = subtotal - discount;
+      break;
+  }
+
+  total = discountSubtotal + discountShipping;
+  console.log({ discount, subtotal, shipping, total });
+
+  $("#subtotal").text(subtotal.toFixed(2));
+  $(".total").text(total.toFixed(2));
+  $("#shipping_cost").val(shipping.toFixed(2));
+
+  const discountText = promo.promo_type === "percentage" ? `${promo.discount}%` : `PHP ${parseFloat(promo.discount).toFixed(2)} ` + `off for ${promo.promo_for}`;
+  $("#discount-label").text(discountText);
+  $("#discount-value").text(parseFloat(discount).toFixed(2));
+};
+
 $(document).ready(function () {
   fetchItems().then(() => {
     $("[data-shipping-select]:first").click();
+    $("[data-shipping-select]").on("click", () => {
+      handleSelect(currentPromo);
+    });
+    selectDiscounts = new DiscountSelection({
+      name: "discounts",
+      target: $("#discounts-select"),
+      placeholder: "Select: ",
+      placeholderLabel: "No discounts selected",
+      options: discounts || [],
+      selected: {},
+      onSelect: handleSelect
+    });
   });
 
   $("#billing-form").on("submit", e => {

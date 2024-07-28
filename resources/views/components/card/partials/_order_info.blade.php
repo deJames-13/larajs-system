@@ -32,13 +32,14 @@
 		</div>
 
 		{{-- DISCOUNTS --}}
-		<div style="display: none" class="flex justify-between items-center">
+		<div style="display: none" class="discount-info-wrapper flex justify-between items-center">
 			<h4 class="m-0">Discount/s</h4>
-			<div id="discounts" class="text-sm font-bold">
-				<span class="discount-item">
-					- PHP <p id="discount">0.00</p>
-				</span>
+			<div class="text-sm font-bold">
+				- PHP <span id="discount-value">0.00</span>
 			</div>
+		</div>
+		<div style="display: none" class="discount-info-wrapper flex justify-between items-center">
+			<span id="discount-label" class="text-gray-600 font-bold text-xs" class="m-0"></span>
 		</div>
 
 		<div class="container mt-auto">

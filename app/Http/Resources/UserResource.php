@@ -39,28 +39,12 @@ class UserResource extends JsonResource
     private function handleCart()
     {
         $this->products->load(['promos', 'brands']);
-
-
-        $shippingPromos = [];
-        $orderPromos = [];
-        $productPromos = [];
-
-        $data = $this->products->map(function ($product) use (&$shippingPromos, &$orderPromos, &$productPromos) {
-
+        $promosData = [];
+        $data = $this->products->map(function ($product) use (&$promosData) {
             foreach ($product->promos as $promo) {
-                switch ($promo->promo_for) {
-                    case 'shipping':
-                        $shippingPromos[] = $promo->toArray();
-                        break;
-                    case 'order':
-                        $orderPromos[] = $promo->toArray();
-                        break;
-                    case 'product':
-                        $productPromos[] = $promo->toArray();
-                        break;
-                }
+                $promosData[$promo->id] = $promo->only(['id', 'name', 'discount', 'promo_type', 'promo_for', 'start_date', 'end_date']);
+                $promosData[$promo->id]['product_id'] = $promo->pivot['product_id'];
             }
-
             return [
                 'id' => $product->id,
                 'name' => $product->name,
@@ -73,16 +57,9 @@ class UserResource extends JsonResource
             ];
         });
 
-
-
-
         return [
             'data' => $data,
-            'promos' => [
-                'shipping' => $shippingPromos,
-                'order' => $orderPromos,
-                'product' => $productPromos,
-            ],
+            'promos' => $promosData,
 
         ];
     }

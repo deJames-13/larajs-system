@@ -51,7 +51,14 @@ class ProductResource extends JsonResource // JSON
 
             'promos' => $this->whenLoaded('promos', function () {
                 $data = $this->promos->filter(function ($promo) {
-                    return ($promo->end_date !== null && $promo->end_date > now()) && $promo->status == 'active';
+
+                    return $promo->status === 'active' &&
+                        $promo->start_date <= now() &&
+                        $promo->end_date >= now() &&
+                        $promo->promo_type !== null &&
+                        $promo->promo_for !== null &&
+                        $promo->start_date !== null &&
+                        $promo->end_date !== null;
                 });
                 Debugbar::info($data);
                 return $data->makeHidden(['pivot'])->toArray();
