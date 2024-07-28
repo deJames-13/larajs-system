@@ -34,7 +34,7 @@ class Order extends Model
     {
         return $this->hasOne(Rating::class, 'order_id', 'id');
     }
-    public function customer()
+    public function promo()
     {
         return $this->belongsTo(Promos::class, 'promo_id', 'id');
     }
