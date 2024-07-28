@@ -103,10 +103,11 @@ class OrderController extends Controller
                 'products.*.id' => 'required|exists:products,id',
                 'products.*.quantity' => 'required|integer|min:1',
                 'customer_info' => 'sometimes',
+                'promo_id' => 'sometimes|numeric',
             ]
         );
-
-        // Debugbar::info($request);
+        // TODO: TEST
+        Debugbar::info($data);
 
         $combinedAddress = collect($data['shipping_address'])->values()->implode(', ');
 
