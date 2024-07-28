@@ -47,13 +47,17 @@ class OrderResource extends JsonResource
     }
  
 
-    private function getDiscount(promo)
+    private function getDiscountedTotal($promo, $shipping, $subtotal)
     {
        if (!optional(promo)->value) return 0;
        
        $discount = promo.discount ?? 0;
+       $discountedSubtotal = $subtotal;
+       $discountedShipping = $shipping;
 
+      
        
+       $total = $discountedSubtotal + discountedShipping;
 
        return $discount;
     }
