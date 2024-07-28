@@ -19,6 +19,7 @@ class Order extends Model
         'customer',
         'products',
         'rating',
+        'promo',
     ];
     protected $guarded = [];
 
