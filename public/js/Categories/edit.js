@@ -65,9 +65,13 @@ export default class CategoriesEdit {
     $("#item-form").validate({
       rules: {
         name: {
-          required: true,
-          pattern: /^[A-Z][a-zA-Z]*$/
-        },
+            required: true,
+            pattern: /^(?:[A-Z0-9][a-zA-Z0-9]*|[0-9]+[a-zA-Z0-9]*)(?: [a-zA-Z0-9]+)*$/
+          },
+          slug: {
+            required: true,
+            pattern: /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/
+          },
         description: {
           required: true,
           minlength: 10
@@ -75,17 +79,18 @@ export default class CategoriesEdit {
         image: {
           required: true
         },
-        slug: {
-          required: true,
-          pattern: /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/
-        },
         status: {
           required: true
         }
       },
       messages: {
         name: {
-          required: "Name is required"
+            required: "Name is required",
+            pattern: "Please enter a valid name: Capitalize the first letter"
+          },
+        slug: {
+            required: "Slug is required",
+            pattern: "Please enter a valid slug: It should only contain letters, numbers, and hyphens, and cannot start or end with a hyphen"
         },
         description: {
           required: "Description is required",
@@ -93,9 +98,6 @@ export default class CategoriesEdit {
         },
         image: {
           required: "Image is required"
-        },
-        slug: {
-          required: "Please enter a slug"
         },
         status: {
           required: "Status is required"

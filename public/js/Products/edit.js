@@ -61,11 +61,11 @@ export default class ProductsEdit {
       rules: {
         name: {
           required: true,
-          pattern: /^[A-Z][a-zA-Z]*$/
+          pattern: /^(?:[A-Z0-9][a-zA-Z0-9]*|[0-9]+[a-zA-Z0-9]*)(?: [a-zA-Z0-9]+)*$/
         },
         sku_code: {
           required: true,
-          pattern: /^[a-z0-9]{10,20}$/i
+          pattern:  /^(?!-)[A-Z0-9-]*(?<!-)$/
         },
         description: {
           required: true,
@@ -94,11 +94,13 @@ export default class ProductsEdit {
         }
       },
       messages: {
-        name: {
-          required: "Name is required"
+       name: {
+          required: "Name is required",
+          pattern: "Please enter a valid name: Capitalize the first letter"
         },
         sku_code: {
-          required: "SKU Code is required"
+          required: "SKU code is required",
+          pattern: "Please enter a valid SKU code: It should only contain uppercase letters, digits, and hyphens SKU code cannot start or end with a hyphen"
         },
         description: {
           required: "Description is required",

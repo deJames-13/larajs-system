@@ -65,15 +65,15 @@ export default class BrandsEdit {
     $("#item-form").validate({
       rules: {
         name: {
-          required: true,
-          pattern: /^[A-Z][a-zA-Z]*$/
+        required: true,
+        pattern: /^(?:[A-Z0-9][a-zA-Z0-9]*|[0-9]+[a-zA-Z0-9]*)(?: [a-zA-Z0-9]+)*$/
         },
-        company: {
+          company: {
           required: true
         },
         website: {
-          required: true,
-          pattern: /^(ftp|http|https):\/\/[^ "]+$/
+        required: true,
+        pattern: /^(ftp|http|https):\/\/[^ "]+$/
         },
         description: {
           required: true
@@ -95,15 +95,16 @@ export default class BrandsEdit {
       },
       messages: {
         name: {
-          required: "Name is required"
-        },
+            required: "Name is required",
+            pattern: "Please enter a valid name: Capitalize the first letter"
+          },
         company: {
-          required: "Company name is required"
-        },
+            required: "Company name is required"
+          },
         website: {
-          required: "Website URL is required",
-          url: "Please enter a valid URL for the website"
-        },
+            required: "Website URL is required",
+            pattern: "Please enter a valid URL for the website: HTTPS, HTTP, or FTP"
+          },
         description: {
           required: "Description is required"
         },
