@@ -36,7 +36,7 @@ class Order extends Model
     }
     public function promo()
     {
-        return $this->belongsTo(Promos::class, 'promo_id', 'id');
+        // return $this->belongsTo(Promos::class, 'promo_id', 'id');
     }
 
 
