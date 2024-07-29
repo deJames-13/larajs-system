@@ -106,7 +106,9 @@ class OrderController extends Controller
                 'promo_id' => 'sometimes|numeric',
             ]
         );
-        // TODO
+
+        // TODO: TEST
+
         Debugbar::info($data);
 
         $combinedAddress = collect($data['shipping_address'])->values()->implode(', ');

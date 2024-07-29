@@ -78,7 +78,7 @@ export default class BrandsCreate {
         rules: {
           name: {
             required: true,
-            pattern: /^[A-Z][a-zA-Z]*$/
+            pattern: /^(?:[A-Z0-9][a-zA-Z0-9]*|[0-9]+[a-zA-Z0-9]*)(?: [a-zA-Z0-9]+)*$/
           },
           company: {
             required: true
@@ -107,14 +107,15 @@ export default class BrandsCreate {
         },
         messages: {
           name: {
-            required: "Name is required"
+            required: "Name is required",
+            pattern: "Please enter a valid name: Capitalize the first letter"
           },
           company: {
             required: "Company name is required"
           },
           website: {
             required: "Website URL is required",
-            url: "Please enter a valid URL for the website"
+            pattern: "Please enter a valid URL for the website: HTTPS, HTTP, or FTP"
           },
           description: {
             required: "Description is required"
