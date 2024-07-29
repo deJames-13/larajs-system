@@ -24,7 +24,8 @@ class OrderResource extends JsonResource
             'subtotal' => $this->whenLoaded('products', function () {
                 return $this->products->sum(fn ($product) => $product->pivot->quantity * $product->price);
             }),
-            'total' => $this->getTotal(),
+            'total' => $this->getTotal()->total ?? 0,
+            'discount' => $this->getTotal()->discount ?? 0,
            'promo' => $this->whenLoaded('promo', fn() => $this->promo),
 
 
@@ -36,25 +37,26 @@ class OrderResource extends JsonResource
     {
       $this->load(['promo', 'products']);
       $total = 0;
+
       $subtotal = $this->products->sum(fn ($product) => $product->pivot->quantity * $product->price);
                 $shipping_cost = $this->shipping_cost;
                 $total = $this->getDiscountedTotal($this->promo, $shipping_cost, $subtotal);
-      return $total;
+
+        return $total;
     }
 
 
     private function getDiscountedTotal($promo, $shipping, $subtotal)
     {
-       if (!optional($promo)->value) return 0;
-
+       if (!optional($promo)->id) return 0;
        $discount = $promo->discount ?? 0;
        $discountedSubtotal = $subtotal;
        $discountedShipping = $shipping;
 
-       switch ($promo->promo_type) {
+       switch ($promo->promo_for) {
         case 'shipping':
-            $discount = $promo->promo_type == 'percentage' ? ($discount*$shipping)/100 : $discount;
-            $discountedShipping = $shipping - $discount;
+            $discount = $promo->promo_type == 'percentage' ? ($shipping * $discount)/100 : $discount;
+            $discountedShipping = $discountedShipping - $discount;
 
             break;
         case 'order':
@@ -78,11 +80,15 @@ class OrderResource extends JsonResource
         default:
             break;
        }
+       Debugbar::info([$shipping,$discount,$discountedSubtotal,$discountedShipping]);
 
        $total = $discountedSubtotal + $discountedShipping;
-       Debugbar::info($total);
 
-       return $total;
+
+       return (object)[
+        'total' => $total,
+        'discount' => $discount
+       ];
     }
 
 
