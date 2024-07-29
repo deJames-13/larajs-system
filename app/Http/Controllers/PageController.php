@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Brand;
-use App\Models\Category;
-use App\Models\Order;
-use App\Models\Product;
-use App\Models\Promos;
 use App\Models\User;
+use App\Models\Brand;
+use App\Models\Order;
+use App\Models\Promos;
+use App\Models\Product;
+use App\Models\Category;
+use App\Http\Resources\ProductResource;
 
 class PageController extends Controller
 {
@@ -41,7 +42,8 @@ class PageController extends Controller
             'categories',
             'promos',
         ]);
-        return view('pages.products.show', ['item' => $item]);
+
+        return view('pages.products.show', ['item' => ProductResource::make($item)]);
     }
 
 

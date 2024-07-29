@@ -11,25 +11,35 @@ return new class extends Migration
      */
     public function up(): void
     {
+
         Schema::create('promos', function (Blueprint $table) {
+            $promo_for = ['product', 'order', 'shipping'];
+            $promo_types = ['percentage', 'fixed'];
+
             $table->id();
-
-
             $table->string('name');
             $table->string('slug')->unique();
+            $table->integer('discount');
+            $table->enum('promo_type', $promo_types)->default('percentage');
+            $table->enum('promo_for', $promo_for)->default('product');
+
             $table->text('description')->nullable();
-            $table->string('image')->nullable();
-            $table->enum('status', ['active', 'inactive'])->default('active');
-            $table->integer('discount')->nullable();
             $table->dateTime('start_date')->nullable();
             $table->dateTime('end_date')->nullable();
-            $table->softDeletes();
+            $table->string('image')->nullable();
 
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
+            $table->softDeletes();
         });
+
         Schema::create('promo_products', function (Blueprint $table) {
             $table->foreignId('promo_id')->constrained()->onDelete('cascade');
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
+        });
+
+        Schema::table('orders', function (Blueprint $table) {
+            $table->foreignId('promo_id')->nullable()->constrained()->onDelete('set null');
         });
     }
 
@@ -38,6 +48,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('orders');
         Schema::dropIfExists('promo_products');
         Schema::dropIfExists('promos');
     }

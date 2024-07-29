@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Rating;
+use App\Models\Promos;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -18,6 +19,7 @@ class Order extends Model
         'customer',
         'products',
         'rating',
+        'promo',
     ];
     protected $guarded = [];
 
@@ -32,6 +34,10 @@ class Order extends Model
     public function rating()
     {
         return $this->hasOne(Rating::class, 'order_id', 'id');
+    }
+    public function promo()
+    {
+        return $this->belongsTo(Promos::class, 'promo_id', 'id');
     }
 
 

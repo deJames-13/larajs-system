@@ -19,6 +19,10 @@
 						{{ $item->name }}
 					</h2>
 				</div>
+
+				<div id="categories-wrapper" class="flex flex-wrap items-center gap-2 my-2"></div>
+
+
 				{{-- Item SKU Code Input --}}
 				<div class="flex items-center space-x-2">
 					<label for="sku_code" class="text-xs text-gray-500">Brand:</label>
@@ -42,7 +46,9 @@
 				</div>
 
 				{{-- Item Categories --}}
-				<div id="categories-wrapper" class="flex flex-wrap items-center space-x-2"></div>
+				<div id="promos-wrapper" class="flex flex-wrap items-center gap-2 my-2"></div>
+
+
 				<div class="divider"></div>
 				{{-- Item Description Input --}}
 				<div class="flex flex-col space-y-2">

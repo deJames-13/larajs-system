@@ -23,7 +23,23 @@ const loadCarousel = () => {
   });
 };
 
+const makePromoPills = promos => {
+  if (!promos) return;
+  const pills = [];
+  promos.forEach(promo => {
+    const pill = /* HTML */ `
+      <span class="bg-primary text-white font-bold px-2 py-1 text-xs rounded-full">
+        ${promo.promo_type === "fixed" ? "PHP" : ""} ${promo.discount} ${promo.promo_type === "percentage" ? "%" : promo.promo_type === "fixed" ? "off" : ""} Discount for
+        <span class="capitalize">${promo.promo_for}</span>
+      </span>
+    `;
+    pills.push(pill);
+  });
+  $("#promos-wrapper").html(pills.join(""));
+};
+
 const makeCategoryPills = categories => {
+  if (!categories) return;
   const pills = [];
   categories.forEach(category => {
     const pill = /* HTML */ ` <span class="bg-primary text-white font-bold px-2 py-1 text-xs rounded-full">${category.name}</span> `;
@@ -62,6 +78,7 @@ const init = () => {
 
   loadCarousel();
   makeCategoryPills(item.categories);
+  makePromoPills(item.promos);
   new Ratings({
     productId: item.id,
     target: "#product-ratings-wrapper"
