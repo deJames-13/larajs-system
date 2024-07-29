@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderResource;
 use App\Mail\OrderStatusNotifier;
 use App\Models\Order;
+use App\Models\Promos;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -49,6 +50,7 @@ class OrderController extends Controller
             'customer',
             'customer.info',
             'customer.images',
+            'promo'
         ]);
 
 
@@ -73,6 +75,7 @@ class OrderController extends Controller
             'customer',
             'customer.info',
             'customer.images',
+            'promo'
         ]);
 
         if (!$order) {
@@ -110,6 +113,7 @@ class OrderController extends Controller
         // TODO: TEST
 
         Debugbar::info($data);
+        // dd(isset($data['promo_id']));
 
         $combinedAddress = collect($data['shipping_address'])->values()->implode(', ');
 
@@ -129,12 +133,18 @@ class OrderController extends Controller
             )
         );
 
+        if (isset($data['promo_id'])) {
+            $promo = Promos::find($data['promo_id']);
+            $order->promo_id = $promo->id;
+        }
+
         $order->load(['products', 'customer']);
         $res = (new OrderResource($order));
 
         $cart = $order->products()->pluck('product_id')->toArray();
         $user->products()->detach($cart);
 
+        $order->save();
         // Debugbar::info($res);
         return response(
             $res,

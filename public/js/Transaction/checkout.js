@@ -141,8 +141,11 @@ const handleSubmit = e => {
       id: product.id,
       quantity: product.quantity
     })),
-    customer_info: formData
+    customer_info: formData,
+    promo_id: currentPromo?.id
   };
+
+
 
   // Confirm
   Swal.fire({
