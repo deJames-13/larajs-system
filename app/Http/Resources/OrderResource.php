@@ -24,8 +24,8 @@ class OrderResource extends JsonResource
             'subtotal' => $this->whenLoaded('products', function () {
                 return $this->products->sum(fn ($product) => $product->pivot->quantity * $product->price);
             }),
-            'total' => $this->getTotal()->total,
-            'discount' => $this->getTotal()->discount,
+            'total' => $this->getTotal()->total ?? 0,
+            'discount' => $this->getTotal()->discount ?? 0,
            'promo' => $this->whenLoaded('promo', fn() => $this->promo),
 
 
