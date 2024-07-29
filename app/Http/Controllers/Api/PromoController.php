@@ -78,7 +78,7 @@ class PromoController extends Controller
         $promo_types = ['percentage', 'fixed'];
         $data = $request->validate([
             'name' => 'sometimes|string',
-            'slug' => 'sometimes|string|exists:promos,slug',
+            'slug' => 'sometimes|string',
             'description' => 'sometimes|string',
             'image' => 'sometimes|string',
             'promo_type' => 'sometimes|in:' . implode(',', $promo_types),
