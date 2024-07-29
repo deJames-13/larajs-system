@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\ProductResource;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrderResource extends JsonResource
@@ -23,7 +24,7 @@ class OrderResource extends JsonResource
             'subtotal' => $this->whenLoaded('products', function () {
                 return $this->products->sum(fn ($product) => $product->pivot->quantity * $product->price);
             }),
-            'total' => $this->whenLoaded('products', fn() => $this->getTotal()),
+            'total' => $this->getTotal(),
            'promo' => $this->whenLoaded('promo', fn() => $this->promo),
 
 
@@ -75,11 +76,11 @@ class OrderResource extends JsonResource
             break;
 
         default:
-            # code...
             break;
        }
 
        $total = $discountedSubtotal + $discountedShipping;
+       Debugbar::info($total);
 
        return $total;
     }

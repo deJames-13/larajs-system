@@ -113,6 +113,7 @@ class OrderController extends Controller
         // TODO: TEST
 
         Debugbar::info($data);
+        // dd(isset($data['promo_id']));
 
         $combinedAddress = collect($data['shipping_address'])->values()->implode(', ');
 
