@@ -24,7 +24,8 @@ class OrderResource extends JsonResource
             'subtotal' => $this->whenLoaded('products', function () {
                 return $this->products->sum(fn ($product) => $product->pivot->quantity * $product->price);
             }),
-            'total' => $this->getTotal(),
+            'total' => $this->getTotal()->total,
+            'discount' => $this->getTotal()->discount,
            'promo' => $this->whenLoaded('promo', fn() => $this->promo),
 
 
@@ -52,10 +53,10 @@ class OrderResource extends JsonResource
        $discountedSubtotal = $subtotal;
        $discountedShipping = $shipping;
 
-       switch ($promo->promo_type) {
+       switch ($promo->promo_for) {
         case 'shipping':
-            $discount = $promo->promo_type == 'percentage' ? ($discount*$shipping)/100 : $discount;
-            $discountedShipping = $shipping - $discount;
+            $discount = $promo->promo_type == 'percentage' ? ($shipping * $discount)/100 : $discount;
+            $discountedShipping = $discountedShipping - $discount;
 
             break;
         case 'order':
@@ -84,7 +85,10 @@ class OrderResource extends JsonResource
        $total = $discountedSubtotal + $discountedShipping;
 
 
-       return $total;
+       return (object)[
+        'total' => $total,
+        'discount' => $discount
+       ];
     }
 
 
