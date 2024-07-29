@@ -19,6 +19,16 @@ class User extends Authenticatable
         // 'images'
     ];
 
+    // hide columns
+    protected $hidden = [
+        'password',
+        'remember_token',
+        // 'email_verified_at',
+        // 'deleted_at',
+    ];
+
+
+
     protected $fillable = [
         'username',
         'email',
@@ -26,10 +36,7 @@ class User extends Authenticatable
         'role',
         'status'
     ];
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+
     protected function casts(): array
     {
         return [
@@ -122,7 +129,6 @@ class User extends Authenticatable
 
     public function getCart()
     {
-        // return user products count and total price (price * quantity)
         $products = $this->products;
         $count = $products->map(function ($product) {
             return $product->pivot->quantity;

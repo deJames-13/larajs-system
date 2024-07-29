@@ -94,6 +94,7 @@ export default class ProductsEdit {
         }
       },
       messages: {
+
        name: {
           required: "Name is required",
           pattern: "Please enter a valid name: Capitalize the first letter"
@@ -101,6 +102,7 @@ export default class ProductsEdit {
         sku_code: {
           required: "SKU code is required",
           pattern: "Please enter a valid SKU code: It should only contain uppercase letters, digits, and hyphens SKU code cannot start or end with a hyphen"
+
         },
         description: {
           required: "Description is required",
@@ -148,6 +150,8 @@ export default class ProductsEdit {
   }
   populateForm(item = {}) {
     this.item = item;
+    console.log(item);
+
     Object.keys(this.item).forEach(key => {
       $(`#${key}`).val(this.item[key]);
     });

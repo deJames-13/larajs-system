@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
+use Illuminate\Foundation\Auth\User;
 use App\Http\Resources\ProductResource;
 use Barryvdh\Debugbar\Facades\Debugbar;
 
@@ -12,9 +14,10 @@ class CartController extends Controller
     public function index()
     {
         if (auth()->user()) {
-            $products = auth()->user()->products;
-            $products->load(['images']);
-            return ProductResource::collection($products);
+            $user = optional(auth()->user())->load([
+                'products',
+            ]);
+            return UserResource::make($user);
         }
 
         return response(null, 401, ['message' => 'Unauthorized']);

@@ -6,6 +6,7 @@ use App\Models\Image;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 abstract class Controller
@@ -45,6 +46,7 @@ abstract class Controller
             return response()->json(['message' => 'Resource not found'], 404);
         }
         $response = new $resource($data);
+        Debugbar::info($response);
 
         return $response;
     }

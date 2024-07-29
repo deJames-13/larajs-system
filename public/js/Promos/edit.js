@@ -11,30 +11,28 @@ export default class PromosEdit {
   }
 
   init() {
-    $(document).ready(() => {
-      const id = $("#item-form").data("id");
+    const id = $("#item-form").data("id");
 
-      // Fetch promo data and populate form
-      this.fetchPromo(id);
+    // Fetch promo data and populate form
+    this.fetchPromo(id);
 
-      // CAROUSEL
-      $("#image-input").change(() => {
-        this.images = Array.from($("#image-input")[0].files).map(file => URL.createObjectURL(file));
-        this.loadCarousel();
-      });
+    // CAROUSEL
+    $("#image-input").change(() => {
+      this.images = Array.from($("#image-input")[0].files).map(file => URL.createObjectURL(file));
+      this.loadCarousel();
+    });
 
-      $(".prev").click(() => {
-        if (this.carousel) this.carousel.prev();
-      });
+    $(".prev").click(() => {
+      if (this.carousel) this.carousel.prev();
+    });
 
-      $(".next").click(() => {
-        if (this.carousel) this.carousel.next();
-      });
+    $(".next").click(() => {
+      if (this.carousel) this.carousel.next();
+    });
 
-      $("#save-item, #cancel").hide();
-      $("#item-form").change(() => {
-        $("#save-item, #cancel").show();
-      });
+    $("#save-item, #cancel").hide();
+    $("#item-form").change(() => {
+      $("#save-item, #cancel").show();
     });
   }
 
@@ -66,7 +64,7 @@ export default class PromosEdit {
       rules: {
         name: {
           required: true,
-          pattern: /^(?:[A-Z0-9][a-zA-Z0-9]*|[0-9]+[a-zA-Z0-9]*)(?: [a-zA-Z0-9]+)*$/
+          pattern: /^[A-Za-z0-9\s]+(?:-[A-Za-z0-9\s]+)*$/
         },
         slug: {
           required: true,
@@ -100,12 +98,12 @@ export default class PromosEdit {
       },
       messages: {
         name: {
-          required: "Name is required",
-          pattern: "Please enter a valid name: Capitalize the first letter"
+          required: "Please enter a name",
+          pattern: "Name must contain only letters, numbers, and hyphens"
         },
         slug: {
-          required: "Slug is required",
-          pattern: "Please enter a valid slug: It should only contain letters, numbers, and hyphens, and cannot start or end with a hyphen"
+          required: "Please enter a slug",
+          pattern: "Slug must contain only letters, numbers, and hyphens"
         },
         description: {
           required: "Please enter a description",
@@ -175,7 +173,7 @@ export default class PromosEdit {
   populateForm(promo) {
     Object.keys(promo).forEach(key => {
       $(`#${key}`).val(promo[key]);
-      // if input is date, format it
+
       if (key.includes("date")) {
         $(`#${key}`).val(new Date(promo[key]).toISOString().split("T")[0]);
       }

@@ -24,8 +24,8 @@ class Dashboard {
   }
 
   _goToPage(url) {
-    // prevent duplicate loading
     $(this.content).html("");
+    window.history.pushState({}, "", "?" + "nav=" + url);
 
     const pages = {
       main: () => MainPage.init(),

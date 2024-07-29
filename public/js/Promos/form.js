@@ -15,7 +15,9 @@ export default class PromosForm extends FormPage {
       });
     } else if (this.type === "create") {
       $(document).ready(() => {
-        new PromosCreate();
+        new PromosCreate({ 
+          target: this.target,
+        });
       });
     }
   }
@@ -37,10 +39,29 @@ export default class PromosForm extends FormPage {
             <textarea name="slug" id="slug" class="textarea textarea-bordered" placeholder="Enter promo slug" rows="2"></textarea>
           </div>
 
+          <!-- Promo Type Input -->
+          <div class="flex flex-col space-y-2">
+            <label for="promo_type" class="text-lg font-semibold">Promo Type</label>
+            <select name="promo_type" id="promo_type" class="select select-bordered">
+              <option value="percentage">Percentage</option>
+              <option value="fixed">Fixed</option>
+            </select>
+          </div>
+
+          <!-- Promo For Selection: Product - Order - Shipping -->
+          <div class="flex flex-col space-y-2">
+            <label for="promo_for" class="text-lg font-semibold">Promo For</label>
+            <select name="promo_for" id="promo_for" class="select select-bordered">
+              <option value="product">Product</option>
+              <option value="order">Order</option>
+              <option value="shipping">Shipping</option>
+            </select>
+          </div>
+
           <!-- Promo Discount Input -->
           <div class="flex flex-col space-y-2">
             <label for="discount" class="text-lg font-semibold">Discount</label>
-            <input type="number" name="discount" id="discount" class="input input-bordered" placeholder="Enter promo discount" />
+            <input type="number" min="0" name="discount" id="discount" class="input input-bordered" placeholder="Enter promo discount" />
           </div>
 
           <!-- Promo Start Date Input -->
