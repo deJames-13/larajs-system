@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PromoResource;
+use Barryvdh\Debugbar\Facades\Debugbar;
 
 class PromoController extends Controller
 {
@@ -40,12 +41,18 @@ class PromoController extends Controller
 
     public function store(Request $request)
     {
+
+        $promo_for = ['product', 'order', 'shipping'];
+        $promo_types = ['percentage', 'fixed'];
+
         $data = $request->validate([
             'name' => 'required|string',
             'slug' => 'required|string|unique:promos,slug',
             'description' => 'required|string',
             'image' => 'sometimes|string',
             'status' => 'required|string',
+            'promo_type' => 'sometimes|in:' . implode(',', $promo_types),
+            'promo_for' => 'sometimes|in:' . implode(',', $promo_for),
             'discount' => 'required|numeric',
             'start_date' => 'required|date',
             'end_date' => 'required|date',
@@ -55,6 +62,7 @@ class PromoController extends Controller
         $image_id = $data['image_id'] ?? null;
         unset($data['image_id']);
 
+        $data['discount'] = $data['discount'] > 0 ? $data['discount'] : 0;
         $promo = Promos::create($data);
 
         $this->handleImageUpload($request, $promo, $image_id);
@@ -66,29 +74,38 @@ class PromoController extends Controller
 
     public function update(Request $request, string $id)
     {
+        $promo_for = ['product', 'order', 'shipping'];
+        $promo_types = ['percentage', 'fixed'];
         $data = $request->validate([
             'name' => 'sometimes|string',
             'slug' => 'sometimes|string|exists:promos,slug',
             'description' => 'sometimes|string',
             'image' => 'sometimes|string',
+            'promo_type' => 'sometimes|in:' . implode(',', $promo_types),
+            'promo_for' => 'sometimes|in:' . implode(',', $promo_for),
             'status' => 'sometimes|string',
             'discount' => 'sometimes|numeric',
             'start_date' => 'sometimes|date',
             'end_date' => 'sometimes|date',
             'image_id' => 'sometimes|numeric',
         ]);
+        Debugbar::info($data);
+
         $image_id = $data['image_id'] ?? null;
         unset($data['image_id']);
 
+        $data['discount'] = $data['discount'] > 0 ? $data['discount'] : 0;
         $promo = Promos::where('id', $id)->first();
         if (!$promo) {
             return response(null, 404, ['message' => 'Promo not found!']);
         }
 
         $promo->update($data);
-
         $this->handleImageUpload($request, $promo, $image_id);
+
+
         $res = new PromoResource($promo);
+
 
         return response($res, 200, ['message' => 'Promo updated successfully!']);
     }
@@ -131,7 +148,6 @@ class PromoController extends Controller
 
         return PromoResource::collection($promos);
     }
-
     public function status(Request $request, string $id)
     {
     }

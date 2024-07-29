@@ -64,9 +64,7 @@ export default class OrderShow {
       this.products.push(product);
     });
 
-    if (this.products.length === 0) {
-      window.location.href = "/";
-    }
+    if (this.products.length === 0) window.location.href = "/";
 
     // RENDER ORDER ITEMS
     $("#cart-body").empty();
@@ -213,6 +211,7 @@ export default class OrderShow {
   init() {
     // GET ORDER
     $(".page").hide();
+    $('.discount-info').remove();
     $("_skeleton").addClass("skeleton");
     this.fetchOrder(this.id);
   }

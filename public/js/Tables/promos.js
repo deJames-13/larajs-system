@@ -33,13 +33,17 @@ export default class PromosPage extends TablePage {
         ID: `${promo.id}`,
         Name: `${promo.name}`,
         Slug: `${promo.slug}`,
-        Description: `${promo.description}`,
+        // Description: `${promo.description}`,
         Image: `<img src="${promo.image}" alt="${promo.name}" class="w-16 h-16 object-cover"/>`,
         Status: `
                     <div class="badge ${this.statusColors[promo.status]} gap-2">
                         ${promo.status}
                     </div>`,
         Discount: `${promo.discount}`,
+        Type: `
+        <span class="capitalize">
+          <strong>${promo?.promo_type}</strong> Discount for <strong>${promo?.promo_for}</strong>
+          </span>`,
         "Start Date": `${promo.start_date}`,
         "End Date": `${promo.end_date}`,
         "": `

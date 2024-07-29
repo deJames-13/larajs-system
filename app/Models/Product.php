@@ -15,7 +15,7 @@ class Product extends Model
 
     protected $with = [
         // 'stock',
-        // 'images',
+        'images',
         // 'categories',
         // 'brands',
         // 'promos',
@@ -78,6 +78,11 @@ class Product extends Model
                 ->orWhere('description', 'like', '%' . $search . '%')
                 ->orWhere('specifications', 'like', '%' . $search . '%');
         });
+
+        // dont
+        // $query->whereHas('stock', function ($query) {
+        //     $query->where('quantity', '>', 0);
+        // });
 
         switch ($sort) {
             case 'oldest':

@@ -25,6 +25,7 @@ return new class extends Migration
             $table->enum('status', ['pending', 'processing', 'shipping', 'completed', 'cancelled'])->default('pending');
             $table->date('paid_date')->nullable();
 
+
             $table->timestamps();
             $table->softDeletes();
         });

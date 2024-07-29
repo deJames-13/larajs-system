@@ -13,11 +13,31 @@ use Barryvdh\Debugbar\Facades\Debugbar;
 
 class ProductController extends Controller
 {
+    private $required = [
+        'name' => 'required|string',
+        'sku_code' => 'required|string|unique:products,sku_code',
+        'description' => 'required|string',
+        'specifications' => 'required|string',
+        'price' => 'required|numeric',
+        'status' => 'required|string|in:active,inactive',
+        'stock' => 'required|numeric',
+    ];
+    private $optionalRules = [
+        'brands' => 'sometimes|array',
+        'brands.*' => 'sometimes|numeric',
+        'categories' => 'sometimes|array',
+        'categories.*' => 'sometimes|numeric',
+        'promos' => 'sometimes|array',
+        'promos.*' => 'sometimes|numeric',
+        'image_id' => 'sometimes|numeric',
+    ];
     public function search()
     {
         // TODO: Implement sorting and other filters
         $product = Product::filter(request(['search']))->get();
-        return ProductResource::collection($product);
+        $res = ProductResource::collection($product);
+        Debugbar::info($res);
+        return response($res, 200);
     }
 
     public function index()
@@ -45,31 +65,40 @@ class ProductController extends Controller
         }
     }
 
+    private function attachRelation($product, $data, $relation)
+    {
+        $filteredRelation = array_filter($data ?? [], function ($item) {
+            return (int)$item !== 0;
+        });
+        Debugbar::info($filteredRelation);
+        $product->$relation()->sync($filteredRelation);
+    }
+
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'name' => 'required|string',
-            'sku_code' => 'required|string|unique:products,sku_code',
-            'description' => 'required|string',
-            'specifications' => 'required|string',
-            'price' => 'required|numeric',
-            'image_id' => 'sometimes|numeric',
-            'status' => 'required|string|in:active,inactive',
-            'stock' => 'required|numeric',
-            'brands' => 'sometimes|array',
-            'brands.*' => 'sometimes|numeric',
-            'categories' => 'sometimes|array',
-            'categories.*' => 'sometimes|numeric',
-        ]);
+        $data = $request->validate(array_merge($this->required, $this->optionalRules));
         Debugbar::info($data);
 
         $stock = $data['stock'] ?? null;
+        $brands = $data['brands'] ?? [];
+        $categories = $data['categories'] ?? [];
+        $promos = $data['promos'] ?? [];
         $image_id = $data['image_id'] ?? null;
-        $product = Product::create($data);
+        unset($data['stock']);
+        unset($data['image_id']);
+        unset($data['brands']);
+        unset($data['categories']);
+        unset($data['promos']);
 
-        $product->stock()->create(['quantity' => $stock ? $stock : 0]);
-        $product->categories()->attach($data['categories'] ?? []);
-        $product->brands()->attach($data['brands'] ?? []);
+        $data['price'] = $data['price'] > 0 ? $data['price'] : 0;
+
+        $product = Product::create($data);
+        $product->stock()->create(['quantity' => $stock > -1 ? $stock : 0]);
+
+        $this->attachRelation($product, $brands, 'brands');
+        $this->attachRelation($product, $categories, 'categories');
+        $this->attachRelation($product, $promos, 'promos');
+
         $product->load([
             'brands',
             'categories',
@@ -85,41 +114,42 @@ class ProductController extends Controller
 
     public function update(Request $request, string $id)
     {
-        Debugbar::info($request);
         $data = $request->validate([
             'name' => 'sometimes|string',
             'sku_code' => 'sometimes|string|unique:products,sku_code,' . $id . ',id',
             'stock' => 'sometimes|numeric',
             'description' => 'sometimes|string',
             'specifications' => 'sometimes|string',
-            'status' => 'required|string|in:active,inactive',
+            'status' => 'sometimes|string|in:active,inactive',
             'price' => 'sometimes|numeric',
-            'image_id' => 'sometimes|numeric',
-            'brands' => 'sometimes|array',
-            'brands.*' => 'sometimes|numeric',
-            'categories' => 'sometimes|array',
-            'categories.*' => 'sometimes|numeric',
+            ...$this->optionalRules
         ]);
+        Debugbar::info($data);
 
         $stock = $data['stock'] ?? null;
-        unset($data['stock']);
+        $brands = $data['brands'] ?? [];
+        $categories = $data['categories'] ?? [];
+        $promos = $data['promos'] ?? [];
         $image_id = $data['image_id'] ?? null;
+        unset($data['stock']);
         unset($data['image_id']);
+        unset($data['brands']);
+        unset($data['categories']);
+        unset($data['promos']);
 
         $product = Product::where('id', $id)->first();
         if (!$product) {
             return response(null, 404, ['message' => 'Product not found!']);
         }
-        if ($stock) {
-            $product->stock()->update(
-                ['quantity' => $stock]
-            );
-        }
 
+        $this->attachRelation($product, $brands, 'brands');
+        $this->attachRelation($product, $categories, 'categories');
+        $this->attachRelation($product, $promos, 'promos');
+
+
+        $data['price'] = $data['price'] > 0 ? $data['price'] : 0;
+        if (is_numeric($stock) && $stock > -1) $product->stock()->update(['quantity' => $stock]);
         $product->update($data);
-        $product->categories()->sync($data['categories'] ?? []);
-        $product->brands()->sync($data['brands'] ?? []);
-
         $product->load([
             'brands',
             'categories',
@@ -133,6 +163,8 @@ class ProductController extends Controller
         // Debugbar::info($res);
         return response($res, 200, ['message' => 'Product updated successfully!']);
     }
+
+
 
     public function destroy(string $id)
     {

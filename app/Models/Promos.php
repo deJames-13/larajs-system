@@ -13,16 +13,7 @@ class Promos extends Model
 
     use HasFactory, SoftDeletes, Searchable;
 
-    protected $fillable = [
-        'name',
-        'slug',
-        'description',
-        'image',
-        'status',
-        'discount',
-        'start_date',
-        'end_date',
-    ];
+    protected $guarded = [];
 
     // Scope Filter
     public function scopeFilter($query, array $filters)
@@ -59,5 +50,9 @@ class Promos extends Model
     public function images()
     {
         return $this->belongsToMany(Image::class, 'promo_images', 'promo_id', 'image_id');
+    }
+    public function orders() 
+    {
+        return $this->hasMany(Order::class, 'promo_id', 'id');
     }
 }

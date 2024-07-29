@@ -57,7 +57,7 @@ export default class Cart {
     ajaxRequest.get({
       url: "/api/cart",
       onSuccess: (response, status, error) => {
-        var data = response.data;
+        var data = response.data.products.data;
         this.checkCart(data);
         // console.log(products);
 
@@ -106,7 +106,7 @@ export default class Cart {
         cancelButtonText: "No"
       }).then(result => {
         if (result.isConfirmed) {
-          window.href = "/checkout";
+          window.location.href = "/checkout";
         }
       });
     }
