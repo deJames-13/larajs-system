@@ -36,17 +36,18 @@ class OrderResource extends JsonResource
     {
       $this->load(['promo', 'products']);
       $total = 0;
+
       $subtotal = $this->products->sum(fn ($product) => $product->pivot->quantity * $product->price);
                 $shipping_cost = $this->shipping_cost;
                 $total = $this->getDiscountedTotal($this->promo, $shipping_cost, $subtotal);
-      return $total;
+
+        return $total;
     }
 
 
     private function getDiscountedTotal($promo, $shipping, $subtotal)
     {
-       if (!optional($promo)->value) return 0;
-
+       if (!optional($promo)->id) return 0;
        $discount = $promo->discount ?? 0;
        $discountedSubtotal = $subtotal;
        $discountedShipping = $shipping;
@@ -78,9 +79,10 @@ class OrderResource extends JsonResource
         default:
             break;
        }
+       Debugbar::info([$shipping,$discount,$discountedSubtotal,$discountedShipping]);
 
        $total = $discountedSubtotal + $discountedShipping;
-       Debugbar::info($total);
+
 
        return $total;
     }
