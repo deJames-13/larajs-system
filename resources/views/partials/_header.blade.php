@@ -25,7 +25,7 @@
 			{{-- SEARCH BAR --}}
 
 			{{-- NAVIGATION --}}
-			@include('partials._nav_top')
+			{{-- @include('partials._nav_top') --}}
 
 			{{-- @role('admin')
 				<div class="container flex items-center justify-center mx-auto space-x-8 font-bold uppercase lg:space-x-12">
