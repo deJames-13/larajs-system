@@ -51,4 +51,8 @@ class Promos extends Model
     {
         return $this->belongsToMany(Image::class, 'promo_images', 'promo_id', 'image_id');
     }
+    public function orders() 
+    {
+        return $this->hasMany(Order::class, 'promo_id', 'id');
+    }
 }

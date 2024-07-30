@@ -52,6 +52,7 @@ export default class Products {
 
     $(this.parent).empty();
     this.products.forEach(product => {
+      if (product.stock === 0) return;
       const card = new ProductCard(product, "/products/" + product.id);
       $(this.parent).prepend(card.render());
     });

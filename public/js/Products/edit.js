@@ -61,12 +61,11 @@ export default class ProductsEdit {
       rules: {
         name: {
           required: true,
-          // only allow letters, numbers, and spaces
-          pattern: /^[a-zA-Z0-9\s]*$/
+          pattern: /^(?:[A-Z0-9][a-zA-Z0-9]*|[0-9]+[a-zA-Z0-9]*)(?: [a-zA-Z0-9]+)*$/
         },
         sku_code: {
           required: true,
-          pattern: /^[A-Z]{3}-\d{3}$/
+          pattern:  /^(?!-)[A-Z0-9-]*(?<!-)$/
         },
         description: {
           required: true,
@@ -95,13 +94,15 @@ export default class ProductsEdit {
         }
       },
       messages: {
-        name: {
+
+       name: {
           required: "Name is required",
-          pattern: "Please enter a valid name, only letters, numbers, and spaces are allowed."
+          pattern: "Please enter a valid name: Capitalize the first letter"
         },
         sku_code: {
-          required: "SKU Code is required",
-          pattern: "Please enter a valid SKU Code - e.g. ABC-123"
+          required: "SKU code is required",
+          pattern: "Please enter a valid SKU code: It should only contain uppercase letters, digits, and hyphens SKU code cannot start or end with a hyphen"
+
         },
         description: {
           required: "Description is required",

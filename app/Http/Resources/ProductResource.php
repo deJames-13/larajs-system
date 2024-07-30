@@ -15,10 +15,10 @@ class ProductResource extends JsonResource // JSON
      */
     public function toArray(Request $request): array
     {
-        // Handles the json that will be sent
-        if ($this->stock->quantity == 0) {
-            return [];
-        }
+        // lol
+        // if ($this->stock->quantity == 0) {
+        //     return [];
+        // }
 
         return [
             // copies the column from products
@@ -33,28 +33,35 @@ class ProductResource extends JsonResource // JSON
                 return $this->pivot->quantity;
             }),
             'images' => $this->whenLoaded('images', function () {
-                return $this->images->makeHidden([''])->toArray();
+                return $this->images->makeHidden(['pivot'])->toArray();
             }),
-
             'brands' => $this->whenLoaded('brands', function () {
-
-                return $this->brands->filter(function ($brand) {
+                $data = $this->brands->filter(function ($brand) {
                     return $brand->status === 'active';
                 });
+                return $data->makeHidden(['pivot'])->toArray();
             }),
 
             'categories' => $this->whenLoaded('categories', function () {
-                return $this->categories->filter(function ($category) {
+                $data = $this->categories->filter(function ($category) {
                     return $category->status === 'active';
                 });
+                return $data->makeHidden(['pivot'])->toArray();
             }),
 
             'promos' => $this->whenLoaded('promos', function () {
                 $data = $this->promos->filter(function ($promo) {
-                    return ($promo->end_date !== null && $promo->end_date > now()) && $promo->status == 'active';
+
+                    return $promo->status === 'active' &&
+                        $promo->start_date <= now() &&
+                        $promo->end_date >= now() &&
+                        $promo->promo_type !== null &&
+                        $promo->promo_for !== null &&
+                        $promo->start_date !== null &&
+                        $promo->end_date !== null;
                 });
                 Debugbar::info($data);
-                return $data;
+                return $data->makeHidden(['pivot'])->toArray();
             }),
             'ratings' => $this->getRatings(),
 

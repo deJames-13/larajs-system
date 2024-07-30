@@ -65,8 +65,8 @@
 
 			<div class="divider"></div>
 			<div
-				class="flex justify-center info-container py-4 lg:px-12 max-md border-2 border-black p-2 lg:p-8 rounded shadow-xl print:shadow-none print:p-0 print:border-0">
-				<div class="_skeleton prose w-full m-0 p-0">
+				class="flex justify-center info-container py-4 lg:px-12 max-md border-2 border-black p-4 md:p-8 rounded shadow-xl print:shadow-none print:p-0 print:border-0">
+				<div class=" prose w-full m-0 p-0">
 
 					<div class=" status-badge badge bg-blue-400 gap-2">
 						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"

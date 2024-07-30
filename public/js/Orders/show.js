@@ -64,9 +64,7 @@ export default class OrderShow {
       this.products.push(product);
     });
 
-    if (this.products.length === 0) {
-      window.location.href = "/";
-    }
+    if (this.products.length === 0) window.location.href = "/";
 
     // RENDER ORDER ITEMS
     $("#cart-body").empty();
@@ -76,10 +74,20 @@ export default class OrderShow {
 
       $("#shipping-cost").text(this.data.shipping_cost.toFixed(2));
       $("#subtotal").text(this.data.subtotal.toFixed(2));
-      $(".total").text(this.data.total.toFixed(2));
       $(`[data-shipping="${this.data.shipping_type}"]`).click();
       $("[data-shipping-select]").off();
     });
+    let promo = this.data.promo;
+    let discount = this.data.discount;
+    console.log(promo);
+    if (promo?.id){
+        $(".discount-info-wrapper").show();
+        const discountText = promo.promo_type =="percentage" ? `${promo.discount}%` : `PHP ${parseFloat(promo.discount).toFixed(2)} ` + `off for ${promo.promo_for}`;
+        $("#discount-label").text(discountText);
+        $("#discount-value").text(parseFloat(discount??0).toFixed(2));
+    }
+    $(".total").text(this.data.total.toFixed(2));
+
 
     // EXTRACT PAYLOAD
     const customer_info = this.data.customer.info || {
@@ -213,6 +221,7 @@ export default class OrderShow {
   init() {
     // GET ORDER
     $(".page").hide();
+    $('.discount-info').remove();
     $("_skeleton").addClass("skeleton");
     this.fetchOrder(this.id);
   }

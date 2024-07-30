@@ -15,7 +15,9 @@ export default class PromosForm extends FormPage {
       });
     } else if (this.type === "create") {
       $(document).ready(() => {
-        new PromosCreate();
+        new PromosCreate({ 
+          target: this.target,
+        });
       });
     }
   }
