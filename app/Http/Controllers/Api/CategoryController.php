@@ -65,7 +65,7 @@ class CategoryController extends Controller
         $data = $request->validate([
             'name' => 'required|string',
             'description' => 'required|string',
-            'slug' => 'required|string|unique:categories,slug',
+            'slug' => 'required|string',
             'status' => 'required|string',
             'image_id' => 'sometimes|numeric',
         ]);

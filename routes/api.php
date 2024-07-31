@@ -1,28 +1,27 @@
 <?php
 
-use App\Http\Controllers\Api\BrandController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\TableController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Api\CartController;
-use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\ChartController;
 use App\Http\Controllers\Api\OrderController;
-use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\PromoController;
-use App\Http\Controllers\Api\UserController;
-// use App\Http\Controllers\AuthController;
-use App\Http\Controllers\SearchController;
-use App\Http\Controllers\TableController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\CategoryController;
 
 Route::get('/test', function () {
     return response()->json(['message' => 'API is working']);
 });
 
-// API AUTH: cant do this, need to handle tokens
-// Route::group(["middleware" => "guest"], function () {
-//     Route::post("/admin/login", [AuthController::class, "authenticate"]);
-//     Route::post("/login", [AuthController::class, "authenticate"]);
-//     Route::post("/register", [AuthController::class, "store"]);
-// });
+Route::group(["middleware" => "guest"], function () {
+    Route::post("/admin/login", [AuthController::class, "authenticate"]);
+    Route::post("/login", [AuthController::class, "authenticate"]);
+    Route::post("/register", [AuthController::class, "store"]);
+});
 
 // Search Functions
 Route::group(['middleware' => 'only.ajax'], function () {
@@ -66,7 +65,7 @@ foreach ($crud as $prefix => $config) {
     Route::get("/$prefix", [$controller, 'index'])->name($prefix . '.all')->middleware($middleware);
     Route::get("/$prefix/{id}", [$controller, 'show'])->name($prefix . '.get')->middleware($middleware);
 
-    // include auth:sanctum middleware, only for authenticated users
+    // // include auth:sanctum middleware, only for authenticated users
     array_push($middleware, 'auth:sanctum');
     array_push($middleware, 'role:staff,admin');
 
