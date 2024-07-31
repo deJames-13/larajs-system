@@ -7,7 +7,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class BrandResource extends JsonResource
 {
-    /**
+    /** response()->json()
      * Transform the resource into an array.
      *
      * @param  Request  $request
@@ -15,6 +15,7 @@ class BrandResource extends JsonResource
      */
     public function toArray($request)
     {
+        // catgen, i, d
         return [
             ...parent::toArray($request),
             'images' => $this->images()->get(['id', 'name', 'path'])

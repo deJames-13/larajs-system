@@ -95,12 +95,18 @@ export default class Login {
     $(".text-error").remove();
 
     var formData = new FormData($("#login-form")[0]);
-    const token = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
     ajaxRequest.post({
       url: "/login",
       data: formData,
       onSuccess: response => {
         const user = response.user ?? null;
+        const csrfToken = response.csrfToken || null ;
+        const apiToken = response.apiToken || null;
+
+        console.log(csrfToken, apiToken);
+
+        if (csrfToken) window.localStorage.setItem('csrfToken', csrfToken);
+        if (apiToken) window.localStorage.setItem('apiToken', apiToken);
         this.modal.remove();
         if (user.role === "admin") {
           window.location.href = "/dashboard";
