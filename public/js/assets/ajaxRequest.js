@@ -40,16 +40,18 @@ const handleSuccess = callback => (response, status, xhr) => {
 // ##########################################################################
 // HEADER
 const getHeaders = (token = null, headers = {}) => {
-  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
-  token = token || document.querySelector('meta[name="api-token"]').getAttribute("content") || null;
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content") || window.localStorage.getItem('csrfToken') || null;
+  token = token || document.querySelector('meta[name="api-token"]').getAttribute("content")  || window.localStorage.getItem('apiToken') || null;
 
   let defaultHeaders = {
     Accept: "application/json",
     "X-Requested-With": "XMLHttpRequest"
   };
+
   if (csrfToken) {
     defaultHeaders["X-CSRF-TOKEN"] = csrfToken;
   }
+
   if (token) {
     defaultHeaders["Authorization"] = "Bearer " + token;
   }

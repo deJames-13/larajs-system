@@ -1,5 +1,6 @@
 import FormModal from "../layouts/FormModal.js";
 import BrandsCreate from "./create.js";
+
 const defaultProps = {
   name: "add-brand",
   id: "add-brand-modal",

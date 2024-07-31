@@ -33,6 +33,8 @@ class AuthController extends Controller
             return response()->json([
                 'message' => 'success',
                 'user' => $user,
+                'apiToken' => $token,
+                'csrfToken' => csrf_token(),
             ], 200);
         }
 
@@ -66,7 +68,8 @@ class AuthController extends Controller
                 return response()->json([
                     'message' => 'success',
                     'user' => $user,
-                    'token' => $token,
+                    'apiToken' => $token,
+                    'csrfToken' => csrf_token(),
                 ], 200);
             }
 
