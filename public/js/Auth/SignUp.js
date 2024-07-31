@@ -136,6 +136,14 @@ export default class SignUp {
       data: formData,
       onSuccess: response => {
         // console.log(response);
+        const user = response.user ?? null;
+        const csrfToken = response.csrfToken || null ;
+        const apiToken = response.apiToken || null;
+
+        console.log(csrfToken, apiToken);
+
+        if (csrfToken) window.localStorage.setItem('csrfToken', csrfToken);
+        if (apiToken) window.localStorage.setItem('apiToken', apiToken);
         this.modal.remove();
         window.location.href = "/";
       },

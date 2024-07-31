@@ -61,7 +61,7 @@ foreach ($crud as $prefix => $config) {
     $middleware = is_array($middleware) ? $middleware : [$middleware];
 
     // prevent non-ajax requests
-    array_push($middleware, 'only.ajax');
+    // array_push($middleware, 'only.ajax');
     Route::get("/$prefix", [$controller, 'index'])->name($prefix . '.all')->middleware($middleware);
     Route::get("/$prefix/{id}", [$controller, 'show'])->name($prefix . '.get')->middleware($middleware);
 
@@ -77,7 +77,7 @@ foreach ($crud as $prefix => $config) {
     // DELETE
     Route::match(['delete'], "/$prefix/{id}", [$controller, 'destroy'])
         ->name($prefix . '.destroy')
-        ->middleware($middleware);
+        ->middleware($middleware);    
 
     // UPDATE
     Route::match(['put', 'post'], "/$prefix/{id}", [$controller, 'update'])
